@@ -1857,41 +1857,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-    // Clear localStorage quota issues - run before Supabase init
+    // Force clear all storage on load to fix quota issues
     (function() {
         try {
-            // Clear old/stale session caches that might be bloating storage
-            var keysToCheck = [];
-            for (var i = 0; i < localStorage.length; i++) {
-                var key = localStorage.key(i);
-                if (key && (key.startsWith('prio_') || key.includes('-auth-token'))) {
-                    keysToCheck.push(key);
-                }
-            }
-            // Clear old prio caches (they're also in sessionStorage now)
-            keysToCheck.forEach(function(key) {
-                if (key.startsWith('prio_')) {
-                    localStorage.removeItem(key);
-                }
-            });
-            // If still having quota issues, clear the auth token to force re-auth
-            var authKey = 'sb-bflmikgoafdffezrfpgb-auth-token';
-            try {
-                localStorage.setItem('_quota_test', 'x'.repeat(1000));
-                localStorage.removeItem('_quota_test');
-            } catch (e) {
-                // Quota exceeded - clear auth token to free space
-                console.warn('localStorage quota low, clearing auth token');
-                localStorage.removeItem(authKey);
-                // Also clear any other large items
-                for (var j = 0; j < localStorage.length; j++) {
-                    var k = localStorage.key(j);
-                    if (k && k !== 'theme') localStorage.removeItem(k);
-                }
-            }
-        } catch (e) {
-            console.warn('localStorage cleanup error:', e);
-        }
+            var theme = localStorage.getItem('theme');
+            localStorage.clear();
+            sessionStorage.clear();
+            if (theme) localStorage.setItem('theme', theme);
+        } catch (e) {}
     })();
     
     // Supabase Setup
