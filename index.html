@@ -59,12 +59,12 @@
         .view-toggle-btn:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8)}
         .view-toggle-btn.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
         .priorities-cards{display:grid;grid-template-columns:1fr;gap:1rem}
-        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:120px;overflow:hidden}
+        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden}
         .priority-card-lg:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
-        .priority-card-lg-left{flex:0 0 280px;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
+        .priority-card-lg-left{flex:0 0 260px;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
         .priority-card-lg-time-col{flex:0 0 70px;background:rgba(52,211,153,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
         .priority-card-lg-time-col .time-value{font-size:1.125rem;font-weight:700;color:rgb(52,211,153);white-space:nowrap}
-        .priority-card-lg-info{flex:1;padding:16px;display:flex;flex-direction:column;justify-content:center}
+        .priority-card-lg-info{flex:1;padding:14px;display:flex;flex-direction:column;justify-content:center}
         .priority-card-lg-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
         .priority-card-lg-name{font-size:1rem;font-weight:600}
         .priority-card-lg-badge{font-size:0.6875rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase}
@@ -73,17 +73,13 @@
         .priority-card-lg-phone{font-size:0.875rem;color:rgba(255,255,255,0.7);margin-bottom:4px;font-family:monospace}
         .priority-card-lg-lastcall{font-size:0.8125rem;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:6px}
         .priority-card-lg-lastcall .lastcall-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-        .priority-card-lg-right{flex:1;display:flex;flex-direction:column}
-        .priority-card-lg-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,0.08)}
-        @media(max-width:768px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}}
-        .priority-card-lg-tab{flex:1;padding:10px 16px;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.5);background:transparent;border:none;cursor:pointer;transition:all 0.15s;text-align:center}
-        .priority-card-lg-tab:first-child{border-right:1px solid rgba(255,255,255,0.08)}
-        .priority-card-lg-tab.active{color:rgb(52,211,153);background:rgba(52,211,153,0.05)}
-        .priority-card-lg-content{flex:1;padding:12px 16px;overflow:hidden}
-        .priority-card-lg-panel{display:none}
-        .priority-card-lg-panel.active{display:block}
-        .priority-card-lg-summary{font-size:0.875rem;line-height:1.6;color:rgba(255,255,255,0.7)}
-        .priority-card-lg-notes{font-size:0.875rem;line-height:1.5;color:rgba(255,255,255,0.7)}
+        .priority-card-lg-summary-col{flex:1;padding:14px 16px;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column}
+        .priority-card-lg-summary-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600}
+        .priority-card-lg-summary-col .col-content{font-size:0.9375rem;line-height:1.6;color:rgba(255,255,255,0.8);flex:1;overflow:hidden}
+        .priority-card-lg-notes-col{flex:0 0 220px;padding:14px 16px;display:flex;flex-direction:column}
+        .priority-card-lg-notes-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600}
+        .priority-card-lg-notes-col .col-content{font-size:0.9375rem;line-height:1.5;color:rgba(255,255,255,0.7);flex:1;overflow:hidden}
+        @media(max-width:900px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-summary-col{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-notes-col{flex:none}}
         .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
         .section-header h3{font-size:1.125rem;font-weight:600}
         .prio-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -2255,6 +2251,9 @@
             
             var cardId = 'priority-card-' + index;
             
+            // Get last note text
+            var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+            
             return '<div class="priority-card-lg" data-id="' + lead.id + '" onclick="openLeadModal(\'' + lead.id + '\')">' +
                 '<div class="priority-card-lg-left">' +
                     '<div class="priority-card-lg-time-col">' +
@@ -2269,19 +2268,13 @@
                         '<div class="priority-card-lg-lastcall"><span class="lastcall-dot ' + lastCalledColor + '"></span>' + lastCalled + '</div>' +
                     '</div>' +
                 '</div>' +
-                '<div class="priority-card-lg-right">' +
-                    '<div class="priority-card-lg-tabs">' +
-                        '<button class="priority-card-lg-tab active" onclick="event.stopPropagation();switchPriorityTab(\'' + cardId + '\',\'summary\')">Summary</button>' +
-                        '<button class="priority-card-lg-tab" onclick="event.stopPropagation();switchPriorityTab(\'' + cardId + '\',\'notes\')">Notes</button>' +
-                    '</div>' +
-                    '<div class="priority-card-lg-content" id="' + cardId + '">' +
-                        '<div class="priority-card-lg-panel active" data-panel="summary">' +
-                            '<div class="priority-card-lg-summary">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
-                        '</div>' +
-                        '<div class="priority-card-lg-panel" data-panel="notes">' +
-                            '<div class="prio-card-notes-list">' + notesHtml + '</div>' +
-                        '</div>' +
-                    '</div>' +
+                '<div class="priority-card-lg-summary-col">' +
+                    '<div class="col-label">Summary</div>' +
+                    '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-notes-col">' +
+                    '<div class="col-label">Notes</div>' +
+                    '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
             '</div>';
         }).join('');
