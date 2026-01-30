@@ -36,7 +36,28 @@
         .prio-filter{padding:0.5rem 1rem;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.7);background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer}
         .prio-filter.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
         .prio-list{display:flex;flex-direction:column;gap:0.75rem}
-        .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;display:flex;align-items:center;gap:1rem}
+        .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s}
+        .prio-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px);box-shadow:0 4px 20px rgba(52,211,153,0.1)}
+        .prio-card-header{display:flex;align-items:center;gap:1rem;padding:1.25rem}
+        .prio-rank{width:32px;height:32px;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.875rem;flex-shrink:0}
+        .prio-lead-info{flex:1;min-width:0}
+        .prio-name{font-weight:600;font-size:1rem;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .prio-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+        .prio-phone{font-size:0.8125rem;color:rgba(255,255,255,0.6)}
+        .prio-status{font-size:0.6875rem;padding:3px 8px;border-radius:4px;font-weight:500;text-transform:uppercase;letter-spacing:0.02em}
+        .prio-status.status-booked,.prio-status.status-callback{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
+        .prio-status.status-interested,.prio-status.status-timeline{background:rgba(59,130,246,0.15);color:#3B82F6}
+        .prio-status.status-follow-up,.prio-status.status-new{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .prio-next-call{text-align:right;flex-shrink:0}
+        .next-call-label{display:block;font-size:0.6875rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:2px}
+        .next-call-value{font-size:0.8125rem;font-weight:500;color:rgb(52,211,153)}
+        .prio-arrow{font-size:1.5rem;color:rgba(255,255,255,0.3);margin-left:8px;transition:transform 0.2s}
+        .prio-card:hover .prio-arrow{transform:translateX(4px);color:rgb(52,211,153)}
+        .prio-card-body{padding:0 1.25rem 1.25rem;border-top:1px solid rgba(255,255,255,0.05);margin-top:-4px;padding-top:1rem}
+        .prio-summary,.prio-notes{font-size:0.8125rem;color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:8px}
+        .prio-summary:last-child,.prio-notes:last-child{margin-bottom:0}
+        .summary-label,.notes-label{color:rgba(255,255,255,0.4);font-weight:500}
+        @media(max-width:640px){.prio-card-header{flex-wrap:wrap}.prio-next-call{width:100%;text-align:left;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)}.prio-arrow{display:none}}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
         .overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
@@ -1415,21 +1436,49 @@
         
         prioList.innerHTML = prioLeads.map(function(lead, index) {
             var f = lead.fields;
-            var name = f['Full Name'] || (f['First Name'] || '') + ' ' + (f['Last Name'] || '');
+            var name = f['Full Name'] || ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
             var phone = f['Phone'] || '-';
-            var disposition = f['Disposition'] || 'New';
-            var lastCall = f['Last Call Timestamp'] ? formatTimeAgo(f['Last Call Timestamp']) : 'Not called';
+            var status = f['Status'] || f['Disposition'] || 'New';
+            var nextCall = f['Next AI Call'] || f['Next Call'] || f['Follow Up Date'] || null;
+            var summary = f['Summary'] || f['Call Summary'] || f['AI Summary'] || '';
+            var notes = f['Agent Notes'] || f['Your Notes'] || f['Notes'] || '';
+            
+            // Format next call date
+            var nextCallDisplay = '-';
+            if (nextCall) {
+                var d = new Date(nextCall);
+                var today = new Date();
+                var tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                if (d.toDateString() === today.toDateString()) nextCallDisplay = 'Today ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+                else if (d.toDateString() === tomorrow.toDateString()) nextCallDisplay = 'Tomorrow ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+                else nextCallDisplay = d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}) + ' ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+            }
+            
+            // Truncate summary and notes
+            var summaryTrunc = summary.length > 120 ? summary.substring(0, 120) + '...' : summary;
+            var notesTrunc = notes.length > 80 ? notes.substring(0, 80) + '...' : notes;
             
             return '<div class="prio-card" data-id="' + lead.id + '">' +
-                '<div class="prio-rank">' + (index + 1) + '</div>' +
-                '<div class="prio-info">' +
-                    '<div class="prio-name">' + escapeHtml(name.trim()) + '</div>' +
-                    '<div class="prio-details">' + escapeHtml(phone) + ' • ' + escapeHtml(disposition) + ' • ' + lastCall + '</div>' +
+                '<div class="prio-card-header">' +
+                    '<div class="prio-rank">' + (index + 1) + '</div>' +
+                    '<div class="prio-lead-info">' +
+                        '<div class="prio-name">' + escapeHtml(name) + '</div>' +
+                        '<div class="prio-meta">' +
+                            '<span class="prio-phone">📞 ' + escapeHtml(phone) + '</span>' +
+                            '<span class="prio-status status-' + status.toLowerCase().replace(/\s+/g, '-') + '">' + escapeHtml(status) + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="prio-next-call">' +
+                        '<span class="next-call-label">Next Call</span>' +
+                        '<span class="next-call-value">' + nextCallDisplay + '</span>' +
+                    '</div>' +
+                    '<div class="prio-arrow">›</div>' +
                 '</div>' +
-                '<div class="prio-score">' +
-                    '<div class="prio-score-value">' + lead._score + '</div>' +
-                    '<div class="prio-score-label">Score</div>' +
-                '</div>' +
+                (summary || notes ? '<div class="prio-card-body">' +
+                    (summary ? '<div class="prio-summary"><span class="summary-label">🤖 Summary:</span> ' + escapeHtml(summaryTrunc) + '</div>' : '') +
+                    (notes ? '<div class="prio-notes"><span class="notes-label">📝 Notes:</span> ' + escapeHtml(notesTrunc) + '</div>' : '') +
+                '</div>' : '') +
             '</div>';
         }).join('');
     }
