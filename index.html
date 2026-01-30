@@ -57,6 +57,23 @@
         .meeting-name{font-weight:600;margin-bottom:0.25rem}
         .meeting-details{font-size:0.875rem;color:rgba(255,255,255,0.6)}
         .prio-empty{text-align:center;padding:3rem;color:rgba(255,255,255,0.5)}
+        
+        /* Profile Menu */
+        .profile-menu{position:absolute;bottom:100%;left:0;right:0;background:#151515;border:1px solid rgba(255,255,255,0.1);border-radius:12px;margin:0 0.5rem 0.5rem;padding:0.5rem;opacity:0;visibility:hidden;transform:translateY(10px);transition:all 0.2s}
+        .profile-menu.active{opacity:1;visibility:visible;transform:translateY(0)}
+        .profile-menu-item{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;border-radius:8px;cursor:pointer;font-size:0.875rem;color:rgba(255,255,255,0.8);transition:all 0.15s}
+        .profile-menu-item:hover{background:rgba(255,255,255,0.05)}
+        .profile-menu-item.logout{color:#ef4444}
+        .profile-menu-item.logout:hover{background:rgba(239,68,68,0.1)}
+        .profile-menu-divider{height:1px;background:rgba(255,255,255,0.1);margin:0.5rem 0}
+        
+        /* Notifications Popup */
+        .notifications-popup{position:absolute;bottom:100%;right:0;width:280px;background:#151515;border:1px solid rgba(255,255,255,0.1);border-radius:12px;margin-bottom:0.5rem;opacity:0;visibility:hidden;transform:translateY(10px);transition:all 0.2s}
+        .notifications-popup.active{opacity:1;visibility:visible;transform:translateY(0)}
+        .notifications-header{padding:1rem;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:600;font-size:0.875rem}
+        .notifications-empty{padding:2rem;text-align:center;color:rgba(255,255,255,0.5);font-size:0.875rem}
+        
+        .sidebar-footer{position:relative}
     </style>
 </head>
 <body>
@@ -108,24 +125,37 @@
                     </div>
                 </div>
 
-                <div class="nav-section">
-                    <div class="nav-section-title">Account</div>
-                    <div class="nav-item" data-page="settings">
-                        <span class="nav-item-icon">⚙️</span>
-                        <span>Settings</span>
-                    </div>
-                    <div class="nav-item" data-page="billing">
-                        <span class="nav-item-icon">💳</span>
-                        <span>Billing</span>
-                    </div>
-                    <div class="nav-item" data-page="help">
-                        <span class="nav-item-icon">❓</span>
-                        <span>Help</span>
-                    </div>
-                </div>
+<!-- Account section moved to profile popup -->
             </nav>
 
             <div class="sidebar-footer">
+                <!-- Profile Menu (slides up) -->
+                <div class="profile-menu" id="profileMenu">
+                    <div class="profile-menu-item" data-page="settings">
+                        <span>⚙️</span> Settings
+                    </div>
+                    <div class="profile-menu-item" data-page="billing">
+                        <span>💳</span> Billing
+                    </div>
+                    <div class="profile-menu-item" data-page="help">
+                        <span>❓</span> Help
+                    </div>
+                    <div class="profile-menu-divider"></div>
+                    <div class="profile-menu-item logout" id="sidebarLogout">
+                        <span>🚪</span> Sign Out
+                    </div>
+                </div>
+                
+                <!-- Notifications Popup -->
+                <div class="notifications-popup" id="notificationsPopup">
+                    <div class="notifications-header">
+                        <span>Notifications</span>
+                    </div>
+                    <div class="notifications-empty">
+                        No new notifications
+                    </div>
+                </div>
+                
                 <div class="sidebar-footer-row">
                     <div class="user-card" id="userCard">
                         <div class="user-avatar" id="userAvatar">U</div>
@@ -683,6 +713,43 @@
         userModal.classList.remove('active');
         checkAuth();
         showToast('Signed out', 'success');
+    });
+    
+    // Sidebar logout
+    document.getElementById('sidebarLogout').addEventListener('click', async function() {
+        await supabase.auth.signOut();
+        currentUser = null;
+        document.getElementById('profileMenu').classList.remove('active');
+        checkAuth();
+        showToast('Signed out', 'success');
+    });
+    
+    // Profile menu toggle
+    document.getElementById('userCard').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('notificationsPopup').classList.remove('active');
+        document.getElementById('profileMenu').classList.toggle('active');
+    });
+    
+    // Profile menu items
+    document.querySelectorAll('.profile-menu-item[data-page]').forEach(function(item) {
+        item.addEventListener('click', function() {
+            switchPage(this.dataset.page);
+            document.getElementById('profileMenu').classList.remove('active');
+        });
+    });
+    
+    // Notifications toggle
+    document.getElementById('notificationBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('profileMenu').classList.remove('active');
+        document.getElementById('notificationsPopup').classList.toggle('active');
+    });
+    
+    // Close popups when clicking outside
+    document.addEventListener('click', function() {
+        document.getElementById('profileMenu').classList.remove('active');
+        document.getElementById('notificationsPopup').classList.remove('active');
     });
 
     // Auth Check (returns promise)
