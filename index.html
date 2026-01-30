@@ -39,6 +39,24 @@
         .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;display:flex;align-items:center;gap:1rem}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
+        .overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
+        @media(min-width:768px){.overview-grid{grid-template-columns:repeat(4,1fr)}}
+        .overview-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.15s}
+        .overview-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
+        .overview-card.highlight{background:rgba(52,211,153,0.1);border-color:rgb(52,211,153)}
+        .overview-card-header{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem}
+        .overview-card-header h4{font-size:0.875rem;font-weight:600;color:rgba(255,255,255,0.8)}
+        .overview-card-icon{font-size:1rem}
+        .overview-card-value{font-size:2rem;font-weight:700;margin-bottom:0.25rem}
+        .overview-card-desc{font-size:0.75rem;color:rgba(255,255,255,0.5)}
+        .meetings-list{display:flex;flex-direction:column;gap:0.5rem}
+        .meetings-empty{text-align:center;padding:2rem;color:rgba(255,255,255,0.5);background:#111;border-radius:12px}
+        .meeting-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1rem;display:flex;align-items:center;gap:1rem}
+        .meeting-time{background:rgba(52,211,153,0.15);color:rgb(52,211,153);padding:0.5rem 0.75rem;border-radius:8px;font-weight:600;font-size:0.875rem}
+        .meeting-info{flex:1}
+        .meeting-name{font-weight:600;margin-bottom:0.25rem}
+        .meeting-details{font-size:0.875rem;color:rgba(255,255,255,0.6)}
+        .prio-empty{text-align:center;padding:3rem;color:rgba(255,255,255,0.5)}
     </style>
 </head>
 <body>
@@ -210,39 +228,49 @@
                             </div>
                         </div>
 
-                        <!-- Quick Actions -->
-                        <div class="section-header">
-                            <h3>Quick Actions</h3>
-                        </div>
-                        <div class="quick-actions">
-                            <button class="quick-action" onclick="switchPage('import')">
-                                <span class="quick-action-icon">📥</span>
-                                <span class="quick-action-text">Import Leads</span>
-                            </button>
-                            <button class="quick-action" onclick="switchPage('prio')">
-                                <span class="quick-action-icon">⚡</span>
-                                <span class="quick-action-text">View PRIO Leads</span>
-                            </button>
-                            <button class="quick-action" onclick="switchPage('pipeline')">
-                                <span class="quick-action-icon">🤖</span>
-                                <span class="quick-action-text">AI Pipeline</span>
-                            </button>
-                            <button class="quick-action" onclick="switchPage('analytics')">
-                                <span class="quick-action-icon">📊</span>
-                                <span class="quick-action-text">View Analytics</span>
-                            </button>
+                        <!-- Overview Cards -->
+                        <div class="overview-grid">
+                            <div class="overview-card" onclick="switchPage('prio')">
+                                <div class="overview-card-header">
+                                    <span class="overview-card-icon">⚡</span>
+                                    <h4>PRIO Leads</h4>
+                                </div>
+                                <div class="overview-card-value" id="overviewPrio">0</div>
+                                <div class="overview-card-desc">Priority leads to focus on</div>
+                            </div>
+                            <div class="overview-card" onclick="switchPage('prospects')">
+                                <div class="overview-card-header">
+                                    <span class="overview-card-icon">📋</span>
+                                    <h4>Prospects</h4>
+                                </div>
+                                <div class="overview-card-value" id="overviewProspects">0</div>
+                                <div class="overview-card-desc">Total leads in your database</div>
+                            </div>
+                            <div class="overview-card" onclick="switchPage('pipeline')">
+                                <div class="overview-card-header">
+                                    <span class="overview-card-icon">🤖</span>
+                                    <h4>AI Pipeline</h4>
+                                </div>
+                                <div class="overview-card-value" id="overviewPipeline">0</div>
+                                <div class="overview-card-desc">Leads being called by AI</div>
+                            </div>
+                            <div class="overview-card highlight" onclick="switchPage('meetings')">
+                                <div class="overview-card-header">
+                                    <span class="overview-card-icon">📅</span>
+                                    <h4>Today's Meetings</h4>
+                                </div>
+                                <div class="overview-card-value" id="overviewMeetings">0</div>
+                                <div class="overview-card-desc">Callbacks scheduled for today</div>
+                            </div>
                         </div>
 
-                        <!-- Recent Activity -->
+                        <!-- Today's Meetings List -->
                         <div class="section-header">
-                            <h3>Recent Activity</h3>
-                            <a href="#" onclick="switchPage('prospects'); return false;" class="section-link">View all →</a>
+                            <h3>Today's Callbacks</h3>
                         </div>
-                        <div class="card">
-                            <div class="activity-list" id="recentActivity">
-                                <div class="activity-empty">
-                                    <p>No recent activity yet. Import some leads to get started!</p>
-                                </div>
+                        <div class="meetings-list" id="todayMeetings">
+                            <div class="meetings-empty">
+                                <p>No callbacks scheduled for today</p>
                             </div>
                         </div>
                     </div>
@@ -253,7 +281,7 @@
                         <div class="prio-header">
                             <div class="prio-header-text">
                                 <h2>⚡ PRIO Leads</h2>
-                                <p>Your hottest leads ranked by likelihood to convert. Focus here first.</p>
+                                <p>Your priority leads ranked by engagement. Focus here first.</p>
                             </div>
                             <div class="prio-header-stats">
                                 <div class="prio-stat">
@@ -263,20 +291,9 @@
                             </div>
                         </div>
 
-                        <!-- PRIO Filters -->
-                        <div class="prio-filters">
-                            <button class="prio-filter active" data-filter="all">All</button>
-                            <button class="prio-filter" data-filter="hot">🔥 Hot</button>
-                            <button class="prio-filter" data-filter="warm">🌤 Warm</button>
-                            <button class="prio-filter" data-filter="new">✨ New</button>
-                        </div>
-
                         <!-- PRIO List -->
                         <div class="prio-list" id="prioList">
-                            <div class="prio-loading">
-                                <div class="spinner"></div>
-                                <p>Loading priority leads...</p>
-                            </div>
+                            <div class="prio-empty">No priority leads yet</div>
                         </div>
                     </div>
 
@@ -799,7 +816,9 @@
 
     // Update stats
     function updateStats() {
-        document.getElementById('statProspects').textContent = allLeads.length;
+        var totalProspects = allLeads.length;
+        document.getElementById('statProspects').textContent = totalProspects;
+        document.getElementById('overviewProspects').textContent = totalProspects;
         
         var callsMade = allLeads.filter(function(l) { return l.fields['Call Count'] > 0; }).length;
         document.getElementById('statCalls').textContent = callsMade;
@@ -809,119 +828,111 @@
         }).length;
         document.getElementById('statAppointments').textContent = appointments;
         
-        var convRate = allLeads.length > 0 ? Math.round((appointments / allLeads.length) * 100) : 0;
+        var convRate = totalProspects > 0 ? Math.round((appointments / totalProspects) * 100) : 0;
         document.getElementById('statConversion').textContent = convRate + '%';
+        
+        // PRIO leads (engaged leads)
+        var prioLeads = allLeads.filter(function(l) {
+            var d = l.fields['Disposition'] || '';
+            return d === 'Interested' || d === 'Callback Requested' || d === 'Appointment Booked' || (l.fields['Call Count'] || 0) > 0;
+        });
+        document.getElementById('overviewPrio').textContent = prioLeads.length;
+        
+        // AI Pipeline (leads in queue)
+        var pipelineLeads = allLeads.filter(function(l) {
+            var status = l.fields['Call Status'] || l.fields['Status'] || '';
+            return status === 'Queued' || status === 'In Progress' || status === 'Retry';
+        });
+        document.getElementById('overviewPipeline').textContent = pipelineLeads.length;
+        
+        // Today's meetings (callbacks scheduled for today)
+        var today = new Date().toISOString().split('T')[0];
+        var todayMeetings = allLeads.filter(function(l) {
+            var callbackDate = l.fields['Callback Date'] || l.fields['Follow Up Date'] || '';
+            return callbackDate && callbackDate.startsWith(today);
+        });
+        document.getElementById('overviewMeetings').textContent = todayMeetings.length;
+        updateTodayMeetings(todayMeetings);
         
         // Update welcome name
         var name = currentUser?.user_metadata?.full_name || currentUser?.user_metadata?.display_name || 'there';
         document.getElementById('welcomeName').textContent = name.split(' ')[0];
+    }
+    
+    // Update today's meetings list
+    function updateTodayMeetings(meetings) {
+        var list = document.getElementById('todayMeetings');
+        if (meetings.length === 0) {
+            list.innerHTML = '<div class="meetings-empty"><p>No callbacks scheduled for today</p></div>';
+            return;
+        }
+        
+        list.innerHTML = meetings.map(function(lead) {
+            var f = lead.fields;
+            var name = f['Full Name'] || (f['First Name'] + ' ' + (f['Last Name'] || ''));
+            var phone = f['Phone'] || '-';
+            var time = f['Callback Time'] || 'TBD';
+            
+            return '<div class="meeting-card">' +
+                '<div class="meeting-time">' + escapeHtml(time) + '</div>' +
+                '<div class="meeting-info">' +
+                    '<div class="meeting-name">' + escapeHtml(name) + '</div>' +
+                    '<div class="meeting-details">' + escapeHtml(phone) + '</div>' +
+                '</div>' +
+                '<button class="btn btn-sm btn-primary" onclick="alert(\'Call feature coming soon\')">Call</button>' +
+            '</div>';
+        }).join('');
     }
 
     // Update PRIO list
     function updatePrioList() {
         var prioList = document.getElementById('prioList');
         
-        // Sort by priority score (you can customize this logic)
+        // Get all engaged leads sorted by score
         var prioLeads = allLeads.filter(function(l) {
-            // Include leads that are hot or have high engagement
-            var disposition = l.fields['Disposition'] || '';
-            var callCount = l.fields['Call Count'] || 0;
-            return disposition === 'Interested' || disposition === 'Callback Requested' || 
-                   disposition === 'Appointment Booked' || callCount > 0;
+            var d = l.fields['Disposition'] || '';
+            return d === 'Interested' || d === 'Callback Requested' || d === 'Appointment Booked' || (l.fields['Call Count'] || 0) > 0;
+        }).map(function(l) {
+            var d = l.fields['Disposition'] || '';
+            var score = 0;
+            if (d === 'Appointment Booked') score = 95;
+            else if (d === 'Interested') score = 85;
+            else if (d === 'Callback Requested') score = 75;
+            else if ((l.fields['Call Count'] || 0) > 2) score = 50;
+            else if ((l.fields['Call Count'] || 0) > 0) score = 30;
+            l._score = score;
+            return l;
         }).sort(function(a, b) {
-            // Sort by most recent activity
-            var aTime = a.fields['Last Call Timestamp'] || a.fields['Created Time'] || '';
-            var bTime = b.fields['Last Call Timestamp'] || b.fields['Created Time'] || '';
-            return new Date(bTime) - new Date(aTime);
-        }).slice(0, 20);
+            return b._score - a._score;
+        });
         
         document.getElementById('prioCount').textContent = prioLeads.length;
         
         if (prioLeads.length === 0) {
-            prioList.innerHTML = '<div class="prio-empty"><p>No priority leads yet. Import some leads to get started!</p></div>';
+            prioList.innerHTML = '<div class="prio-empty">No priority leads yet. Import some leads to get started!</div>';
             return;
         }
         
         prioList.innerHTML = prioLeads.map(function(lead, index) {
             var f = lead.fields;
-            var name = f['Full Name'] || f['First Name'] + ' ' + (f['Last Name'] || '');
+            var name = f['Full Name'] || (f['First Name'] || '') + ' ' + (f['Last Name'] || '');
             var phone = f['Phone'] || '-';
             var disposition = f['Disposition'] || 'New';
+            var lastCall = f['Last Call Timestamp'] ? formatTimeAgo(f['Last Call Timestamp']) : 'Not called';
             
-            var tempClass = 'new';
-            if (disposition === 'Interested' || disposition === 'Callback Requested') tempClass = 'hot';
-            else if (f['Call Count'] > 0) tempClass = 'warm';
-            
-            var score = 0;
-            if (disposition === 'Appointment Booked') score = 95;
-            else if (disposition === 'Interested') score = 80;
-            else if (disposition === 'Callback Requested') score = 70;
-            else if (f['Call Count'] > 2) score = 60;
-            else if (f['Call Count'] > 0) score = 40;
-            else score = 20;
-            
-            return '<div class="prio-card ' + tempClass + '" data-id="' + lead.id + '">' +
+            return '<div class="prio-card" data-id="' + lead.id + '">' +
                 '<div class="prio-rank">' + (index + 1) + '</div>' +
                 '<div class="prio-info">' +
-                    '<div class="prio-name">' + escapeHtml(name) + '</div>' +
-                    '<div class="prio-details">' + escapeHtml(phone) + ' • ' + escapeHtml(disposition) + '</div>' +
+                    '<div class="prio-name">' + escapeHtml(name.trim()) + '</div>' +
+                    '<div class="prio-details">' + escapeHtml(phone) + ' • ' + escapeHtml(disposition) + ' • ' + lastCall + '</div>' +
                 '</div>' +
                 '<div class="prio-score">' +
-                    '<div class="prio-score-value">' + score + '</div>' +
+                    '<div class="prio-score-value">' + lead._score + '</div>' +
                     '<div class="prio-score-label">Score</div>' +
                 '</div>' +
-                '<div class="prio-actions">' +
-                    '<button class="prio-action-btn" title="Call">📞</button>' +
-                    '<button class="prio-action-btn" title="View">👁</button>' +
-                '</div>' +
             '</div>';
         }).join('');
     }
-
-    // Update recent activity
-    function updateRecentActivity() {
-        var activityList = document.getElementById('recentActivity');
-        
-        var recentLeads = allLeads.filter(function(l) {
-            return l.fields['Last Call Timestamp'];
-        }).sort(function(a, b) {
-            return new Date(b.fields['Last Call Timestamp']) - new Date(a.fields['Last Call Timestamp']);
-        }).slice(0, 5);
-        
-        if (recentLeads.length === 0) {
-            activityList.innerHTML = '<div class="activity-empty"><p>No recent activity yet. Import some leads to get started!</p></div>';
-            return;
-        }
-        
-        activityList.innerHTML = recentLeads.map(function(lead) {
-            var f = lead.fields;
-            var name = f['Full Name'] || f['First Name'] + ' ' + (f['Last Name'] || '');
-            var time = formatTimeAgo(f['Last Call Timestamp']);
-            var disposition = f['Disposition'] || 'Called';
-            
-            var icon = '📞';
-            if (disposition === 'Appointment Booked') icon = '📅';
-            else if (disposition === 'Interested') icon = '🔥';
-            else if (disposition === 'Not Interested') icon = '❌';
-            
-            return '<div class="activity-item">' +
-                '<div class="activity-icon">' + icon + '</div>' +
-                '<div class="activity-content">' +
-                    '<div class="activity-title">' + escapeHtml(name) + ' - ' + escapeHtml(disposition) + '</div>' +
-                    '<div class="activity-time">' + time + '</div>' +
-                '</div>' +
-            '</div>';
-        }).join('');
-    }
-
-    // PRIO Filters
-    document.querySelectorAll('.prio-filter').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.prio-filter').forEach(function(b) { b.classList.remove('active'); });
-            this.classList.add('active');
-            // TODO: filter logic
-        });
-    });
 
     // Helpers
     function escapeHtml(text) {
