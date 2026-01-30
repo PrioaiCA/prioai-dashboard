@@ -1332,10 +1332,9 @@
         var convRate = totalProspects > 0 ? Math.round((appointments / totalProspects) * 100) : 0;
         document.getElementById('statConversion').textContent = convRate + '%';
         
-        // PRIO leads (engaged leads)
+        // PRIO leads (Is Prio = true from Airtable)
         var prioLeads = allLeads.filter(function(l) {
-            var d = l.fields['Disposition'] || '';
-            return d === 'Interested' || d === 'Callback Requested' || d === 'Appointment Booked' || (l.fields['Call Count'] || 0) > 0;
+            return l.fields['Is Prio'] === true;
         });
         document.getElementById('overviewPrio').textContent = prioLeads.length;
         
@@ -1389,18 +1388,18 @@
     function updatePrioList() {
         var prioList = document.getElementById('prioList');
         
-        // Get all engaged leads sorted by score
+        // Get leads where Is Prio = true, sorted by priority score
         var prioLeads = allLeads.filter(function(l) {
-            var d = l.fields['Disposition'] || '';
-            return d === 'Interested' || d === 'Callback Requested' || d === 'Appointment Booked' || (l.fields['Call Count'] || 0) > 0;
+            return l.fields['Is Prio'] === true;
         }).map(function(l) {
-            var d = l.fields['Disposition'] || '';
+            var d = l.fields['Disposition'] || l.fields['Status'] || '';
             var score = 0;
-            if (d === 'Appointment Booked') score = 95;
+            if (d === 'Booked' || d === 'Appointment Booked') score = 95;
+            else if (d === 'Callback' || d === 'Callback Requested') score = 90;
             else if (d === 'Interested') score = 85;
-            else if (d === 'Callback Requested') score = 75;
-            else if ((l.fields['Call Count'] || 0) > 2) score = 50;
-            else if ((l.fields['Call Count'] || 0) > 0) score = 30;
+            else if (d === 'Timeline') score = 70;
+            else if (d === 'Follow Up') score = 60;
+            else score = 50;
             l._score = score;
             return l;
         }).sort(function(a, b) {
