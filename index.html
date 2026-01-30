@@ -35,36 +35,34 @@
         .prio-filters{display:flex;gap:0.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
         .prio-filter{padding:0.5rem 1rem;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.7);background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer}
         .prio-filter.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
-        .prio-list{display:flex;flex-direction:column;gap:0.75rem}
-        .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s}
-        .prio-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px);box-shadow:0 4px 20px rgba(52,211,153,0.1)}
-        .prio-card-header{display:flex;align-items:center;gap:1rem;padding:1.25rem}
-        .prio-rank{width:32px;height:32px;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.875rem;flex-shrink:0}
-        .prio-lead-info{flex:1;min-width:0}
-        .prio-name{font-weight:600;font-size:1rem;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .prio-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-        .prio-phone{font-size:0.8125rem;color:rgba(255,255,255,0.6)}
-        .prio-status{font-size:0.6875rem;padding:3px 8px;border-radius:4px;font-weight:500;text-transform:uppercase;letter-spacing:0.02em}
+        .prio-list{display:flex;flex-direction:column;gap:10px}
+        .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;transition:all 0.15s;display:grid;grid-template-columns:40px 200px 100px 1fr 24px;align-items:center;gap:16px;padding:16px 20px}
+        .prio-card:hover{border-color:rgb(52,211,153);background:#151515}
+        .prio-rank{width:32px;height:32px;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.875rem}
+        .prio-col-lead{min-width:0}
+        .prio-name{font-weight:600;font-size:0.9375rem;margin-bottom:2px;display:flex;align-items:center;gap:6px}
+        .prio-name .shared-icon{color:#3B82F6;font-size:0.75rem;cursor:help}
+        .prio-phone{font-size:0.8125rem;color:rgba(255,255,255,0.5)}
+        .prio-col-status{text-align:center}
+        .prio-status{font-size:0.6875rem;padding:4px 10px;border-radius:4px;font-weight:600;text-transform:uppercase;display:inline-block}
         .prio-status.status-booked,.prio-status.status-callback{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
         .prio-status.status-interested,.prio-status.status-timeline{background:rgba(59,130,246,0.15);color:#3B82F6}
         .prio-status.status-follow-up,.prio-status.status-new{background:rgba(245,158,11,0.15);color:#f59e0b}
-        .prio-next-call{text-align:right;flex-shrink:0}
-        .next-call-label{display:block;font-size:0.6875rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:2px}
-        .next-call-value{font-size:0.8125rem;font-weight:500;color:rgb(52,211,153)}
-        .prio-arrow{font-size:1.5rem;color:rgba(255,255,255,0.3);margin-left:8px;transition:transform 0.2s}
-        .prio-card:hover .prio-arrow{transform:translateX(4px);color:rgb(52,211,153)}
-        .prio-card-body{padding:0 1.25rem 1.25rem;border-top:1px solid rgba(255,255,255,0.05);margin-top:-4px;padding-top:1rem}
-        .prio-summary,.prio-notes{font-size:0.8125rem;color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:8px}
-        .prio-summary:last-child,.prio-notes:last-child{margin-bottom:0}
-        .summary-label,.notes-label{color:rgba(255,255,255,0.4);font-weight:500}
-        @media(max-width:640px){.prio-card-header{flex-wrap:wrap}.prio-next-call{width:100%;text-align:left;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)}.prio-arrow{display:none}}
+        .prio-next-call{font-size:0.75rem;color:rgb(52,211,153);font-weight:500}
+        .prio-col-content{min-width:0}
+        .prio-content-row{font-size:0.8125rem;color:rgba(255,255,255,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+        .prio-content-row:last-child{margin-bottom:0}
+        .prio-content-label{color:rgba(255,255,255,0.35);margin-right:4px}
+        .prio-arrow{font-size:1.25rem;color:rgba(255,255,255,0.2);transition:all 0.15s}
+        .prio-card:hover .prio-arrow{color:rgb(52,211,153);transform:translateX(3px)}
+        @media(max-width:900px){.prio-card{grid-template-columns:32px 1fr auto;gap:12px;padding:14px 16px}.prio-col-content{display:none}.prio-col-status{text-align:left}}
         
         /* Section count badge */
         .section-count{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;background:rgb(52,211,153);color:#000;border-radius:12px;font-size:0.75rem;font-weight:700;margin-left:8px}
         .prio-stat-value{font-size:1.5rem;font-weight:700;color:rgb(52,211,153)}
         
         /* Lead Detail Modal */
-        .lead-modal{max-width:600px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+        .lead-modal{max-width:900px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
         .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.1)}
         .lead-modal-title h2{font-size:1.25rem;font-weight:600;margin-bottom:8px}
         .lead-modal-actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -1581,11 +1579,12 @@
         prioList.innerHTML = prioLeads.map(function(lead, index) {
             var f = lead.fields;
             var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
-            var phone = f['Phone #'] || '-';
+            var phone = f['Phone #'] || f['Phone'] || '-';
             var status = f['Status'] || f['Outcome'] || 'New';
             var nextCall = f['Booked Time'] || null;
-            var summary = f['Last Call Summary'] || '';
-            var notes = f['Client Notes'] || '';
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var notes = f['Client Notes'] || f['Notes'] || '';
+            var isShared = f['Shared With'] || f['Shared With Email'];
             
             // Format next call date
             var nextCallDisplay = '-';
@@ -1599,30 +1598,26 @@
                 else nextCallDisplay = d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}) + ' ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
             }
             
-            // Truncate summary and notes
-            var summaryTrunc = summary.length > 120 ? summary.substring(0, 120) + '...' : summary;
+            // Truncate summary and notes for display
+            var summaryTrunc = summary.length > 100 ? summary.substring(0, 100) + '...' : summary;
             var notesTrunc = notes.length > 80 ? notes.substring(0, 80) + '...' : notes;
             
             return '<div class="prio-card" data-id="' + lead.id + '">' +
-                '<div class="prio-card-header">' +
-                    '<div class="prio-rank">' + (index + 1) + '</div>' +
-                    '<div class="prio-lead-info">' +
-                        '<div class="prio-name">' + escapeHtml(name) + '</div>' +
-                        '<div class="prio-meta">' +
-                            '<span class="prio-phone">📞 ' + escapeHtml(phone) + '</span>' +
-                            '<span class="prio-status status-' + status.toLowerCase().replace(/\s+/g, '-') + '">' + escapeHtml(status) + '</span>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="prio-next-call">' +
-                        '<span class="next-call-label">Next Call</span>' +
-                        '<span class="next-call-value">' + nextCallDisplay + '</span>' +
-                    '</div>' +
-                    '<div class="prio-arrow">›</div>' +
+                '<div class="prio-rank">' + (index + 1) + '</div>' +
+                '<div class="prio-col-lead">' +
+                    '<div class="prio-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                    '<div class="prio-phone">📞 ' + escapeHtml(phone) + '</div>' +
                 '</div>' +
-                (summary || notes ? '<div class="prio-card-body">' +
-                    (summary ? '<div class="prio-summary"><span class="summary-label">🤖 Summary:</span> ' + escapeHtml(summaryTrunc) + '</div>' : '') +
-                    (notes ? '<div class="prio-notes"><span class="notes-label">📝 Notes:</span> ' + escapeHtml(notesTrunc) + '</div>' : '') +
-                '</div>' : '') +
+                '<div class="prio-col-status">' +
+                    '<span class="prio-status status-' + status.toLowerCase().replace(/\s+/g, '-') + '">' + escapeHtml(status) + '</span>' +
+                    '<div class="prio-next-call">' + nextCallDisplay + '</div>' +
+                '</div>' +
+                '<div class="prio-col-content">' +
+                    (summary ? '<div class="prio-content-row"><span class="prio-content-label">🤖</span>' + escapeHtml(summaryTrunc) + '</div>' : '') +
+                    (notes ? '<div class="prio-content-row"><span class="prio-content-label">📝</span>' + escapeHtml(notesTrunc) + '</div>' : '') +
+                    (!summary && !notes ? '<div class="prio-content-row" style="color:rgba(255,255,255,0.25)">No summary or notes</div>' : '') +
+                '</div>' +
+                '<div class="prio-arrow">›</div>' +
             '</div>';
         }).join('');
     }
@@ -1999,7 +1994,7 @@
         // Populate modal
         var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
         document.getElementById('modalLeadName').textContent = name;
-        document.getElementById('modalPhone').textContent = f['Phone #'] || '-';
+        document.getElementById('modalPhone').textContent = f['Phone #'] || f['Phone'] || '-';
         
         var status = f['Status'] || f['Outcome'] || 'New';
         var statusEl = document.getElementById('modalStatus');
@@ -2012,10 +2007,10 @@
         var bookedTime = f['Booked Time'];
         document.getElementById('modalBookedTime').textContent = bookedTime ? new Date(bookedTime).toLocaleString() : '-';
         
-        document.getElementById('modalSummary').textContent = f['Last Call Summary'] || 'No summary available';
+        document.getElementById('modalSummary').textContent = f['Last Call Summary'] || f['Summary'] || 'No summary available';
         
         // Notes
-        var notes = f['Client Notes'];
+        var notes = f['Client Notes'] || f['Notes'];
         var notesList = document.getElementById('modalNotesList');
         if (notes && notes.trim()) {
             var notesArr = notes.split('\n---\n').filter(function(n) { return n.trim(); });
