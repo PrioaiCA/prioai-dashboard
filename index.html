@@ -789,7 +789,8 @@
         
         try {
             var clientRecordId = currentUserRecord.id;
-            var filterFormula = '{Client} = "' + (currentUserRecord.fields['Name'] || currentUserRecord.fields['Email'] || '') + '"';
+            var email = currentUser.email.toLowerCase();
+            var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client Email})))';
             var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
             
             allLeads = [];
