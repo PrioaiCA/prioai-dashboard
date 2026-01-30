@@ -1857,10 +1857,69 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+    // Clear localStorage quota issues - run before Supabase init
+    (function() {
+        try {
+            // Clear old/stale session caches that might be bloating storage
+            var keysToCheck = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key && (key.startsWith('prio_') || key.includes('-auth-token'))) {
+                    keysToCheck.push(key);
+                }
+            }
+            // Clear old prio caches (they're also in sessionStorage now)
+            keysToCheck.forEach(function(key) {
+                if (key.startsWith('prio_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+            // If still having quota issues, clear the auth token to force re-auth
+            var authKey = 'sb-bflmikgoafdffezrfpgb-auth-token';
+            try {
+                localStorage.setItem('_quota_test', 'x'.repeat(1000));
+                localStorage.removeItem('_quota_test');
+            } catch (e) {
+                // Quota exceeded - clear auth token to free space
+                console.warn('localStorage quota low, clearing auth token');
+                localStorage.removeItem(authKey);
+                // Also clear any other large items
+                for (var j = 0; j < localStorage.length; j++) {
+                    var k = localStorage.key(j);
+                    if (k && k !== 'theme') localStorage.removeItem(k);
+                }
+            }
+        } catch (e) {
+            console.warn('localStorage cleanup error:', e);
+        }
+    })();
+    
     // Supabase Setup
     var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
     var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
-    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: {
+            persistSession: true,
+            storageKey: 'sb-bflmikgoafdffezrfpgb-auth-token',
+            storage: {
+                getItem: function(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
+                setItem: function(key, value) {
+                    try {
+                        localStorage.setItem(key, value);
+                    } catch(e) {
+                        // Quota exceeded - clear old data and retry
+                        console.warn('Storage quota exceeded, clearing old data');
+                        for (var i = localStorage.length - 1; i >= 0; i--) {
+                            var k = localStorage.key(i);
+                            if (k && k !== 'theme' && k !== key) localStorage.removeItem(k);
+                        }
+                        try { localStorage.setItem(key, value); } catch(e2) { console.error('Still cannot save:', e2); }
+                    }
+                },
+                removeItem: function(key) { try { localStorage.removeItem(key); } catch(e) {} }
+            }
+        }
+    });
 
     // State
     var currentUser = null;
