@@ -1857,26 +1857,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-    // Force clear all storage on load to fix quota issues
-    (function() {
-        try {
-            var theme = localStorage.getItem('theme');
-            localStorage.clear();
-            sessionStorage.clear();
-            if (theme) localStorage.setItem('theme', theme);
-        } catch (e) {}
-    })();
-    
     // Supabase Setup
     var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
     var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
-    // In-memory storage fallback for devices with no storage quota
-    var memoryStorage = { _data: {}, getItem: function(k) { return this._data[k] || null; }, setItem: function(k,v) { this._data[k] = v; }, removeItem: function(k) { delete this._data[k]; } };
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
         auth: {
-            persistSession: true,
-            storageKey: 'sb-prio-auth',
-            storage: memoryStorage
+            persistSession: false
         }
     });
 
