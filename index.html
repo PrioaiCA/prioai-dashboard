@@ -404,7 +404,18 @@
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <!-- Full Page Loading Overlay -->
+    <div id="pageLoadingOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s ease;">
+        <img src="/assets/logo_white.png" alt="Prio AI" style="height:48px;margin-bottom:32px;animation:pulse 2s ease-in-out infinite;">
+        <div style="width:48px;height:48px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+        <p style="margin-top:24px;color:rgba(255,255,255,0.5);font-size:0.9rem;">Loading your dashboard...</p>
+    </div>
+    <style>
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+        #pageLoadingOverlay.fade-out{opacity:0;pointer-events:none}
+    </style>
+    
+    <div class="app-container" style="opacity:0;transition:opacity 0.5s ease;" id="appContainer">
         <!-- Sidebar Overlay (mobile) -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -3221,6 +3232,23 @@
         updateProspectsTable();
         updatePipelineList();
     };
+    
+    // Full page loading - show for 10 seconds then reveal
+    var pageLoadingComplete = false;
+    function hidePageLoading() {
+        if (pageLoadingComplete) return;
+        pageLoadingComplete = true;
+        var overlay = document.getElementById('pageLoadingOverlay');
+        var appContainer = document.getElementById('appContainer');
+        if (overlay) overlay.classList.add('fade-out');
+        if (appContainer) appContainer.style.opacity = '1';
+        setTimeout(function() {
+            if (overlay) overlay.style.display = 'none';
+        }, 500);
+    }
+    
+    // Hide loading after 10 seconds
+    setTimeout(hidePageLoading, 10000);
     </script>
 </body>
 </html>
