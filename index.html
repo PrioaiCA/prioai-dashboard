@@ -1501,6 +1501,23 @@
     var AIRTABLE_CLIENTS_TABLE = 'tblMptC862PyL7Znw';
     var AIRTABLE_LEADS_TABLE = 'tblLpN4wceakfNFpq';
     
+    // Airtable API helper - proxies through Pages Function to avoid CORS
+    async function fetchAirtable(path, options = {}) {
+        var proxyUrl = '/api/airtable?path=' + encodeURIComponent(path);
+        var fetchOptions = {
+            method: options.method || 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Airtable-Token': AIRTABLE_TOKEN
+            }
+        };
+        if (options.body) {
+            fetchOptions.body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
+        }
+        var response = await fetch(proxyUrl, fetchOptions);
+        return response.json();
+    }
+    
     var currentUserRecord = null;
     var allLeads = [];
 
@@ -1557,10 +1574,8 @@
         
         try {
             var filterFormula = encodeURIComponent('({Email} = "' + currentUser.email + '")');
-            var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + filterFormula, {
-                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN }
-            });
-            var data = await response.json();
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + filterFormula;
+            var data = await fetchAirtable(path);
             
             if (data.records && data.records.length > 0) {
                 currentUserRecord = data.records[0];
@@ -1588,16 +1603,15 @@
         try {
             var email = currentUser.email.toLowerCase();
             var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client Email})))';
-            var baseUrl = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
+            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
             
             allLeads = [];
             var offset = null;
             var isFirstPage = true;
             
             do {
-                var fetchUrl = baseUrl + (offset ? '&offset=' + offset : '');
-                var response = await fetch(fetchUrl, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
-                var data = await response.json();
+                var fetchPath = basePath + (offset ? '&offset=' + offset : '');
+                var data = await fetchAirtable(fetchPath);
                 
                 if (data.records) {
                     allLeads = allLeads.concat(data.records);
@@ -2099,15 +2113,15 @@
         
         try {
             if (!currentUserRecord) throw new Error('No client record found');
-            var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '/' + currentUserRecord.id, {
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '/' + currentUserRecord.id;
+            var response = await fetchAirtable(path, {
                 method: 'PATCH',
-                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fields: {
+                body: { fields: {
                     'Phone': document.getElementById('settingsPhone').value,
                     'Google Calendar Email': document.getElementById('settingsCalendar').value,
                     'Available Start': document.getElementById('settingsStart').value,
                     'Available End': document.getElementById('settingsEnd').value
-                }})
+                }}
             });
             if (!response.ok) throw new Error('Failed to update');
             suc.textContent = '✓ Preferences saved';
@@ -2476,10 +2490,9 @@
             var timestamp = new Date().toLocaleString();
             var newNotes = existingNotes ? existingNotes + '\n---\n[' + timestamp + '] ' + noteText : '[' + timestamp + '] ' + noteText;
             
-            await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fields: { 'Client Notes': newNotes } })
+                body: { fields: { 'Client Notes': newNotes } }
             });
             
             lead.fields['Client Notes'] = newNotes;
@@ -2502,10 +2515,9 @@
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
             var currentAttempts = parseInt(lead.fields['Client Attempts'] || 0) + 1;
             
-            await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fields: { 'Client Attempts': currentAttempts } })
+                body: { fields: { 'Client Attempts': currentAttempts } }
             });
             
             lead.fields['Client Attempts'] = currentAttempts;
@@ -2520,10 +2532,9 @@
     // Unprio from table
     async function unprio(leadId) {
         try {
-            await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
                 method: 'PATCH',
-                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fields: { 'Is Prio': false } })
+                body: { fields: { 'Is Prio': false } }
             });
             var lead = allLeads.find(function(l) { return l.id === leadId; });
             if (lead) lead.fields['Is Prio'] = false;
@@ -2544,10 +2555,9 @@
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
             var newPrioStatus = !lead.fields['Is Prio'];
             
-            await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fields: { 'Is Prio': newPrioStatus } })
+                body: { fields: { 'Is Prio': newPrioStatus } }
             });
             
             lead.fields['Is Prio'] = newPrioStatus;
