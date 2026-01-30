@@ -1900,24 +1900,8 @@
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
         auth: {
             persistSession: true,
-            storageKey: 'sb-bflmikgoafdffezrfpgb-auth-token',
-            storage: {
-                getItem: function(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
-                setItem: function(key, value) {
-                    try {
-                        localStorage.setItem(key, value);
-                    } catch(e) {
-                        // Quota exceeded - clear old data and retry
-                        console.warn('Storage quota exceeded, clearing old data');
-                        for (var i = localStorage.length - 1; i >= 0; i--) {
-                            var k = localStorage.key(i);
-                            if (k && k !== 'theme' && k !== key) localStorage.removeItem(k);
-                        }
-                        try { localStorage.setItem(key, value); } catch(e2) { console.error('Still cannot save:', e2); }
-                    }
-                },
-                removeItem: function(key) { try { localStorage.removeItem(key); } catch(e) {} }
-            }
+            storageKey: 'sb-prio-auth',
+            storage: sessionStorage
         }
     });
 
