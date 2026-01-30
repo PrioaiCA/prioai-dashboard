@@ -245,6 +245,51 @@ img {
     border-top: 1px solid var(--border-secondary);
 }
 
+.sidebar-footer-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.sidebar-footer-row .user-card {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    position: relative;
+    transition: all var(--transition-fast);
+}
+
+.notification-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    min-width: 16px;
+    height: 16px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
 .user-card {
     display: flex;
     align-items: center;

@@ -30,6 +30,10 @@
                         <span class="nav-item-icon">📊</span>
                         <span>Overview</span>
                     </div>
+                    <div class="nav-item" data-page="prio">
+                        <span class="nav-item-icon">⚡</span>
+                        <span>PRIO</span>
+                    </div>
                     <div class="nav-item" data-page="prospects">
                         <span class="nav-item-icon">📋</span>
                         <span>Prospects</span>
@@ -74,12 +78,21 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-card" id="userCard">
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <div class="user-info">
-                        <div class="user-name" id="userName">Guest</div>
-                        <div class="user-email" id="userEmail">Not signed in</div>
+                <div class="sidebar-footer-row">
+                    <div class="user-card" id="userCard">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <div class="user-info">
+                            <div class="user-name" id="userName">Guest</div>
+                            <div class="user-email" id="userEmail">Not signed in</div>
+                        </div>
                     </div>
+                    <button class="notification-btn" id="notificationBtn" title="Notifications">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-badge" id="notificationBadge" style="display:none;">0</span>
+                    </button>
                 </div>
             </div>
         </aside>
@@ -149,6 +162,16 @@
                                 <h3 class="card-title">Recent Activity</h3>
                             </div>
                             <p class="text-muted">Your recent lead activity will appear here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: PRIO -->
+                    <div class="page hidden" id="page-prio">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">PRIO - Priority Leads</h3>
+                            </div>
+                            <p class="text-muted">Your highest priority leads ranked by likelihood to convert.</p>
                         </div>
                     </div>
 
@@ -400,7 +423,7 @@
         
         // Update title
         var titles = {
-            overview: 'Overview', prospects: 'Prospects', pipeline: 'AI Pipeline',
+            overview: 'Overview', prio: 'PRIO', prospects: 'Prospects', pipeline: 'AI Pipeline',
             analytics: 'Analytics', import: 'Import Leads', search: 'Search',
             settings: 'Settings', billing: 'Billing', help: 'Help'
         };
