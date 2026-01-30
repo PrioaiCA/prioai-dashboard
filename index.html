@@ -1464,7 +1464,6 @@
         // Show loading state only if no cache
         if (!hasCached) {
             document.getElementById('statProspects').textContent = '...';
-            document.getElementById('statCalls').textContent = '...';
             document.getElementById('statAppointments').textContent = '...';
             document.getElementById('statConversion').textContent = '...';
         }
@@ -1481,7 +1480,6 @@
                 loadLeadsData();
             } else {
                 document.getElementById('statProspects').textContent = '0';
-                document.getElementById('statCalls').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
                 document.getElementById('statConversion').textContent = '0%';
                 document.getElementById('prioList').innerHTML = '<div class="prio-empty">No leads yet. Import some to get started!</div>';
@@ -1490,7 +1488,6 @@
             console.error('Failed to load user data:', err);
             if (!hasCached) {
                 document.getElementById('statProspects').textContent = '0';
-                document.getElementById('statCalls').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
                 document.getElementById('statConversion').textContent = '0%';
             }
@@ -1545,10 +1542,6 @@
     function updateStats() {
         var totalProspects = allLeads.length;
         document.getElementById('statProspects').textContent = totalProspects;
-        document.getElementById('overviewProspects').textContent = totalProspects;
-        
-        var callsMade = allLeads.filter(function(l) { return (l.fields['Attempts'] || l.fields['Call Count'] || 0) > 0; }).length;
-        document.getElementById('statCalls').textContent = callsMade;
         
         var appointments = allLeads.filter(function(l) { 
             var status = l.fields['Status'] || l.fields['Disposition'] || '';
@@ -1564,7 +1557,6 @@
             var retellPhone = currentUserRecord.fields['Retell Phone'];
             if (retellPhone) {
                 document.getElementById('retellPhoneNumber').textContent = retellPhone;
-                document.getElementById('welcomePhone').style.display = 'flex';
             }
             var callsThisMonth = currentUserRecord.fields['Calls This Month'] || 0;
             var callLimit = currentUserRecord.fields['Call Limit'] || (currentUserRecord.fields['Monthly Plan'] === 'Professional' ? 3000 : 1000);
