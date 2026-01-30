@@ -1860,11 +1860,17 @@
     // Supabase Setup
     var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
     var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
-    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-        auth: {
-            persistSession: false
+    // Clear bloated storage to fix quota issues
+    try {
+        var authKey = 'sb-bflmikgoafdffezrfpgb-auth-token';
+        var existing = localStorage.getItem(authKey);
+        if (existing && existing.length > 50000) localStorage.removeItem(authKey);
+        for (var i = localStorage.length - 1; i >= 0; i--) {
+            var k = localStorage.key(i);
+            if (k && k.startsWith('prio_')) localStorage.removeItem(k);
         }
-    });
+    } catch(e) {}
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // State
     var currentUser = null;
