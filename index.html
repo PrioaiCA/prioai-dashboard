@@ -399,6 +399,95 @@
         .page-loading .spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         .page-loading p{margin-top:16px;color:rgba(255,255,255,0.5);font-size:0.875rem}
         @keyframes spin{to{transform:rotate(360deg)}}
+        
+        /* Analytics Page */
+        .analytics-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:16px}
+        .analytics-header h2{font-size:1.5rem;font-weight:700;margin-bottom:4px}
+        .analytics-period-tabs{display:flex;gap:4px;background:#111;padding:4px;border-radius:8px}
+        .analytics-period-tab{background:none;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:0.875rem;color:rgba(255,255,255,0.6);transition:all 0.2s}
+        .analytics-period-tab:hover{color:#fff}
+        .analytics-period-tab.active{background:rgb(52,211,153);color:#000}
+        .analytics-date-picker{margin-bottom:24px}
+        .date-picker-input{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;color:#fff;font-size:0.9375rem}
+        .analytics-key-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+        @media(max-width:768px){.analytics-key-metrics{grid-template-columns:1fr}}
+        .analytics-metric-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;text-align:center}
+        .analytics-metric-card.accent{background:rgba(52,211,153,0.1);border-color:rgb(52,211,153)}
+        .analytics-metric-card.success{background:rgba(34,197,94,0.1);border-color:#22c55e}
+        .metric-value{font-size:2.5rem;font-weight:700;margin-bottom:4px}
+        .analytics-metric-card.accent .metric-value{color:rgb(52,211,153)}
+        .analytics-metric-card.success .metric-value{color:#22c55e}
+        .metric-label{font-size:0.75rem;text-transform:uppercase;color:rgba(255,255,255,0.5)}
+        .analytics-section{margin-bottom:32px}
+        .analytics-section-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.5);margin-bottom:16px}
+        .analytics-breakdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+        @media(max-width:768px){.analytics-breakdown-grid{grid-template-columns:repeat(2,1fr)}}
+        .breakdown-card{border-radius:8px;padding:20px;text-align:center}
+        .breakdown-card.booked{background:#14532d}
+        .breakdown-card.callback{background:#172554}
+        .breakdown-card.interested{background:rgba(59,130,246,0.15)}
+        .breakdown-card.timeline{background:#451a03}
+        .breakdown-value{font-size:1.75rem;font-weight:700}
+        .breakdown-card.booked .breakdown-value,.breakdown-card.booked .breakdown-label{color:#22c55e}
+        .breakdown-card.callback .breakdown-value,.breakdown-card.callback .breakdown-label{color:#3B82F6}
+        .breakdown-card.interested .breakdown-value,.breakdown-card.interested .breakdown-label{color:#3B82F6}
+        .breakdown-card.timeline .breakdown-value,.breakdown-card.timeline .breakdown-label{color:#f59e0b}
+        .breakdown-label{font-size:0.75rem;margin-top:4px}
+        .analytics-outcomes-grid{display:flex;flex-wrap:wrap;gap:8px}
+        .outcome-pill{background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:8px 16px;font-size:0.875rem;color:rgba(255,255,255,0.7)}
+        .outcome-count{font-weight:600;margin-right:4px}
+        .analytics-table-container.booked-table{background:#14532d;border-color:#166534}
+        .analytics-table-container.booked-table th{background:#166534;color:#22c55e}
+        
+        /* Import Page */
+        .import-header{margin-bottom:24px}
+        .import-header h2{font-size:1.5rem;font-weight:700;margin-bottom:4px}
+        .import-tabs{display:flex;gap:8px;margin-bottom:24px}
+        .import-tab{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 24px;font-size:0.9375rem;color:rgba(255,255,255,0.7);cursor:pointer;transition:all 0.2s}
+        .import-tab:hover{border-color:rgb(52,211,153)}
+        .import-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
+        .import-panel{display:none}
+        .import-panel.active{display:block}
+        .import-form-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;max-width:600px}
+        .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+        @media(max-width:600px){.form-row{grid-template-columns:1fr}}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;font-size:0.875rem;margin-bottom:6px;color:rgba(255,255,255,0.8)}
+        .form-group .required{color:#ef4444}
+        .form-input{width:100%;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;color:#fff;font-size:0.9375rem}
+        .form-input:focus{outline:none;border-color:rgb(52,211,153)}
+        .form-hint{font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:4px}
+        .btn-block{width:100%;justify-content:center}
+        .template-download{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+        .template-info h4{margin-bottom:4px}
+        .template-info p{font-size:0.875rem;color:rgba(255,255,255,0.5)}
+        .file-upload-zone{border:2px dashed rgba(255,255,255,0.2);border-radius:12px;padding:48px;text-align:center;cursor:pointer;transition:all 0.2s}
+        .file-upload-zone:hover{border-color:rgb(52,211,153);background:rgba(52,211,153,0.05)}
+        .file-upload-zone.dragover{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
+        .file-upload-zone input{display:none}
+        .file-upload-icon{font-size:3rem;margin-bottom:16px}
+        .file-upload-supported{font-size:0.875rem;color:rgba(255,255,255,0.4);margin-top:8px}
+        
+        /* Search Page */
+        .search-header{margin-bottom:24px}
+        .search-header h2{font-size:1.5rem;font-weight:700;margin-bottom:4px}
+        .search-box-large{display:flex;gap:12px;max-width:500px;margin-bottom:32px}
+        .search-input-large{flex:1;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:14px 18px;color:#fff;font-size:1rem}
+        .search-input-large:focus{outline:none;border-color:rgb(52,211,153)}
+        .search-results-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+        .search-result-item{display:flex;justify-content:space-between;align-items:center;padding:16px;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer;transition:all 0.2s}
+        .search-result-item:hover{border-color:rgb(52,211,153);background:rgba(52,211,153,0.05)}
+        .search-lead-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px}
+        .search-lead-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+        .search-lead-header h3{font-size:1.5rem;margin-bottom:4px}
+        .search-lead-info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;padding:16px;background:#0a0a0a;border-radius:8px}
+        @media(max-width:768px){.search-lead-info-grid{grid-template-columns:repeat(2,1fr)}}
+        .info-item .info-label{display:block;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:2px}
+        .info-item .info-value{font-weight:500}
+        .search-lead-section{margin-bottom:24px}
+        .search-lead-section h4{font-size:0.875rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
+        .search-lead-content{background:#0a0a0a;padding:16px;border-radius:8px;font-size:0.9375rem;line-height:1.6;white-space:pre-wrap}
+        .search-lead-content.transcript{max-height:300px;overflow-y:auto}
     </style>
 </head>
 <body>
@@ -818,31 +907,256 @@
 
                     <!-- Page: Analytics -->
                     <div class="page hidden" id="page-analytics">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Analytics</h3>
+                        <div class="analytics-header">
+                            <div>
+                                <h2>📊 Performance Summary</h2>
+                                <p style="color:rgba(255,255,255,0.5);">Track your AI calling performance</p>
                             </div>
-                            <p class="text-muted">Your analytics and reports will appear here.</p>
+                            <div class="analytics-period-tabs">
+                                <button class="analytics-period-tab active" data-period="daily">Daily</button>
+                                <button class="analytics-period-tab" data-period="weekly">Weekly</button>
+                                <button class="analytics-period-tab" data-period="monthly">Monthly</button>
+                                <button class="analytics-period-tab" data-period="all">All Time</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Date Picker -->
+                        <div class="analytics-date-picker" id="analyticsDateRow">
+                            <input type="date" id="analyticsDatePicker" class="date-picker-input">
+                        </div>
+                        
+                        <!-- Key Metrics -->
+                        <div class="analytics-key-metrics">
+                            <div class="analytics-metric-card accent">
+                                <div class="metric-value" id="analyticsTotalCalls">0</div>
+                                <div class="metric-label">Total Calls</div>
+                            </div>
+                            <div class="analytics-metric-card success">
+                                <div class="metric-value" id="analyticsConversations">0</div>
+                                <div class="metric-label">Conversations</div>
+                            </div>
+                            <div class="analytics-metric-card">
+                                <div class="metric-value" id="analyticsActivePipeline">0</div>
+                                <div class="metric-label">Active Pipeline</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Qualified Breakdown -->
+                        <div class="analytics-section">
+                            <h3 class="analytics-section-title">Qualified Breakdown</h3>
+                            <div class="analytics-breakdown-grid">
+                                <div class="breakdown-card booked">
+                                    <div class="breakdown-value" id="analyticsBooked">0</div>
+                                    <div class="breakdown-label">Booked</div>
+                                </div>
+                                <div class="breakdown-card callback">
+                                    <div class="breakdown-value" id="analyticsCallbackCount">0</div>
+                                    <div class="breakdown-label">Callback</div>
+                                </div>
+                                <div class="breakdown-card interested">
+                                    <div class="breakdown-value" id="analyticsInterested">0</div>
+                                    <div class="breakdown-label">Interested</div>
+                                </div>
+                                <div class="breakdown-card timeline">
+                                    <div class="breakdown-value" id="analyticsTimelineCount">0</div>
+                                    <div class="breakdown-label">Timeline</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Other Outcomes -->
+                        <div class="analytics-section">
+                            <h3 class="analytics-section-title">Other Outcomes</h3>
+                            <div class="analytics-outcomes-grid" id="analyticsOutcomes">
+                                <div class="outcome-pill"><span class="outcome-count" id="analyticsVoicemail">0</span> Voicemail</div>
+                                <div class="outcome-pill"><span class="outcome-count" id="analyticsNoAnswer">0</span> No Answer</div>
+                                <div class="outcome-pill"><span class="outcome-count" id="analyticsNotInterested">0</span> Not Interested</div>
+                                <div class="outcome-pill"><span class="outcome-count" id="analyticsDNC">0</span> DNC</div>
+                                <div class="outcome-pill"><span class="outcome-count" id="analyticsWrongNumber">0</span> Wrong Number</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Booked Leads Table -->
+                        <div class="analytics-section" id="analyticsBookedSection">
+                            <h3 class="analytics-section-title" style="color:rgb(52,211,153)">📅 Booked Appointments</h3>
+                            <div class="table-container analytics-table-container booked-table">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Phone</th>
+                                            <th>Summary</th>
+                                            <th>Meeting Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="analyticsBookedTable"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Page: Import -->
                     <div class="page hidden" id="page-import">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Import Leads</h3>
+                        <div class="import-header">
+                            <h2>📥 Import Leads</h2>
+                            <p style="color:rgba(255,255,255,0.5);">Add new leads to your account</p>
+                        </div>
+                        
+                        <!-- Import Method Tabs -->
+                        <div class="import-tabs">
+                            <button class="import-tab active" data-import="single">➕ Single Lead</button>
+                            <button class="import-tab" data-import="bulk">📁 Bulk Upload</button>
+                        </div>
+                        
+                        <!-- Single Lead Form -->
+                        <div class="import-panel active" id="importSinglePanel">
+                            <div class="import-form-card">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>First Name <span class="required">*</span></label>
+                                        <input type="text" id="singleLeadFirstName" placeholder="John" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Last Name</label>
+                                        <input type="text" id="singleLeadLastName" placeholder="Smith" class="form-input">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Phone Number <span class="required">*</span></label>
+                                    <input type="tel" id="singleLeadPhone" placeholder="(416) 555-1234" class="form-input">
+                                    <p class="form-hint">10 digits (e.g., 416-555-1234)</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Interest <span class="required">*</span></label>
+                                    <select id="singleLeadInterest" class="form-input">
+                                        <option value="">Select interest...</option>
+                                        <option value="Buy">Buying</option>
+                                        <option value="Sell">Selling</option>
+                                        <option value="Both">Both (Buying & Selling)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" id="singleLeadEmail" placeholder="john@example.com" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Max Call Attempts</label>
+                                        <select id="singleLeadMaxAttempts" class="form-input">
+                                            <option value="">Default (5)</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div id="singleLeadStatus"></div>
+                                
+                                <button class="btn btn-primary btn-block" id="submitSingleLeadBtn">
+                                    ➕ Add Lead
+                                </button>
                             </div>
-                            <p class="text-muted">Upload CSV or Excel files to import leads.</p>
+                        </div>
+                        
+                        <!-- Bulk Upload -->
+                        <div class="import-panel" id="importBulkPanel">
+                            <div class="template-download">
+                                <div class="template-info">
+                                    <h4>📥 Download Template First</h4>
+                                    <p>CSV with: First Name, Last Name, Phone, Interest</p>
+                                </div>
+                                <button class="btn btn-secondary" id="downloadTemplateBtn">Download Template</button>
+                            </div>
+                            
+                            <div class="file-upload-zone" id="fileUploadZone">
+                                <input type="file" id="leadFileInput" accept=".csv,.xlsx,.xls">
+                                <div class="file-upload-icon">📁</div>
+                                <p><strong>Click to upload</strong> or drag and drop</p>
+                                <p class="file-upload-supported">CSV, XLSX, or XLS (max 10MB)</p>
+                            </div>
+                            
+                            <div id="uploadStatus"></div>
                         </div>
                     </div>
 
                     <!-- Page: Search -->
                     <div class="page hidden" id="page-search">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Search</h3>
+                        <div class="search-header">
+                            <h2>🔍 Search Lead</h2>
+                            <p style="color:rgba(255,255,255,0.5);">Search by name or last 4 digits of phone number</p>
+                        </div>
+                        
+                        <div class="search-box-large">
+                            <input type="text" id="globalSearchInput" placeholder="Enter name or last 4 digits of phone..." class="search-input-large">
+                            <button class="btn btn-primary" id="globalSearchBtn">Search</button>
+                        </div>
+                        
+                        <!-- Multiple Results -->
+                        <div id="searchMultipleResults" style="display:none;">
+                            <h4 style="margin-bottom:12px;color:rgba(255,255,255,0.6);">Multiple leads found - click to view:</h4>
+                            <div id="searchResultsList" class="search-results-list"></div>
+                        </div>
+                        
+                        <!-- Single Result Detail -->
+                        <div id="searchLeadDetail" style="display:none;">
+                            <div class="search-lead-card">
+                                <div class="search-lead-header">
+                                    <div>
+                                        <h3 id="searchLeadName">-</h3>
+                                        <p id="searchLeadPhoneDisplay" style="color:rgba(255,255,255,0.6);font-family:monospace;">-</p>
+                                    </div>
+                                    <span id="searchLeadStatusBadge" class="status-badge">-</span>
+                                </div>
+                                
+                                <div class="search-lead-info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Email</span>
+                                        <span class="info-value" id="searchLeadEmail">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Total Calls</span>
+                                        <span class="info-value" id="searchLeadCalls">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Last Called</span>
+                                        <span class="info-value" id="searchLeadLastCall">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Booked Time</span>
+                                        <span class="info-value" id="searchLeadBookedTime">-</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="search-lead-section">
+                                    <h4>📝 Client Notes</h4>
+                                    <textarea id="searchLeadNotesInput" class="form-input" rows="4" placeholder="Add notes about this lead..."></textarea>
+                                    <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+                                        <button class="btn btn-primary btn-sm" id="searchLeadSaveNotes">Save Notes</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="search-lead-section">
+                                    <h4>🤖 AI Summary</h4>
+                                    <div id="searchLeadSummary" class="search-lead-content">No summary available</div>
+                                </div>
+                                
+                                <div class="search-lead-section">
+                                    <h4>💬 Latest Transcript</h4>
+                                    <div id="searchLeadTranscript" class="search-lead-content transcript">No transcript available</div>
+                                </div>
                             </div>
-                            <p class="text-muted">Search across all your leads.</p>
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div id="searchEmptyState" style="display:none;text-align:center;padding:60px;color:rgba(255,255,255,0.4);">
+                            <div style="font-size:3rem;margin-bottom:16px;">🔍</div>
+                            <p id="searchEmptyText">No lead found</p>
                         </div>
                     </div>
 
@@ -3249,6 +3563,348 @@
     
     // Hide loading after 10 seconds
     setTimeout(hidePageLoading, 10000);
+    
+    // ===== ANALYTICS PAGE =====
+    var analyticsPeriod = 'daily';
+    var analyticsDate = new Date();
+    
+    // Period tab clicks
+    document.querySelectorAll('.analytics-period-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.analytics-period-tab').forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+            analyticsPeriod = this.dataset.period;
+            updateAnalyticsDisplay();
+        });
+    });
+    
+    // Date picker change
+    document.getElementById('analyticsDatePicker')?.addEventListener('change', function() {
+        analyticsDate = new Date(this.value);
+        updateAnalyticsDisplay();
+    });
+    
+    function updateAnalyticsDisplay() {
+        var statusCounts = { booked: 0, callback: 0, interested: 0, timeline: 0, followUp: 0, notInterested: 0, voicemail: 0, noAnswer: 0, dnc: 0, wrongNumber: 0 };
+        var totalCalls = 0;
+        var conversations = 0;
+        var bookedLeads = [];
+        
+        allLeads.forEach(function(l) {
+            var f = l.fields;
+            var status = (f['Status'] || f['Disposition'] || '').toLowerCase();
+            var lastCall = f['Last Call Timestamp'];
+            
+            // Filter by period/date
+            if (analyticsPeriod !== 'all' && lastCall) {
+                var callDate = new Date(lastCall);
+                var now = new Date();
+                if (analyticsPeriod === 'daily') {
+                    var selectedDate = analyticsDate.toDateString();
+                    if (callDate.toDateString() !== selectedDate) return;
+                } else if (analyticsPeriod === 'weekly') {
+                    var weekAgo = new Date(now); weekAgo.setDate(weekAgo.getDate() - 7);
+                    if (callDate < weekAgo) return;
+                } else if (analyticsPeriod === 'monthly') {
+                    var monthAgo = new Date(now); monthAgo.setMonth(monthAgo.getMonth() - 1);
+                    if (callDate < monthAgo) return;
+                }
+            }
+            
+            totalCalls++;
+            
+            if (status === 'booked' || status === 'appointment booked') {
+                statusCounts.booked++;
+                conversations++;
+                bookedLeads.push(l);
+            }
+            else if (status === 'callback' || status === 'callback requested') { statusCounts.callback++; conversations++; }
+            else if (status === 'interested') { statusCounts.interested++; conversations++; }
+            else if (status === 'timeline') { statusCounts.timeline++; conversations++; }
+            else if (status === 'follow up' || status === 'followup') { statusCounts.followUp++; }
+            else if (status === 'not interested' || status === 'notinterested') statusCounts.notInterested++;
+            else if (status === 'voicemail') statusCounts.voicemail++;
+            else if (status === 'no answer' || status === 'noanswer') statusCounts.noAnswer++;
+            else if (status === 'dnc' || status === 'do not call') statusCounts.dnc++;
+            else if (status === 'wrong number' || status === 'wrongnumber') statusCounts.wrongNumber++;
+        });
+        
+        // Update UI
+        var el = function(id) { return document.getElementById(id); };
+        if (el('analyticsTotalCalls')) el('analyticsTotalCalls').textContent = totalCalls;
+        if (el('analyticsConversations')) el('analyticsConversations').textContent = conversations;
+        if (el('analyticsActivePipeline')) el('analyticsActivePipeline').textContent = statusCounts.timeline + statusCounts.followUp;
+        if (el('analyticsBooked')) el('analyticsBooked').textContent = statusCounts.booked;
+        if (el('analyticsCallbackCount')) el('analyticsCallbackCount').textContent = statusCounts.callback;
+        if (el('analyticsInterested')) el('analyticsInterested').textContent = statusCounts.interested;
+        if (el('analyticsTimelineCount')) el('analyticsTimelineCount').textContent = statusCounts.timeline;
+        if (el('analyticsVoicemail')) el('analyticsVoicemail').textContent = statusCounts.voicemail;
+        if (el('analyticsNoAnswer')) el('analyticsNoAnswer').textContent = statusCounts.noAnswer;
+        if (el('analyticsNotInterested')) el('analyticsNotInterested').textContent = statusCounts.notInterested;
+        if (el('analyticsDNC')) el('analyticsDNC').textContent = statusCounts.dnc;
+        if (el('analyticsWrongNumber')) el('analyticsWrongNumber').textContent = statusCounts.wrongNumber;
+        
+        // Booked table
+        var bookedTable = el('analyticsBookedTable');
+        if (bookedTable) {
+            if (bookedLeads.length === 0) {
+                bookedTable.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:rgba(255,255,255,0.4)">No booked appointments</td></tr>';
+            } else {
+                bookedTable.innerHTML = bookedLeads.map(function(lead) {
+                    var f = lead.fields;
+                    var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+                    var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
+                    var summaryRaw = f['Last Call Summary'] || '';
+                    var summary = Array.isArray(summaryRaw) ? summaryRaw.join(' ') : String(summaryRaw || '');
+                    var bookedTime = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
+                    return '<tr onclick="openLeadModal(\'' + lead.id + '\')" style="cursor:pointer">' +
+                        '<td>' + escapeHtml(name) + '</td>' +
+                        '<td style="font-family:monospace">' + escapeHtml(phone) + '</td>' +
+                        '<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(summary.substring(0,80)) + '</td>' +
+                        '<td style="color:#22c55e">' + bookedTime + '</td>' +
+                    '</tr>';
+                }).join('');
+            }
+        }
+    }
+    
+    // ===== IMPORT PAGE =====
+    // Tab switching
+    document.querySelectorAll('.import-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.import-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.import-panel').forEach(function(p) { p.classList.remove('active'); });
+            this.classList.add('active');
+            var target = this.dataset.import === 'single' ? 'importSinglePanel' : 'importBulkPanel';
+            document.getElementById(target)?.classList.add('active');
+        });
+    });
+    
+    // Single lead form
+    document.getElementById('submitSingleLeadBtn')?.addEventListener('click', async function() {
+        var btn = this;
+        var firstName = document.getElementById('singleLeadFirstName')?.value.trim();
+        var lastName = document.getElementById('singleLeadLastName')?.value.trim();
+        var phone = document.getElementById('singleLeadPhone')?.value.trim();
+        var interest = document.getElementById('singleLeadInterest')?.value;
+        var email = document.getElementById('singleLeadEmail')?.value.trim();
+        var maxAttempts = document.getElementById('singleLeadMaxAttempts')?.value;
+        
+        var statusEl = document.getElementById('singleLeadStatus');
+        
+        if (!firstName || !phone || !interest) {
+            if (statusEl) statusEl.innerHTML = '<p style="color:#ef4444">Please fill in required fields</p>';
+            return;
+        }
+        
+        btn.disabled = true;
+        btn.textContent = 'Adding...';
+        if (statusEl) statusEl.innerHTML = '<p style="color:rgb(52,211,153)">Adding lead...</p>';
+        
+        try {
+            // Send to n8n webhook
+            await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: currentUser?.email,
+                    agentName: currentUserRecord?.fields?.['Agent Name'] || '',
+                    leads: [{
+                        firstName: firstName,
+                        lastName: lastName,
+                        phone: phone,
+                        interest: interest,
+                        email: email,
+                        maxAttempts: maxAttempts || 5
+                    }]
+                })
+            });
+            
+            if (statusEl) statusEl.innerHTML = '<p style="color:#22c55e">✓ Lead added successfully!</p>';
+            
+            // Clear form
+            document.getElementById('singleLeadFirstName').value = '';
+            document.getElementById('singleLeadLastName').value = '';
+            document.getElementById('singleLeadPhone').value = '';
+            document.getElementById('singleLeadInterest').value = '';
+            document.getElementById('singleLeadEmail').value = '';
+        } catch (err) {
+            if (statusEl) statusEl.innerHTML = '<p style="color:#ef4444">Failed to add lead: ' + err.message + '</p>';
+        }
+        
+        btn.disabled = false;
+        btn.textContent = '➕ Add Lead';
+    });
+    
+    // File upload
+    var uploadZone = document.getElementById('fileUploadZone');
+    var fileInput = document.getElementById('leadFileInput');
+    
+    uploadZone?.addEventListener('click', function() { fileInput?.click(); });
+    uploadZone?.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+    uploadZone?.addEventListener('dragleave', function() { this.classList.remove('dragover'); });
+    uploadZone?.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+        if (e.dataTransfer.files.length) handleFileUpload(e.dataTransfer.files[0]);
+    });
+    fileInput?.addEventListener('change', function() {
+        if (this.files.length) handleFileUpload(this.files[0]);
+    });
+    
+    async function handleFileUpload(file) {
+        var statusEl = document.getElementById('uploadStatus');
+        if (!statusEl) return;
+        
+        statusEl.innerHTML = '<p style="color:rgb(52,211,153)">📤 Uploading ' + file.name + '...</p>';
+        
+        try {
+            var reader = new FileReader();
+            reader.onload = async function(e) {
+                var base64 = e.target.result.split(',')[1];
+                await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: currentUser?.email,
+                        agentName: currentUserRecord?.fields?.['Agent Name'] || '',
+                        fileName: file.name,
+                        fileType: file.type,
+                        fileData: base64
+                    })
+                });
+                statusEl.innerHTML = '<p style="color:#22c55e">✓ File uploaded successfully! Leads will be processed shortly.</p>';
+            };
+            reader.readAsDataURL(file);
+        } catch (err) {
+            statusEl.innerHTML = '<p style="color:#ef4444">Failed to upload: ' + err.message + '</p>';
+        }
+    }
+    
+    // Download template
+    document.getElementById('downloadTemplateBtn')?.addEventListener('click', function() {
+        var csv = 'First Name,Last Name,Phone,Interest,Email\nJohn,Smith,4165551234,Buy,john@example.com\nJane,Doe,6475559876,Sell,';
+        var blob = new Blob([csv], { type: 'text/csv' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'prio-leads-template.csv';
+        a.click();
+    });
+    
+    // ===== SEARCH PAGE =====
+    var searchedLead = null;
+    
+    document.getElementById('globalSearchBtn')?.addEventListener('click', performSearch);
+    document.getElementById('globalSearchInput')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') performSearch();
+    });
+    
+    function performSearch() {
+        var query = document.getElementById('globalSearchInput')?.value.trim().toLowerCase();
+        if (!query) return;
+        
+        var results = allLeads.filter(function(l) {
+            var f = l.fields;
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+            var phone = (f['Phone #'] || f['Phone'] || '').replace(/\D/g, '');
+            var phoneLast4 = phone.slice(-4);
+            return name.includes(query) || phoneLast4 === query || phone.includes(query);
+        });
+        
+        document.getElementById('searchMultipleResults').style.display = 'none';
+        document.getElementById('searchLeadDetail').style.display = 'none';
+        document.getElementById('searchEmptyState').style.display = 'none';
+        
+        if (results.length === 0) {
+            document.getElementById('searchEmptyState').style.display = 'block';
+            document.getElementById('searchEmptyText').textContent = 'No lead found matching "' + query + '"';
+        } else if (results.length === 1) {
+            showSearchLeadDetail(results[0]);
+        } else {
+            // Multiple results
+            document.getElementById('searchMultipleResults').style.display = 'block';
+            document.getElementById('searchResultsList').innerHTML = results.slice(0, 10).map(function(lead) {
+                var f = lead.fields;
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+                var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
+                var status = f['Status'] || f['Disposition'] || '-';
+                return '<div class="search-result-item" onclick="showSearchLeadDetail(allLeads.find(function(l){return l.id===\'' + lead.id + '\'}))">' +
+                    '<div><div style="font-weight:600">' + escapeHtml(name) + '</div><div style="color:rgba(255,255,255,0.5);font-family:monospace">' + escapeHtml(phone) + '</div></div>' +
+                    '<span class="status-badge ' + getStatusClass(status) + '">' + escapeHtml(status) + '</span>' +
+                '</div>';
+            }).join('');
+        }
+    }
+    
+    function showSearchLeadDetail(lead) {
+        if (!lead) return;
+        searchedLead = lead;
+        var f = lead.fields;
+        
+        document.getElementById('searchMultipleResults').style.display = 'none';
+        document.getElementById('searchLeadDetail').style.display = 'block';
+        
+        document.getElementById('searchLeadName').textContent = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+        document.getElementById('searchLeadPhoneDisplay').textContent = formatPhone(f['Phone #'] || f['Phone'] || '-');
+        
+        var status = f['Status'] || f['Disposition'] || '-';
+        var statusBadge = document.getElementById('searchLeadStatusBadge');
+        statusBadge.textContent = status;
+        statusBadge.className = 'status-badge ' + getStatusClass(status);
+        
+        document.getElementById('searchLeadEmail').textContent = f['Email'] || '-';
+        document.getElementById('searchLeadCalls').textContent = f['Attempts'] || '0';
+        document.getElementById('searchLeadLastCall').textContent = f['Last Call Timestamp'] ? formatDateTime(f['Last Call Timestamp']) : '-';
+        document.getElementById('searchLeadBookedTime').textContent = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
+        
+        // Notes
+        var notesRaw = f['Client Notes'] || '';
+        var notes = parseNotesJson(notesRaw);
+        document.getElementById('searchLeadNotesInput').value = notes.map(function(n) { return n.text; }).join('\n');
+        
+        // Summary
+        var summaryRaw = f['Last Call Summary'] || '';
+        var summary = Array.isArray(summaryRaw) ? summaryRaw.join('\n') : String(summaryRaw || 'No summary available');
+        document.getElementById('searchLeadSummary').textContent = summary;
+        
+        // Transcript
+        var transcriptRaw = f['Transcript (from Calls)'] || '';
+        var transcript = Array.isArray(transcriptRaw) ? transcriptRaw.join('\n\n---\n\n') : String(transcriptRaw || 'No transcript available');
+        document.getElementById('searchLeadTranscript').textContent = transcript;
+    }
+    
+    // Save notes from search
+    document.getElementById('searchLeadSaveNotes')?.addEventListener('click', async function() {
+        if (!searchedLead) return;
+        var btn = this;
+        var notesText = document.getElementById('searchLeadNotesInput')?.value.trim();
+        
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        
+        try {
+            var newNotes = JSON.stringify([{ time: new Date().toISOString(), text: notesText }]);
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + searchedLead.id, {
+                method: 'PATCH',
+                body: { fields: { 'Client Notes': newNotes } }
+            });
+            searchedLead.fields['Client Notes'] = newNotes;
+            showToast('Notes saved', 'success');
+        } catch (err) {
+            showToast('Failed to save notes', 'error');
+        }
+        
+        btn.disabled = false;
+        btn.textContent = 'Save Notes';
+    });
+    
+    // Update analytics when data loads
+    var originalLoadLeadsData2 = loadLeadsData;
+    loadLeadsData = async function() {
+        await originalLoadLeadsData2();
+        updateAnalyticsDisplay();
+    };
     </script>
 </body>
 </html>
