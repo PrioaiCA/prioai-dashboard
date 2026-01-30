@@ -38,21 +38,32 @@
         .meta-label{color:rgba(255,255,255,0.4)}
         .meta-value{color:rgb(52,211,153);font-family:monospace;font-weight:500}
         .priorities-section{margin-top:2rem}
-        .priorities-header{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+        .priorities-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
         .priorities-header h3{font-size:1.25rem;font-weight:600;display:flex;align-items:center;gap:10px}
         .priorities-count{background:rgb(52,211,153);color:#000;font-size:0.875rem;font-weight:700;padding:4px 12px;border-radius:20px}
+        .priorities-view-toggle{display:flex;gap:4px}
+        .view-toggle-btn{width:32px;height:32px;border:1px solid rgba(255,255,255,0.15);background:#111;color:rgba(255,255,255,0.5);border-radius:6px;cursor:pointer;font-size:1rem;transition:all 0.15s}
+        .view-toggle-btn:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8)}
+        .view-toggle-btn.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
         .priorities-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}
+        .priorities-cards.list-view{grid-template-columns:1fr}
+        .priorities-cards.list-view .priority-card-lg{min-height:auto;flex-direction:row;align-items:stretch}
+        .priorities-cards.list-view .priority-card-lg-header{flex:0 0 280px;border-bottom:none;border-right:1px solid rgba(255,255,255,0.08)}
+        .priorities-cards.list-view .priority-card-lg-tabs{flex:0 0 auto;flex-direction:column;border-bottom:none;border-right:1px solid rgba(255,255,255,0.08)}
+        .priorities-cards.list-view .priority-card-lg-tab{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .priorities-cards.list-view .priority-card-lg-tab:last-child{border-bottom:none}
+        .priorities-cards.list-view .priority-card-lg-content{flex:1}
         .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;min-height:240px}
         .priority-card-lg:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
         .priority-card-lg-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priority-card-lg-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-        .priority-card-lg-name{font-size:1rem;font-weight:600}
+        .priority-card-lg-name{font-size:1.125rem;font-weight:600}
         .priority-card-lg-badge{font-size:0.6875rem;padding:4px 10px;border-radius:4px;font-weight:600;text-transform:uppercase}
         .priority-card-lg-badge.booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
         .priority-card-lg-badge.callback{background:rgba(245,158,11,0.15);color:#f59e0b}
         .priority-card-lg-meta{display:flex;gap:16px;font-size:0.8125rem;color:rgba(255,255,255,0.6)}
-        .priority-card-lg-time{margin-top:10px;display:flex;align-items:center;gap:8px;font-size:0.875rem}
-        .priority-card-lg-time .time-value{color:rgb(52,211,153);font-weight:600}
+        .priority-card-lg-time{margin-top:12px;display:flex;align-items:center;gap:8px;font-size:1.125rem;background:rgba(52,211,153,0.1);padding:8px 12px;border-radius:8px;width:fit-content}
+        .priority-card-lg-time .time-value{color:rgb(52,211,153);font-weight:700}
         .priority-card-lg-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priority-card-lg-tab{flex:1;padding:10px 16px;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.5);background:transparent;border:none;cursor:pointer;transition:all 0.15s;text-align:center}
         .priority-card-lg-tab:first-child{border-right:1px solid rgba(255,255,255,0.08)}
@@ -488,10 +499,10 @@
                                 <div class="overview-card-value" id="overviewPrio">0</div>
                                 <div class="overview-card-desc">Priority leads to focus on</div>
                             </div>
-                            <div class="overview-card" onclick="switchPage('booked')">
+                            <div class="overview-card" onclick="switchPage('prospects')">
                                 <div class="overview-card-header">
-                                    <span class="overview-card-icon">📅</span>
-                                    <h4>Scheduled</h4>
+                                    <span class="overview-card-icon">📋</span>
+                                    <h4>Prospects</h4>
                                 </div>
                                 <div class="overview-card-value" id="overviewScheduled">0</div>
                                 <div class="overview-card-desc">Callbacks & meetings booked</div>
@@ -518,6 +529,10 @@
                         <div class="priorities-section">
                             <div class="priorities-header">
                                 <h3>📅 Today's Priorities <span class="priorities-count" id="prioritiesCount">0</span></h3>
+                                <div class="priorities-view-toggle">
+                                    <button class="view-toggle-btn active" id="viewGrid" onclick="setPrioritiesView('grid')" title="Grid view">▦</button>
+                                    <button class="view-toggle-btn" id="viewList" onclick="setPrioritiesView('list')" title="List view">☰</button>
+                                </div>
                             </div>
                             <div class="priorities-cards" id="todayPriorities">
                                 <div class="priorities-empty">
@@ -1687,10 +1702,10 @@
                         '<span class="priority-card-lg-badge ' + (isBooked ? 'booked' : 'callback') + '">' + (isBooked ? 'Meeting' : 'Callback') + '</span>' +
                     '</div>' +
                     '<div class="priority-card-lg-meta">' +
-                        '<span>' + escapeHtml(phone) + '</span>' +
+                        '<span>📞 ' + escapeHtml(phone) + '</span>' +
                         '<span class="prio-card-lastcall"><span class="lastcall-dot ' + lastCalledColor + '"></span>' + lastCalled + '</span>' +
                     '</div>' +
-                    '<div class="priority-card-lg-time"><span>🕐</span> <span class="time-value">' + timeDisplay + '</span></div>' +
+                    '<div class="priority-card-lg-time"><span class="time-value">' + timeDisplay + '</span></div>' +
                 '</div>' +
                 '<div class="priority-card-lg-tabs">' +
                     '<button class="priority-card-lg-tab active" onclick="event.stopPropagation();switchPriorityTab(\'' + cardId + '\',\'summary\')">Summary</button>' +
@@ -1725,6 +1740,23 @@
             panel.classList.remove('active');
             if (panel.dataset.panel === tab) panel.classList.add('active');
         });
+    }
+    
+    // Toggle priorities view between grid and list
+    function setPrioritiesView(view) {
+        var container = document.getElementById('todayPriorities');
+        var gridBtn = document.getElementById('viewGrid');
+        var listBtn = document.getElementById('viewList');
+        
+        if (view === 'list') {
+            container.classList.add('list-view');
+            gridBtn.classList.remove('active');
+            listBtn.classList.add('active');
+        } else {
+            container.classList.remove('list-view');
+            gridBtn.classList.add('active');
+            listBtn.classList.remove('active');
+        }
     }
 
     // Update Prio Prospects list
@@ -1799,7 +1831,7 @@
                 '<div class="prio-card-header">' +
                     '<div class="prio-card-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                     '<div class="prio-card-meta">' +
-                        '<span class="prio-card-phone">' + escapeHtml(phone) + '</span>' +
+                        '<span class="prio-card-phone">📞 ' + escapeHtml(phone) + '</span>' +
                         '<span class="prio-card-lastcall"><span class="lastcall-dot ' + lastCalledColor + '"></span>' + lastCalled + '</span>' +
                     '</div>' +
                     (bookedTime ? '<div class="prio-card-booked"><span class="booked-time">📅 ' + bookedDisplay + '</span></div>' : 
@@ -1904,8 +1936,7 @@
         if (diff < 60) return 'Just now';
         if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
         if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-        if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
-        return date.toLocaleDateString();
+        return Math.floor(diff / 86400) + 'd ago';
     }
 
     // Settings - populate profile info
