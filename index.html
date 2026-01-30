@@ -104,6 +104,23 @@
         .overview-card-desc{font-size:0.75rem;color:rgba(255,255,255,0.5)}
         .meetings-list{display:flex;flex-direction:column;gap:0.5rem}
         .meetings-empty{text-align:center;padding:2rem;color:rgba(255,255,255,0.5);background:#111;border-radius:12px}
+        .welcome-meta{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+        .welcome-phone,.welcome-usage{background:#111;padding:8px 14px;border-radius:8px;font-size:0.8125rem;display:flex;align-items:center;gap:8px}
+        .phone-label,.usage-label{color:rgba(255,255,255,0.5)}
+        .phone-value{color:rgb(52,211,153);font-weight:600;font-family:monospace}
+        .usage-value{font-weight:600}
+        .priorities-list{display:flex;flex-direction:column;gap:10px}
+        .priorities-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
+        .priority-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:16px 20px;display:grid;grid-template-columns:auto 1fr auto auto;gap:16px;align-items:center;cursor:pointer;transition:all 0.15s}
+        .priority-card:hover{border-color:rgb(52,211,153);background:#151515}
+        .priority-time{background:rgba(52,211,153,0.15);color:rgb(52,211,153);padding:8px 12px;border-radius:8px;font-weight:600;font-size:0.875rem;text-align:center;min-width:80px}
+        .priority-info{min-width:0}
+        .priority-name{font-weight:600;margin-bottom:2px}
+        .priority-details{font-size:0.8125rem;color:rgba(255,255,255,0.5)}
+        .priority-type{font-size:0.6875rem;padding:4px 10px;border-radius:4px;font-weight:600;text-transform:uppercase}
+        .priority-type.booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
+        .priority-type.callback{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .priority-arrow{color:rgba(255,255,255,0.3);font-size:1.25rem}
         .meeting-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1rem;display:flex;align-items:center;gap:1rem}
         .meeting-time{background:rgba(52,211,153,0.15);color:rgb(52,211,153);padding:0.5rem 0.75rem;border-radius:8px;font-weight:600;font-size:0.875rem}
         .meeting-info{flex:1}
@@ -375,7 +392,17 @@
                                 <h2>Welcome back, <span id="welcomeName">there</span> 👋</h2>
                                 <p>Here's what's happening with your leads today.</p>
                             </div>
-                            <div class="welcome-date" id="welcomeDate"></div>
+                            <div class="welcome-meta">
+                                <div class="welcome-date" id="welcomeDate"></div>
+                                <div class="welcome-phone" id="welcomePhone" style="display:none;">
+                                    <span class="phone-label">AI Phone #</span>
+                                    <span class="phone-value" id="retellPhoneNumber">-</span>
+                                </div>
+                                <div class="welcome-usage" id="welcomeUsage">
+                                    <span class="usage-label">Usage</span>
+                                    <span class="usage-value"><span id="usageCalls">0</span> / <span id="usageLimit">0</span></span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Stats Grid -->
@@ -436,23 +463,23 @@
                                 <div class="overview-card-value" id="overviewPipeline">0</div>
                                 <div class="overview-card-desc">Leads being called by AI</div>
                             </div>
-                            <div class="overview-card highlight" onclick="switchPage('meetings')">
+                            <div class="overview-card highlight">
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">📅</span>
-                                    <h4>Today's Meetings</h4>
+                                    <h4>Today's Priorities</h4>
                                 </div>
                                 <div class="overview-card-value" id="overviewMeetings">0</div>
-                                <div class="overview-card-desc">Callbacks scheduled for today</div>
+                                <div class="overview-card-desc">Meetings & callbacks today</div>
                             </div>
                         </div>
 
-                        <!-- Today's Meetings List -->
+                        <!-- Today's Priorities List -->
                         <div class="section-header">
-                            <h3>Today's Callbacks</h3>
+                            <h3>📅 Today's Priorities</h3>
                         </div>
-                        <div class="meetings-list" id="todayMeetings">
-                            <div class="meetings-empty">
-                                <p>No callbacks scheduled for today</p>
+                        <div class="priorities-list" id="todayPriorities">
+                            <div class="priorities-empty">
+                                <p>No meetings or callbacks scheduled for today</p>
                             </div>
                         </div>
                     </div>
@@ -1497,16 +1524,30 @@
         document.getElementById('statProspects').textContent = totalProspects;
         document.getElementById('overviewProspects').textContent = totalProspects;
         
-        var callsMade = allLeads.filter(function(l) { return l.fields['Call Count'] > 0; }).length;
+        var callsMade = allLeads.filter(function(l) { return (l.fields['Attempts'] || l.fields['Call Count'] || 0) > 0; }).length;
         document.getElementById('statCalls').textContent = callsMade;
         
         var appointments = allLeads.filter(function(l) { 
-            return l.fields['Disposition'] === 'Appointment Booked' || l.fields['Booking Status'] === 'Booked';
+            var status = l.fields['Status'] || l.fields['Disposition'] || '';
+            return status === 'Booked' || status === 'Appointment Booked';
         }).length;
         document.getElementById('statAppointments').textContent = appointments;
         
         var convRate = totalProspects > 0 ? Math.round((appointments / totalProspects) * 100) : 0;
         document.getElementById('statConversion').textContent = convRate + '%';
+        
+        // Retell Phone & Usage from client record
+        if (currentUserRecord && currentUserRecord.fields) {
+            var retellPhone = currentUserRecord.fields['Retell Phone'];
+            if (retellPhone) {
+                document.getElementById('retellPhoneNumber').textContent = retellPhone;
+                document.getElementById('welcomePhone').style.display = 'flex';
+            }
+            var callsThisMonth = currentUserRecord.fields['Calls This Month'] || 0;
+            var callLimit = currentUserRecord.fields['Call Limit'] || (currentUserRecord.fields['Monthly Plan'] === 'Professional' ? 3000 : 1000);
+            document.getElementById('usageCalls').textContent = callsThisMonth;
+            document.getElementById('usageLimit').textContent = callLimit;
+        }
         
         // PRIO leads (Is Prio = true from Airtable)
         var prioLeads = allLeads.filter(function(l) {
@@ -1517,45 +1558,65 @@
         // AI Pipeline (leads in queue)
         var pipelineLeads = allLeads.filter(function(l) {
             var status = l.fields['Call Status'] || l.fields['Status'] || '';
-            return status === 'Queued' || status === 'In Progress' || status === 'Retry';
+            return status === 'Queued' || status === 'In Progress' || status === 'Retry' || status === 'Follow Up' || status === 'Timeline';
         });
         document.getElementById('overviewPipeline').textContent = pipelineLeads.length;
         
-        // Today's meetings (callbacks scheduled for today)
+        // Today's priorities (booked time or callback today)
         var today = new Date().toISOString().split('T')[0];
-        var todayMeetings = allLeads.filter(function(l) {
+        var todayPriorities = allLeads.filter(function(l) {
+            var bookedTime = l.fields['Booked Time'] || '';
             var callbackDate = l.fields['Callback Date'] || l.fields['Follow Up Date'] || '';
-            return callbackDate && callbackDate.startsWith(today);
+            return (bookedTime && bookedTime.startsWith(today)) || (callbackDate && callbackDate.startsWith(today));
+        }).sort(function(a, b) {
+            var timeA = a.fields['Booked Time'] || a.fields['Callback Date'] || '';
+            var timeB = b.fields['Booked Time'] || b.fields['Callback Date'] || '';
+            return timeA.localeCompare(timeB);
         });
-        document.getElementById('overviewMeetings').textContent = todayMeetings.length;
-        updateTodayMeetings(todayMeetings);
+        document.getElementById('overviewMeetings').textContent = todayPriorities.length;
+        updateTodayPriorities(todayPriorities);
         
         // Update welcome name
         var name = currentUser?.user_metadata?.full_name || currentUser?.user_metadata?.display_name || 'there';
         document.getElementById('welcomeName').textContent = name.split(' ')[0];
+        
+        // Set today's date
+        document.getElementById('welcomeDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     }
     
-    // Update today's meetings list
-    function updateTodayMeetings(meetings) {
-        var list = document.getElementById('todayMeetings');
-        if (meetings.length === 0) {
-            list.innerHTML = '<div class="meetings-empty"><p>No callbacks scheduled for today</p></div>';
+    // Update today's priorities list
+    function updateTodayPriorities(priorities) {
+        var list = document.getElementById('todayPriorities');
+        if (!priorities || priorities.length === 0) {
+            list.innerHTML = '<div class="priorities-empty"><p>No meetings or callbacks scheduled for today</p></div>';
             return;
         }
         
-        list.innerHTML = meetings.map(function(lead) {
+        list.innerHTML = priorities.map(function(lead) {
             var f = lead.fields;
-            var name = f['Full Name'] || (f['First Name'] + ' ' + (f['Last Name'] || ''));
-            var phone = f['Phone'] || '-';
-            var time = f['Callback Time'] || 'TBD';
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var phone = f['Phone #'] || f['Phone'] || '-';
+            var bookedTime = f['Booked Time'];
+            var callbackDate = f['Callback Date'] || f['Follow Up Date'];
+            var isBooked = !!bookedTime;
             
-            return '<div class="meeting-card">' +
-                '<div class="meeting-time">' + escapeHtml(time) + '</div>' +
-                '<div class="meeting-info">' +
-                    '<div class="meeting-name">' + escapeHtml(name) + '</div>' +
-                    '<div class="meeting-details">' + escapeHtml(phone) + '</div>' +
+            var timeDisplay = '-';
+            if (bookedTime) {
+                var d = new Date(bookedTime);
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            } else if (callbackDate) {
+                var d = new Date(callbackDate);
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            }
+            
+            return '<div class="priority-card" data-id="' + lead.id + '" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                '<div class="priority-time">' + timeDisplay + '</div>' +
+                '<div class="priority-info">' +
+                    '<div class="priority-name">' + escapeHtml(name) + '</div>' +
+                    '<div class="priority-details">📞 ' + escapeHtml(phone) + '</div>' +
                 '</div>' +
-                '<button class="btn btn-sm btn-primary" onclick="alert(\'Call feature coming soon\')">Call</button>' +
+                '<span class="priority-type ' + (isBooked ? 'booked' : 'callback') + '">' + (isBooked ? 'Booked' : 'Callback') + '</span>' +
+                '<span class="priority-arrow">›</span>' +
             '</div>';
         }).join('');
     }
