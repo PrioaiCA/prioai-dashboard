@@ -314,6 +314,87 @@
             .help-support-actions{flex-direction:column}
             .help-support-actions .btn{width:100%}
         }
+        
+        /* Filters Bar */
+        .filters-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+        .search-box{position:relative;flex:1;min-width:200px;max-width:300px}
+        .search-box input{width:100%;padding:10px 16px 10px 40px;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.875rem}
+        .search-box input:focus{outline:none;border-color:rgb(52,211,153)}
+        .search-box .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.5}
+        .filter-group{display:flex;gap:0.5rem;flex-wrap:wrap}
+        .filter-select{padding:10px 16px;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.875rem;min-width:140px;cursor:pointer}
+        .filter-select:focus{outline:none;border-color:rgb(52,211,153)}
+        
+        /* Data Table */
+        .table-container{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden}
+        .data-table{width:100%;border-collapse:collapse}
+        .data-table th{text-align:left;padding:12px 16px;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.5);background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:600}
+        .data-table th.sortable{cursor:pointer}
+        .data-table th.sortable:hover{color:rgb(52,211,153)}
+        .data-table th.sorted-asc::after{content:" ↑";color:rgb(52,211,153)}
+        .data-table th.sorted-desc::after{content:" ↓";color:rgb(52,211,153)}
+        .data-table td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.875rem;vertical-align:middle}
+        .data-table tr:hover td{background:rgba(255,255,255,0.02)}
+        .data-table tr:last-child td{border-bottom:none}
+        .data-table .empty-state{text-align:center;padding:40px;color:rgba(255,255,255,0.4)}
+        
+        /* Status Badges */
+        .status-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:600}
+        .status-badge.booked,.status-badge.meeting-booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
+        .status-badge.callback{background:rgba(59,130,246,0.15);color:#3B82F6}
+        .status-badge.timeline{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .status-badge.follow-up{background:rgba(139,92,246,0.15);color:#8B5CF6}
+        .status-badge.interested{background:rgba(52,211,153,0.1);color:rgb(52,211,153)}
+        .status-badge.not-interested{background:rgba(239,68,68,0.1);color:#ef4444}
+        
+        /* Prospects Header */
+        .prospects-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+        .prospects-header-text h2{font-size:1.5rem;font-weight:700;margin-bottom:0.5rem}
+        .prospects-header-text p{color:rgba(255,255,255,0.5);font-size:0.9rem}
+        
+        /* Pipeline Styles */
+        .pipeline-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+        .pipeline-header-text h2{font-size:1.5rem;font-weight:700;margin-bottom:0.5rem}
+        .pipeline-header-text p{color:rgba(255,255,255,0.5);font-size:0.9rem}
+        .pipeline-stats{display:flex;gap:1.5rem}
+        .pipeline-stat{text-align:center}
+        .pipeline-stat-value{display:block;font-size:1.75rem;font-weight:700;color:rgb(52,211,153)}
+        .pipeline-stat-label{font-size:0.75rem;color:rgba(255,255,255,0.5);text-transform:uppercase}
+        .pipeline-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}
+        .pipeline-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
+        
+        /* Pipeline Card */
+        .pipeline-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px;cursor:pointer;transition:all 0.15s}
+        .pipeline-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
+        .pipeline-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+        .pipeline-card-name{font-size:1rem;font-weight:600}
+        .pipeline-card-phone{font-size:0.8125rem;color:rgba(255,255,255,0.5);font-family:monospace}
+        .pipeline-card-status{margin-bottom:12px}
+        .pipeline-card-nextcall{display:flex;align-items:center;gap:8px;font-size:0.875rem;color:rgba(255,255,255,0.7)}
+        .pipeline-card-nextcall .date{color:rgb(52,211,153);font-weight:600}
+        .pipeline-card-summary{font-size:0.8125rem;line-height:1.5;color:rgba(255,255,255,0.6);margin-top:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        
+        /* Table Actions */
+        .table-actions{display:flex;gap:6px}
+        .table-action-btn{padding:6px 10px;border-radius:6px;border:none;cursor:pointer;font-size:0.75rem;font-weight:500;transition:all 0.15s}
+        .table-action-btn.view{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
+        .table-action-btn.view:hover{background:rgb(52,211,153);color:#000}
+        .table-action-btn.prio{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .table-action-btn.prio:hover{background:#f59e0b;color:#000}
+        .table-action-btn.share{background:rgba(59,130,246,0.15);color:#3B82F6}
+        .table-action-btn.share:hover{background:#3B82F6;color:#fff}
+        
+        /* Sharing indicator */
+        .sharing-indicator{display:flex;align-items:center;gap:4px;font-size:0.8125rem}
+        .sharing-indicator.shared{color:#3B82F6}
+        .sharing-indicator.not-shared{color:rgba(255,255,255,0.3)}
+        
+        /* Summary cell */
+        .summary-cell{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.8125rem;color:rgba(255,255,255,0.7)}
+        .notes-cell{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.8125rem;color:rgba(255,255,255,0.6)}
+        
+        /* Prio empty state */
+        .prio-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px;grid-column:1/-1}
     </style>
 </head>
 <body>
@@ -608,7 +689,7 @@
 
                     <!-- Page: PRIO -->
                     <div class="page hidden" id="page-prio">
-                        <!-- Prio Prospects Header -->
+                        <!-- Prio Header -->
                         <div class="prio-header">
                             <div class="prio-header-text">
                                 <h2>⚡ Prio Prospects</h2>
@@ -622,30 +703,145 @@
                             </div>
                         </div>
 
-                        <!-- Prio Prospects Cards -->
+                        <!-- Prio Filters -->
+                        <div class="filters-bar">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="prioSearch" placeholder="Search by name or phone...">
+                            </div>
+                            <div class="filter-group">
+                                <select id="prioOwnership" class="filter-select">
+                                    <option value="all">All Leads</option>
+                                    <option value="mine">My Prospects</option>
+                                    <option value="shared-by">Shared By Me</option>
+                                    <option value="not-shared">Not Shared</option>
+                                    <option value="shared-with">Shared With Me</option>
+                                </select>
+                                <select id="prioTimeframe" class="filter-select">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="7days">Last 7 Days</option>
+                                    <option value="30days">Last 30 Days</option>
+                                    <option value="90days">Last 90 Days</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Prio Cards -->
                         <div class="prio-list" id="prioList">
-                            <div class="prio-empty" style="padding:40px;text-align:center;color:rgba(255,255,255,0.4);">No priority leads yet</div>
+                            <div class="prio-empty">No priority leads yet</div>
                         </div>
                     </div>
 
                     <!-- Page: Prospects -->
                     <div class="page hidden" id="page-prospects">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Prospects</h3>
-                                <button class="btn btn-primary btn-sm">+ Add Lead</button>
+                        <!-- Prospects Header -->
+                        <div class="prospects-header">
+                            <div class="prospects-header-text">
+                                <h2>📋 Prospects</h2>
+                                <p>Booked meetings and callback requests.</p>
                             </div>
-                            <p class="text-muted">Your prospects will appear here.</p>
+                            <div class="prospects-header-actions">
+                                <button class="btn btn-secondary btn-sm" id="columnsBtn">⚙️ Columns</button>
+                            </div>
+                        </div>
+
+                        <!-- Prospects Filters -->
+                        <div class="filters-bar">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="prospectsSearch" placeholder="Search by name or phone...">
+                            </div>
+                            <div class="filter-group">
+                                <select id="prospectsStatus" class="filter-select">
+                                    <option value="all">All Status</option>
+                                    <option value="Booked">Booked</option>
+                                    <option value="Callback">Callback</option>
+                                </select>
+                                <select id="prospectsOwnership" class="filter-select">
+                                    <option value="all">All Leads</option>
+                                    <option value="mine">My Prospects</option>
+                                    <option value="shared-by">Shared By Me</option>
+                                    <option value="not-shared">Not Shared</option>
+                                    <option value="shared-with">Shared With Me</option>
+                                </select>
+                                <select id="prospectsTimeframe" class="filter-select">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="7days">Last 7 Days</option>
+                                    <option value="30days">Last 30 Days</option>
+                                    <option value="90days">Last 90 Days</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Prospects Table -->
+                        <div class="table-container">
+                            <table class="data-table" id="prospectsTable">
+                                <thead>
+                                    <tr>
+                                        <th class="sortable" data-sort="firstName">Name</th>
+                                        <th>Phone</th>
+                                        <th class="sortable" data-sort="status">Status</th>
+                                        <th class="sortable" data-sort="lastCalled">Last Called</th>
+                                        <th class="sortable" data-sort="bookedTime">Booked Time</th>
+                                        <th>Summary</th>
+                                        <th>Notes</th>
+                                        <th>Sharing</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="prospectsTableBody">
+                                    <tr><td colspan="9" class="empty-state">Loading prospects...</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
                     <!-- Page: Pipeline -->
                     <div class="page hidden" id="page-pipeline">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">AI Pipeline</h3>
+                        <!-- Pipeline Header -->
+                        <div class="pipeline-header">
+                            <div class="pipeline-header-text">
+                                <h2>🤖 AI Pipeline</h2>
+                                <p>Leads being followed up by AI. Timeline and scheduled follow-ups.</p>
                             </div>
-                            <p class="text-muted">Your AI calling pipeline will appear here.</p>
+                            <div class="pipeline-stats">
+                                <div class="pipeline-stat">
+                                    <span class="pipeline-stat-value" id="pipelineTimeline">0</span>
+                                    <span class="pipeline-stat-label">Timeline</span>
+                                </div>
+                                <div class="pipeline-stat">
+                                    <span class="pipeline-stat-value" id="pipelineFollowUp">0</span>
+                                    <span class="pipeline-stat-label">Follow Up</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pipeline Filters -->
+                        <div class="filters-bar">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="pipelineSearch" placeholder="Search by name or phone...">
+                            </div>
+                            <div class="filter-group">
+                                <select id="pipelineStatus" class="filter-select">
+                                    <option value="all">All Status</option>
+                                    <option value="Timeline">Timeline</option>
+                                    <option value="Follow Up">Follow Up</option>
+                                </select>
+                                <select id="pipelineTimeframe" class="filter-select">
+                                    <option value="all">All Time</option>
+                                    <option value="7days">Next 7 Days</option>
+                                    <option value="30days">Next 30 Days</option>
+                                    <option value="90days">Next 90 Days</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Pipeline Cards -->
+                        <div class="pipeline-list" id="pipelineList">
+                            <div class="pipeline-empty">No leads in AI pipeline</div>
                         </div>
                     </div>
 
@@ -2569,6 +2765,532 @@
         }
         btn.disabled = false;
     });
+    
+    // ===== PROSPECTS TAB =====
+    var prospectsSort = { field: 'bookedTime', direction: 'desc' };
+    
+    function updateProspectsTable() {
+        var tbody = document.getElementById('prospectsTableBody');
+        if (!tbody) return;
+        
+        // Get Booked/Callback leads (excluding PRIO)
+        var searchVal = (document.getElementById('prospectsSearch')?.value || '').toLowerCase();
+        var statusFilter = document.getElementById('prospectsStatus')?.value || 'all';
+        var ownershipFilter = document.getElementById('prospectsOwnership')?.value || 'all';
+        var timeframeFilter = document.getElementById('prospectsTimeframe')?.value || 'all';
+        
+        var prospects = allLeads.filter(function(l) {
+            var f = l.fields;
+            var status = f['Status'] || f['Disposition'] || '';
+            
+            // Only Booked or Callback, and NOT in PRIO
+            if (f['Is Prio'] === true) return false;
+            if (status !== 'Booked' && status !== 'Appointment Booked' && status !== 'Callback' && status !== 'Callback Requested') return false;
+            
+            // Status filter
+            if (statusFilter !== 'all') {
+                if (statusFilter === 'Booked' && !status.includes('Booked')) return false;
+                if (statusFilter === 'Callback' && !status.includes('Callback')) return false;
+            }
+            
+            // Search filter
+            if (searchVal) {
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+                var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
+                if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
+            }
+            
+            // Ownership filter
+            if (ownershipFilter !== 'all') {
+                var isOwned = isLeadOwnedByUser(l);
+                var isSharedByMe = !l.isShared && f['Shared With Email'];
+                var isSharedWithMe = l.isShared === true;
+                
+                if (ownershipFilter === 'mine' && !isOwned) return false;
+                if (ownershipFilter === 'shared-by' && !isSharedByMe) return false;
+                if (ownershipFilter === 'not-shared' && (isSharedByMe || isSharedWithMe)) return false;
+                if (ownershipFilter === 'shared-with' && !isSharedWithMe) return false;
+            }
+            
+            // Timeframe filter
+            if (timeframeFilter !== 'all') {
+                var lastCall = f['Last Call Timestamp'] || f['Client Last Call Timestamp'];
+                if (!lastCall) return false;
+                var daysDiff = getDaysDiff(new Date(lastCall));
+                if (timeframeFilter === 'today' && daysDiff > 0) return false;
+                if (timeframeFilter === '7days' && daysDiff > 7) return false;
+                if (timeframeFilter === '30days' && daysDiff > 30) return false;
+                if (timeframeFilter === '90days' && daysDiff > 90) return false;
+            }
+            
+            return true;
+        });
+        
+        // Sort
+        prospects.sort(function(a, b) {
+            var aVal, bVal;
+            var fa = a.fields, fb = b.fields;
+            
+            switch (prospectsSort.field) {
+                case 'firstName':
+                    aVal = (fa['First Name'] || '').toLowerCase();
+                    bVal = (fb['First Name'] || '').toLowerCase();
+                    break;
+                case 'status':
+                    aVal = fa['Status'] || fa['Disposition'] || '';
+                    bVal = fb['Status'] || fb['Disposition'] || '';
+                    break;
+                case 'lastCalled':
+                    aVal = new Date(getMostRecentLastCalled(fa) || 0).getTime();
+                    bVal = new Date(getMostRecentLastCalled(fb) || 0).getTime();
+                    break;
+                case 'bookedTime':
+                default:
+                    aVal = new Date(fa['Booked Time'] || 0).getTime();
+                    bVal = new Date(fb['Booked Time'] || 0).getTime();
+            }
+            
+            if (prospectsSort.direction === 'asc') {
+                return aVal > bVal ? 1 : -1;
+            } else {
+                return aVal < bVal ? 1 : -1;
+            }
+        });
+        
+        if (prospects.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No prospects found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = prospects.map(function(lead) {
+            var f = lead.fields;
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
+            var status = f['Status'] || f['Disposition'] || '-';
+            var statusClass = getStatusClass(status);
+            var lastCalled = formatDateTime(getMostRecentLastCalled(f));
+            var bookedTime = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
+            var summary = f['Last Call Summary'] || '';
+            var notesRaw = f['Client Notes'] || '';
+            var notes = parseNotesJson(notesRaw);
+            var lastNote = notes.length > 0 ? notes[notes.length - 1].text : '';
+            var isShared = f['Shared With'] || f['Shared With Email'];
+            
+            return '<tr onclick="openLeadModal(\'' + lead.id + '\')" style="cursor:pointer">' +
+                '<td><strong>' + escapeHtml(name) + '</strong></td>' +
+                '<td style="font-family:monospace">' + escapeHtml(phone) + '</td>' +
+                '<td><span class="status-badge ' + statusClass + '">' + escapeHtml(status) + '</span></td>' +
+                '<td>' + lastCalled + '</td>' +
+                '<td>' + bookedTime + '</td>' +
+                '<td class="summary-cell" title="' + escapeHtml(summary) + '">' + escapeHtml(summary.substring(0, 60)) + (summary.length > 60 ? '...' : '') + '</td>' +
+                '<td class="notes-cell" title="' + escapeHtml(lastNote) + '">' + escapeHtml(lastNote.substring(0, 40)) + (lastNote.length > 40 ? '...' : '') + '</td>' +
+                '<td><span class="sharing-indicator ' + (isShared ? 'shared' : 'not-shared') + '">' + (isShared ? '🔗' : '-') + '</span></td>' +
+                '<td class="table-actions">' +
+                    '<button class="table-action-btn view" onclick="event.stopPropagation();openLeadModal(\'' + lead.id + '\')">View</button>' +
+                    '<button class="table-action-btn prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')">⭐</button>' +
+                '</td>' +
+            '</tr>';
+        }).join('');
+    }
+    
+    // ===== PIPELINE TAB =====
+    function updatePipelineList() {
+        var pipelineList = document.getElementById('pipelineList');
+        if (!pipelineList) return;
+        
+        var searchVal = (document.getElementById('pipelineSearch')?.value || '').toLowerCase();
+        var statusFilter = document.getElementById('pipelineStatus')?.value || 'all';
+        var timeframeFilter = document.getElementById('pipelineTimeframe')?.value || 'all';
+        
+        // Get Timeline and Follow Up leads
+        var pipelineLeads = allLeads.filter(function(l) {
+            var f = l.fields;
+            var status = f['Status'] || f['Disposition'] || '';
+            
+            if (status !== 'Timeline' && status !== 'Follow Up') return false;
+            
+            // Status filter
+            if (statusFilter !== 'all' && status !== statusFilter) return false;
+            
+            // Search filter
+            if (searchVal) {
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+                var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
+                if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
+            }
+            
+            // Timeframe filter (for Next Call Date)
+            if (timeframeFilter !== 'all' && f['Next Call Date']) {
+                var nextCall = new Date(f['Next Call Date']);
+                var now = new Date();
+                var daysDiff = Math.ceil((nextCall - now) / (1000 * 60 * 60 * 24));
+                if (timeframeFilter === '7days' && daysDiff > 7) return false;
+                if (timeframeFilter === '30days' && daysDiff > 30) return false;
+                if (timeframeFilter === '90days' && daysDiff > 90) return false;
+            }
+            
+            return true;
+        });
+        
+        // Sort by Next Call Date
+        pipelineLeads.sort(function(a, b) {
+            var aDate = new Date(a.fields['Next Call Date'] || '9999-12-31');
+            var bDate = new Date(b.fields['Next Call Date'] || '9999-12-31');
+            return aDate - bDate;
+        });
+        
+        // Update stats
+        var timelineCount = allLeads.filter(function(l) { return (l.fields['Status'] || l.fields['Disposition']) === 'Timeline'; }).length;
+        var followUpCount = allLeads.filter(function(l) { return (l.fields['Status'] || l.fields['Disposition']) === 'Follow Up'; }).length;
+        document.getElementById('pipelineTimeline').textContent = timelineCount;
+        document.getElementById('pipelineFollowUp').textContent = followUpCount;
+        
+        if (pipelineLeads.length === 0) {
+            pipelineList.innerHTML = '<div class="pipeline-empty">No leads in AI pipeline</div>';
+            return;
+        }
+        
+        pipelineList.innerHTML = pipelineLeads.map(function(lead) {
+            var f = lead.fields;
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
+            var status = f['Status'] || f['Disposition'] || '-';
+            var statusClass = status === 'Timeline' ? 'timeline' : 'follow-up';
+            var nextCall = f['Next Call Date'] ? formatDateTime(f['Next Call Date']) : 'Not scheduled';
+            var summary = f['Last Call Summary'] || 'No summary';
+            
+            return '<div class="pipeline-card" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                '<div class="pipeline-card-header">' +
+                    '<div class="pipeline-card-name">' + escapeHtml(name) + '</div>' +
+                    '<div class="pipeline-card-phone">' + escapeHtml(phone) + '</div>' +
+                '</div>' +
+                '<div class="pipeline-card-status"><span class="status-badge ' + statusClass + '">' + escapeHtml(status) + '</span></div>' +
+                '<div class="pipeline-card-nextcall">📅 Next call: <span class="date">' + nextCall + '</span></div>' +
+                '<div class="pipeline-card-summary">' + escapeHtml(summary) + '</div>' +
+            '</div>';
+        }).join('');
+    }
+    
+    // Helper: Check if lead is owned by current user
+    function isLeadOwnedByUser(lead) {
+        if (!currentUser) return false;
+        var clientEmails = lead.fields['Client Email'] || [];
+        if (typeof clientEmails === 'string') clientEmails = [clientEmails];
+        return clientEmails.some(function(e) {
+            return e.toLowerCase() === currentUser.email.toLowerCase();
+        });
+    }
+    
+    // Helper: Get days difference
+    function getDaysDiff(date) {
+        var now = new Date();
+        return Math.floor((now - date) / (1000 * 60 * 60 * 24));
+    }
+    
+    // Helper: Get most recent last called timestamp
+    function getMostRecentLastCalled(fields) {
+        var aiLastCall = fields['Last Call Timestamp'] ? new Date(fields['Last Call Timestamp']) : null;
+        var clientLastCall = fields['Client Last Call Timestamp'] ? new Date(fields['Client Last Call Timestamp']) : null;
+        
+        if (!aiLastCall && !clientLastCall) return null;
+        if (!aiLastCall) return clientLastCall;
+        if (!clientLastCall) return aiLastCall;
+        
+        return aiLastCall > clientLastCall ? aiLastCall : clientLastCall;
+    }
+    
+    // Helper: Format date/time
+    function formatDateTime(dateVal) {
+        if (!dateVal) return '-';
+        var date = new Date(dateVal);
+        return date.toLocaleDateString('en-CA', {
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+    }
+    
+    // Helper: Format phone
+    function formatPhone(phone) {
+        if (!phone) return '-';
+        var cleaned = phone.toString().replace(/\D/g, '');
+        if (cleaned.length === 11 && cleaned[0] === '1') cleaned = cleaned.slice(1);
+        if (cleaned.length === 10) {
+            return '(' + cleaned.slice(0,3) + ') ' + cleaned.slice(3,6) + '-' + cleaned.slice(6);
+        }
+        return phone;
+    }
+    
+    // Helper: Get status class
+    function getStatusClass(status) {
+        if (!status) return '';
+        var s = status.toLowerCase();
+        if (s.includes('booked')) return 'booked';
+        if (s.includes('callback')) return 'callback';
+        if (s.includes('timeline')) return 'timeline';
+        if (s.includes('follow')) return 'follow-up';
+        if (s.includes('interested') && !s.includes('not')) return 'interested';
+        if (s.includes('not interested')) return 'not-interested';
+        return '';
+    }
+    
+    // Mark as PRIO from table
+    async function markAsPrio(leadId) {
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+                method: 'PATCH',
+                body: { fields: { 'Is Prio': true } }
+            });
+            var lead = allLeads.find(function(l) { return l.id === leadId; });
+            if (lead) lead.fields['Is Prio'] = true;
+            updatePrioList();
+            updateProspectsTable();
+            showToast('Marked as PRIO', 'success');
+        } catch (err) {
+            showToast('Failed to update', 'error');
+        }
+    }
+    
+    // Open lead modal by ID
+    function openLeadModal(leadId) {
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        if (!lead) return;
+        
+        currentLeadId = leadId;
+        var f = lead.fields;
+        
+        // Populate modal
+        document.getElementById('modalLeadName').textContent = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+        document.getElementById('modalPhone').textContent = formatPhone(f['Phone #'] || f['Phone'] || '-');
+        
+        var status = f['Status'] || f['Disposition'] || '-';
+        var statusEl = document.getElementById('modalStatus');
+        statusEl.textContent = status;
+        statusEl.className = 'status-badge ' + getStatusClass(status);
+        
+        document.getElementById('modalLastCalled').textContent = formatDateTime(getMostRecentLastCalled(f));
+        document.getElementById('modalBookedTime').textContent = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
+        document.getElementById('modalSummary').textContent = f['Last Call Summary'] || 'No summary available';
+        
+        // Notes
+        var notesRaw = f['Client Notes'] || '';
+        var notes = parseNotesJson(notesRaw);
+        var notesList = document.getElementById('modalNotesList');
+        if (notes.length > 0) {
+            notesList.innerHTML = notes.map(function(note) {
+                return '<div class="lead-note-item">' + escapeHtml(note.text) + '<div class="lead-note-date">' + formatNoteDate(note.date || note.time) + '</div></div>';
+            }).join('');
+        } else {
+            notesList.innerHTML = '<div style="color:rgba(255,255,255,0.4)">No notes yet</div>';
+        }
+        document.getElementById('modalNotesInput').value = '';
+        
+        // Attempts
+        var attempts = f['Client Attempts'] || 0;
+        document.getElementById('modalAttemptsCount').textContent = attempts;
+        
+        // Transcript
+        var transcript = f['Transcript (from Calls)'] || '';
+        if (Array.isArray(transcript)) transcript = transcript.join('\n\n---\n\n');
+        document.getElementById('modalTranscript').textContent = transcript || 'No transcript available';
+        
+        // PRIO button state
+        var prioBtn = document.getElementById('modalPrioBtn');
+        if (f['Is Prio']) {
+            prioBtn.classList.add('active');
+            prioBtn.textContent = '⭐ PRIO';
+        } else {
+            prioBtn.classList.remove('active');
+            prioBtn.textContent = '☆ PRIO';
+        }
+        
+        // Show modal
+        document.getElementById('leadModal').classList.add('active');
+    }
+    
+    // Close modal
+    document.getElementById('leadModalClose').addEventListener('click', function() {
+        document.getElementById('leadModal').classList.remove('active');
+        currentLeadId = null;
+    });
+    document.getElementById('leadModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('active');
+            currentLeadId = null;
+        }
+    });
+    
+    // ===== FILTER EVENT LISTENERS =====
+    // Prio filters
+    document.getElementById('prioSearch')?.addEventListener('input', debounce(updatePrioListFiltered, 300));
+    document.getElementById('prioOwnership')?.addEventListener('change', updatePrioListFiltered);
+    document.getElementById('prioTimeframe')?.addEventListener('change', updatePrioListFiltered);
+    
+    // Prospects filters
+    document.getElementById('prospectsSearch')?.addEventListener('input', debounce(updateProspectsTable, 300));
+    document.getElementById('prospectsStatus')?.addEventListener('change', updateProspectsTable);
+    document.getElementById('prospectsOwnership')?.addEventListener('change', updateProspectsTable);
+    document.getElementById('prospectsTimeframe')?.addEventListener('change', updateProspectsTable);
+    
+    // Pipeline filters
+    document.getElementById('pipelineSearch')?.addEventListener('input', debounce(updatePipelineList, 300));
+    document.getElementById('pipelineStatus')?.addEventListener('change', updatePipelineList);
+    document.getElementById('pipelineTimeframe')?.addEventListener('change', updatePipelineList);
+    
+    // Debounce helper
+    function debounce(func, wait) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                func.apply(context, args);
+            }, wait);
+        };
+    }
+    
+    // Filtered Prio list update
+    function updatePrioListFiltered() {
+        var prioList = document.getElementById('prioList');
+        
+        var searchVal = (document.getElementById('prioSearch')?.value || '').toLowerCase();
+        var ownershipFilter = document.getElementById('prioOwnership')?.value || 'all';
+        var timeframeFilter = document.getElementById('prioTimeframe')?.value || 'all';
+        
+        var prioLeads = allLeads.filter(function(l) {
+            var f = l.fields;
+            if (f['Is Prio'] !== true) return false;
+            
+            // Search filter
+            if (searchVal) {
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+                var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
+                if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
+            }
+            
+            // Ownership filter
+            if (ownershipFilter !== 'all') {
+                var isOwned = isLeadOwnedByUser(l);
+                var isSharedByMe = !l.isShared && f['Shared With Email'];
+                var isSharedWithMe = l.isShared === true;
+                
+                if (ownershipFilter === 'mine' && !isOwned) return false;
+                if (ownershipFilter === 'shared-by' && !isSharedByMe) return false;
+                if (ownershipFilter === 'not-shared' && (isSharedByMe || isSharedWithMe)) return false;
+                if (ownershipFilter === 'shared-with' && !isSharedWithMe) return false;
+            }
+            
+            // Timeframe filter
+            if (timeframeFilter !== 'all') {
+                var lastCall = f['Last Call Timestamp'] || f['Client Last Call Timestamp'];
+                if (!lastCall) return false;
+                var daysDiff = getDaysDiff(new Date(lastCall));
+                if (timeframeFilter === 'today' && daysDiff > 0) return false;
+                if (timeframeFilter === '7days' && daysDiff > 7) return false;
+                if (timeframeFilter === '30days' && daysDiff > 30) return false;
+                if (timeframeFilter === '90days' && daysDiff > 90) return false;
+            }
+            
+            return true;
+        });
+        
+        // Sort by priority score
+        prioLeads = prioLeads.map(function(l) {
+            var d = l.fields['Disposition'] || l.fields['Status'] || '';
+            var score = 0;
+            if (d === 'Booked' || d === 'Appointment Booked') score = 95;
+            else if (d === 'Callback' || d === 'Callback Requested') score = 90;
+            else if (d === 'Interested') score = 85;
+            else if (d === 'Timeline') score = 70;
+            else if (d === 'Follow Up') score = 60;
+            else score = 50;
+            l._score = score;
+            return l;
+        }).sort(function(a, b) {
+            return b._score - a._score;
+        });
+        
+        document.getElementById('prioCount').textContent = prioLeads.length;
+        
+        if (prioLeads.length === 0) {
+            prioList.innerHTML = '<div class="prio-empty">No priority leads match your filters</div>';
+            return;
+        }
+        
+        // Render cards (reuse existing card rendering logic)
+        prioList.innerHTML = prioLeads.map(function(lead, index) {
+            var f = lead.fields;
+            var firstName = f['First Name'] || '';
+            var lastName = f['Last Name'] || '';
+            var name = (firstName + ' ' + lastName).trim() || 'Unknown';
+            var phone = f['Phone #'] || f['Phone'] || '-';
+            var lastCalledTimestamp = f['Last Call Timestamp'];
+            var lastCalled = lastCalledTimestamp ? formatTimeAgo(lastCalledTimestamp) : '-';
+            var lastCalledColor = getLastCalledColor(lastCalledTimestamp);
+            var bookedTime = f['Booked Time'] || null;
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var notesRaw = f['Client Notes'] || f['Notes'] || '';
+            var isShared = f['Shared With'] || f['Shared With Email'];
+            
+            var notesArray = parseNotesJson(notesRaw);
+            
+            var bookedDisplay = '';
+            if (bookedTime) {
+                var d = new Date(bookedTime);
+                bookedDisplay = d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}) + ', ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+            }
+            
+            var notesHtml = '';
+            if (notesArray.length > 0) {
+                notesHtml = notesArray.map(function(note) {
+                    return '<div class="prio-note-item">' +
+                        '<div class="prio-note-text">' + escapeHtml(note.text) + '</div>' +
+                        '<div class="prio-note-date">' + formatNoteDate(note.date || note.time) + '</div>' +
+                    '</div>';
+                }).join('');
+            } else {
+                notesHtml = '<div style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</div>';
+            }
+            
+            var cardId = 'prio-card-' + index;
+            
+            return '<div class="prio-card" data-id="' + lead.id + '" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                '<div class="prio-card-header">' +
+                    '<div class="prio-card-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                    '<div class="prio-card-meta">' +
+                        '<span class="prio-card-phone">📞 ' + escapeHtml(phone) + '</span>' +
+                        '<span class="prio-card-lastcall"><span class="lastcall-dot ' + lastCalledColor + '"></span>' + lastCalled + '</span>' +
+                    '</div>' +
+                    (bookedTime ? '<div class="prio-card-booked"><span class="booked-time">📅 ' + bookedDisplay + '</span></div>' : '') +
+                '</div>' +
+                '<div class="prio-card-tabs">' +
+                    '<button class="prio-card-tab active" onclick="event.stopPropagation();switchPrioTab(\'' + cardId + '\',\'summary\')">Summary</button>' +
+                    '<button class="prio-card-tab" onclick="event.stopPropagation();switchPrioTab(\'' + cardId + '\',\'notes\')">Notes</button>' +
+                '</div>' +
+                '<div class="prio-card-content" id="' + cardId + '">' +
+                    '<div class="prio-card-panel active" data-panel="summary">' +
+                        '<div class="prio-card-summary">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                    '</div>' +
+                    '<div class="prio-card-panel" data-panel="notes">' +
+                        '<div class="prio-card-notes-list">' + notesHtml + '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="prio-card-footer">' +
+                    '<button class="btn-share" onclick="event.stopPropagation()" title="Share lead">+ Share</button>' +
+                    '<button class="btn-unprio" onclick="event.stopPropagation();unprio(\'' + lead.id + '\')">Unprio</button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+    
+    // Update all tabs when data loads
+    var originalLoadLeadsData = loadLeadsData;
+    loadLeadsData = async function() {
+        await originalLoadLeadsData();
+        updateProspectsTable();
+        updatePipelineList();
+    };
     </script>
 </body>
 </html>
