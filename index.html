@@ -395,6 +395,12 @@
         
         /* Prio empty state */
         .prio-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px;grid-column:1/-1}
+        
+        /* Page Loading State */
+        .page-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;background:#111;border-radius:12px;grid-column:1/-1}
+        .page-loading .spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
+        .page-loading p{margin-top:16px;color:rgba(255,255,255,0.5);font-size:0.875rem}
+        @keyframes spin{to{transform:rotate(360deg)}}
     </style>
 </head>
 <body>
@@ -685,7 +691,7 @@
 
                         <!-- Prio Cards -->
                         <div class="prio-list" id="prioList">
-                            <div class="prio-empty">No priority leads yet</div>
+                            <div class="page-loading"><div class="spinner"></div><p>Loading priority leads...</p></div>
                         </div>
                     </div>
 
@@ -748,7 +754,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="prospectsTableBody">
-                                    <tr><td colspan="9" class="empty-state">Loading prospects...</td></tr>
+                                    <tr><td colspan="9" class="empty-state"><div class="spinner" style="margin:0 auto"></div><p style="margin-top:12px">Loading prospects...</p></td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -797,7 +803,7 @@
 
                         <!-- Pipeline Cards -->
                         <div class="pipeline-list" id="pipelineList">
-                            <div class="pipeline-empty">No leads in AI pipeline</div>
+                            <div class="page-loading"><div class="spinner"></div><p>Loading AI pipeline...</p></div>
                         </div>
                     </div>
 
@@ -1878,40 +1884,6 @@
         // Set today's date
         document.getElementById('welcomeDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
         
-        // Update analytics breakdown
-        updateAnalytics();
-    }
-    
-    // Update analytics breakdown by status
-    function updateAnalytics() {
-        var statusCounts = {
-            booked: 0, callback: 0, interested: 0,
-            timeline: 0, followUp: 0, notInterested: 0,
-            voicemail: 0, noAnswer: 0, dnc: 0
-        };
-        
-        allLeads.forEach(function(l) {
-            var status = (l.fields['Status'] || l.fields['Disposition'] || '').toLowerCase();
-            if (status === 'booked' || status === 'appointment booked') statusCounts.booked++;
-            else if (status === 'callback' || status === 'callback requested') statusCounts.callback++;
-            else if (status === 'interested') statusCounts.interested++;
-            else if (status === 'timeline') statusCounts.timeline++;
-            else if (status === 'follow up' || status === 'followup') statusCounts.followUp++;
-            else if (status === 'not interested' || status === 'notinterested') statusCounts.notInterested++;
-            else if (status === 'voicemail') statusCounts.voicemail++;
-            else if (status === 'no answer' || status === 'noanswer') statusCounts.noAnswer++;
-            else if (status === 'dnc' || status === 'do not call') statusCounts.dnc++;
-        });
-        
-        document.getElementById('analyticsBooked').textContent = statusCounts.booked;
-        document.getElementById('analyticsCallback').textContent = statusCounts.callback;
-        document.getElementById('analyticsInterested').textContent = statusCounts.interested;
-        document.getElementById('analyticsTimeline').textContent = statusCounts.timeline;
-        document.getElementById('analyticsFollowUp').textContent = statusCounts.followUp;
-        document.getElementById('analyticsNotInterested').textContent = statusCounts.notInterested;
-        document.getElementById('analyticsVoicemail').textContent = statusCounts.voicemail;
-        document.getElementById('analyticsNoAnswer').textContent = statusCounts.noAnswer;
-        document.getElementById('analyticsDNC').textContent = statusCounts.dnc;
     }
     
     // Update today's priorities list with taller cards
@@ -2826,10 +2798,12 @@
             var statusClass = getStatusClass(status);
             var lastCalled = formatDateTime(getMostRecentLastCalled(f));
             var bookedTime = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
-            var summary = f['Last Call Summary'] || '';
+            var summaryRaw = f['Last Call Summary'] || '';
+            var summary = Array.isArray(summaryRaw) ? summaryRaw.join(' ') : String(summaryRaw || '');
             var notesRaw = f['Client Notes'] || '';
             var notes = parseNotesJson(notesRaw);
-            var lastNote = notes.length > 0 ? notes[notes.length - 1].text : '';
+            var lastNoteRaw = notes.length > 0 ? notes[notes.length - 1].text : '';
+            var lastNote = String(lastNoteRaw || '');
             var isShared = f['Shared With'] || f['Shared With Email'];
             
             return '<tr onclick="openLeadModal(\'' + lead.id + '\')" style="cursor:pointer">' +
