@@ -25,9 +25,14 @@
         .quick-action:hover{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
         .quick-action-icon{font-size:1.5rem}
         .quick-action-text{font-size:0.875rem;font-weight:500}
-        .overview-header{margin-bottom:2rem}
-        .overview-header h2{font-size:1.5rem;margin-bottom:0.5rem}
-        .overview-header-meta{display:flex;align-items:center;gap:12px;font-size:0.875rem;color:rgba(255,255,255,0.5)}
+        .overview-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .overview-welcome{font-size:2rem;font-weight:700;margin-bottom:0.75rem}
+        .overview-header-meta{display:flex;align-items:center;gap:12px;font-size:0.9375rem;color:rgba(255,255,255,0.5)}
+        .usage-card .stat-content{flex:1}
+        .usage-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-top:10px;overflow:hidden}
+        .usage-bar-fill{height:100%;background:rgb(52,211,153);border-radius:3px;transition:width 0.3s ease,background 0.3s ease}
+        .usage-bar-fill.warning{background:#f59e0b}
+        .usage-bar-fill.danger{background:#ef4444}
         .header-meta-item{display:flex;align-items:center;gap:6px}
         .header-meta-divider{opacity:0.3}
         .meta-label{color:rgba(255,255,255,0.4)}
@@ -430,7 +435,7 @@
                     <div class="page" id="page-overview">
                         <!-- Welcome Header -->
                         <div class="overview-header">
-                            <h2>Welcome back, <span id="welcomeName">there</span> 👋</h2>
+                            <h1 class="overview-welcome">Welcome back, <span id="welcomeName">there</span> 👋</h1>
                             <div class="overview-header-meta">
                                 <span class="header-meta-item" id="welcomeDate"></span>
                                 <span class="header-meta-divider">•</span>
@@ -440,11 +445,14 @@
 
                         <!-- Row 1: Key Metrics -->
                         <div class="stats-grid">
-                            <div class="stat-card">
+                            <div class="stat-card usage-card" id="usageCard">
                                 <div class="stat-icon">📊</div>
                                 <div class="stat-content">
                                     <div class="stat-value"><span id="usageCalls">0</span> / <span id="usageLimit">0</span></div>
                                     <div class="stat-label">Monthly Usage</div>
+                                    <div class="usage-bar">
+                                        <div class="usage-bar-fill" id="usageBarFill"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="stat-card">
@@ -1562,6 +1570,17 @@
             var callLimit = currentUserRecord.fields['Call Limit'] || (currentUserRecord.fields['Monthly Plan'] === 'Professional' ? 3000 : 1000);
             document.getElementById('usageCalls').textContent = callsThisMonth;
             document.getElementById('usageLimit').textContent = callLimit;
+            
+            // Update usage progress bar
+            var usagePercent = callLimit > 0 ? Math.min((callsThisMonth / callLimit) * 100, 100) : 0;
+            var usageBar = document.getElementById('usageBarFill');
+            usageBar.style.width = usagePercent + '%';
+            usageBar.classList.remove('warning', 'danger');
+            if (callsThisMonth >= callLimit) {
+                usageBar.classList.add('danger');
+            } else if (usagePercent >= 80) {
+                usageBar.classList.add('warning');
+            }
         }
         
         // PRIO leads (Is Prio = true from Airtable)
