@@ -472,22 +472,7 @@
         </div>
     </div>
 
-    <!-- User Menu Modal -->
-    <div class="modal-overlay" id="userModal">
-        <div class="modal" style="max-width: 320px;">
-            <button class="modal-close" id="userModalClose">&times;</button>
-            <div class="modal-content">
-                <div style="text-align: center; margin-bottom: var(--space-5);">
-                    <div class="user-avatar" id="userModalAvatar" style="width: 64px; height: 64px; font-size: var(--text-xl); margin: 0 auto var(--space-3);">U</div>
-                    <div style="font-weight: 600;" id="userModalName">User</div>
-                    <div style="font-size: var(--text-sm); color: var(--text-secondary);" id="userModalEmail">user@example.com</div>
-                </div>
-                <button class="btn btn-secondary btn-block" style="margin-bottom: var(--space-2);" onclick="switchPage('settings')">Settings</button>
-                <button class="btn btn-secondary btn-block" style="margin-bottom: var(--space-2);" onclick="switchPage('billing')">Billing</button>
-                <button class="btn btn-secondary btn-block" id="logoutBtn" style="color: #ef4444;">Sign Out</button>
-            </div>
-        </div>
-    </div>
+<!-- User modal removed - using sidebar profile popup instead -->
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
@@ -507,7 +492,7 @@
     var sidebar = document.getElementById('sidebar');
     var sidebarOverlay = document.getElementById('sidebarOverlay');
     var authModal = document.getElementById('authModal');
-    var userModal = document.getElementById('userModal');
+    // userModal removed
     var loginForm = document.getElementById('loginForm');
     var signupForm = document.getElementById('signupForm');
 
@@ -586,9 +571,6 @@
         var pageEl = document.getElementById('page-' + page);
         if (pageEl) pageEl.classList.remove('hidden');
         
-        // Close user modal if open
-        userModal.classList.remove('active');
-        
         // Update hash
         window.location.hash = page;
     }
@@ -627,16 +609,7 @@
     document.getElementById('authModalClose').addEventListener('click', closeAuthModal);
     authModal.addEventListener('click', function(e) { if (e.target === authModal) closeAuthModal(); });
 
-    // User Modal
-    document.getElementById('userCard').addEventListener('click', function() {
-        if (currentUser) {
-            userModal.classList.add('active');
-        } else {
-            openAuthModal('login');
-        }
-    });
-    document.getElementById('userModalClose').addEventListener('click', function() { userModal.classList.remove('active'); });
-    userModal.addEventListener('click', function(e) { if (e.target === userModal) userModal.classList.remove('active'); });
+    // User card click handled by profile popup code below
 
     // Login
     loginForm.addEventListener('submit', async function(e) {
@@ -706,14 +679,7 @@
         });
     });
 
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', async function() {
-        await supabase.auth.signOut();
-        currentUser = null;
-        userModal.classList.remove('active');
-        checkAuth();
-        showToast('Signed out', 'success');
-    });
+<!-- Old logout button removed -->
     
     // Sidebar logout
     document.getElementById('sidebarLogout').addEventListener('click', async function() {
@@ -770,15 +736,11 @@
             
             document.getElementById('userName').textContent = name;
             document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('userModalName').textContent = name;
-            document.getElementById('userModalEmail').textContent = currentUser.email;
             
             if (avatar) {
                 document.getElementById('userAvatar').innerHTML = '<img src="' + avatar + '" alt="">';
-                document.getElementById('userModalAvatar').innerHTML = '<img src="' + avatar + '" alt="">';
             } else {
                 document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
-                document.getElementById('userModalAvatar').textContent = name.charAt(0).toUpperCase();
             }
             
             document.getElementById('loginBtn').classList.add('hidden');
