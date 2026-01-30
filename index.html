@@ -74,6 +74,29 @@
         .notifications-empty{padding:2rem;text-align:center;color:rgba(255,255,255,0.5);font-size:0.875rem}
         
         .sidebar-footer{position:relative}
+        
+        /* Settings Page */
+        .settings-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+        .settings-card.danger{border-color:rgba(239,68,68,0.3)}
+        .settings-title{font-size:1rem;font-weight:600;margin-bottom:1rem}
+        .profile-header{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+        .profile-avatar-lg{width:80px;height:80px;border-radius:50%;background:rgb(52,211,153);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:600;color:#000;overflow:hidden;flex-shrink:0}
+        .profile-avatar-lg img{width:100%;height:100%;object-fit:cover}
+        .profile-info h2{font-size:1.25rem;margin-bottom:0.25rem}
+        .profile-info p{color:rgba(255,255,255,0.6);font-size:0.875rem;margin-bottom:0.75rem}
+        .profile-actions{display:flex;gap:0.5rem}
+        .form-row{display:grid;grid-template-columns:1fr;gap:1rem;margin-bottom:1rem}
+        @media(min-width:640px){.form-row{grid-template-columns:repeat(2,1fr)}}
+        .form-group{margin-bottom:1rem}
+        .form-group:last-child{margin-bottom:0}
+        .form-group label{display:block;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.7);margin-bottom:0.5rem}
+        .form-group input,.form-group select{width:100%;padding:0.75rem 1rem;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.9375rem}
+        .form-group input:focus,.form-group select:focus{outline:none;border-color:rgb(52,211,153)}
+        .form-group input::placeholder{color:rgba(255,255,255,0.4)}
+        .form-message{font-size:0.875rem;padding:0.75rem;border-radius:8px;margin-bottom:1rem;display:none}
+        .form-message:not(:empty){display:block}
+        .form-message.success{background:rgba(52,211,153,0.1);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3)}
+        .form-message.error{background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3)}
     </style>
 </head>
 <body>
@@ -380,11 +403,105 @@
 
                     <!-- Page: Settings -->
                     <div class="page hidden" id="page-settings">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Settings</h3>
+                        <!-- Profile Card -->
+                        <div class="settings-card">
+                            <div class="profile-header">
+                                <div class="profile-avatar-lg" id="settingsAvatar">
+                                    <span id="settingsInitial">U</span>
+                                </div>
+                                <div class="profile-info">
+                                    <h2 id="settingsName">-</h2>
+                                    <p id="settingsEmail">-</p>
+                                    <div class="profile-actions">
+                                        <input type="file" id="settingsPhotoInput" accept="image/*" style="display:none;">
+                                        <button class="btn btn-sm btn-secondary" id="settingsUploadBtn">Upload Photo</button>
+                                        <button class="btn btn-sm btn-ghost" id="settingsRemoveBtn" style="display:none;">Remove</button>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="text-muted">Manage your account settings.</p>
+                        </div>
+
+                        <!-- Display Name -->
+                        <div class="settings-card">
+                            <h3 class="settings-title">Display Name</h3>
+                            <form id="displayNameForm">
+                                <div class="form-group">
+                                    <label for="settingsDisplayName">How should we greet you?</label>
+                                    <input type="text" id="settingsDisplayName" placeholder="e.g. Sahib">
+                                </div>
+                                <div class="form-message success" id="displaySuccess"></div>
+                                <div class="form-message error" id="displayError"></div>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </form>
+                        </div>
+
+                        <!-- Calling Preferences -->
+                        <div class="settings-card">
+                            <h3 class="settings-title">Calling Preferences</h3>
+                            <form id="callingPrefsForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="settingsPhone">Your Phone Number</label>
+                                        <input type="tel" id="settingsPhone" placeholder="+1 (555) 123-4567">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="settingsCalendar">Calendar Email</label>
+                                        <input type="email" id="settingsCalendar" placeholder="calendar@gmail.com">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="settingsStart">Available Start</label>
+                                        <select id="settingsStart">
+                                            <option value="8:00 AM">8:00 AM</option>
+                                            <option value="9:00 AM" selected>9:00 AM</option>
+                                            <option value="10:00 AM">10:00 AM</option>
+                                            <option value="11:00 AM">11:00 AM</option>
+                                            <option value="12:00 PM">12:00 PM</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="settingsEnd">Available End</label>
+                                        <select id="settingsEnd">
+                                            <option value="5:00 PM">5:00 PM</option>
+                                            <option value="6:00 PM" selected>6:00 PM</option>
+                                            <option value="7:00 PM">7:00 PM</option>
+                                            <option value="8:00 PM">8:00 PM</option>
+                                            <option value="9:00 PM">9:00 PM</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-message success" id="callingSuccess"></div>
+                                <div class="form-message error" id="callingError"></div>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                        </div>
+
+                        <!-- Change Password -->
+                        <div class="settings-card">
+                            <h3 class="settings-title">Change Password</h3>
+                            <form id="passwordForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="newPassword">New Password</label>
+                                        <input type="password" id="newPassword" placeholder="Min. 8 characters" minlength="8">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmNewPassword">Confirm Password</label>
+                                        <input type="password" id="confirmNewPassword" placeholder="Confirm password" minlength="8">
+                                    </div>
+                                </div>
+                                <div class="form-message success" id="passwordSuccess"></div>
+                                <div class="form-message error" id="passwordError"></div>
+                                <button type="submit" class="btn btn-secondary">Update Password</button>
+                            </form>
+                        </div>
+
+                        <!-- Danger Zone -->
+                        <div class="settings-card danger">
+                            <h3 class="settings-title" style="color:#ef4444;">Danger Zone</h3>
+                            <p class="text-muted" style="margin-bottom:1rem;">Need to pause or cancel your subscription?</p>
+                            <button class="btn btn-secondary" onclick="window.location.href='mailto:info@prioai.ca?subject=Account Change Request'">Contact Support</button>
                         </div>
                     </div>
 
@@ -984,10 +1101,180 @@
         return date.toLocaleDateString();
     }
 
+    // Settings - populate profile info
+    function updateSettingsProfile() {
+        if (!currentUser) return;
+        var name = currentUser.user_metadata?.full_name || currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+        var avatar = currentUser.user_metadata?.profile_picture;
+        
+        document.getElementById('settingsName').textContent = name;
+        document.getElementById('settingsEmail').textContent = currentUser.email;
+        document.getElementById('settingsDisplayName').value = currentUser.user_metadata?.display_name || '';
+        
+        if (avatar) {
+            document.getElementById('settingsAvatar').innerHTML = '<img src="' + avatar + '" alt="">';
+            document.getElementById('settingsRemoveBtn').style.display = 'inline-flex';
+        } else {
+            document.getElementById('settingsInitial').textContent = name.charAt(0).toUpperCase();
+            document.getElementById('settingsRemoveBtn').style.display = 'none';
+        }
+        
+        // Populate from Airtable client record
+        if (currentUserRecord && currentUserRecord.fields) {
+            var f = currentUserRecord.fields;
+            document.getElementById('settingsPhone').value = f['Phone'] || '';
+            document.getElementById('settingsCalendar').value = f['Google Calendar Email'] || '';
+            if (f['Available Start']) document.getElementById('settingsStart').value = f['Available Start'];
+            if (f['Available End']) document.getElementById('settingsEnd').value = f['Available End'];
+        }
+    }
+
+    // Display Name form
+    document.getElementById('displayNameForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var btn = this.querySelector('button');
+        var suc = document.getElementById('displaySuccess');
+        var err = document.getElementById('displayError');
+        suc.textContent = ''; err.textContent = '';
+        btn.disabled = true; btn.textContent = 'Saving...';
+        
+        try {
+            var displayName = document.getElementById('settingsDisplayName').value.trim();
+            var result = await supabase.auth.updateUser({ data: { display_name: displayName } });
+            if (result.error) throw result.error;
+            suc.textContent = '✓ Display name updated';
+            document.getElementById('userName').textContent = displayName || currentUser.email.split('@')[0];
+            document.getElementById('settingsName').textContent = displayName || currentUser.email.split('@')[0];
+        } catch (ex) {
+            err.textContent = ex.message || 'Failed to save';
+        }
+        btn.disabled = false; btn.textContent = 'Save';
+    });
+
+    // Calling Preferences form
+    document.getElementById('callingPrefsForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var btn = this.querySelector('button');
+        var suc = document.getElementById('callingSuccess');
+        var err = document.getElementById('callingError');
+        suc.textContent = ''; err.textContent = '';
+        btn.disabled = true; btn.textContent = 'Saving...';
+        
+        try {
+            if (!currentUserRecord) throw new Error('No client record found');
+            var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '/' + currentUserRecord.id, {
+                method: 'PATCH',
+                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fields: {
+                    'Phone': document.getElementById('settingsPhone').value,
+                    'Google Calendar Email': document.getElementById('settingsCalendar').value,
+                    'Available Start': document.getElementById('settingsStart').value,
+                    'Available End': document.getElementById('settingsEnd').value
+                }})
+            });
+            if (!response.ok) throw new Error('Failed to update');
+            suc.textContent = '✓ Preferences saved';
+        } catch (ex) {
+            err.textContent = ex.message || 'Failed to save';
+        }
+        btn.disabled = false; btn.textContent = 'Save Changes';
+    });
+
+    // Password form
+    document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var btn = this.querySelector('button');
+        var suc = document.getElementById('passwordSuccess');
+        var err = document.getElementById('passwordError');
+        suc.textContent = ''; err.textContent = '';
+        
+        var newPass = document.getElementById('newPassword').value;
+        var confirmPass = document.getElementById('confirmNewPassword').value;
+        
+        if (newPass !== confirmPass) {
+            err.textContent = 'Passwords do not match';
+            return;
+        }
+        if (newPass.length < 8) {
+            err.textContent = 'Password must be at least 8 characters';
+            return;
+        }
+        
+        btn.disabled = true; btn.textContent = 'Updating...';
+        
+        try {
+            var result = await supabase.auth.updateUser({ password: newPass });
+            if (result.error) throw result.error;
+            suc.textContent = '✓ Password updated';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+        } catch (ex) {
+            err.textContent = ex.message || 'Failed to update password';
+        }
+        btn.disabled = false; btn.textContent = 'Update Password';
+    });
+
+    // Photo upload
+    document.getElementById('settingsUploadBtn').addEventListener('click', function() {
+        document.getElementById('settingsPhotoInput').click();
+    });
+    
+    document.getElementById('settingsPhotoInput').addEventListener('change', async function() {
+        if (!this.files || !this.files[0]) return;
+        var file = this.files[0];
+        if (file.size > 5 * 1024 * 1024) { showToast('Image too large (max 5MB)', 'error'); return; }
+        
+        // Simple base64 upload for now
+        var reader = new FileReader();
+        reader.onload = async function(e) {
+            try {
+                // Resize to 200x200
+                var img = new Image();
+                img.onload = async function() {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = 200; canvas.height = 200;
+                    var ctx = canvas.getContext('2d');
+                    var size = Math.min(img.width, img.height);
+                    var x = (img.width - size) / 2;
+                    var y = (img.height - size) / 2;
+                    ctx.drawImage(img, x, y, size, size, 0, 0, 200, 200);
+                    var resized = canvas.toDataURL('image/jpeg', 0.85);
+                    
+                    var result = await supabase.auth.updateUser({ data: { profile_picture: resized } });
+                    if (result.error) throw result.error;
+                    
+                    document.getElementById('settingsAvatar').innerHTML = '<img src="' + resized + '" alt="">';
+                    document.getElementById('userAvatar').innerHTML = '<img src="' + resized + '" alt="">';
+                    document.getElementById('settingsRemoveBtn').style.display = 'inline-flex';
+                    showToast('Photo updated', 'success');
+                };
+                img.src = e.target.result;
+            } catch (ex) {
+                showToast('Failed to upload photo', 'error');
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+    
+    document.getElementById('settingsRemoveBtn').addEventListener('click', async function() {
+        try {
+            var result = await supabase.auth.updateUser({ data: { profile_picture: null } });
+            if (result.error) throw result.error;
+            var name = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+            document.getElementById('settingsAvatar').innerHTML = '<span id="settingsInitial">' + name.charAt(0).toUpperCase() + '</span>';
+            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+            this.style.display = 'none';
+            showToast('Photo removed', 'success');
+        } catch (ex) {
+            showToast('Failed to remove photo', 'error');
+        }
+    });
+
     // Init
     checkAuth().then(function() {
         if (currentUser) {
             loadUserData();
+            updateSettingsProfile();
         }
     });
     
