@@ -564,7 +564,7 @@
 </head>
 <body>
     <!-- Full Page Loading Overlay -->
-    <div id="pageLoadingOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.5s ease;">
+    <div id="pageLoadingOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:9999;display:none;align-items:center;justify-content:center;transition:opacity 0.5s ease;">
         <video autoplay muted playsinline style="max-width:300px;max-height:300px;" id="loadingVideo">
             <source src="/assets/loading.mp4" type="video/mp4">
         </video>
@@ -2127,6 +2127,14 @@
             
             document.getElementById('loginBtn').classList.add('hidden');
             document.getElementById('dashboardContent').classList.remove('hidden');
+            
+            // Show loading animation for logged in users
+            var overlay = document.getElementById('pageLoadingOverlay');
+            overlay.style.display = 'flex';
+            setTimeout(function() {
+                overlay.classList.add('fade-out');
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }, 8000);
         } else {
             document.getElementById('userName').textContent = 'Guest';
             document.getElementById('userEmail').textContent = 'Not signed in';
@@ -4115,8 +4123,7 @@
         }, 500);
     }
     
-    // Hide loading after 8 seconds (video duration)
-    setTimeout(hidePageLoading, 8000);
+    // Loading animation is now triggered in checkAuth after login
     
     // ===== ANALYTICS PAGE =====
     var analyticsPeriod = 'daily';
