@@ -25,10 +25,38 @@
         .quick-action:hover{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
         .quick-action-icon{font-size:1.5rem}
         .quick-action-text{font-size:0.875rem;font-weight:500}
-        .welcome-banner{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
-        .welcome-text h2{font-size:1.5rem;margin-bottom:0.5rem}
-        .welcome-text p{color:rgba(255,255,255,0.7)}
-        .welcome-date{font-size:0.875rem;color:rgba(255,255,255,0.5);background:#111;padding:0.5rem 1rem;border-radius:8px}
+        .overview-header{margin-bottom:2rem}
+        .overview-header h2{font-size:1.5rem;margin-bottom:0.5rem}
+        .overview-header-meta{display:flex;align-items:center;gap:12px;font-size:0.875rem;color:rgba(255,255,255,0.5)}
+        .header-meta-item{display:flex;align-items:center;gap:6px}
+        .header-meta-divider{opacity:0.3}
+        .meta-label{color:rgba(255,255,255,0.4)}
+        .meta-value{color:rgb(52,211,153);font-family:monospace;font-weight:500}
+        .priorities-section{margin-top:2rem}
+        .priorities-header{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+        .priorities-header h3{font-size:1.25rem;font-weight:600;display:flex;align-items:center;gap:10px}
+        .priorities-count{background:rgb(52,211,153);color:#000;font-size:0.875rem;font-weight:700;padding:4px 12px;border-radius:20px}
+        .priorities-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}
+        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;min-height:240px}
+        .priority-card-lg:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
+        .priority-card-lg-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .priority-card-lg-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+        .priority-card-lg-name{font-size:1rem;font-weight:600}
+        .priority-card-lg-badge{font-size:0.6875rem;padding:4px 10px;border-radius:4px;font-weight:600;text-transform:uppercase}
+        .priority-card-lg-badge.booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
+        .priority-card-lg-badge.callback{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .priority-card-lg-meta{display:flex;gap:16px;font-size:0.8125rem;color:rgba(255,255,255,0.6)}
+        .priority-card-lg-time{margin-top:10px;display:flex;align-items:center;gap:8px;font-size:0.875rem}
+        .priority-card-lg-time .time-value{color:rgb(52,211,153);font-weight:600}
+        .priority-card-lg-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .priority-card-lg-tab{flex:1;padding:10px 16px;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.5);background:transparent;border:none;cursor:pointer;transition:all 0.15s;text-align:center}
+        .priority-card-lg-tab:first-child{border-right:1px solid rgba(255,255,255,0.08)}
+        .priority-card-lg-tab.active{color:rgb(52,211,153);background:rgba(52,211,153,0.05)}
+        .priority-card-lg-content{flex:1;padding:16px 20px;overflow:hidden}
+        .priority-card-lg-panel{display:none}
+        .priority-card-lg-panel.active{display:block}
+        .priority-card-lg-summary{font-size:0.8125rem;line-height:1.6;color:rgba(255,255,255,0.7)}
+        .priority-card-lg-notes{font-size:0.8125rem;line-height:1.5;color:rgba(255,255,255,0.7)}
         .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
         .section-header h3{font-size:1.125rem;font-weight:600}
         .prio-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -400,39 +428,30 @@
                 <div id="dashboardContent" class="hidden">
                     <!-- Page: Overview -->
                     <div class="page" id="page-overview">
-                        <!-- Welcome Banner -->
-                        <div class="welcome-banner">
-                            <div class="welcome-text">
-                                <h2>Welcome back, <span id="welcomeName">there</span> 👋</h2>
-                                <p>Here's what's happening with your leads today.</p>
-                            </div>
-                            <div class="welcome-meta">
-                                <div class="welcome-date" id="welcomeDate"></div>
-                                <div class="welcome-phone" id="welcomePhone" style="display:none;">
-                                    <span class="phone-label">AI Phone #</span>
-                                    <span class="phone-value" id="retellPhoneNumber">-</span>
-                                </div>
-                                <div class="welcome-usage" id="welcomeUsage">
-                                    <span class="usage-label">Usage</span>
-                                    <span class="usage-value"><span id="usageCalls">0</span> / <span id="usageLimit">0</span></span>
-                                </div>
+                        <!-- Welcome Header -->
+                        <div class="overview-header">
+                            <h2>Welcome back, <span id="welcomeName">there</span> 👋</h2>
+                            <div class="overview-header-meta">
+                                <span class="header-meta-item" id="welcomeDate"></span>
+                                <span class="header-meta-divider">•</span>
+                                <span class="header-meta-item" id="welcomePhone"><span class="meta-label">AI:</span> <span class="meta-value" id="retellPhoneNumber">-</span></span>
                             </div>
                         </div>
 
-                        <!-- Stats Grid -->
+                        <!-- Row 1: Key Metrics -->
                         <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">📊</div>
+                                <div class="stat-content">
+                                    <div class="stat-value"><span id="usageCalls">0</span> / <span id="usageLimit">0</span></div>
+                                    <div class="stat-label">Monthly Usage</div>
+                                </div>
+                            </div>
                             <div class="stat-card">
                                 <div class="stat-icon">📋</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statProspects">-</div>
-                                    <div class="stat-label">Total Prospects</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">📞</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statCalls">-</div>
-                                    <div class="stat-label">Calls Made</div>
+                                    <div class="stat-label">Total Leads</div>
                                 </div>
                             </div>
                             <div class="stat-card accent">
@@ -451,7 +470,7 @@
                             </div>
                         </div>
 
-                        <!-- Overview Cards -->
+                        <!-- Row 2: Lead Categories -->
                         <div class="overview-grid">
                             <div class="overview-card" onclick="switchPage('prio')">
                                 <div class="overview-card-header">
@@ -461,13 +480,21 @@
                                 <div class="overview-card-value" id="overviewPrio">0</div>
                                 <div class="overview-card-desc">Priority leads to focus on</div>
                             </div>
-                            <div class="overview-card" onclick="switchPage('prospects')">
+                            <div class="overview-card" onclick="switchPage('booked')">
                                 <div class="overview-card-header">
-                                    <span class="overview-card-icon">📋</span>
-                                    <h4>Prospects</h4>
+                                    <span class="overview-card-icon">📅</span>
+                                    <h4>Scheduled</h4>
                                 </div>
-                                <div class="overview-card-value" id="overviewProspects">0</div>
-                                <div class="overview-card-desc">Total leads in your database</div>
+                                <div class="overview-card-value" id="overviewScheduled">0</div>
+                                <div class="overview-card-desc">Callbacks & meetings booked</div>
+                            </div>
+                            <div class="overview-card" onclick="switchPage('pipeline')">
+                                <div class="overview-card-header">
+                                    <span class="overview-card-icon">📞</span>
+                                    <h4>Active Leads</h4>
+                                </div>
+                                <div class="overview-card-value" id="overviewActive">0</div>
+                                <div class="overview-card-desc">Being called by AI</div>
                             </div>
                             <div class="overview-card" onclick="switchPage('pipeline')">
                                 <div class="overview-card-header">
@@ -475,25 +502,19 @@
                                     <h4>AI Pipeline</h4>
                                 </div>
                                 <div class="overview-card-value" id="overviewPipeline">0</div>
-                                <div class="overview-card-desc">Leads being called by AI</div>
-                            </div>
-                            <div class="overview-card highlight">
-                                <div class="overview-card-header">
-                                    <span class="overview-card-icon">📅</span>
-                                    <h4>Today's Priorities</h4>
-                                </div>
-                                <div class="overview-card-value" id="overviewMeetings">0</div>
-                                <div class="overview-card-desc">Meetings & callbacks today</div>
+                                <div class="overview-card-desc">Timeline & follow-ups</div>
                             </div>
                         </div>
 
-                        <!-- Today's Priorities List -->
-                        <div class="section-header">
-                            <h3>📅 Today's Priorities</h3>
-                        </div>
-                        <div class="priorities-list" id="todayPriorities">
-                            <div class="priorities-empty">
-                                <p>No meetings or callbacks scheduled for today</p>
+                        <!-- Today's Priorities Section -->
+                        <div class="priorities-section">
+                            <div class="priorities-header">
+                                <h3>📅 Today's Priorities <span class="priorities-count" id="prioritiesCount">0</span></h3>
+                            </div>
+                            <div class="priorities-cards" id="todayPriorities">
+                                <div class="priorities-empty">
+                                    <p>No meetings or callbacks scheduled for today</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1557,10 +1578,26 @@
         });
         document.getElementById('overviewPrio').textContent = prioLeads.length;
         
-        // AI Pipeline (leads in queue)
-        var pipelineLeads = allLeads.filter(function(l) {
+        // Scheduled leads (callback or meeting booked)
+        var scheduledLeads = allLeads.filter(function(l) {
+            var status = l.fields['Status'] || l.fields['Disposition'] || '';
+            var hasBookedTime = !!l.fields['Booked Time'];
+            var hasCallback = status === 'Callback' || status === 'Callback Requested';
+            return hasBookedTime || hasCallback || status === 'Booked' || status === 'Appointment Booked';
+        });
+        document.getElementById('overviewScheduled').textContent = scheduledLeads.length;
+        
+        // Active leads (currently being called by AI)
+        var activeLeads = allLeads.filter(function(l) {
             var status = l.fields['Call Status'] || l.fields['Status'] || '';
-            return status === 'Queued' || status === 'In Progress' || status === 'Retry' || status === 'Follow Up' || status === 'Timeline';
+            return status === 'Queued' || status === 'In Progress' || status === 'Retry' || status === 'Calling';
+        });
+        document.getElementById('overviewActive').textContent = activeLeads.length;
+        
+        // AI Pipeline (Timeline & Follow Up - will be called back)
+        var pipelineLeads = allLeads.filter(function(l) {
+            var status = l.fields['Status'] || l.fields['Disposition'] || '';
+            return status === 'Timeline' || status === 'Follow Up';
         });
         document.getElementById('overviewPipeline').textContent = pipelineLeads.length;
         
@@ -1575,7 +1612,7 @@
             var timeB = b.fields['Booked Time'] || b.fields['Callback Date'] || '';
             return timeA.localeCompare(timeB);
         });
-        document.getElementById('overviewMeetings').textContent = todayPriorities.length;
+        document.getElementById('prioritiesCount').textContent = todayPriorities.length;
         updateTodayPriorities(todayPriorities);
         
         // Update welcome name
@@ -1586,7 +1623,7 @@
         document.getElementById('welcomeDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     }
     
-    // Update today's priorities list
+    // Update today's priorities list with taller cards
     function updateTodayPriorities(priorities) {
         var list = document.getElementById('todayPriorities');
         if (!priorities || priorities.length === 0) {
@@ -1594,13 +1631,32 @@
             return;
         }
         
-        list.innerHTML = priorities.map(function(lead) {
+        list.innerHTML = priorities.map(function(lead, index) {
             var f = lead.fields;
             var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
             var phone = f['Phone #'] || f['Phone'] || '-';
             var bookedTime = f['Booked Time'];
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var isBooked = !!bookedTime;
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var notesRaw = f['Client Notes'] || f['Notes'] || '';
+            var lastCalledTimestamp = f['Last Call Timestamp'];
+            var lastCalled = lastCalledTimestamp ? formatTimeAgo(lastCalledTimestamp) : '-';
+            var lastCalledColor = getLastCalledColor(lastCalledTimestamp);
+            
+            // Parse notes
+            var notesArray = parseNotesJson(notesRaw);
+            var notesHtml = '';
+            if (notesArray.length > 0) {
+                notesHtml = notesArray.map(function(note) {
+                    return '<div class="prio-note-item">' +
+                        '<div class="prio-note-text">' + escapeHtml(note.text) + '</div>' +
+                        '<div class="prio-note-date">' + formatNoteDate(note.date) + '</div>' +
+                    '</div>';
+                }).join('');
+            } else {
+                notesHtml = '<div style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</div>';
+            }
             
             var timeDisplay = '-';
             if (bookedTime) {
@@ -1611,16 +1667,53 @@
                 timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
             }
             
-            return '<div class="priority-card" data-id="' + lead.id + '" onclick="openLeadModal(\'' + lead.id + '\')">' +
-                '<div class="priority-time">' + timeDisplay + '</div>' +
-                '<div class="priority-info">' +
-                    '<div class="priority-name">' + escapeHtml(name) + '</div>' +
-                    '<div class="priority-details">📞 ' + escapeHtml(phone) + '</div>' +
+            var cardId = 'priority-card-' + index;
+            
+            return '<div class="priority-card-lg" data-id="' + lead.id + '" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                '<div class="priority-card-lg-header">' +
+                    '<div class="priority-card-lg-top">' +
+                        '<div class="priority-card-lg-name">' + escapeHtml(name) + '</div>' +
+                        '<span class="priority-card-lg-badge ' + (isBooked ? 'booked' : 'callback') + '">' + (isBooked ? 'Meeting' : 'Callback') + '</span>' +
+                    '</div>' +
+                    '<div class="priority-card-lg-meta">' +
+                        '<span>' + escapeHtml(phone) + '</span>' +
+                        '<span class="prio-card-lastcall"><span class="lastcall-dot ' + lastCalledColor + '"></span>' + lastCalled + '</span>' +
+                    '</div>' +
+                    '<div class="priority-card-lg-time"><span>🕐</span> <span class="time-value">' + timeDisplay + '</span></div>' +
                 '</div>' +
-                '<span class="priority-type ' + (isBooked ? 'booked' : 'callback') + '">' + (isBooked ? 'Booked' : 'Callback') + '</span>' +
-                '<span class="priority-arrow">›</span>' +
+                '<div class="priority-card-lg-tabs">' +
+                    '<button class="priority-card-lg-tab active" onclick="event.stopPropagation();switchPriorityTab(\'' + cardId + '\',\'summary\')">Summary</button>' +
+                    '<button class="priority-card-lg-tab" onclick="event.stopPropagation();switchPriorityTab(\'' + cardId + '\',\'notes\')">Notes</button>' +
+                '</div>' +
+                '<div class="priority-card-lg-content" id="' + cardId + '">' +
+                    '<div class="priority-card-lg-panel active" data-panel="summary">' +
+                        '<div class="priority-card-lg-summary">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                    '</div>' +
+                    '<div class="priority-card-lg-panel" data-panel="notes">' +
+                        '<div class="prio-card-notes-list">' + notesHtml + '</div>' +
+                    '</div>' +
+                '</div>' +
             '</div>';
         }).join('');
+    }
+    
+    // Switch tabs on Priority cards
+    function switchPriorityTab(cardId, tab) {
+        var card = document.getElementById(cardId);
+        if (!card) return;
+        var tabsContainer = card.previousElementSibling;
+        
+        // Update tab buttons
+        tabsContainer.querySelectorAll('.priority-card-lg-tab').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        tabsContainer.querySelector('.priority-card-lg-tab:' + (tab === 'summary' ? 'first-child' : 'last-child')).classList.add('active');
+        
+        // Update panels
+        card.querySelectorAll('.priority-card-lg-panel').forEach(function(panel) {
+            panel.classList.remove('active');
+            if (panel.dataset.panel === tab) panel.classList.add('active');
+        });
     }
 
     // Update Prio Prospects list
