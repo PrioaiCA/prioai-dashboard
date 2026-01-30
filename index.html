@@ -731,11 +731,11 @@
                             <div class="priorities-header">
                                 <h3>📅 Today's Priorities <span class="priorities-count" id="prioritiesCount">0</span></h3>
                                 <div class="priorities-view-toggle">
-                                    <button class="view-toggle-btn active" id="viewGrid" onclick="setPrioritiesView('grid')" title="Grid view">▦</button>
-                                    <button class="view-toggle-btn" id="viewList" onclick="setPrioritiesView('list')" title="List view">☰</button>
+                                    <button class="view-toggle-btn" id="viewGrid" onclick="setPrioritiesView('grid')" title="Grid view">▦</button>
+                                    <button class="view-toggle-btn active" id="viewList" onclick="setPrioritiesView('list')" title="List view">☰</button>
                                 </div>
                             </div>
-                            <div class="priorities-cards" id="todayPriorities">
+                            <div class="priorities-cards list-view" id="todayPriorities">
                                 <div class="priorities-empty">
                                     <p>No meetings or callbacks scheduled for today</p>
                                 </div>
@@ -2268,7 +2268,7 @@
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + '</div>' +
-                            '<span class="priority-card-lg-badge ' + (isBooked ? 'booked' : 'callback') + '">' + (isBooked ? 'Meeting' : 'Callback') + '</span>' +
+                            (isBooked ? '' : '<span class="priority-card-lg-badge callback">Callback</span>') +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(phone) + '</div>' +
                         '<div class="priority-card-lg-lastcall"><span class="lastcall-dot ' + lastCalledColor + '"></span>' + lastCalled + '</div>' +
