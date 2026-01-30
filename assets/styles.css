@@ -784,6 +784,406 @@ tr:hover td {
     }
 }
 
+/* ==========================================================================
+   Overview Page
+   ========================================================================== */
+
+.welcome-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-8);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
+.welcome-text h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-2);
+}
+
+.welcome-text p {
+    color: var(--text-secondary);
+}
+
+.welcome-date {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    background: var(--bg-secondary);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+}
+
+@media (min-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    transition: all var(--transition-fast);
+}
+
+.stat-card:hover {
+    border-color: var(--border-primary);
+}
+
+.stat-card.accent {
+    background: var(--accent-muted);
+    border-color: var(--accent);
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: var(--space-1);
+}
+
+.stat-label {
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Section Header */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+}
+
+.section-header h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+}
+
+.section-link {
+    font-size: var(--text-sm);
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.section-link:hover {
+    text-decoration: underline;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+}
+
+@media (min-width: 768px) {
+    .quick-actions {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.quick-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+}
+
+.quick-action:hover {
+    border-color: var(--accent);
+    background: var(--accent-muted);
+}
+
+.quick-action-icon {
+    font-size: 1.5rem;
+}
+
+.quick-action-text {
+    font-size: var(--text-sm);
+    font-weight: 500;
+}
+
+/* Activity List */
+.activity-list {
+    min-height: 100px;
+}
+
+.activity-empty {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--text-tertiary);
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--border-secondary);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border-radius: 50%;
+    font-size: 1rem;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    margin-bottom: var(--space-1);
+}
+
+.activity-time {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+/* ==========================================================================
+   PRIO Page
+   ========================================================================== */
+
+.prio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
+.prio-header-text h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-2);
+}
+
+.prio-header-text p {
+    color: var(--text-secondary);
+}
+
+.prio-stat {
+    text-align: right;
+}
+
+.prio-stat-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.prio-stat-label {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+/* PRIO Filters */
+.prio-filters {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+}
+
+.prio-filter {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.prio-filter:hover {
+    border-color: var(--border-primary);
+    color: var(--text-primary);
+}
+
+.prio-filter.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+}
+
+/* PRIO List */
+.prio-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.prio-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12);
+    gap: var(--space-4);
+    color: var(--text-secondary);
+}
+
+.prio-empty {
+    text-align: center;
+    padding: var(--space-12);
+    color: var(--text-tertiary);
+}
+
+.prio-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.prio-card:hover {
+    border-color: var(--accent);
+    transform: translateX(4px);
+}
+
+.prio-card.hot {
+    border-left: 3px solid #ef4444;
+}
+
+.prio-card.warm {
+    border-left: 3px solid #f59e0b;
+}
+
+.prio-card.new {
+    border-left: 3px solid var(--accent);
+}
+
+.prio-rank {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border-radius: 50%;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.prio-card.hot .prio-rank {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.prio-card.warm .prio-rank {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
+
+.prio-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.prio-name {
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.prio-details {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+.prio-score {
+    text-align: right;
+}
+
+.prio-score-value {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.prio-score-label {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+.prio-actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.prio-action-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+
+.prio-action-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
 /* Loading states */
 .loading {
     display: flex;

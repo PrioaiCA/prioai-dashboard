@@ -139,39 +139,114 @@
                 <div id="dashboardContent" class="hidden">
                     <!-- Page: Overview -->
                     <div class="page" id="page-overview">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-5); margin-bottom: var(--space-6);">
-                            <div class="card">
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Total Prospects</div>
-                                <div style="font-size: var(--text-2xl); font-weight: 700;" id="statProspects">-</div>
+                        <!-- Welcome Banner -->
+                        <div class="welcome-banner">
+                            <div class="welcome-text">
+                                <h2>Welcome back, <span id="welcomeName">there</span> 👋</h2>
+                                <p>Here's what's happening with your leads today.</p>
                             </div>
-                            <div class="card">
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Calls Made</div>
-                                <div style="font-size: var(--text-2xl); font-weight: 700;" id="statCalls">-</div>
+                            <div class="welcome-date" id="welcomeDate"></div>
+                        </div>
+
+                        <!-- Stats Grid -->
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">📋</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statProspects">-</div>
+                                    <div class="stat-label">Total Prospects</div>
+                                </div>
                             </div>
-                            <div class="card">
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Appointments</div>
-                                <div style="font-size: var(--text-2xl); font-weight: 700;" id="statAppointments">-</div>
+                            <div class="stat-card">
+                                <div class="stat-icon">📞</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statCalls">-</div>
+                                    <div class="stat-label">Calls Made</div>
+                                </div>
                             </div>
-                            <div class="card">
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Conversion Rate</div>
-                                <div style="font-size: var(--text-2xl); font-weight: 700;" id="statConversion">-</div>
+                            <div class="stat-card accent">
+                                <div class="stat-icon">📅</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statAppointments">-</div>
+                                    <div class="stat-label">Appointments Booked</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">📈</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statConversion">-</div>
+                                    <div class="stat-label">Conversion Rate</div>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Quick Actions -->
+                        <div class="section-header">
+                            <h3>Quick Actions</h3>
+                        </div>
+                        <div class="quick-actions">
+                            <button class="quick-action" onclick="switchPage('import')">
+                                <span class="quick-action-icon">📥</span>
+                                <span class="quick-action-text">Import Leads</span>
+                            </button>
+                            <button class="quick-action" onclick="switchPage('prio')">
+                                <span class="quick-action-icon">⚡</span>
+                                <span class="quick-action-text">View PRIO Leads</span>
+                            </button>
+                            <button class="quick-action" onclick="switchPage('pipeline')">
+                                <span class="quick-action-icon">🤖</span>
+                                <span class="quick-action-text">AI Pipeline</span>
+                            </button>
+                            <button class="quick-action" onclick="switchPage('analytics')">
+                                <span class="quick-action-icon">📊</span>
+                                <span class="quick-action-text">View Analytics</span>
+                            </button>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="section-header">
+                            <h3>Recent Activity</h3>
+                            <a href="#" onclick="switchPage('prospects'); return false;" class="section-link">View all →</a>
+                        </div>
                         <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Recent Activity</h3>
+                            <div class="activity-list" id="recentActivity">
+                                <div class="activity-empty">
+                                    <p>No recent activity yet. Import some leads to get started!</p>
+                                </div>
                             </div>
-                            <p class="text-muted">Your recent lead activity will appear here.</p>
                         </div>
                     </div>
 
                     <!-- Page: PRIO -->
                     <div class="page hidden" id="page-prio">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">PRIO - Priority Leads</h3>
+                        <!-- PRIO Header -->
+                        <div class="prio-header">
+                            <div class="prio-header-text">
+                                <h2>⚡ PRIO Leads</h2>
+                                <p>Your hottest leads ranked by likelihood to convert. Focus here first.</p>
                             </div>
-                            <p class="text-muted">Your highest priority leads ranked by likelihood to convert.</p>
+                            <div class="prio-header-stats">
+                                <div class="prio-stat">
+                                    <span class="prio-stat-value" id="prioCount">0</span>
+                                    <span class="prio-stat-label">Priority Leads</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PRIO Filters -->
+                        <div class="prio-filters">
+                            <button class="prio-filter active" data-filter="all">All</button>
+                            <button class="prio-filter" data-filter="hot">🔥 Hot</button>
+                            <button class="prio-filter" data-filter="warm">🌤 Warm</button>
+                            <button class="prio-filter" data-filter="new">✨ New</button>
+                        </div>
+
+                        <!-- PRIO List -->
+                        <div class="prio-list" id="prioList">
+                            <div class="prio-loading">
+                                <div class="spinner"></div>
+                                <p>Loading priority leads...</p>
+                            </div>
                         </div>
                     </div>
 
@@ -563,8 +638,9 @@
         showToast('Signed out', 'success');
     });
 
-    // Auth Check
-    async function checkAuth() {
+    // Auth Check (returns promise)
+    function checkAuth() {
+        return (async function() {
         document.getElementById('loadingState').classList.remove('hidden');
         document.getElementById('guestState').classList.add('hidden');
         document.getElementById('dashboardContent').classList.add('hidden');
@@ -600,10 +676,231 @@
             document.getElementById('loginBtn').classList.remove('hidden');
             document.getElementById('guestState').classList.remove('hidden');
         }
+        })();
+    }
+
+    // Airtable Config
+    var _a = ['cGF0N0c3SURnT2lSNnJiTFEuM2E5ZGIyMmM1MTcwYjkwMzA1Yjc1MDRhNjNlNjkzM2JkNTQwMTFiMDI4YWMzODRmM2QyOWU5YWQ3YmNkYzBjMw=='];
+    var AIRTABLE_TOKEN = atob(_a[0]);
+    var AIRTABLE_BASE = 'applOjDjhH0RqLtBH';
+    var AIRTABLE_CLIENTS_TABLE = 'tblMptC872PyL7Znw';
+    var AIRTABLE_LEADS_TABLE = 'tblLpN4wceakfNFpq';
+    
+    var currentUserRecord = null;
+    var allLeads = [];
+
+    // Update welcome date
+    function updateWelcomeDate() {
+        var now = new Date();
+        var options = { weekday: 'long', month: 'long', day: 'numeric' };
+        document.getElementById('welcomeDate').textContent = now.toLocaleDateString('en-US', options);
+    }
+    updateWelcomeDate();
+
+    // Load user data from Airtable
+    async function loadUserData() {
+        if (!currentUser) return;
+        
+        try {
+            var filterFormula = encodeURIComponent('({Email} = "' + currentUser.email + '")');
+            var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + filterFormula, {
+                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN }
+            });
+            var data = await response.json();
+            
+            if (data.records && data.records.length > 0) {
+                currentUserRecord = data.records[0];
+                loadLeadsData();
+            }
+        } catch (err) {
+            console.error('Failed to load user data:', err);
+        }
+    }
+
+    // Load leads data
+    async function loadLeadsData() {
+        if (!currentUserRecord) return;
+        
+        try {
+            var clientRecordId = currentUserRecord.id;
+            var filterFormula = '({Client Record ID} = "' + clientRecordId + '")';
+            var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
+            
+            allLeads = [];
+            var offset = null;
+            
+            do {
+                var fetchUrl = url + (offset ? '&offset=' + offset : '');
+                var response = await fetch(fetchUrl, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
+                var data = await response.json();
+                
+                if (data.records) {
+                    allLeads = allLeads.concat(data.records);
+                }
+                offset = data.offset;
+            } while (offset);
+            
+            updateStats();
+            updatePrioList();
+            updateRecentActivity();
+        } catch (err) {
+            console.error('Failed to load leads:', err);
+        }
+    }
+
+    // Update stats
+    function updateStats() {
+        document.getElementById('statProspects').textContent = allLeads.length;
+        
+        var callsMade = allLeads.filter(function(l) { return l.fields['Call Count'] > 0; }).length;
+        document.getElementById('statCalls').textContent = callsMade;
+        
+        var appointments = allLeads.filter(function(l) { 
+            return l.fields['Disposition'] === 'Appointment Booked' || l.fields['Booking Status'] === 'Booked';
+        }).length;
+        document.getElementById('statAppointments').textContent = appointments;
+        
+        var convRate = allLeads.length > 0 ? Math.round((appointments / allLeads.length) * 100) : 0;
+        document.getElementById('statConversion').textContent = convRate + '%';
+        
+        // Update welcome name
+        var name = currentUser?.user_metadata?.full_name || currentUser?.user_metadata?.display_name || 'there';
+        document.getElementById('welcomeName').textContent = name.split(' ')[0];
+    }
+
+    // Update PRIO list
+    function updatePrioList() {
+        var prioList = document.getElementById('prioList');
+        
+        // Sort by priority score (you can customize this logic)
+        var prioLeads = allLeads.filter(function(l) {
+            // Include leads that are hot or have high engagement
+            var disposition = l.fields['Disposition'] || '';
+            var callCount = l.fields['Call Count'] || 0;
+            return disposition === 'Interested' || disposition === 'Callback Requested' || 
+                   disposition === 'Appointment Booked' || callCount > 0;
+        }).sort(function(a, b) {
+            // Sort by most recent activity
+            var aTime = a.fields['Last Call Timestamp'] || a.fields['Created Time'] || '';
+            var bTime = b.fields['Last Call Timestamp'] || b.fields['Created Time'] || '';
+            return new Date(bTime) - new Date(aTime);
+        }).slice(0, 20);
+        
+        document.getElementById('prioCount').textContent = prioLeads.length;
+        
+        if (prioLeads.length === 0) {
+            prioList.innerHTML = '<div class="prio-empty"><p>No priority leads yet. Import some leads to get started!</p></div>';
+            return;
+        }
+        
+        prioList.innerHTML = prioLeads.map(function(lead, index) {
+            var f = lead.fields;
+            var name = f['Full Name'] || f['First Name'] + ' ' + (f['Last Name'] || '');
+            var phone = f['Phone'] || '-';
+            var disposition = f['Disposition'] || 'New';
+            
+            var tempClass = 'new';
+            if (disposition === 'Interested' || disposition === 'Callback Requested') tempClass = 'hot';
+            else if (f['Call Count'] > 0) tempClass = 'warm';
+            
+            var score = 0;
+            if (disposition === 'Appointment Booked') score = 95;
+            else if (disposition === 'Interested') score = 80;
+            else if (disposition === 'Callback Requested') score = 70;
+            else if (f['Call Count'] > 2) score = 60;
+            else if (f['Call Count'] > 0) score = 40;
+            else score = 20;
+            
+            return '<div class="prio-card ' + tempClass + '" data-id="' + lead.id + '">' +
+                '<div class="prio-rank">' + (index + 1) + '</div>' +
+                '<div class="prio-info">' +
+                    '<div class="prio-name">' + escapeHtml(name) + '</div>' +
+                    '<div class="prio-details">' + escapeHtml(phone) + ' • ' + escapeHtml(disposition) + '</div>' +
+                '</div>' +
+                '<div class="prio-score">' +
+                    '<div class="prio-score-value">' + score + '</div>' +
+                    '<div class="prio-score-label">Score</div>' +
+                '</div>' +
+                '<div class="prio-actions">' +
+                    '<button class="prio-action-btn" title="Call">📞</button>' +
+                    '<button class="prio-action-btn" title="View">👁</button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    // Update recent activity
+    function updateRecentActivity() {
+        var activityList = document.getElementById('recentActivity');
+        
+        var recentLeads = allLeads.filter(function(l) {
+            return l.fields['Last Call Timestamp'];
+        }).sort(function(a, b) {
+            return new Date(b.fields['Last Call Timestamp']) - new Date(a.fields['Last Call Timestamp']);
+        }).slice(0, 5);
+        
+        if (recentLeads.length === 0) {
+            activityList.innerHTML = '<div class="activity-empty"><p>No recent activity yet. Import some leads to get started!</p></div>';
+            return;
+        }
+        
+        activityList.innerHTML = recentLeads.map(function(lead) {
+            var f = lead.fields;
+            var name = f['Full Name'] || f['First Name'] + ' ' + (f['Last Name'] || '');
+            var time = formatTimeAgo(f['Last Call Timestamp']);
+            var disposition = f['Disposition'] || 'Called';
+            
+            var icon = '📞';
+            if (disposition === 'Appointment Booked') icon = '📅';
+            else if (disposition === 'Interested') icon = '🔥';
+            else if (disposition === 'Not Interested') icon = '❌';
+            
+            return '<div class="activity-item">' +
+                '<div class="activity-icon">' + icon + '</div>' +
+                '<div class="activity-content">' +
+                    '<div class="activity-title">' + escapeHtml(name) + ' - ' + escapeHtml(disposition) + '</div>' +
+                    '<div class="activity-time">' + time + '</div>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    // PRIO Filters
+    document.querySelectorAll('.prio-filter').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.prio-filter').forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            // TODO: filter logic
+        });
+    });
+
+    // Helpers
+    function escapeHtml(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function formatTimeAgo(dateStr) {
+        if (!dateStr) return '';
+        var date = new Date(dateStr);
+        var now = new Date();
+        var diff = Math.floor((now - date) / 1000);
+        
+        if (diff < 60) return 'Just now';
+        if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+        if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+        return date.toLocaleDateString();
     }
 
     // Init
-    checkAuth();
+    checkAuth().then(function() {
+        if (currentUser) {
+            loadUserData();
+        }
+    });
     
     // Handle hash
     var hash = window.location.hash.slice(1);
