@@ -661,6 +661,13 @@
                                 </div>
                             </div>
                             <div class="stat-card">
+                                <div class="stat-icon">📞</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statCallsToday">0</div>
+                                    <div class="stat-label">Calls Today</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
                                 <div class="stat-icon">📋</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statProspects">-</div>
@@ -672,13 +679,6 @@
                                 <div class="stat-content">
                                     <div class="stat-value" id="statAppointments">-</div>
                                     <div class="stat-label">Appointments Booked</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">📈</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statConversion">-</div>
-                                    <div class="stat-label">Conversion Rate</div>
                                 </div>
                             </div>
                         </div>
@@ -2046,7 +2046,7 @@
         if (!hasCached) {
             document.getElementById('statProspects').textContent = '...';
             document.getElementById('statAppointments').textContent = '...';
-            document.getElementById('statConversion').textContent = '...';
+            document.getElementById('statCallsToday').textContent = '...';
         }
         
         try {
@@ -2060,7 +2060,7 @@
             } else {
                 document.getElementById('statProspects').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
-                document.getElementById('statConversion').textContent = '0%';
+                document.getElementById('statCallsToday').textContent = '0';
                 document.getElementById('prioList').innerHTML = '<div class="prio-empty">No leads yet. Import some to get started!</div>';
             }
         } catch (err) {
@@ -2068,7 +2068,7 @@
             if (!hasCached) {
                 document.getElementById('statProspects').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
-                document.getElementById('statConversion').textContent = '0%';
+                document.getElementById('statCallsToday').textContent = '0';
             }
         }
     }
@@ -2127,8 +2127,14 @@
         }).length;
         document.getElementById('statAppointments').textContent = appointments;
         
-        var convRate = totalProspects > 0 ? Math.round((appointments / totalProspects) * 100) : 0;
-        document.getElementById('statConversion').textContent = convRate + '%';
+        // Calls Today - count leads with Last Call Timestamp today
+        var today = new Date().toDateString();
+        var callsToday = allLeads.filter(function(l) {
+            var lastCall = l.fields['Last Call Timestamp'];
+            if (!lastCall) return false;
+            return new Date(lastCall).toDateString() === today;
+        }).length;
+        document.getElementById('statCallsToday').textContent = callsToday;
         
         // Retell Phone & Usage from client record
         if (currentUserRecord && currentUserRecord.fields) {
