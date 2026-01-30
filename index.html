@@ -154,6 +154,82 @@
         .lead-attempts-list{max-height:120px;overflow-y:auto}
         .lead-attempt-item{padding:8px 12px;background:rgba(255,255,255,0.05);border-radius:6px;margin-bottom:6px;font-size:0.8125rem;display:flex;justify-content:space-between}
         .lead-transcript{font-size:0.8125rem;line-height:1.7;color:rgba(255,255,255,0.7);max-height:200px;overflow-y:auto;white-space:pre-wrap}
+        .lead-transcript .speaker-ai{color:#fff;font-weight:600}
+        .lead-transcript .speaker-prospect{color:rgb(52,211,153);font-weight:600}
+        .lead-transcript-line{margin-bottom:8px}
+        
+        /* Share Button */
+        .btn-share{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:4px}
+        .btn-share:hover{background:rgba(59,130,246,0.25)}
+        .btn-share.shared{background:rgba(52,211,153,0.15);color:rgb(52,211,153);border-color:rgba(52,211,153,0.3)}
+        
+        /* Schedule Button */
+        .btn-schedule{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:4px}
+        .btn-schedule:hover{background:rgba(52,211,153,0.25)}
+        
+        /* Booked Time Display */
+        .booked-time-display{display:flex;align-items:center;gap:8px}
+        .booked-time-value{font-weight:500}
+        .btn-delete-booking{background:none;border:none;color:rgba(239,68,68,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
+        .btn-delete-booking:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        
+        /* Share Popup */
+        .share-popup-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1999;display:none}
+        .share-popup-overlay.active{display:block}
+        .share-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;min-width:320px;max-width:380px;box-shadow:0 16px 48px rgba(0,0,0,0.5);z-index:2000;display:none}
+        .share-popup.active{display:block}
+        .share-popup-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+        .share-popup-header h4{font-size:1.125rem;font-weight:600}
+        .share-popup-close{background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1.5rem;padding:0;line-height:1}
+        .share-popup-close:hover{color:#fff}
+        .share-popup-agents{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;max-height:280px;overflow-y:auto}
+        .share-agent-option{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;transition:all 0.2s}
+        .share-agent-option:hover{border-color:rgb(52,211,153);background:rgba(52,211,153,0.05)}
+        .share-agent-option.selected{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
+        .share-agent-option input{display:none}
+        .share-agent-radio{width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+        .share-agent-option.selected .share-agent-radio{border-color:rgb(52,211,153)}
+        .share-agent-option.selected .share-agent-radio::after{content:'';width:10px;height:10px;background:rgb(52,211,153);border-radius:50%}
+        .share-agent-name{font-weight:500;font-size:0.9375rem}
+        .share-popup-actions{display:flex;gap:10px}
+        .share-popup-actions button{flex:1;padding:12px;border-radius:10px;font-size:0.875rem;font-weight:500;cursor:pointer;transition:all 0.2s}
+        .btn-share-confirm{background:rgb(52,211,153);border:none;color:#000}
+        .btn-share-confirm:hover{opacity:0.9}
+        .btn-share-confirm:disabled{opacity:0.5;cursor:not-allowed}
+        .btn-share-cancel{background:#222;border:1px solid rgba(255,255,255,0.1);color:#fff}
+        .btn-share-cancel:hover{background:#2a2a2a}
+        .share-info-content{padding:4px 0}
+        .share-info-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+        .share-info-name{font-size:0.9375rem;font-weight:500;color:#fff;padding:8px 12px;background:#111;border-radius:8px;margin-bottom:12px}
+        
+        /* Schedule Modal */
+        .schedule-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 0.2s}
+        .schedule-modal-overlay.active{opacity:1;visibility:visible}
+        .schedule-modal{background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:420px;width:90%;max-height:90vh;overflow-y:auto}
+        .schedule-modal h3{margin-bottom:8px;font-size:1.25rem}
+        .schedule-modal .form-group{margin-bottom:16px}
+        .schedule-modal label{display:block;margin-bottom:8px;font-size:0.875rem;color:rgba(255,255,255,0.7);font-weight:500}
+        .schedule-modal-actions{display:flex;gap:12px;margin-top:20px}
+        .schedule-modal-actions button{flex:1;padding:12px;border-radius:8px;font-weight:500;cursor:pointer;transition:all 0.2s}
+        .schedule-modal .btn-cancel{background:#222;border:1px solid rgba(255,255,255,0.1);color:#fff}
+        .schedule-modal .btn-save{background:rgb(52,211,153);border:none;color:#000}
+        .schedule-modal .btn-save:hover{opacity:0.9}
+        
+        /* Calendar Picker */
+        .calendar-picker{background:#111;border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.1)}
+        .calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+        .calendar-header button{background:none;border:none;color:#fff;cursor:pointer;padding:8px;border-radius:6px;font-size:1.25rem}
+        .calendar-header button:hover{background:rgba(255,255,255,0.1)}
+        .calendar-month{font-weight:600;font-size:1rem}
+        .calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:8px}
+        .calendar-weekdays span{font-size:0.75rem;color:rgba(255,255,255,0.5);font-weight:500;padding:8px 0}
+        .calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+        .calendar-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;font-size:0.875rem;transition:all 0.15s;border:none;background:none;color:#fff}
+        .calendar-day:hover:not(.disabled):not(.selected){background:rgba(255,255,255,0.1)}
+        .calendar-day.selected{background:rgb(52,211,153);color:#000;font-weight:600}
+        .calendar-day.today:not(.selected){border:2px solid rgb(52,211,153)}
+        .calendar-day.disabled{color:rgba(255,255,255,0.3);cursor:not-allowed}
+        .calendar-day.other-month{opacity:0.3}
         @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr}}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -1569,6 +1645,9 @@
                 <div class="lead-modal-title">
                     <h2 id="modalLeadName">Lead Name</h2>
                     <div class="lead-modal-actions">
+                        <button class="btn-share" id="modalShareBtn" title="Share with another agent">
+                            🔗 Share
+                        </button>
                         <button class="btn-prio-toggle" id="modalPrioBtn" title="Toggle PRIO status">
                             ⭐ PRIO
                         </button>
@@ -1595,7 +1674,10 @@
                     </div>
                     <div class="lead-info-item">
                         <label>⏰ Booked Time</label>
-                        <div class="value" id="modalBookedTime">-</div>
+                        <div class="value" id="modalBookedTime">
+                            <span id="modalBookedTimeValue">-</span>
+                            <button class="btn-schedule" id="modalScheduleBtn" style="display:none;">📅 Schedule</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -1624,6 +1706,87 @@
                     <div class="lead-transcript" id="modalTranscript">No transcript available</div>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Share Lead Popup -->
+    <div class="share-popup-overlay" id="sharePopupOverlay"></div>
+    <div class="share-popup" id="shareLeadPopup">
+        <div class="share-popup-header">
+            <h4>Share Prospect With</h4>
+            <button class="share-popup-close" id="sharePopupClose">&times;</button>
+        </div>
+        <div class="share-popup-agents" id="shareAgentsList"></div>
+        <div class="share-popup-actions">
+            <button class="btn-share-cancel" id="sharePopupCancel">Cancel</button>
+            <button class="btn-share-confirm" id="sharePopupConfirm" disabled>Share</button>
+        </div>
+    </div>
+    
+    <!-- Share Info Popup -->
+    <div class="share-popup" id="shareInfoPopup">
+        <div class="share-popup-header">
+            <h4 id="shareInfoTitle">Shared Prospect</h4>
+            <button class="share-popup-close" id="shareInfoClose">&times;</button>
+        </div>
+        <div class="share-info-content" id="shareInfoContent"></div>
+    </div>
+    
+    <!-- Schedule Booking Modal -->
+    <div class="schedule-modal-overlay" id="scheduleModal">
+        <div class="schedule-modal">
+            <h3>📅 Schedule Meeting</h3>
+            <p id="scheduleLeadName" style="color:rgba(255,255,255,0.6);margin-bottom:16px;font-size:0.875rem;"></p>
+            
+            <div class="form-group">
+                <label>Select Date</label>
+                <div class="calendar-picker" id="calendarPicker">
+                    <div class="calendar-header">
+                        <button id="calendarPrev">‹</button>
+                        <span class="calendar-month" id="calendarMonth"></span>
+                        <button id="calendarNext">›</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                    </div>
+                    <div class="calendar-days" id="calendarDays"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Select Time</label>
+                <div style="display:flex;gap:12px;align-items:center;">
+                    <select id="scheduleHour" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#111;color:#fff;font-size:1rem;">
+                        <option value="9">9 AM</option>
+                        <option value="10">10 AM</option>
+                        <option value="11">11 AM</option>
+                        <option value="12">12 PM</option>
+                        <option value="13">1 PM</option>
+                        <option value="14">2 PM</option>
+                        <option value="15">3 PM</option>
+                        <option value="16">4 PM</option>
+                        <option value="17">5 PM</option>
+                        <option value="18">6 PM</option>
+                        <option value="19">7 PM</option>
+                        <option value="20">8 PM</option>
+                    </select>
+                    <span style="color:rgba(255,255,255,0.5);">:</span>
+                    <select id="scheduleMinute" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#111;color:#fff;font-size:1rem;">
+                        <option value="0">00</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                        <option value="45">45</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="schedule-modal-actions">
+                <button class="btn-cancel" id="scheduleCancelBtn">Cancel</button>
+                <button class="btn-save" id="scheduleSaveBtn">Save Booking</button>
+            </div>
+            <p style="text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:12px;">
+                📅 Event will be automatically added to Google Calendar
+            </p>
         </div>
     </div>
 
@@ -2862,10 +3025,33 @@
         var lastCalled = f['Last Call Timestamp'];
         document.getElementById('modalLastCalled').textContent = lastCalled ? formatTimeAgo(lastCalled) : 'Not called';
         
+        // Booked Time with delete button
         var bookedTime = f['Booked Time'];
-        document.getElementById('modalBookedTime').textContent = bookedTime ? new Date(bookedTime).toLocaleString() : '-';
+        var bookedTimeContainer = document.getElementById('modalBookedTime');
+        var bookedTimeValue = document.getElementById('modalBookedTimeValue');
+        var scheduleBtn = document.getElementById('modalScheduleBtn');
+        if (bookedTime) {
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + new Date(bookedTime).toLocaleString() + '</span><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            scheduleBtn.style.display = 'none';
+        } else {
+            bookedTimeValue.textContent = '-';
+            scheduleBtn.style.display = 'inline-flex';
+        }
         
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || f['Summary'] || 'No summary available';
+        
+        // Share button state
+        var shareBtn = document.getElementById('modalShareBtn');
+        var sharedWithEmail = f['Shared With Email'];
+        if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
+        var isSharedToUser = lead.isShared;
+        if (sharedWithEmail || isSharedToUser) {
+            shareBtn.classList.add('shared');
+            shareBtn.innerHTML = '🔗 ' + (isSharedToUser ? 'Shared with you' : 'Shared');
+        } else {
+            shareBtn.classList.remove('shared');
+            shareBtn.innerHTML = '🔗 Share';
+        }
         
         // Notes
         var notes = f['Client Notes'] || f['Notes'];
@@ -2894,9 +3080,16 @@
             attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No attempts logged</p>';
         }
         
-        // Transcript
+        // Transcript with colored speakers
         var transcript = f['Transcript (from Calls)'];
-        document.getElementById('modalTranscript').textContent = transcript && transcript.length ? transcript[0] : 'No transcript available';
+        var transcriptEl = document.getElementById('modalTranscript');
+        if (transcript && transcript.length) {
+            var transcriptText = transcript[0];
+            var formattedTranscript = formatTranscript(transcriptText, name);
+            transcriptEl.innerHTML = formattedTranscript;
+        } else {
+            transcriptEl.textContent = 'No transcript available';
+        }
         
         // PRIO button state
         var prioBtn = document.getElementById('modalPrioBtn');
@@ -3018,6 +3211,363 @@
         }
         btn.disabled = false;
     });
+    
+    // Format transcript with colored speakers
+    function formatTranscript(text, prospectName) {
+        if (!text) return 'No transcript available';
+        var lines = text.split('\n');
+        var firstName = prospectName.split(' ')[0] || 'Lead';
+        return lines.map(function(line) {
+            var trimmed = line.trim();
+            if (!trimmed) return '';
+            // Match "Speaker:" at start of line
+            if (trimmed.toLowerCase().startsWith('prio ai:') || trimmed.toLowerCase().startsWith('prio:') || trimmed.toLowerCase().startsWith('ai:') || trimmed.toLowerCase().startsWith('sarah:')) {
+                var colonIdx = trimmed.indexOf(':');
+                return '<div class="lead-transcript-line"><span class="speaker-ai">Prio AI:</span>' + escapeHtml(trimmed.slice(colonIdx + 1)) + '</div>';
+            } else if (trimmed.includes(':')) {
+                var colonIdx = trimmed.indexOf(':');
+                var speaker = trimmed.slice(0, colonIdx);
+                var content = trimmed.slice(colonIdx + 1);
+                return '<div class="lead-transcript-line"><span class="speaker-prospect">' + escapeHtml(speaker) + ':</span>' + escapeHtml(content) + '</div>';
+            }
+            return '<div class="lead-transcript-line">' + escapeHtml(trimmed) + '</div>';
+        }).filter(function(l) { return l; }).join('');
+    }
+    
+    // === SHARE FUNCTIONALITY ===
+    var currentShareLeadId = null;
+    var shareableAgents = [];
+    var allActiveAgents = [];
+    
+    // Fetch all active agents
+    async function fetchAllActiveAgents() {
+        try {
+            var response = await fetchAirtable(AIRTABLE_BASE + '/Clients?filterByFormula={Status}="Active"');
+            allActiveAgents = response.records.map(function(r) {
+                return { id: r.id, name: r.fields['Agent Name'] || 'Unknown', email: r.fields['Email'] || '' };
+            });
+        } catch (err) {
+            console.error('Error fetching agents:', err);
+        }
+        return allActiveAgents;
+    }
+    
+    // Fetch agents current user can share with
+    async function fetchShareableAgents() {
+        shareableAgents = [];
+        try {
+            var canShareWith = currentUserRecord?.fields['Can Share With'] || '';
+            if (!canShareWith.trim()) return shareableAgents;
+            
+            var allowedEmails = canShareWith.split(',').map(function(e) { return e.trim().toLowerCase(); }).filter(function(e) { return e; });
+            if (allowedEmails.length === 0) return shareableAgents;
+            
+            if (allActiveAgents.length === 0) await fetchAllActiveAgents();
+            
+            shareableAgents = allActiveAgents.filter(function(a) {
+                return a.email && a.email.toLowerCase() !== currentUserEmail.toLowerCase() && allowedEmails.includes(a.email.toLowerCase());
+            });
+        } catch (err) {
+            console.error('Error fetching shareable agents:', err);
+        }
+        return shareableAgents;
+    }
+    
+    function getAgentNameByEmail(email) {
+        if (Array.isArray(email)) email = email[0] || '';
+        if (!email) return 'Unknown';
+        var agent = allActiveAgents.find(function(a) { return a.email && a.email.toLowerCase() === email.toLowerCase(); });
+        if (agent) return agent.name;
+        return email.split('@')[0];
+    }
+    
+    // Share button click
+    document.getElementById('modalShareBtn').addEventListener('click', async function() {
+        if (!currentLeadId) return;
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        if (!lead) return;
+        
+        var sharedWithEmail = lead.fields['Shared With Email'];
+        if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
+        
+        if (lead.isShared || sharedWithEmail) {
+            // Show info popup
+            openShareInfoPopup(lead);
+        } else {
+            // Show share popup
+            openSharePopup(currentLeadId);
+        }
+    });
+    
+    async function openSharePopup(leadId) {
+        currentShareLeadId = leadId;
+        var popup = document.getElementById('shareLeadPopup');
+        var overlay = document.getElementById('sharePopupOverlay');
+        var agentsList = document.getElementById('shareAgentsList');
+        var confirmBtn = document.getElementById('sharePopupConfirm');
+        
+        var agents = await fetchShareableAgents();
+        
+        if (agents.length === 0) {
+            agentsList.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:12px;">You don\'t have permission to share prospects with other agents.</p>';
+            confirmBtn.disabled = true;
+        } else {
+            agentsList.innerHTML = agents.map(function(agent) {
+                return '<label class="share-agent-option" data-email="' + agent.email + '">' +
+                    '<input type="radio" name="shareAgent" value="' + agent.id + '" data-email="' + agent.email + '">' +
+                    '<span class="share-agent-radio"></span>' +
+                    '<span class="share-agent-name">' + agent.name + '</span>' +
+                '</label>';
+            }).join('');
+            
+            agentsList.querySelectorAll('.share-agent-option').forEach(function(opt) {
+                opt.addEventListener('click', function() {
+                    agentsList.querySelectorAll('.share-agent-option').forEach(function(o) { o.classList.remove('selected'); });
+                    this.classList.add('selected');
+                    this.querySelector('input').checked = true;
+                    confirmBtn.disabled = false;
+                });
+            });
+            confirmBtn.disabled = true;
+        }
+        
+        overlay.classList.add('active');
+        popup.classList.add('active');
+    }
+    
+    function openShareInfoPopup(lead) {
+        var popup = document.getElementById('shareInfoPopup');
+        var overlay = document.getElementById('sharePopupOverlay');
+        var content = document.getElementById('shareInfoContent');
+        var title = document.getElementById('shareInfoTitle');
+        
+        var sharedWithEmail = lead.fields['Shared With Email'];
+        if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
+        
+        if (lead.isShared) {
+            title.textContent = 'Shared With You';
+            var ownerEmail = lead.fields['Client Email'];
+            if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
+            content.innerHTML = '<div class="share-info-label">Shared By</div><div class="share-info-name">' + getAgentNameByEmail(ownerEmail) + '</div>';
+        } else {
+            title.textContent = 'You Shared This';
+            content.innerHTML = '<div class="share-info-label">Shared With</div><div class="share-info-name">' + getAgentNameByEmail(sharedWithEmail) + '</div>';
+        }
+        
+        overlay.classList.add('active');
+        popup.classList.add('active');
+    }
+    
+    function closeSharePopup() {
+        document.getElementById('shareLeadPopup').classList.remove('active');
+        document.getElementById('shareInfoPopup').classList.remove('active');
+        document.getElementById('sharePopupOverlay').classList.remove('active');
+        currentShareLeadId = null;
+    }
+    
+    document.getElementById('sharePopupClose').addEventListener('click', closeSharePopup);
+    document.getElementById('sharePopupCancel').addEventListener('click', closeSharePopup);
+    document.getElementById('shareInfoClose').addEventListener('click', closeSharePopup);
+    document.getElementById('sharePopupOverlay').addEventListener('click', closeSharePopup);
+    
+    document.getElementById('sharePopupConfirm').addEventListener('click', async function() {
+        if (!currentShareLeadId) return;
+        var selectedAgent = document.querySelector('input[name="shareAgent"]:checked');
+        if (!selectedAgent) return;
+        
+        var selectedAgentId = selectedAgent.value;
+        var selectedAgentEmail = selectedAgent.dataset.email;
+        
+        var btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Sharing...';
+        
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentShareLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Shared With': [selectedAgentId] } }
+            });
+            
+            var lead = allLeads.find(function(l) { return l.id === currentShareLeadId; });
+            if (lead) {
+                lead.fields['Shared With Email'] = selectedAgentEmail;
+                lead.fields['Shared With'] = [selectedAgentId];
+            }
+            
+            showToast('Prospect shared successfully!', 'success');
+            closeSharePopup();
+            if (currentLeadId === currentShareLeadId) openLeadModal(currentLeadId);
+        } catch (err) {
+            showToast('Failed to share prospect', 'error');
+        }
+        btn.disabled = false;
+        btn.textContent = 'Share';
+    });
+    
+    // === SCHEDULE BOOKING FUNCTIONALITY ===
+    var scheduleLeadId = null;
+    var scheduleLeadData = null;
+    var selectedDate = null;
+    var calendarMonth = new Date();
+    
+    // Schedule button click
+    document.getElementById('modalScheduleBtn').addEventListener('click', function() {
+        if (!currentLeadId) return;
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        if (lead) openScheduleModal(lead.id, lead.fields);
+    });
+    
+    function openScheduleModal(leadId, leadData) {
+        scheduleLeadId = leadId;
+        scheduleLeadData = leadData;
+        var leadName = ((leadData['First Name'] || '') + ' ' + (leadData['Last Name'] || '')).trim() || 'Lead';
+        document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + leadName;
+        
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate = today;
+        calendarMonth = new Date();
+        
+        renderCalendar();
+        document.getElementById('scheduleModal').classList.add('active');
+    }
+    
+    function renderCalendar() {
+        var year = calendarMonth.getFullYear();
+        var month = calendarMonth.getMonth();
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        document.getElementById('calendarMonth').textContent = monthNames[month] + ' ' + year;
+        
+        var firstDay = new Date(year, month, 1).getDay();
+        var daysInMonth = new Date(year, month + 1, 0).getDate();
+        var daysInPrevMonth = new Date(year, month, 0).getDate();
+        
+        var daysHtml = '';
+        
+        for (var i = firstDay - 1; i >= 0; i--) {
+            var day = daysInPrevMonth - i;
+            daysHtml += '<button class="calendar-day other-month disabled">' + day + '</button>';
+        }
+        
+        for (var d = 1; d <= daysInMonth; d++) {
+            var date = new Date(year, month, d);
+            var isPast = date < today;
+            var isToday = date.getTime() === today.getTime();
+            var isSelected = selectedDate && date.getTime() === selectedDate.getTime();
+            
+            var classes = 'calendar-day';
+            if (isPast) classes += ' disabled';
+            if (isToday) classes += ' today';
+            if (isSelected) classes += ' selected';
+            
+            daysHtml += '<button class="' + classes + '" data-date="' + date.toISOString().split('T')[0] + '"' + (isPast ? ' disabled' : '') + '>' + d + '</button>';
+        }
+        
+        var totalCells = firstDay + daysInMonth;
+        var remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+        for (var n = 1; n <= remaining; n++) {
+            daysHtml += '<button class="calendar-day other-month disabled">' + n + '</button>';
+        }
+        
+        document.getElementById('calendarDays').innerHTML = daysHtml;
+        
+        document.querySelectorAll('.calendar-day:not(.disabled)').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.calendar-day').forEach(function(d) { d.classList.remove('selected'); });
+                this.classList.add('selected');
+                var parts = this.dataset.date.split('-');
+                selectedDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            });
+        });
+    }
+    
+    document.getElementById('calendarPrev').addEventListener('click', function() {
+        calendarMonth.setMonth(calendarMonth.getMonth() - 1);
+        renderCalendar();
+    });
+    
+    document.getElementById('calendarNext').addEventListener('click', function() {
+        calendarMonth.setMonth(calendarMonth.getMonth() + 1);
+        renderCalendar();
+    });
+    
+    document.getElementById('scheduleCancelBtn').addEventListener('click', function() {
+        document.getElementById('scheduleModal').classList.remove('active');
+        scheduleLeadId = null;
+        scheduleLeadData = null;
+    });
+    
+    document.getElementById('scheduleSaveBtn').addEventListener('click', async function() {
+        if (!scheduleLeadId || !selectedDate) return;
+        
+        var btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        
+        try {
+            var hour = parseInt(document.getElementById('scheduleHour').value);
+            var minute = parseInt(document.getElementById('scheduleMinute').value);
+            
+            var bookedDateTime = new Date(selectedDate);
+            bookedDateTime.setHours(hour, minute, 0, 0);
+            
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Booked Time': bookedDateTime.toISOString(), 'Status': 'Booked' } }
+            });
+            
+            var lead = allLeads.find(function(l) { return l.id === scheduleLeadId; });
+            if (lead) {
+                lead.fields['Booked Time'] = bookedDateTime.toISOString();
+                lead.fields['Status'] = 'Booked';
+            }
+            
+            // Open Google Calendar
+            var leadName = ((scheduleLeadData['First Name'] || '') + ' ' + (scheduleLeadData['Last Name'] || '')).trim() || 'Lead';
+            var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
+            var gcalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+                '&text=' + encodeURIComponent('Meeting with ' + leadName) +
+                '&dates=' + bookedDateTime.toISOString().replace(/-|:|\.\d{3}/g, '') + '/' + new Date(bookedDateTime.getTime() + 3600000).toISOString().replace(/-|:|\.\d{3}/g, '') +
+                '&details=' + encodeURIComponent('Phone: ' + phone);
+            window.open(gcalUrl, '_blank');
+            
+            document.getElementById('scheduleModal').classList.remove('active');
+            if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
+            updatePrioList();
+            showToast('Meeting scheduled!', 'success');
+        } catch (err) {
+            showToast('Failed to schedule meeting', 'error');
+        }
+        btn.disabled = false;
+        btn.textContent = 'Save Booking';
+    });
+    
+    // Delete booking
+    async function deleteBookingFromModal() {
+        if (!currentLeadId) return;
+        if (!confirm('Remove this booking?')) return;
+        
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Booked Time': null } }
+            });
+            
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            if (lead) lead.fields['Booked Time'] = null;
+            
+            openLeadModal(currentLeadId);
+            updatePrioList();
+            showToast('Booking removed', 'success');
+        } catch (err) {
+            showToast('Failed to remove booking', 'error');
+        }
+    }
+    // Make available globally for onclick
+    window.deleteBookingFromModal = deleteBookingFromModal;
     
     // ===== PROSPECTS TAB =====
     var prospectsSort = { field: 'bookedTime', direction: 'desc' };
