@@ -1364,8 +1364,8 @@
     }
     updateWelcomeDate();
 
-    // Only fetch fields we actually use - matched to Airtable field names
-    var LEAD_FIELDS = ['First Name', 'Last Name', 'Phone #', 'Email', 'Status', 'Is Prio', 'Last Call Summary', 'Client Notes', 'Booked Time', 'Last Call Timestamp', 'Attempts', 'Client Attempts', 'Transcript (from Calls)', 'Outcome'].map(function(f) { return 'fields[]=' + encodeURIComponent(f); }).join('&');
+    // Fetch all fields for now - field filtering can be added once field names are verified
+    var LEAD_FIELDS = '';
     
     // Try to load cached data first for instant display
     function loadCachedData() {
@@ -1443,7 +1443,7 @@
         try {
             var email = currentUser.email.toLowerCase();
             var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client Email})))';
-            var baseUrl = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?' + LEAD_FIELDS + '&filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
+            var baseUrl = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
             
             allLeads = [];
             var offset = null;
