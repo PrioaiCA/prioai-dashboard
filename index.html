@@ -789,7 +789,7 @@
         
         try {
             var clientRecordId = currentUserRecord.id;
-            var filterFormula = '({Client Record ID} = "' + clientRecordId + '")';
+            var filterFormula = 'FIND("' + clientRecordId + '", ARRAYJOIN({Client Record ID}))';
             var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
             
             allLeads = [];
