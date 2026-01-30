@@ -58,6 +58,39 @@
         .prio-summary:last-child,.prio-notes:last-child{margin-bottom:0}
         .summary-label,.notes-label{color:rgba(255,255,255,0.4);font-weight:500}
         @media(max-width:640px){.prio-card-header{flex-wrap:wrap}.prio-next-call{width:100%;text-align:left;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)}.prio-arrow{display:none}}
+        
+        /* Section count badge */
+        .section-count{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;background:rgb(52,211,153);color:#000;border-radius:12px;font-size:0.75rem;font-weight:700;margin-left:8px}
+        .prio-stat-value{font-size:1.5rem;font-weight:700;color:rgb(52,211,153)}
+        
+        /* Lead Detail Modal */
+        .lead-modal{max-width:600px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+        .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.1)}
+        .lead-modal-title h2{font-size:1.25rem;font-weight:600;margin-bottom:8px}
+        .lead-modal-actions{display:flex;gap:8px;flex-wrap:wrap}
+        .btn-prio-toggle{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
+        .btn-prio-toggle.active{background:#f59e0b;color:#000}
+        .btn-prio-toggle:hover{background:rgba(245,158,11,0.25)}
+        .btn-send-back{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(139,92,246,0.15);color:#8B5CF6;border:1px solid rgba(139,92,246,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
+        .btn-send-back:hover{background:rgba(139,92,246,0.25)}
+        .lead-modal-body{padding:24px;overflow-y:auto;flex:1}
+        .lead-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+        .lead-info-item label{display:block;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:4px}
+        .lead-info-item .value{font-size:0.9375rem;font-weight:500}
+        .lead-section{margin-bottom:24px;padding:16px;background:rgba(255,255,255,0.03);border-radius:10px}
+        .lead-section h3{font-size:0.875rem;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .lead-summary-content{font-size:0.875rem;line-height:1.6;color:rgba(255,255,255,0.8);white-space:pre-wrap}
+        .lead-notes-list{max-height:150px;overflow-y:auto;margin-bottom:12px}
+        .lead-note-item{padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:6px;margin-bottom:8px;font-size:0.8125rem}
+        .lead-note-item:last-child{margin-bottom:0}
+        .lead-note-date{font-size:0.6875rem;color:rgba(255,255,255,0.4);margin-top:4px}
+        #modalNotesInput{width:100%;min-height:80px;padding:12px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.875rem;resize:vertical;margin-bottom:8px}
+        .lead-notes-actions{display:flex;justify-content:flex-end}
+        .attempts-count{background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:500}
+        .lead-attempts-list{max-height:120px;overflow-y:auto}
+        .lead-attempt-item{padding:8px 12px;background:rgba(255,255,255,0.05);border-radius:6px;margin-bottom:6px;font-size:0.8125rem;display:flex;justify-content:space-between}
+        .lead-transcript{font-size:0.8125rem;line-height:1.7;color:rgba(255,255,255,0.7);max-height:200px;overflow-y:auto;white-space:pre-wrap}
+        @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr}}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
         .overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
@@ -905,6 +938,71 @@
         </main>
     </div>
 
+    <!-- Lead Detail Modal -->
+    <div class="modal-overlay" id="leadModal">
+        <div class="modal lead-modal">
+            <div class="lead-modal-header">
+                <div class="lead-modal-title">
+                    <h2 id="modalLeadName">Lead Name</h2>
+                    <div class="lead-modal-actions">
+                        <button class="btn-prio-toggle" id="modalPrioBtn" title="Toggle PRIO status">
+                            ⭐ PRIO
+                        </button>
+                        <button class="btn-send-back" id="modalSendBackBtn">
+                            🔄 Send Back to AI
+                        </button>
+                    </div>
+                </div>
+                <button class="modal-close" id="leadModalClose">&times;</button>
+            </div>
+            <div class="lead-modal-body">
+                <div class="lead-info-grid">
+                    <div class="lead-info-item">
+                        <label>📞 Phone</label>
+                        <div class="value" id="modalPhone">-</div>
+                    </div>
+                    <div class="lead-info-item">
+                        <label>📊 Status</label>
+                        <div class="value"><span id="modalStatus" class="status-badge">-</span></div>
+                    </div>
+                    <div class="lead-info-item">
+                        <label>📅 Last Called</label>
+                        <div class="value" id="modalLastCalled">-</div>
+                    </div>
+                    <div class="lead-info-item">
+                        <label>⏰ Booked Time</label>
+                        <div class="value" id="modalBookedTime">-</div>
+                    </div>
+                </div>
+                
+                <div class="lead-section">
+                    <h3>🤖 AI Summary</h3>
+                    <div class="lead-summary-content" id="modalSummary">No summary available</div>
+                </div>
+                
+                <div class="lead-section">
+                    <h3>📝 Your Notes</h3>
+                    <div class="lead-notes-list" id="modalNotesList"></div>
+                    <textarea id="modalNotesInput" placeholder="Add a note about this lead..."></textarea>
+                    <div class="lead-notes-actions">
+                        <button class="btn btn-primary btn-sm" id="modalSaveNoteBtn">💾 Save Note</button>
+                    </div>
+                </div>
+                
+                <div class="lead-section">
+                    <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
+                    <div class="lead-attempts-list" id="modalAttemptsList"></div>
+                    <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
+                </div>
+                
+                <div class="lead-section">
+                    <h3>🎙️ Transcript</h3>
+                    <div class="lead-transcript" id="modalTranscript">No transcript available</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Auth Modal -->
     <div class="modal-overlay" id="authModal">
         <div class="modal">
@@ -1266,8 +1364,8 @@
     }
     updateWelcomeDate();
 
-    // Only fetch fields we actually use
-    var LEAD_FIELDS = ['Full Name', 'First Name', 'Last Name', 'Phone', 'Email', 'Status', 'Disposition', 'Is Prio', 'Summary', 'Call Summary', 'AI Summary', 'Agent Notes', 'Your Notes', 'Notes', 'Next AI Call', 'Next Call', 'Follow Up Date', 'Last Call Timestamp', 'Callback Date', 'Call Count', 'Call Status'].map(function(f) { return 'fields[]=' + encodeURIComponent(f); }).join('&');
+    // Only fetch fields we actually use - matched to Airtable field names
+    var LEAD_FIELDS = ['First Name', 'Last Name', 'Phone #', 'Email', 'Status', 'Is Prio', 'Last Call Summary', 'Client Notes', 'Booked Time', 'Last Call Timestamp', 'Attempts', 'Client Attempts', 'Transcript (from Calls)', 'Outcome'].map(function(f) { return 'fields[]=' + encodeURIComponent(f); }).join('&');
     
     // Try to load cached data first for instant display
     function loadCachedData() {
@@ -1482,12 +1580,12 @@
         
         prioList.innerHTML = prioLeads.map(function(lead, index) {
             var f = lead.fields;
-            var name = f['Full Name'] || ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
-            var phone = f['Phone'] || '-';
-            var status = f['Status'] || f['Disposition'] || 'New';
-            var nextCall = f['Next AI Call'] || f['Next Call'] || f['Follow Up Date'] || null;
-            var summary = f['Summary'] || f['Call Summary'] || f['AI Summary'] || '';
-            var notes = f['Agent Notes'] || f['Your Notes'] || f['Notes'] || '';
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var phone = f['Phone #'] || '-';
+            var status = f['Status'] || f['Outcome'] || 'New';
+            var nextCall = f['Booked Time'] || null;
+            var summary = f['Last Call Summary'] || '';
+            var notes = f['Client Notes'] || '';
             
             // Format next call date
             var nextCallDisplay = '-';
@@ -1877,6 +1975,183 @@
             window.location.href = 'https://prioai.ca/pricing';
         });
     }
+    
+    // === LEAD DETAIL MODAL ===
+    var currentLeadId = null;
+    var leadModal = document.getElementById('leadModal');
+    
+    // Open modal when clicking PRIO card
+    document.getElementById('prioList').addEventListener('click', function(e) {
+        var card = e.target.closest('.prio-card');
+        if (card) {
+            var leadId = card.dataset.id;
+            openLeadModal(leadId);
+        }
+    });
+    
+    function openLeadModal(leadId) {
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        if (!lead) return;
+        
+        currentLeadId = leadId;
+        var f = lead.fields;
+        
+        // Populate modal
+        var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+        document.getElementById('modalLeadName').textContent = name;
+        document.getElementById('modalPhone').textContent = f['Phone #'] || '-';
+        
+        var status = f['Status'] || f['Outcome'] || 'New';
+        var statusEl = document.getElementById('modalStatus');
+        statusEl.textContent = status;
+        statusEl.className = 'status-badge status-' + status.toLowerCase().replace(/\s+/g, '-');
+        
+        var lastCalled = f['Last Call Timestamp'];
+        document.getElementById('modalLastCalled').textContent = lastCalled ? formatTimeAgo(lastCalled) : 'Not called';
+        
+        var bookedTime = f['Booked Time'];
+        document.getElementById('modalBookedTime').textContent = bookedTime ? new Date(bookedTime).toLocaleString() : '-';
+        
+        document.getElementById('modalSummary').textContent = f['Last Call Summary'] || 'No summary available';
+        
+        // Notes
+        var notes = f['Client Notes'];
+        var notesList = document.getElementById('modalNotesList');
+        if (notes && notes.trim()) {
+            var notesArr = notes.split('\n---\n').filter(function(n) { return n.trim(); });
+            notesList.innerHTML = notesArr.map(function(note) {
+                return '<div class="lead-note-item">' + escapeHtml(note) + '</div>';
+            }).join('');
+        } else {
+            notesList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</p>';
+        }
+        document.getElementById('modalNotesInput').value = '';
+        
+        // Attempts
+        var attempts = f['Client Attempts'] || f['Attempts'] || 0;
+        document.getElementById('modalAttemptsCount').textContent = attempts;
+        var attemptsList = document.getElementById('modalAttemptsList');
+        if (attempts > 0) {
+            var attemptsHtml = '';
+            for (var i = 0; i < Math.min(attempts, 5); i++) {
+                attemptsHtml += '<div class="lead-attempt-item"><span>Call #' + (i + 1) + '</span></div>';
+            }
+            attemptsList.innerHTML = attemptsHtml;
+        } else {
+            attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No attempts logged</p>';
+        }
+        
+        // Transcript
+        var transcript = f['Transcript (from Calls)'];
+        document.getElementById('modalTranscript').textContent = transcript && transcript.length ? transcript[0] : 'No transcript available';
+        
+        // PRIO button state
+        var prioBtn = document.getElementById('modalPrioBtn');
+        if (f['Is Prio']) {
+            prioBtn.classList.add('active');
+            prioBtn.textContent = '⭐ PRIO';
+        } else {
+            prioBtn.classList.remove('active');
+            prioBtn.textContent = '☆ Mark PRIO';
+        }
+        
+        leadModal.classList.add('active');
+    }
+    
+    // Close modal
+    document.getElementById('leadModalClose').addEventListener('click', function() {
+        leadModal.classList.remove('active');
+        currentLeadId = null;
+    });
+    leadModal.addEventListener('click', function(e) {
+        if (e.target === leadModal) {
+            leadModal.classList.remove('active');
+            currentLeadId = null;
+        }
+    });
+    
+    // Save note
+    document.getElementById('modalSaveNoteBtn').addEventListener('click', async function() {
+        if (!currentLeadId) return;
+        var noteText = document.getElementById('modalNotesInput').value.trim();
+        if (!noteText) return;
+        
+        var btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        
+        try {
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            var existingNotes = lead.fields['Client Notes'] || '';
+            var timestamp = new Date().toLocaleString();
+            var newNotes = existingNotes ? existingNotes + '\n---\n[' + timestamp + '] ' + noteText : '[' + timestamp + '] ' + noteText;
+            
+            await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fields: { 'Client Notes': newNotes } })
+            });
+            
+            lead.fields['Client Notes'] = newNotes;
+            openLeadModal(currentLeadId); // Refresh modal
+            showToast('Note saved', 'success');
+        } catch (err) {
+            showToast('Failed to save note', 'error');
+        }
+        btn.disabled = false;
+        btn.textContent = '💾 Save Note';
+    });
+    
+    // Log call attempt
+    document.getElementById('modalLogAttemptBtn').addEventListener('click', async function() {
+        if (!currentLeadId) return;
+        var btn = this;
+        btn.disabled = true;
+        
+        try {
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            var currentAttempts = parseInt(lead.fields['Client Attempts'] || 0) + 1;
+            
+            await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fields: { 'Client Attempts': currentAttempts } })
+            });
+            
+            lead.fields['Client Attempts'] = currentAttempts;
+            openLeadModal(currentLeadId);
+            showToast('Call logged', 'success');
+        } catch (err) {
+            showToast('Failed to log call', 'error');
+        }
+        btn.disabled = false;
+    });
+    
+    // Toggle PRIO
+    document.getElementById('modalPrioBtn').addEventListener('click', async function() {
+        if (!currentLeadId) return;
+        var btn = this;
+        btn.disabled = true;
+        
+        try {
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            var newPrioStatus = !lead.fields['Is Prio'];
+            
+            await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fields: { 'Is Prio': newPrioStatus } })
+            });
+            
+            lead.fields['Is Prio'] = newPrioStatus;
+            openLeadModal(currentLeadId);
+            updatePrioList();
+            showToast(newPrioStatus ? 'Marked as PRIO' : 'Removed from PRIO', 'success');
+        } catch (err) {
+            showToast('Failed to update', 'error');
+        }
+        btn.disabled = false;
+    });
     </script>
 </body>
 </html>
