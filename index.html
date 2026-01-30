@@ -2136,7 +2136,9 @@
             
             // Show loading animation for logged in users
             var overlay = document.getElementById('pageLoadingOverlay');
+            var appContainer = document.getElementById('appContainer');
             overlay.style.display = 'flex';
+            appContainer.style.opacity = '1';
             setTimeout(function() {
                 overlay.classList.add('fade-out');
                 setTimeout(function() { overlay.style.display = 'none'; }, 500);
@@ -2147,6 +2149,8 @@
             document.getElementById('userAvatar').textContent = 'G';
             document.getElementById('loginBtn').classList.remove('hidden');
             document.getElementById('guestState').classList.remove('hidden');
+            // Show app container for non-logged in users
+            document.getElementById('appContainer').style.opacity = '1';
         }
         })();
     }
