@@ -1266,15 +1266,49 @@
     }
     updateWelcomeDate();
 
+    // Only fetch fields we actually use
+    var LEAD_FIELDS = ['Full Name', 'First Name', 'Last Name', 'Phone', 'Email', 'Status', 'Disposition', 'Is Prio', 'Summary', 'Call Summary', 'AI Summary', 'Agent Notes', 'Your Notes', 'Notes', 'Next AI Call', 'Next Call', 'Follow Up Date', 'Last Call Timestamp', 'Callback Date', 'Call Count', 'Call Status'].map(function(f) { return 'fields[]=' + encodeURIComponent(f); }).join('&');
+    
+    // Try to load cached data first for instant display
+    function loadCachedData() {
+        try {
+            var cached = sessionStorage.getItem('prio_leads_' + currentUser.email);
+            if (cached) {
+                var data = JSON.parse(cached);
+                if (Date.now() - data.timestamp < 60000) { // Cache valid for 1 minute
+                    allLeads = data.leads;
+                    updateDashboard();
+                    updatePrioList();
+                    return true;
+                }
+            }
+        } catch (e) {}
+        return false;
+    }
+    
+    function cacheData() {
+        try {
+            sessionStorage.setItem('prio_leads_' + currentUser.email, JSON.stringify({
+                timestamp: Date.now(),
+                leads: allLeads
+            }));
+        } catch (e) {}
+    }
+
     // Load user data from Airtable
     async function loadUserData() {
         if (!currentUser) return;
         
-        // Show loading state
-        document.getElementById('statProspects').textContent = '...';
-        document.getElementById('statCalls').textContent = '...';
-        document.getElementById('statAppointments').textContent = '...';
-        document.getElementById('statConversion').textContent = '...';
+        // Show cached data immediately if available
+        var hasCached = loadCachedData();
+        
+        // Show loading state only if no cache
+        if (!hasCached) {
+            document.getElementById('statProspects').textContent = '...';
+            document.getElementById('statCalls').textContent = '...';
+            document.getElementById('statAppointments').textContent = '...';
+            document.getElementById('statConversion').textContent = '...';
+        }
         
         try {
             var filterFormula = encodeURIComponent('({Email} = "' + currentUser.email + '")');
@@ -1283,43 +1317,42 @@
             });
             var data = await response.json();
             
-            console.log('Client data:', data);
-            
             if (data.records && data.records.length > 0) {
                 currentUserRecord = data.records[0];
                 loadLeadsData();
             } else {
-                // No client record found - show zeros
                 document.getElementById('statProspects').textContent = '0';
                 document.getElementById('statCalls').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
                 document.getElementById('statConversion').textContent = '0%';
-                document.getElementById('prioList').innerHTML = '<div class="prio-empty" style="text-align:center;padding:3rem;color:rgba(255,255,255,0.5);"><p>No leads yet. Import some to get started!</p></div>';
+                document.getElementById('prioList').innerHTML = '<div class="prio-empty">No leads yet. Import some to get started!</div>';
             }
         } catch (err) {
             console.error('Failed to load user data:', err);
-            document.getElementById('statProspects').textContent = '0';
-            document.getElementById('statCalls').textContent = '0';
-            document.getElementById('statAppointments').textContent = '0';
-            document.getElementById('statConversion').textContent = '0%';
+            if (!hasCached) {
+                document.getElementById('statProspects').textContent = '0';
+                document.getElementById('statCalls').textContent = '0';
+                document.getElementById('statAppointments').textContent = '0';
+                document.getElementById('statConversion').textContent = '0%';
+            }
         }
     }
 
-    // Load leads data
+    // Load leads data with optimizations
     async function loadLeadsData() {
         if (!currentUserRecord) return;
         
         try {
-            var clientRecordId = currentUserRecord.id;
             var email = currentUser.email.toLowerCase();
             var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client Email})))';
-            var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
+            var baseUrl = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?' + LEAD_FIELDS + '&filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
             
             allLeads = [];
             var offset = null;
+            var isFirstPage = true;
             
             do {
-                var fetchUrl = url + (offset ? '&offset=' + offset : '');
+                var fetchUrl = baseUrl + (offset ? '&offset=' + offset : '');
                 var response = await fetch(fetchUrl, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
                 var data = await response.json();
                 
@@ -1327,13 +1360,26 @@
                     allLeads = allLeads.concat(data.records);
                 }
                 offset = data.offset;
+                
+                // Render after first page so user sees data fast
+                if (isFirstPage && allLeads.length > 0) {
+                    isFirstPage = false;
+                    updateDashboard();
+                    updatePrioList();
+                }
             } while (offset);
             
-            updateStats();
+            // Final update with all data & cache it
+            updateDashboard();
             updatePrioList();
+            cacheData();
         } catch (err) {
             console.error('Failed to load leads:', err);
         }
+    }
+    
+    function updateDashboard() {
+        updateStats();
     }
 
     // Update stats
