@@ -35,27 +35,28 @@
         .prio-filters{display:flex;gap:0.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
         .prio-filter{padding:0.5rem 1rem;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.7);background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer}
         .prio-filter.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
-        .prio-list{display:flex;flex-direction:column;gap:10px}
-        .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;transition:all 0.15s;display:grid;grid-template-columns:40px 200px 100px 1fr 24px;align-items:center;gap:16px;padding:16px 20px}
-        .prio-card:hover{border-color:rgb(52,211,153);background:#151515}
-        .prio-rank{width:32px;height:32px;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.875rem}
-        .prio-col-lead{min-width:0}
-        .prio-name{font-weight:600;font-size:0.9375rem;margin-bottom:2px;display:flex;align-items:center;gap:6px}
-        .prio-name .shared-icon{color:#3B82F6;font-size:0.75rem;cursor:help}
-        .prio-phone{font-size:0.8125rem;color:rgba(255,255,255,0.5)}
-        .prio-col-status{text-align:center}
-        .prio-status{font-size:0.6875rem;padding:4px 10px;border-radius:4px;font-weight:600;text-transform:uppercase;display:inline-block}
-        .prio-status.status-booked,.prio-status.status-callback{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
-        .prio-status.status-interested,.prio-status.status-timeline{background:rgba(59,130,246,0.15);color:#3B82F6}
-        .prio-status.status-follow-up,.prio-status.status-new{background:rgba(245,158,11,0.15);color:#f59e0b}
-        .prio-next-call{font-size:0.75rem;color:rgb(52,211,153);font-weight:500}
-        .prio-col-content{min-width:0}
-        .prio-content-row{font-size:0.8125rem;color:rgba(255,255,255,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
-        .prio-content-row:last-child{margin-bottom:0}
-        .prio-content-label{color:rgba(255,255,255,0.35);margin-right:4px}
-        .prio-arrow{font-size:1.25rem;color:rgba(255,255,255,0.2);transition:all 0.15s}
-        .prio-card:hover .prio-arrow{color:rgb(52,211,153);transform:translateX(3px)}
-        @media(max-width:900px){.prio-card{grid-template-columns:32px 1fr auto;gap:12px;padding:14px 16px}.prio-col-content{display:none}.prio-col-status{text-align:left}}
+        .prio-table-container{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden}
+        .prio-table-header{display:grid;grid-template-columns:140px 120px 110px 140px 1fr 140px 80px 90px;gap:12px;padding:12px 20px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.1);font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.5)}
+        .prio-list{display:flex;flex-direction:column}
+        .prio-card{display:grid;grid-template-columns:140px 120px 110px 140px 1fr 140px 80px 90px;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:all 0.15s;align-items:center}
+        .prio-card:last-child{border-bottom:none}
+        .prio-card:hover{background:rgba(52,211,153,0.05)}
+        .prio-col{font-size:0.8125rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .prio-col-name{font-weight:600;display:flex;align-items:center;gap:6px}
+        .prio-col-name .shared-icon{color:#3B82F6;font-size:0.75rem}
+        .prio-col-phone{color:rgba(255,255,255,0.7)}
+        .prio-col-lastcall{color:rgba(255,255,255,0.5)}
+        .prio-col-booked{display:flex;align-items:center;gap:8px}
+        .prio-col-booked .booked-time{color:rgb(52,211,153);font-weight:500}
+        .prio-col-booked .btn-schedule{font-size:0.6875rem;padding:4px 8px;background:rgb(52,211,153);color:#000;border:none;border-radius:4px;cursor:pointer;font-weight:600}
+        .prio-col-summary{color:rgba(255,255,255,0.6);white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
+        .prio-col-notes{color:rgba(255,255,255,0.5);white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
+        .prio-col-share .btn-share{width:28px;height:28px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#3B82F6;border-radius:6px;cursor:pointer;font-size:1rem;font-weight:600;transition:all 0.15s}
+        .prio-col-share .btn-share:hover{background:#3B82F6;color:#fff}
+        .prio-col-action .btn-unprio{font-size:0.6875rem;padding:6px 12px;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:6px;cursor:pointer;font-weight:600;transition:all 0.15s}
+        .prio-col-action .btn-unprio:hover{background:#ef4444;color:#fff}
+        @media(max-width:1200px){.prio-table-header,.prio-card{grid-template-columns:130px 110px 100px 120px 1fr 80px 70px}.prio-table-header>:nth-child(6),.prio-card>:nth-child(6){display:none}}
+        @media(max-width:900px){.prio-table-header{display:none}.prio-card{grid-template-columns:1fr auto;padding:16px}.prio-col:not(.prio-col-name):not(.prio-col-action){display:none}.prio-col-name{white-space:normal}}
         
         /* Section count badge */
         .section-count{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;background:rgb(52,211,153);color:#000;border-radius:12px;font-size:0.75rem;font-weight:700;margin-left:8px}
@@ -472,9 +473,21 @@
                             </div>
                         </div>
 
-                        <!-- PRIO List -->
-                        <div class="prio-list" id="prioList">
-                            <div class="prio-empty">No priority leads yet</div>
+                        <!-- PRIO Table -->
+                        <div class="prio-table-container">
+                            <div class="prio-table-header">
+                                <div>Name</div>
+                                <div>Phone</div>
+                                <div>Last Called</div>
+                                <div>Booked Time</div>
+                                <div>Summary</div>
+                                <div>Notes</div>
+                                <div>Share</div>
+                                <div>Action</div>
+                            </div>
+                            <div class="prio-list" id="prioList">
+                                <div class="prio-empty" style="padding:40px;text-align:center;color:rgba(255,255,255,0.4);">No priority leads yet</div>
+                            </div>
                         </div>
                     </div>
 
@@ -1578,46 +1591,38 @@
         
         prioList.innerHTML = prioLeads.map(function(lead, index) {
             var f = lead.fields;
-            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var firstName = f['First Name'] || '';
+            var lastName = f['Last Name'] || '';
+            var name = (firstName + ' ' + lastName).trim() || 'Unknown';
             var phone = f['Phone #'] || f['Phone'] || '-';
-            var status = f['Status'] || f['Outcome'] || 'New';
-            var nextCall = f['Booked Time'] || null;
+            var lastCalled = f['Last Call Timestamp'] ? formatTimeAgo(f['Last Call Timestamp']) : '-';
+            var bookedTime = f['Booked Time'] || null;
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notes = f['Client Notes'] || f['Notes'] || '';
             var isShared = f['Shared With'] || f['Shared With Email'];
             
-            // Format next call date
-            var nextCallDisplay = '-';
-            if (nextCall) {
-                var d = new Date(nextCall);
-                var today = new Date();
-                var tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                if (d.toDateString() === today.toDateString()) nextCallDisplay = 'Today ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
-                else if (d.toDateString() === tomorrow.toDateString()) nextCallDisplay = 'Tomorrow ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
-                else nextCallDisplay = d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}) + ' ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+            // Format booked time
+            var bookedDisplay = '';
+            if (bookedTime) {
+                var d = new Date(bookedTime);
+                bookedDisplay = d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}) + ', ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
             }
             
-            // Truncate summary and notes for display
-            var summaryTrunc = summary.length > 100 ? summary.substring(0, 100) + '...' : summary;
-            var notesTrunc = notes.length > 80 ? notes.substring(0, 80) + '...' : notes;
+            // Truncate for display
+            var summaryTrunc = summary.length > 80 ? summary.substring(0, 80) + '...' : (summary || '-');
+            var notesTrunc = notes.length > 60 ? notes.substring(0, 60) + '...' : (notes || '-');
             
             return '<div class="prio-card" data-id="' + lead.id + '">' +
-                '<div class="prio-rank">' + (index + 1) + '</div>' +
-                '<div class="prio-col-lead">' +
-                    '<div class="prio-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
-                    '<div class="prio-phone">📞 ' + escapeHtml(phone) + '</div>' +
+                '<div class="prio-col prio-col-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                '<div class="prio-col prio-col-phone">' + escapeHtml(phone) + '</div>' +
+                '<div class="prio-col prio-col-lastcall">' + lastCalled + '</div>' +
+                '<div class="prio-col prio-col-booked">' + 
+                    (bookedDisplay ? '<span class="booked-time">' + bookedDisplay + '</span>' : '<button class="btn-schedule" onclick="event.stopPropagation()">Schedule</button>') +
                 '</div>' +
-                '<div class="prio-col-status">' +
-                    '<span class="prio-status status-' + status.toLowerCase().replace(/\s+/g, '-') + '">' + escapeHtml(status) + '</span>' +
-                    '<div class="prio-next-call">' + nextCallDisplay + '</div>' +
-                '</div>' +
-                '<div class="prio-col-content">' +
-                    (summary ? '<div class="prio-content-row"><span class="prio-content-label">🤖</span>' + escapeHtml(summaryTrunc) + '</div>' : '') +
-                    (notes ? '<div class="prio-content-row"><span class="prio-content-label">📝</span>' + escapeHtml(notesTrunc) + '</div>' : '') +
-                    (!summary && !notes ? '<div class="prio-content-row" style="color:rgba(255,255,255,0.25)">No summary or notes</div>' : '') +
-                '</div>' +
-                '<div class="prio-arrow">›</div>' +
+                '<div class="prio-col prio-col-summary">' + escapeHtml(summaryTrunc) + '</div>' +
+                '<div class="prio-col prio-col-notes">' + escapeHtml(notesTrunc) + '</div>' +
+                '<div class="prio-col prio-col-share"><button class="btn-share" onclick="event.stopPropagation()" title="Share lead">+</button></div>' +
+                '<div class="prio-col prio-col-action"><button class="btn-unprio" onclick="event.stopPropagation();unprio(\'' + lead.id + '\')">Unprio</button></div>' +
             '</div>';
         }).join('');
     }
@@ -2121,6 +2126,23 @@
         }
         btn.disabled = false;
     });
+    
+    // Unprio from table
+    async function unprio(leadId) {
+        try {
+            await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+                method: 'PATCH',
+                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fields: { 'Is Prio': false } })
+            });
+            var lead = allLeads.find(function(l) { return l.id === leadId; });
+            if (lead) lead.fields['Is Prio'] = false;
+            updatePrioList();
+            showToast('Removed from PRIO', 'success');
+        } catch (err) {
+            showToast('Failed to update', 'error');
+        }
+    }
     
     // Toggle PRIO
     document.getElementById('modalPrioBtn').addEventListener('click', async function() {
