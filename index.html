@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Prio AI Dashboard - Manage your leads and grow your business.">
+    <title>Dashboard | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Overlay (mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="/assets/logo_white.png" alt="Prio AI" class="sidebar-logo logo-dark">
+                <img src="/assets/logo_black.png" alt="Prio AI" class="sidebar-logo logo-light" style="display:none;">
+                <button class="sidebar-close" id="sidebarClose">&times;</button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-item active" data-page="overview">
+                        <span class="nav-item-icon">📊</span>
+                        <span>Overview</span>
+                    </div>
+                    <div class="nav-item" data-page="prospects">
+                        <span class="nav-item-icon">📋</span>
+                        <span>Prospects</span>
+                    </div>
+                    <div class="nav-item" data-page="pipeline">
+                        <span class="nav-item-icon">🤖</span>
+                        <span>AI Pipeline</span>
+                    </div>
+                    <div class="nav-item" data-page="analytics">
+                        <span class="nav-item-icon">📈</span>
+                        <span>Analytics</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Tools</div>
+                    <div class="nav-item" data-page="import">
+                        <span class="nav-item-icon">📥</span>
+                        <span>Import Leads</span>
+                    </div>
+                    <div class="nav-item" data-page="search">
+                        <span class="nav-item-icon">🔍</span>
+                        <span>Search</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Account</div>
+                    <div class="nav-item" data-page="settings">
+                        <span class="nav-item-icon">⚙️</span>
+                        <span>Settings</span>
+                    </div>
+                    <div class="nav-item" data-page="billing">
+                        <span class="nav-item-icon">💳</span>
+                        <span>Billing</span>
+                    </div>
+                    <div class="nav-item" data-page="help">
+                        <span class="nav-item-icon">❓</span>
+                        <span>Help</span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-card" id="userCard">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Guest</div>
+                        <div class="user-email" id="userEmail">Not signed in</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <h1 class="header-title" id="pageTitle">Overview</h1>
+                </div>
+                <div class="header-right">
+                    <button class="header-btn" id="themeToggle" title="Toggle theme">
+                        <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        <svg class="moon-icon" viewBox="0 0 24 24" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </button>
+                    <button class="btn btn-primary btn-sm" id="loginBtn">Sign In</button>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- Loading State -->
+                <div class="loading" id="loadingState">
+                    <div class="spinner"></div>
+                    <p class="text-muted">Loading...</p>
+                </div>
+
+                <!-- Guest State -->
+                <div id="guestState" class="hidden">
+                    <div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
+                        <h2 style="margin-bottom: var(--space-4);">Welcome to Prio AI</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: var(--space-6);">Sign in to access your dashboard and start converting more leads.</p>
+                        <button class="btn btn-primary btn-lg" id="guestLoginBtn">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div id="dashboardContent" class="hidden">
+                    <!-- Page: Overview -->
+                    <div class="page" id="page-overview">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-5); margin-bottom: var(--space-6);">
+                            <div class="card">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Total Prospects</div>
+                                <div style="font-size: var(--text-2xl); font-weight: 700;" id="statProspects">-</div>
+                            </div>
+                            <div class="card">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Calls Made</div>
+                                <div style="font-size: var(--text-2xl); font-weight: 700;" id="statCalls">-</div>
+                            </div>
+                            <div class="card">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Appointments</div>
+                                <div style="font-size: var(--text-2xl); font-weight: 700;" id="statAppointments">-</div>
+                            </div>
+                            <div class="card">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Conversion Rate</div>
+                                <div style="font-size: var(--text-2xl); font-weight: 700;" id="statConversion">-</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Activity</h3>
+                            </div>
+                            <p class="text-muted">Your recent lead activity will appear here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: Prospects -->
+                    <div class="page hidden" id="page-prospects">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Prospects</h3>
+                                <button class="btn btn-primary btn-sm">+ Add Lead</button>
+                            </div>
+                            <p class="text-muted">Your prospects will appear here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: Pipeline -->
+                    <div class="page hidden" id="page-pipeline">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">AI Pipeline</h3>
+                            </div>
+                            <p class="text-muted">Your AI calling pipeline will appear here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: Analytics -->
+                    <div class="page hidden" id="page-analytics">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Analytics</h3>
+                            </div>
+                            <p class="text-muted">Your analytics and reports will appear here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: Import -->
+                    <div class="page hidden" id="page-import">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Import Leads</h3>
+                            </div>
+                            <p class="text-muted">Upload CSV or Excel files to import leads.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: Search -->
+                    <div class="page hidden" id="page-search">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Search</h3>
+                            </div>
+                            <p class="text-muted">Search across all your leads.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: Settings -->
+                    <div class="page hidden" id="page-settings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Settings</h3>
+                            </div>
+                            <p class="text-muted">Manage your account settings.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: Billing -->
+                    <div class="page hidden" id="page-billing">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Billing</h3>
+                            </div>
+                            <p class="text-muted">Manage your subscription and payment methods.</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: Help -->
+                    <div class="page hidden" id="page-help">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Help & Support</h3>
+                            </div>
+                            <p class="text-muted">Get help with using Prio AI.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" id="authModalClose">&times;</button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="/assets/logo_white.png" alt="Prio AI" class="modal-logo logo-dark">
+                    <img src="/assets/logo_black.png" alt="Prio AI" class="modal-logo logo-light" style="display:none;">
+                    <h2 id="authTitle">Welcome to Prio AI</h2>
+                    <p id="authSubtitle">Sign in to your account</p>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-error" id="loginError"></div>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" id="loginSubmit">Sign In</button>
+                </form>
+
+                <!-- Signup Form (hidden by default) -->
+                <form id="signupForm" class="hidden">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" placeholder="John Smith" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" placeholder="Min. 8 characters" required minlength="8">
+                    </div>
+                    <div class="form-error" id="signupError"></div>
+                    <div class="form-success" id="signupSuccess"></div>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" id="signupSubmit">Create Account</button>
+                </form>
+
+                <div class="auth-divider"><span>or</span></div>
+
+                <button class="btn btn-google btn-block" id="googleAuthBtn">
+                    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Continue with Google
+                </button>
+
+                <div class="auth-footer">
+                    <p id="authSwitch">Don't have an account? <a href="#" id="switchToSignup">Sign up</a></p>
+                    <p style="margin-top: var(--space-2);"><a href="#" id="forgotPassword">Forgot password?</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Menu Modal -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal" style="max-width: 320px;">
+            <button class="modal-close" id="userModalClose">&times;</button>
+            <div class="modal-content">
+                <div style="text-align: center; margin-bottom: var(--space-5);">
+                    <div class="user-avatar" id="userModalAvatar" style="width: 64px; height: 64px; font-size: var(--text-xl); margin: 0 auto var(--space-3);">U</div>
+                    <div style="font-weight: 600;" id="userModalName">User</div>
+                    <div style="font-size: var(--text-sm); color: var(--text-secondary);" id="userModalEmail">user@example.com</div>
+                </div>
+                <button class="btn btn-secondary btn-block" style="margin-bottom: var(--space-2);" onclick="switchPage('settings')">Settings</button>
+                <button class="btn btn-secondary btn-block" style="margin-bottom: var(--space-2);" onclick="switchPage('billing')">Billing</button>
+                <button class="btn btn-secondary btn-block" id="logoutBtn" style="color: #ef4444;">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    // Supabase Setup
+    var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+    var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // State
+    var currentUser = null;
+    var currentPage = 'overview';
+
+    // Elements
+    var sidebar = document.getElementById('sidebar');
+    var sidebarOverlay = document.getElementById('sidebarOverlay');
+    var authModal = document.getElementById('authModal');
+    var userModal = document.getElementById('userModal');
+    var loginForm = document.getElementById('loginForm');
+    var signupForm = document.getElementById('signupForm');
+
+    // Toast
+    function showToast(message, type) {
+        var toast = document.createElement('div');
+        toast.className = 'toast ' + (type || '');
+        toast.textContent = message;
+        document.getElementById('toastContainer').appendChild(toast);
+        setTimeout(function() { toast.remove(); }, 4000);
+    }
+
+    // Theme
+    (function() {
+        var html = document.documentElement;
+        var saved = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', saved);
+        updateThemeIcons();
+        
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeIcons();
+        });
+        
+        function updateThemeIcons() {
+            var isDark = html.getAttribute('data-theme') === 'dark';
+            document.querySelectorAll('.sun-icon').forEach(function(el) { el.style.display = isDark ? 'block' : 'none'; });
+            document.querySelectorAll('.moon-icon').forEach(function(el) { el.style.display = isDark ? 'none' : 'block'; });
+            document.querySelectorAll('.logo-dark').forEach(function(el) { el.style.display = isDark ? 'block' : 'none'; });
+            document.querySelectorAll('.logo-light').forEach(function(el) { el.style.display = isDark ? 'none' : 'block'; });
+        }
+    })();
+
+    // Sidebar Toggle (mobile)
+    document.getElementById('menuToggle').addEventListener('click', function() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+    });
+    
+    document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+    
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-item[data-page]').forEach(function(item) {
+        item.addEventListener('click', function() {
+            switchPage(this.dataset.page);
+            closeSidebar();
+        });
+    });
+
+    function switchPage(page) {
+        currentPage = page;
+        
+        // Update nav
+        document.querySelectorAll('.nav-item').forEach(function(item) {
+            item.classList.toggle('active', item.dataset.page === page);
+        });
+        
+        // Update title
+        var titles = {
+            overview: 'Overview', prospects: 'Prospects', pipeline: 'AI Pipeline',
+            analytics: 'Analytics', import: 'Import Leads', search: 'Search',
+            settings: 'Settings', billing: 'Billing', help: 'Help'
+        };
+        document.getElementById('pageTitle').textContent = titles[page] || page;
+        
+        // Show page
+        document.querySelectorAll('.page').forEach(function(p) { p.classList.add('hidden'); });
+        var pageEl = document.getElementById('page-' + page);
+        if (pageEl) pageEl.classList.remove('hidden');
+        
+        // Close user modal if open
+        userModal.classList.remove('active');
+        
+        // Update hash
+        window.location.hash = page;
+    }
+
+    // Auth Modal
+    function openAuthModal(mode) {
+        authModal.classList.add('active');
+        if (mode === 'signup') {
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            document.getElementById('authTitle').textContent = 'Create Account';
+            document.getElementById('authSubtitle').textContent = 'Start converting more leads';
+            document.getElementById('authSwitch').innerHTML = 'Already have an account? <a href="#" id="switchToLogin">Sign in</a>';
+            document.getElementById('switchToLogin').addEventListener('click', function(e) { e.preventDefault(); openAuthModal('login'); });
+        } else {
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            document.getElementById('authTitle').textContent = 'Welcome to Prio AI';
+            document.getElementById('authSubtitle').textContent = 'Sign in to your account';
+            document.getElementById('authSwitch').innerHTML = "Don't have an account? <a href=\"#\" id=\"switchToSignup\">Sign up</a>";
+            document.getElementById('switchToSignup').addEventListener('click', function(e) { e.preventDefault(); openAuthModal('signup'); });
+        }
+    }
+
+    function closeAuthModal() {
+        authModal.classList.remove('active');
+        loginForm.reset();
+        signupForm.reset();
+        document.getElementById('loginError').textContent = '';
+        document.getElementById('signupError').textContent = '';
+        document.getElementById('signupSuccess').textContent = '';
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', function() { openAuthModal('login'); });
+    document.getElementById('guestLoginBtn').addEventListener('click', function() { openAuthModal('signup'); });
+    document.getElementById('authModalClose').addEventListener('click', closeAuthModal);
+    authModal.addEventListener('click', function(e) { if (e.target === authModal) closeAuthModal(); });
+
+    // User Modal
+    document.getElementById('userCard').addEventListener('click', function() {
+        if (currentUser) {
+            userModal.classList.add('active');
+        } else {
+            openAuthModal('login');
+        }
+    });
+    document.getElementById('userModalClose').addEventListener('click', function() { userModal.classList.remove('active'); });
+    userModal.addEventListener('click', function(e) { if (e.target === userModal) userModal.classList.remove('active'); });
+
+    // Login
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var btn = document.getElementById('loginSubmit');
+        var err = document.getElementById('loginError');
+        err.textContent = '';
+        btn.disabled = true;
+        btn.textContent = 'Signing in...';
+        
+        try {
+            var result = await supabase.auth.signInWithPassword({
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            });
+            if (result.error) throw result.error;
+            closeAuthModal();
+            checkAuth();
+        } catch (ex) {
+            err.textContent = ex.message || 'Login failed';
+        }
+        
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+    });
+
+    // Signup
+    signupForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var btn = document.getElementById('signupSubmit');
+        var err = document.getElementById('signupError');
+        var suc = document.getElementById('signupSuccess');
+        err.textContent = '';
+        suc.textContent = '';
+        btn.disabled = true;
+        btn.textContent = 'Creating account...';
+        
+        try {
+            var result = await supabase.auth.signUp({
+                email: document.getElementById('signupEmail').value,
+                password: document.getElementById('signupPassword').value,
+                options: {
+                    data: { full_name: document.getElementById('signupName').value },
+                    emailRedirectTo: window.location.origin
+                }
+            });
+            if (result.error) throw result.error;
+            if (result.data.user && !result.data.session) {
+                suc.textContent = '✓ Check your email to confirm your account';
+                btn.textContent = 'Email Sent';
+            } else {
+                closeAuthModal();
+                checkAuth();
+            }
+        } catch (ex) {
+            err.textContent = ex.message || 'Signup failed';
+            btn.disabled = false;
+            btn.textContent = 'Create Account';
+        }
+    });
+
+    // Google Auth
+    document.getElementById('googleAuthBtn').addEventListener('click', function() {
+        supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin }
+        });
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', async function() {
+        await supabase.auth.signOut();
+        currentUser = null;
+        userModal.classList.remove('active');
+        checkAuth();
+        showToast('Signed out', 'success');
+    });
+
+    // Auth Check
+    async function checkAuth() {
+        document.getElementById('loadingState').classList.remove('hidden');
+        document.getElementById('guestState').classList.add('hidden');
+        document.getElementById('dashboardContent').classList.add('hidden');
+        
+        var result = await supabase.auth.getSession();
+        currentUser = result.data.session?.user || null;
+        
+        document.getElementById('loadingState').classList.add('hidden');
+        
+        if (currentUser) {
+            var name = currentUser.user_metadata?.full_name || currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+            var avatar = currentUser.user_metadata?.profile_picture;
+            
+            document.getElementById('userName').textContent = name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userModalName').textContent = name;
+            document.getElementById('userModalEmail').textContent = currentUser.email;
+            
+            if (avatar) {
+                document.getElementById('userAvatar').innerHTML = '<img src="' + avatar + '" alt="">';
+                document.getElementById('userModalAvatar').innerHTML = '<img src="' + avatar + '" alt="">';
+            } else {
+                document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+                document.getElementById('userModalAvatar').textContent = name.charAt(0).toUpperCase();
+            }
+            
+            document.getElementById('loginBtn').classList.add('hidden');
+            document.getElementById('dashboardContent').classList.remove('hidden');
+        } else {
+            document.getElementById('userName').textContent = 'Guest';
+            document.getElementById('userEmail').textContent = 'Not signed in';
+            document.getElementById('userAvatar').textContent = 'G';
+            document.getElementById('loginBtn').classList.remove('hidden');
+            document.getElementById('guestState').classList.remove('hidden');
+        }
+    }
+
+    // Init
+    checkAuth();
+    
+    // Handle hash
+    var hash = window.location.hash.slice(1);
+    if (hash && document.getElementById('page-' + hash)) {
+        switchPage(hash);
+    }
+    </script>
+</body>
+</html>
