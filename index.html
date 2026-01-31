@@ -26,6 +26,14 @@
         .quick-action-icon{font-size:1.5rem}
         .quick-action-text{font-size:0.875rem;font-weight:500}
         .overview-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .overview-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap}
+        .overview-header-left{flex:1;min-width:280px}
+        .overview-header-right{display:flex;gap:0.75rem;flex-wrap:wrap}
+        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.75rem 1rem;min-width:80px;text-align:center}
+        .header-stat-badge.accent{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3)}
+        .header-stat-badge .badge-value{font-size:1.125rem;font-weight:700;margin-bottom:2px}
+        .header-stat-badge .badge-label{font-size:0.6875rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px}
+        .usage-bar-mini{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:6px;overflow:hidden}
         .overview-welcome{font-size:2rem;font-weight:700;margin-bottom:0.75rem}
         .overview-header-meta{display:flex;align-items:center;gap:12px;font-size:0.9375rem;color:rgba(255,255,255,0.5)}
         .usage-card .stat-content{flex:1}
@@ -713,28 +721,35 @@
                 <div id="dashboardContent" class="hidden">
                     <!-- Page: Overview -->
                     <div class="page" id="page-overview">
-                        <!-- Welcome Header -->
-                        <div class="overview-header">
-                            <h1 class="overview-welcome">Welcome back, <span id="welcomeName">there</span> 👋</h1>
-                            <div class="overview-header-meta">
-                                <span class="header-meta-item" id="welcomeDate"></span>
-                                <span class="header-meta-divider">•</span>
-                                <span class="header-meta-item" id="welcomePhone"><span class="meta-label">AI:</span> <span class="meta-value" id="retellPhoneNumber">-</span></span>
+                        <!-- Welcome Header with Compact Stats -->
+                        <div class="overview-header-row">
+                            <div class="overview-header-left">
+                                <h1 class="overview-welcome">Welcome back, <span id="welcomeName">there</span> 👋</h1>
+                                <div class="overview-header-meta">
+                                    <span class="header-meta-item" id="welcomeDate"></span>
+                                    <span class="header-meta-divider">•</span>
+                                    <span class="header-meta-item" id="welcomePhone"><span class="meta-label">AI:</span> <span class="meta-value" id="retellPhoneNumber">-</span></span>
+                                </div>
+                            </div>
+                            <div class="overview-header-right">
+                                <div class="header-stat-badge" id="usageCard">
+                                    <div class="badge-value"><span id="usageCalls">0</span>/<span id="usageLimit">0</span></div>
+                                    <div class="badge-label">Usage</div>
+                                    <div class="usage-bar-mini"><div class="usage-bar-fill" id="usageBarFill"></div></div>
+                                </div>
+                                <div class="header-stat-badge">
+                                    <div class="badge-value" id="statProspects">-</div>
+                                    <div class="badge-label">Leads</div>
+                                </div>
+                                <div class="header-stat-badge accent">
+                                    <div class="badge-value" id="statAppointments">-</div>
+                                    <div class="badge-label">Booked</div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Row 1: Key Metrics -->
+                        <!-- Row 1: Today's Activity -->
                         <div class="stats-grid">
-                            <div class="stat-card usage-card" id="usageCard">
-                                <div class="stat-icon">📊</div>
-                                <div class="stat-content">
-                                    <div class="stat-value"><span id="usageCalls">0</span> / <span id="usageLimit">0</span></div>
-                                    <div class="stat-label">Monthly Usage</div>
-                                    <div class="usage-bar">
-                                        <div class="usage-bar-fill" id="usageBarFill"></div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="stat-card">
                                 <div class="stat-icon">📞</div>
                                 <div class="stat-content">
@@ -743,17 +758,24 @@
                                 </div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-icon">📋</div>
+                                <div class="stat-icon">💬</div>
                                 <div class="stat-content">
-                                    <div class="stat-value" id="statProspects">-</div>
-                                    <div class="stat-label">Total Leads</div>
+                                    <div class="stat-value" id="statConversationsToday">0</div>
+                                    <div class="stat-label">Conversations Today</div>
                                 </div>
                             </div>
-                            <div class="stat-card accent">
+                            <div class="stat-card">
                                 <div class="stat-icon">📅</div>
                                 <div class="stat-content">
-                                    <div class="stat-value" id="statAppointments">-</div>
-                                    <div class="stat-label">Appointments Booked</div>
+                                    <div class="stat-value" id="statMeetingsToday">0</div>
+                                    <div class="stat-label">Meetings Booked Today</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🔄</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statFollowUpsToday">0</div>
+                                    <div class="stat-label">Follow Ups Today</div>
                                 </div>
                             </div>
                         </div>
@@ -2298,14 +2320,46 @@
         }).length;
         document.getElementById('statAppointments').textContent = appointments;
         
-        // Calls Today - count leads with Last Call Timestamp today
+        // Today's date for filtering
         var today = new Date().toDateString();
+        var todayISO = new Date().toISOString().split('T')[0];
+
+        // Calls Today - count leads with Last Call Timestamp today
         var callsToday = allLeads.filter(function(l) {
             var lastCall = l.fields['Last Call Timestamp'];
             if (!lastCall) return false;
             return new Date(lastCall).toDateString() === today;
         }).length;
         document.getElementById('statCallsToday').textContent = callsToday;
+
+        // Conversations Today - calls today with meaningful outcomes (not voicemail/no answer)
+        var conversationsToday = allLeads.filter(function(l) {
+            var lastCall = l.fields['Last Call Timestamp'];
+            if (!lastCall) return false;
+            if (new Date(lastCall).toDateString() !== today) return false;
+            var outcome = (l.fields['Disposition'] || l.fields['Status'] || '').toLowerCase();
+            return outcome && outcome !== 'no answer' && outcome !== 'voicemail' && outcome !== 'new';
+        }).length;
+        var convEl = document.getElementById('statConversationsToday');
+        if (convEl) convEl.textContent = conversationsToday;
+
+        // Meetings Booked Today - leads with Booked Time date = today
+        var meetingsToday = allLeads.filter(function(l) {
+            var bookedTime = l.fields['Booked Time'];
+            if (!bookedTime) return false;
+            return bookedTime.startsWith(todayISO);
+        }).length;
+        var meetEl = document.getElementById('statMeetingsToday');
+        if (meetEl) meetEl.textContent = meetingsToday;
+
+        // Follow Ups Scheduled Today
+        var followUpsToday = allLeads.filter(function(l) {
+            var nextCall = l.fields['Next Call Date'] || l.fields['Follow Up Date'] || l.fields['Callback Date'];
+            if (!nextCall) return false;
+            return nextCall.startsWith(todayISO);
+        }).length;
+        var fuEl = document.getElementById('statFollowUpsToday');
+        if (fuEl) fuEl.textContent = followUpsToday;
         
         // Retell Phone & Usage from client record
         if (currentUserRecord && currentUserRecord.fields) {
@@ -2373,8 +2427,11 @@
         document.getElementById('prioritiesCount').textContent = todayPriorities.length;
         updateTodayPriorities(todayPriorities);
         
-        // Update welcome name
-        var name = currentUser?.user_metadata?.full_name || currentUser?.user_metadata?.display_name || 'there';
+        // Update welcome name - check Supabase metadata first, then Airtable Agent Name
+        var name = currentUser?.user_metadata?.full_name ||
+                   currentUser?.user_metadata?.display_name ||
+                   currentUserRecord?.fields?.['Agent Name'] ||
+                   'there';
         document.getElementById('welcomeName').textContent = name.split(' ')[0];
         
         // Set today's date
@@ -2442,7 +2499,7 @@
                             '' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(phone) + '</div>' +
-                        '<div class="priority-card-lg-lastcall"><span class="lastcall-dot ' + lastCalledColor + '"></span>' + lastCalled + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Last Called <span class="lastcall-dot ' + lastCalledColor + '"></span> ' + lastCalled + '</div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="priority-card-lg-summary-col">' +
