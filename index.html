@@ -29,14 +29,17 @@
         .overview-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap}
         .overview-header-left{flex:1;min-width:280px}
         .overview-header-right{display:flex;gap:0.75rem;flex-wrap:wrap}
-        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.75rem 1rem;min-width:80px;text-align:center;display:flex;flex-direction:column;align-items:center}
-        .header-stat-badge.usage-badge{min-width:120px}
+        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.875rem 1rem;min-width:70px;min-height:70px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .header-stat-badge.usage-badge{min-width:180px;padding:0.75rem 1.25rem}
         .header-stat-badge.accent{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3)}
         .header-stat-badge .badge-emoji{font-size:1rem;margin-bottom:4px}
-        .header-stat-badge .badge-value{font-size:1.125rem;font-weight:700;margin-bottom:2px}
+        .header-stat-badge .badge-value{font-size:1.25rem;font-weight:700;margin-bottom:2px}
         .header-stat-badge .badge-label{font-size:0.6875rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px}
         .section-label{font-size:0.8125rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px;margin:1.5rem 0 0.75rem 0}
-        .usage-bar-mini{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:6px;overflow:hidden}
+        .usage-bar-mini{width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-top:8px;overflow:hidden}
+        .usage-bar-mini .usage-bar-fill{height:100%;border-radius:3px;transition:width 0.3s ease,background 0.3s ease;background:linear-gradient(90deg,#fff,#fff)}
+        .usage-bar-mini .usage-bar-fill.warning{background:linear-gradient(90deg,#f59e0b,#eab308)}
+        .usage-bar-mini .usage-bar-fill.danger{background:linear-gradient(90deg,#ef4444,#dc2626)}
         .overview-welcome{font-size:2rem;font-weight:700;margin-bottom:0.75rem}
         .overview-header-meta{display:flex;align-items:center;gap:12px;font-size:0.9375rem;color:rgba(255,255,255,0.5)}
         .usage-card .stat-content{flex:1}
@@ -93,7 +96,8 @@
         @media(max-width:900px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-summary-col{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-notes-col{flex:none}}
         .missed-meeting-separator{display:flex;align-items:center;gap:16px;margin:24px 0 8px 0;padding:0 8px}
         .missed-meeting-separator::before,.missed-meeting-separator::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent)}
-        .missed-meeting-separator span{font-size:0.8125rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+        .missed-meeting-separator span{font-size:0.8125rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+        .missed-count{background:#ef4444;color:#fff;font-size:0.75rem;padding:2px 8px;border-radius:10px;font-weight:700}
         .missed-meeting-info{font-size:0.8125rem;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:16px;padding:8px 16px;background:rgba(239,68,68,0.08);border-radius:8px}
         .priority-card-lg.missed-meeting{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05)}
         .priority-card-lg.missed-meeting:hover{border-color:#ef4444}
@@ -101,9 +105,13 @@
         .priority-card-lg.missed-meeting .priority-card-lg-time-col .time-value{color:#ef4444}
         .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:6px;margin-right:8px;flex-shrink:0}
-        .priority-card-lg-actions{display:flex;flex-direction:column;gap:6px;padding:10px;border-left:1px solid rgba(255,255,255,0.08);justify-content:center}
-        .action-btn{width:36px;height:36px;border:1px solid rgba(255,255,255,0.15);background:#111;border-radius:8px;cursor:pointer;font-size:1rem;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
-        .action-btn:hover{transform:scale(1.1);border-color:rgba(255,255,255,0.3)}
+        .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
+        .priority-card-lg-time-col{position:relative}
+        .priority-card-lg-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;border-left:1px solid rgba(255,255,255,0.08);min-width:180px}
+        .action-btn{padding:12px 8px;border:1px solid rgba(255,255,255,0.15);background:#111;border-radius:10px;cursor:pointer;font-size:0.75rem;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:rgba(255,255,255,0.7)}
+        .action-btn .action-icon{font-size:1.125rem}
+        .action-btn .action-label{font-size:0.6875rem;font-weight:500;white-space:nowrap}
+        .action-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.3);color:#fff}
         .action-btn.action-share:hover{background:rgba(59,130,246,0.2);border-color:#3B82F6}
         .action-btn.action-ai:hover{background:rgba(52,211,153,0.2);border-color:rgb(52,211,153)}
         .action-btn.action-dnc:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
@@ -113,7 +121,7 @@
         .priorities-cards:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priorities-cards:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .priorities-cards:not(.list-view) .priority-card-lg-summary-col,.priorities-cards:not(.list-view) .priority-card-lg-notes-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
-        .priorities-cards:not(.list-view) .priority-card-lg-actions{flex-direction:row;border-left:none;border-top:1px solid rgba(255,255,255,0.08);justify-content:center;padding:12px}
+        .priorities-cards:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto}
         .priorities-cards:not(.list-view) .missed-meeting-separator,.priorities-cards:not(.list-view) .missed-meeting-info{grid-column:1/-1}
         .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
         .section-header h3{font-size:1.125rem;font-weight:600}
@@ -865,13 +873,6 @@
                             </div>
                         </div>
 
-                        <!-- View Analytics Button -->
-                        <div style="text-align:center;margin:1.5rem 0;">
-                            <button class="btn btn-secondary" onclick="switchPage('analytics')" style="padding:12px 24px;">
-                                📊 View All Analytics
-                            </button>
-                        </div>
-
                         <!-- Row 2: Lead Categories -->
                         <div class="section-label">Pipeline Overview</div>
                         <div class="overview-grid">
@@ -907,6 +908,13 @@
                                 <div class="overview-card-value" id="overviewPipeline">0</div>
                                 <div class="overview-card-desc">Timeline & follow-ups</div>
                             </div>
+                        </div>
+
+                        <!-- View Analytics Button -->
+                        <div style="text-align:center;margin:1.5rem 0;">
+                            <button class="btn btn-secondary" onclick="switchPage('analytics')" style="padding:12px 24px;">
+                                📊 View All Analytics
+                            </button>
                         </div>
 
                         <!-- Today's Priorities Section -->
@@ -2540,16 +2548,21 @@
             document.getElementById('usageCalls').textContent = callsThisMonth;
             document.getElementById('usageLimit').textContent = callLimit;
             
-            // Update usage progress bar
+            // Update usage progress bar with color gradient
             var usagePercent = callLimit > 0 ? Math.min((callsThisMonth / callLimit) * 100, 100) : 0;
             var usageBar = document.getElementById('usageBarFill');
             usageBar.style.width = usagePercent + '%';
             usageBar.classList.remove('warning', 'danger');
-            if (callsThisMonth >= callLimit) {
+
+            // Color changes: white (0-50%) -> yellow (50-80%) -> red (80%+)
+            if (usagePercent >= 100) {
                 usageBar.classList.add('danger');
             } else if (usagePercent >= 80) {
+                usageBar.classList.add('danger');
+            } else if (usagePercent >= 50) {
                 usageBar.classList.add('warning');
             }
+            // Default is white (no class)
         }
         
         // PRIO leads (Is Prio = true from Airtable)
@@ -2632,8 +2645,8 @@
             return timeB.localeCompare(timeA);
         });
 
-        var totalCount = todayPriorities.length + missedMeetings.length;
-        document.getElementById('prioritiesCount').textContent = totalCount;
+        // Update count - only today's meetings in the green badge
+        document.getElementById('prioritiesCount').textContent = todayPriorities.length;
         updateTodayPriorities(todayPriorities, missedMeetings);
         
         // Update welcome name - check Supabase metadata first, then Airtable Agent Name
@@ -2711,20 +2724,20 @@
                 ? '<span class="time-value missed-date">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>'
                 : '<span class="time-value">' + timeDisplay + '</span>';
 
-            var prioIndicator = isPrio ? '<span class="prio-indicator" title="Priority Lead">P</span>' : '';
+            var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
 
             return '<div class="priority-card-lg' + missedClass + '" data-id="' + lead.id + '">' +
                 '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="priority-card-lg-time-col">' +
+                        prioIndicator +
                         timeCol +
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            prioIndicator +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
-                        '<div class="priority-card-lg-lastcall">Last Called - <span class="lastcall-dot ' + lastCalledColor + '"></span> ' + lastCalled + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Called ' + lastCalled + ' <span class="lastcall-dot ' + lastCalledColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
@@ -2736,10 +2749,10 @@
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
                 '<div class="priority-card-lg-actions">' +
-                    '<button class="action-btn action-share" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')" title="Share Lead">🔗</button>' +
-                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')" title="Send to AI">🤖</button>' +
-                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')" title="Do Not Call">🚫</button>' +
-                    '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')" title="Reschedule">📅</button>' +
+                    '<button class="action-btn action-share" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">🔗</span><span class="action-label">Share</span></button>' +
+                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
+                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
+                    '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Reschedule</span></button>' +
                 '</div>' +
             '</div>';
         }
@@ -2755,7 +2768,7 @@
 
         // Add red separator and missed meetings if any
         if (missedMeetings.length > 0) {
-            html += '<div class="missed-meeting-separator"><span>Missed Meeting</span></div>';
+            html += '<div class="missed-meeting-separator"><span>Missed Meeting <span class="missed-count">' + missedMeetings.length + '</span></span></div>';
             html += '<div class="missed-meeting-info">Please reschedule these meetings or send back to AI to keep your dashboard clean.</div>';
             html += missedMeetings.map(function(lead, index) {
                 return renderPriorityCard(lead, index, true);
