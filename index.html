@@ -29,10 +29,13 @@
         .overview-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap}
         .overview-header-left{flex:1;min-width:280px}
         .overview-header-right{display:flex;gap:0.75rem;flex-wrap:wrap}
-        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.75rem 1rem;min-width:80px;text-align:center}
+        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.75rem 1rem;min-width:80px;text-align:center;display:flex;flex-direction:column;align-items:center}
+        .header-stat-badge.usage-badge{min-width:120px}
         .header-stat-badge.accent{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3)}
+        .header-stat-badge .badge-emoji{font-size:1rem;margin-bottom:4px}
         .header-stat-badge .badge-value{font-size:1.125rem;font-weight:700;margin-bottom:2px}
         .header-stat-badge .badge-label{font-size:0.6875rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px}
+        .section-label{font-size:0.8125rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px;margin:1.5rem 0 0.75rem 0}
         .usage-bar-mini{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:6px;overflow:hidden}
         .overview-welcome{font-size:2rem;font-weight:700;margin-bottom:0.75rem}
         .overview-header-meta{display:flex;align-items:center;gap:12px;font-size:0.9375rem;color:rgba(255,255,255,0.5)}
@@ -88,14 +91,30 @@
         .priority-card-lg-notes-col .col-label{font-size:0.8125rem;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;font-weight:600}
         .priority-card-lg-notes-col .col-content{font-size:1rem;line-height:1.5;color:rgba(255,255,255,0.8);flex:1;overflow:hidden}
         @media(max-width:900px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-summary-col{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-notes-col{flex:none}}
-        .missed-meeting-separator{display:flex;align-items:center;gap:16px;margin:24px 0 16px 0;padding:0 8px}
+        .missed-meeting-separator{display:flex;align-items:center;gap:16px;margin:24px 0 8px 0;padding:0 8px}
         .missed-meeting-separator::before,.missed-meeting-separator::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent)}
         .missed-meeting-separator span{font-size:0.8125rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+        .missed-meeting-info{font-size:0.8125rem;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:16px;padding:8px 16px;background:rgba(239,68,68,0.08);border-radius:8px}
         .priority-card-lg.missed-meeting{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05)}
         .priority-card-lg.missed-meeting:hover{border-color:#ef4444}
         .priority-card-lg.missed-meeting .priority-card-lg-time-col{background:rgba(239,68,68,0.15)}
         .priority-card-lg.missed-meeting .priority-card-lg-time-col .time-value{color:#ef4444}
         .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
+        .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:6px;margin-right:8px;flex-shrink:0}
+        .priority-card-lg-actions{display:flex;flex-direction:column;gap:6px;padding:10px;border-left:1px solid rgba(255,255,255,0.08);justify-content:center}
+        .action-btn{width:36px;height:36px;border:1px solid rgba(255,255,255,0.15);background:#111;border-radius:8px;cursor:pointer;font-size:1rem;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+        .action-btn:hover{transform:scale(1.1);border-color:rgba(255,255,255,0.3)}
+        .action-btn.action-share:hover{background:rgba(59,130,246,0.2);border-color:#3B82F6}
+        .action-btn.action-ai:hover{background:rgba(52,211,153,0.2);border-color:rgb(52,211,153)}
+        .action-btn.action-dnc:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
+        .action-btn.action-reschedule:hover{background:rgba(245,158,11,0.2);border-color:#f59e0b}
+        .priorities-cards:not(.list-view){display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
+        .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
+        .priorities-cards:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .priorities-cards:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
+        .priorities-cards:not(.list-view) .priority-card-lg-summary-col,.priorities-cards:not(.list-view) .priority-card-lg-notes-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .priorities-cards:not(.list-view) .priority-card-lg-actions{flex-direction:row;border-left:none;border-top:1px solid rgba(255,255,255,0.08);justify-content:center;padding:12px}
+        .priorities-cards:not(.list-view) .missed-meeting-separator,.priorities-cards:not(.list-view) .missed-meeting-info{grid-column:1/-1}
         .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
         .section-header h3{font-size:1.125rem;font-weight:600}
         .prio-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -144,21 +163,47 @@
         .prio-stat-value{font-size:1.5rem;font-weight:700;color:rgb(52,211,153)}
         
         /* Lead Detail Modal */
-        .lead-modal{max-width:900px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
-        .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.1)}
+        .lead-modal{max-width:900px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#0f0f0f 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.08);box-shadow:0 25px 50px -12px rgba(0,0,0,0.8)}
+        .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)}
         .lead-modal-title h2{font-size:1.25rem;font-weight:600;margin-bottom:8px}
         .lead-modal-actions{display:flex;gap:8px;flex-wrap:wrap}
         .btn-prio-toggle{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
         .btn-prio-toggle.active{background:#f59e0b;color:#000}
         .btn-prio-toggle:hover{background:rgba(245,158,11,0.25)}
-        .btn-send-back{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(139,92,246,0.15);color:#8B5CF6;border:1px solid rgba(139,92,246,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
-        .btn-send-back:hover{background:rgba(139,92,246,0.25)}
+        .btn-send-back{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
+        .btn-send-back:hover{background:rgba(52,211,153,0.25)}
+        .btn-dnc{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
+        .btn-dnc:hover{background:rgba(239,68,68,0.25)}
+        .notes-input-container{position:relative}
+        .notes-input-tools{display:flex;gap:8px;margin-top:8px;justify-content:flex-end}
+        .voice-input-btn{width:40px;height:40px;border-radius:10px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.125rem;transition:all 0.2s}
+        .voice-input-btn:hover{background:rgba(52,211,153,0.15);border-color:rgb(52,211,153);color:rgb(52,211,153)}
+        .voice-input-btn.recording{background:rgba(239,68,68,0.2);border-color:#ef4444;color:#ef4444;animation:pulse-recording 1.5s infinite}
+        @keyframes pulse-recording{0%,100%{opacity:1}50%{opacity:0.5}}
+        .polish-notes-btn{padding:10px 14px;border-radius:10px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border:none;color:white;font-size:0.8125rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+        .polish-notes-btn:hover{opacity:0.9;transform:translateY(-1px)}
+        .polish-notes-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+        .polish-preview-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1200;opacity:0;visibility:hidden;transition:all 0.2s}
+        .polish-preview-modal.active{opacity:1;visibility:visible}
+        .polish-preview-content{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
+        .polish-preview-content h3{margin-bottom:16px;display:flex;align-items:center;gap:8px;font-size:1.125rem}
+        .polish-comparison{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+        .polish-box{background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px}
+        .polish-box-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px;font-weight:600;text-transform:uppercase}
+        .polish-box-text{font-size:0.875rem;line-height:1.6;white-space:pre-wrap;color:rgba(255,255,255,0.85)}
+        .polish-actions{display:flex;gap:12px}
+        .polish-actions button{flex:1;padding:12px;border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.2s;font-size:0.875rem}
+        .polish-accept{background:rgb(52,211,153);border:none;color:#000}
+        .polish-accept:hover{background:rgb(45,190,135)}
+        .polish-reject{background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8)}
+        .polish-reject:hover{border-color:rgba(255,255,255,0.3)}
+        @media(max-width:600px){.polish-comparison{grid-template-columns:1fr}}
         .lead-modal-body{padding:24px;overflow-y:auto;flex:1}
         .lead-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
         .lead-info-item label{display:block;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:4px}
         .lead-info-item .value{font-size:0.9375rem;font-weight:500}
-        .lead-section{margin-bottom:24px;padding:16px;background:rgba(255,255,255,0.03);border-radius:10px}
-        .lead-section h3{font-size:0.875rem;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .lead-section{margin-bottom:20px;padding:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
+        .lead-section h3{font-size:0.875rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9)}
         .lead-summary-content{font-size:0.875rem;line-height:1.6;color:rgba(255,255,255,0.8);white-space:pre-wrap}
         .lead-notes-list{max-height:150px;overflow-y:auto;margin-bottom:12px}
         .lead-note-item{padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:6px;margin-bottom:8px;font-size:0.8125rem}
@@ -740,16 +785,19 @@
                                 </div>
                             </div>
                             <div class="overview-header-right">
-                                <div class="header-stat-badge" id="usageCard">
+                                <div class="header-stat-badge usage-badge" id="usageCard">
+                                    <span class="badge-emoji">📊</span>
                                     <div class="badge-value"><span id="usageCalls">0</span>/<span id="usageLimit">0</span></div>
                                     <div class="badge-label">Usage</div>
                                     <div class="usage-bar-mini"><div class="usage-bar-fill" id="usageBarFill"></div></div>
                                 </div>
                                 <div class="header-stat-badge">
+                                    <span class="badge-emoji">👥</span>
                                     <div class="badge-value" id="statProspects">-</div>
                                     <div class="badge-label">Leads</div>
                                 </div>
                                 <div class="header-stat-badge accent">
+                                    <span class="badge-emoji">✅</span>
                                     <div class="badge-value" id="statAppointments">-</div>
                                     <div class="badge-label">Booked</div>
                                 </div>
@@ -757,38 +805,47 @@
                         </div>
 
                         <!-- Row 1: Today's Activity -->
+                        <div class="section-label">Today's Numbers</div>
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <div class="stat-icon">📞</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statCallsToday">0</div>
-                                    <div class="stat-label">Calls Today</div>
+                                    <div class="stat-label">AI Calls</div>
                                 </div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">💬</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statConversationsToday">0</div>
-                                    <div class="stat-label">Conversations Today</div>
+                                    <div class="stat-label">Qualified AI Conversations</div>
                                 </div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">📅</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statMeetingsToday">0</div>
-                                    <div class="stat-label">Meetings Booked Today</div>
+                                    <div class="stat-label">AI Meetings Scheduled</div>
                                 </div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">🔄</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statFollowUpsToday">0</div>
-                                    <div class="stat-label">Follow Ups Today</div>
+                                    <div class="stat-label">AI Follow Ups Scheduled</div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- View Analytics Button -->
+                        <div style="text-align:center;margin:1.5rem 0;">
+                            <button class="btn btn-secondary" onclick="switchPage('analytics')" style="padding:12px 24px;">
+                                📊 View All Analytics
+                            </button>
+                        </div>
+
                         <!-- Row 2: Lead Categories -->
+                        <div class="section-label">Pipeline Overview</div>
                         <div class="overview-grid">
                             <div class="overview-card" onclick="switchPage('prio')">
                                 <div class="overview-card-header">
@@ -822,13 +879,6 @@
                                 <div class="overview-card-value" id="overviewPipeline">0</div>
                                 <div class="overview-card-desc">Timeline & follow-ups</div>
                             </div>
-                        </div>
-
-                        <!-- View Analytics Button -->
-                        <div style="text-align:center;margin:1.5rem 0;">
-                            <button class="btn btn-secondary" onclick="switchPage('analytics')" style="padding:12px 24px;">
-                                📊 View Today's Analytics
-                            </button>
                         </div>
 
                         <!-- Today's Priorities Section -->
@@ -1682,7 +1732,10 @@
                             ⭐ PRIO
                         </button>
                         <button class="btn-send-back" id="modalSendBackBtn">
-                            🔄 Send Back to AI
+                            🤖 Send to AI
+                        </button>
+                        <button class="btn-dnc" id="modalDNCBtn" title="Mark as Do Not Call">
+                            🚫 DNC
                         </button>
                     </div>
                 </div>
@@ -1710,31 +1763,58 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="lead-section">
                     <h3>🤖 AI Summary</h3>
                     <div class="lead-summary-content" id="modalSummary">No summary available</div>
                 </div>
-                
+
                 <div class="lead-section">
                     <h3>📝 Your Notes</h3>
                     <div class="lead-notes-list" id="modalNotesList"></div>
-                    <textarea id="modalNotesInput" placeholder="Add a note about this lead..."></textarea>
+                    <div class="notes-input-container">
+                        <textarea id="modalNotesInput" placeholder="Add a note about this lead..."></textarea>
+                        <div class="notes-input-tools">
+                            <button id="voiceInputBtn" class="voice-input-btn" title="Voice to text">🎤</button>
+                            <button id="polishNotesBtn" class="polish-notes-btn" title="Polish with AI">✨ Polish</button>
+                        </div>
+                    </div>
                     <div class="lead-notes-actions">
                         <button class="btn btn-primary btn-sm" id="modalSaveNoteBtn">💾 Save Note</button>
                     </div>
                 </div>
-                
+
                 <div class="lead-section">
                     <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
                     <div class="lead-attempts-list" id="modalAttemptsList"></div>
                     <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
                 </div>
-                
+
                 <div class="lead-section">
                     <h3>🎙️ Transcript</h3>
                     <div class="lead-transcript" id="modalTranscript">No transcript available</div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Polish Preview Modal -->
+    <div class="polish-preview-modal" id="polishPreviewModal">
+        <div class="polish-preview-content">
+            <h3>✨ Polished Note Preview</h3>
+            <div class="polish-comparison">
+                <div class="polish-box">
+                    <div class="polish-box-label">Original</div>
+                    <div class="polish-box-text" id="polishOriginalText"></div>
+                </div>
+                <div class="polish-box">
+                    <div class="polish-box-label">Polished</div>
+                    <div class="polish-box-text" id="polishNewText"></div>
+                </div>
+            </div>
+            <div class="polish-actions">
+                <button class="polish-reject" id="polishRejectBtn">Cancel</button>
+                <button class="polish-accept" id="polishAcceptBtn">Use Polished</button>
             </div>
         </div>
     </div>
@@ -2340,31 +2420,38 @@
         }).length;
         document.getElementById('statCallsToday').textContent = callsToday;
 
-        // Conversations Today - calls today with meaningful outcomes (not voicemail/no answer)
+        // Qualified AI Conversations - Outcome = Booked, Timeline, Follow Up, Callback, or Not Interested
+        var qualifiedOutcomes = ['booked', 'timeline', 'follow up', 'callback', 'not interested'];
         var conversationsToday = allLeads.filter(function(l) {
             var lastCall = l.fields['Last Call Timestamp'];
             if (!lastCall) return false;
             if (new Date(lastCall).toDateString() !== today) return false;
-            var outcome = (l.fields['Disposition'] || l.fields['Status'] || '').toLowerCase();
-            return outcome && outcome !== 'no answer' && outcome !== 'voicemail' && outcome !== 'new';
+            var outcome = (l.fields['Outcome'] || l.fields['Disposition'] || l.fields['Status'] || '').toLowerCase();
+            return qualifiedOutcomes.includes(outcome);
         }).length;
         var convEl = document.getElementById('statConversationsToday');
         if (convEl) convEl.textContent = conversationsToday;
 
-        // Meetings Booked Today - leads with Booked Time date = today
+        // AI Meetings Scheduled - Outcome = Booked or Callback
+        var meetingOutcomes = ['booked', 'callback'];
         var meetingsToday = allLeads.filter(function(l) {
-            var bookedTime = l.fields['Booked Time'];
-            if (!bookedTime) return false;
-            return bookedTime.startsWith(todayISO);
+            var lastCall = l.fields['Last Call Timestamp'];
+            if (!lastCall) return false;
+            if (new Date(lastCall).toDateString() !== today) return false;
+            var outcome = (l.fields['Outcome'] || l.fields['Disposition'] || l.fields['Status'] || '').toLowerCase();
+            return meetingOutcomes.includes(outcome);
         }).length;
         var meetEl = document.getElementById('statMeetingsToday');
         if (meetEl) meetEl.textContent = meetingsToday;
 
-        // Follow Ups Scheduled Today
+        // AI Follow Ups Scheduled - Outcome = Timeline or Follow Up
+        var followUpOutcomes = ['timeline', 'follow up'];
         var followUpsToday = allLeads.filter(function(l) {
-            var nextCall = l.fields['Next Call Date'] || l.fields['Follow Up Date'] || l.fields['Callback Date'];
-            if (!nextCall) return false;
-            return nextCall.startsWith(todayISO);
+            var lastCall = l.fields['Last Call Timestamp'];
+            if (!lastCall) return false;
+            if (new Date(lastCall).toDateString() !== today) return false;
+            var outcome = (l.fields['Outcome'] || l.fields['Disposition'] || l.fields['Status'] || '').toLowerCase();
+            return followUpOutcomes.includes(outcome);
         }).length;
         var fuEl = document.getElementById('statFollowUpsToday');
         if (fuEl) fuEl.textContent = followUpsToday;
@@ -2488,6 +2575,18 @@
         
     }
     
+    // Format phone number as +1 (647) 123-4567
+    function formatPhoneNumber(phone) {
+        if (!phone || phone === '-') return '-';
+        var digits = phone.replace(/\D/g, '');
+        if (digits.length === 10) {
+            return '+1 (' + digits.substring(0,3) + ') ' + digits.substring(3,6) + '-' + digits.substring(6);
+        } else if (digits.length === 11 && digits.startsWith('1')) {
+            return '+1 (' + digits.substring(1,4) + ') ' + digits.substring(4,7) + '-' + digits.substring(7);
+        }
+        return phone;
+    }
+
     // Update today's priorities list with taller cards
     function updateTodayPriorities(priorities, missedMeetings) {
         var list = document.getElementById('todayPriorities');
@@ -2502,6 +2601,7 @@
             var f = lead.fields;
             var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
             var phone = f['Phone #'] || f['Phone'] || '-';
+            var formattedPhone = formatPhoneNumber(phone);
             var bookedTime = f['Booked Time'];
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var summary = f['Last Call Summary'] || f['Summary'] || '';
@@ -2509,6 +2609,7 @@
             var lastCalledTimestamp = f['Last Call Timestamp'];
             var lastCalled = lastCalledTimestamp ? formatTimeAgo(lastCalledTimestamp) : '-';
             var lastCalledColor = getLastCalledColor(lastCalledTimestamp);
+            var isPrio = f['Is Prio'] === true;
 
             // Parse notes
             var notesArray = parseNotesJson(notesRaw);
@@ -2537,26 +2638,35 @@
                 ? '<span class="time-value missed-date">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>'
                 : '<span class="time-value">' + timeDisplay + '</span>';
 
-            return '<div class="priority-card-lg' + missedClass + '" data-id="' + lead.id + '" onclick="openLeadModal(\'' + lead.id + '\')">' +
-                '<div class="priority-card-lg-left">' +
+            var prioIndicator = isPrio ? '<span class="prio-indicator" title="Priority Lead">P</span>' : '';
+
+            return '<div class="priority-card-lg' + missedClass + '" data-id="' + lead.id + '">' +
+                '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="priority-card-lg-time-col">' +
                         timeCol +
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
+                            prioIndicator +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(phone) + '</div>' +
-                        '<div class="priority-card-lg-lastcall">Last Called <span class="lastcall-dot ' + lastCalledColor + '"></span> ' + lastCalled + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Last Called - <span class="lastcall-dot ' + lastCalledColor + '"></span> ' + lastCalled + '</div>' +
                     '</div>' +
                 '</div>' +
-                '<div class="priority-card-lg-summary-col">' +
+                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
-                '<div class="priority-card-lg-notes-col">' +
+                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-actions">' +
+                    '<button class="action-btn action-share" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')" title="Share Lead">🔗</button>' +
+                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')" title="Send to AI">🤖</button>' +
+                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')" title="Do Not Call">🚫</button>' +
+                    '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')" title="Reschedule">📅</button>' +
                 '</div>' +
             '</div>';
         }
@@ -2573,6 +2683,7 @@
         // Add red separator and missed meetings if any
         if (missedMeetings.length > 0) {
             html += '<div class="missed-meeting-separator"><span>Missed Meeting</span></div>';
+            html += '<div class="missed-meeting-info">Please reschedule these meetings or send back to AI to keep your dashboard clean.</div>';
             html += missedMeetings.map(function(lead, index) {
                 return renderPriorityCard(lead, index, true);
             }).join('');
@@ -3254,23 +3365,24 @@
         if (!currentLeadId) return;
         var noteText = document.getElementById('modalNotesInput').value.trim();
         if (!noteText) return;
-        
+
         var btn = this;
         btn.disabled = true;
         btn.textContent = 'Saving...';
-        
+
         try {
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
             var existingNotes = lead.fields['Client Notes'] || '';
             var timestamp = new Date().toLocaleString();
             var newNotes = existingNotes ? existingNotes + '\n---\n[' + timestamp + '] ' + noteText : '[' + timestamp + '] ' + noteText;
-            
+
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
                 body: { fields: { 'Client Notes': newNotes } }
             });
-            
+
             lead.fields['Client Notes'] = newNotes;
+            document.getElementById('modalNotesInput').value = '';
             openLeadModal(currentLeadId); // Refresh modal
             showToast('Note saved', 'success');
         } catch (err) {
@@ -3279,7 +3391,131 @@
         btn.disabled = false;
         btn.textContent = '💾 Save Note';
     });
-    
+
+    // === VOICE INPUT ===
+    var voiceRecognition = null;
+    var isRecording = false;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        voiceRecognition = new SpeechRecognition();
+        voiceRecognition.continuous = true;
+        voiceRecognition.interimResults = true;
+        voiceRecognition.lang = 'en-US';
+
+        voiceRecognition.onresult = function(event) {
+            var transcript = '';
+            for (var i = event.resultIndex; i < event.results.length; i++) {
+                transcript += event.results[i][0].transcript;
+            }
+            var input = document.getElementById('modalNotesInput');
+            var currentText = input.value;
+            var baseText = input.dataset.baseText || currentText;
+            input.value = baseText + (baseText ? ' ' : '') + transcript;
+        };
+
+        voiceRecognition.onerror = function(event) {
+            console.error('Voice error:', event.error);
+            stopVoiceRecording();
+            if (event.error === 'not-allowed') {
+                showToast('Microphone access denied. Please enable in browser settings.', 'error');
+            }
+        };
+
+        voiceRecognition.onend = function() {
+            if (isRecording) {
+                voiceRecognition.start();
+            }
+        };
+    }
+
+    function startVoiceRecording() {
+        if (!voiceRecognition) {
+            showToast('Voice input not supported in this browser', 'error');
+            return;
+        }
+        var input = document.getElementById('modalNotesInput');
+        input.dataset.baseText = input.value;
+        document.getElementById('voiceInputBtn').classList.add('recording');
+        isRecording = true;
+        voiceRecognition.start();
+    }
+
+    function stopVoiceRecording() {
+        isRecording = false;
+        document.getElementById('voiceInputBtn').classList.remove('recording');
+        if (voiceRecognition) {
+            voiceRecognition.stop();
+        }
+        var input = document.getElementById('modalNotesInput');
+        delete input.dataset.baseText;
+    }
+
+    document.getElementById('voiceInputBtn').addEventListener('click', function() {
+        if (isRecording) {
+            stopVoiceRecording();
+        } else {
+            startVoiceRecording();
+        }
+    });
+
+    // === POLISH NOTES WITH AI ===
+    var POLISH_NOTES_ENDPOINT = 'https://n8n.prioai.ca/webhook/clean-notes';
+    var polishedText = '';
+
+    document.getElementById('polishNotesBtn').addEventListener('click', async function() {
+        var noteText = document.getElementById('modalNotesInput').value.trim();
+        if (!noteText) {
+            showToast('Please enter a note first', 'warning');
+            return;
+        }
+        if (noteText.length < 10) {
+            showToast('Note too short to polish', 'warning');
+            return;
+        }
+
+        var btn = this;
+        btn.disabled = true;
+        btn.innerHTML = '✨ Polishing...';
+
+        try {
+            var response = await fetch(POLISH_NOTES_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ notes: noteText })
+            });
+
+            if (!response.ok) {
+                throw new Error('Polish API error: ' + response.status);
+            }
+
+            var data = await response.json();
+            if (data.polished || data.cleaned || data.result) {
+                polishedText = data.polished || data.cleaned || data.result;
+                document.getElementById('polishOriginalText').textContent = noteText;
+                document.getElementById('polishNewText').textContent = polishedText;
+                document.getElementById('polishPreviewModal').classList.add('active');
+            } else {
+                throw new Error(data.error || 'Failed to polish notes');
+            }
+        } catch (err) {
+            console.error('Polish error:', err);
+            showToast('Polish failed: ' + err.message, 'error');
+        }
+        btn.disabled = false;
+        btn.innerHTML = '✨ Polish';
+    });
+
+    document.getElementById('polishAcceptBtn').addEventListener('click', function() {
+        document.getElementById('modalNotesInput').value = polishedText;
+        document.getElementById('polishPreviewModal').classList.remove('active');
+        showToast('Polished note applied!', 'success');
+    });
+
+    document.getElementById('polishRejectBtn').addEventListener('click', function() {
+        document.getElementById('polishPreviewModal').classList.remove('active');
+    });
+
     // Log call attempt
     document.getElementById('modalLogAttemptBtn').addEventListener('click', async function() {
         if (!currentLeadId) return;
@@ -3325,16 +3561,16 @@
         if (!currentLeadId) return;
         var btn = this;
         btn.disabled = true;
-        
+
         try {
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
             var newPrioStatus = !lead.fields['Is Prio'];
-            
+
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
                 body: { fields: { 'Is Prio': newPrioStatus } }
             });
-            
+
             lead.fields['Is Prio'] = newPrioStatus;
             openLeadModal(currentLeadId);
             updatePrioList();
@@ -3344,7 +3580,137 @@
         }
         btn.disabled = false;
     });
-    
+
+    // Send Back to AI
+    document.getElementById('modalSendBackBtn').addEventListener('click', async function() {
+        if (!currentLeadId) return;
+        var btn = this;
+        btn.disabled = true;
+        btn.innerHTML = '🔄 Sending...';
+
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Call Status': 'Queued', 'Status': 'New' } }
+            });
+
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            if (lead) {
+                lead.fields['Call Status'] = 'Queued';
+                lead.fields['Status'] = 'New';
+            }
+
+            showToast('Lead sent back to AI queue', 'success');
+            document.getElementById('leadModal').classList.remove('active');
+            updateDashboard();
+            updatePrioList();
+        } catch (err) {
+            showToast('Failed to send to AI: ' + err.message, 'error');
+        }
+        btn.disabled = false;
+        btn.innerHTML = '🔄 Send Back to AI';
+    });
+
+    // Do Not Call from modal
+    document.getElementById('modalDNCBtn')?.addEventListener('click', async function() {
+        if (!currentLeadId) return;
+        if (!confirm('Are you sure you want to mark this lead as Do Not Call?')) return;
+
+        var btn = this;
+        btn.disabled = true;
+
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Status': 'DNC', 'Call Status': 'Completed' } }
+            });
+
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            if (lead) {
+                lead.fields['Status'] = 'DNC';
+                lead.fields['Call Status'] = 'Completed';
+            }
+
+            showToast('Lead marked as Do Not Call', 'success');
+            document.getElementById('leadModal').classList.remove('active');
+            updateDashboard();
+            updatePrioList();
+        } catch (err) {
+            showToast('Failed to update: ' + err.message, 'error');
+        }
+        btn.disabled = false;
+    });
+
+    // Quick action functions for priority cards
+    async function quickShareLead(leadId) {
+        currentLeadId = leadId;
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        if (!lead) return;
+
+        var sharedWithEmail = lead.fields['Shared With Email'];
+        if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
+
+        if (lead.isShared || sharedWithEmail) {
+            openShareInfoPopup(lead);
+        } else {
+            openSharePopup(leadId);
+        }
+    }
+
+    async function quickSendToAI(leadId) {
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+                method: 'PATCH',
+                body: { fields: { 'Call Status': 'Queued', 'Status': 'New' } }
+            });
+
+            var lead = allLeads.find(function(l) { return l.id === leadId; });
+            if (lead) {
+                lead.fields['Call Status'] = 'Queued';
+                lead.fields['Status'] = 'New';
+            }
+
+            showToast('Sent to AI queue', 'success');
+            updateDashboard();
+        } catch (err) {
+            showToast('Failed: ' + err.message, 'error');
+        }
+    }
+
+    async function quickMarkDNC(leadId) {
+        if (!confirm('Mark this lead as Do Not Call?')) return;
+
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+                method: 'PATCH',
+                body: { fields: { 'Status': 'DNC', 'Call Status': 'Completed' } }
+            });
+
+            var lead = allLeads.find(function(l) { return l.id === leadId; });
+            if (lead) {
+                lead.fields['Status'] = 'DNC';
+                lead.fields['Call Status'] = 'Completed';
+            }
+
+            showToast('Marked as DNC', 'success');
+            updateDashboard();
+        } catch (err) {
+            showToast('Failed: ' + err.message, 'error');
+        }
+    }
+
+    function quickReschedule(leadId) {
+        currentLeadId = leadId;
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        if (lead) {
+            scheduleLeadId = leadId;
+            var name = ((lead.fields['First Name'] || '') + ' ' + (lead.fields['Last Name'] || '')).trim() || 'Lead';
+            document.getElementById('scheduleLeadName').textContent = name;
+            document.getElementById('scheduleModal').classList.add('active');
+            initCalendar();
+        }
+    }
+
     // Format transcript with colored speakers
     function formatTranscript(text, prospectName) {
         if (!text) return 'No transcript available';
@@ -3375,7 +3741,7 @@
     // Fetch all active agents
     async function fetchAllActiveAgents() {
         try {
-            var response = await fetchAirtable(AIRTABLE_BASE + '/Clients?filterByFormula={Status}="Active"');
+            var response = await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula={Status}="Active"');
             allActiveAgents = response.records.map(function(r) {
                 return { id: r.id, name: r.fields['Agent Name'] || 'Unknown', email: r.fields['Email'] || '' };
             });
