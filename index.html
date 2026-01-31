@@ -29,12 +29,12 @@
         .overview-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap}
         .overview-header-left{flex:1;min-width:280px}
         .overview-header-right{display:flex;gap:0.75rem;flex-wrap:wrap}
-        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.5rem 0.75rem;width:65px;height:65px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-        .header-stat-badge.usage-badge{width:180px;height:65px;padding:0.5rem 1rem}
+        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.75rem;width:70px;height:70px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .header-stat-badge.usage-badge{width:160px;height:70px;padding:0.75rem 1rem}
         .header-stat-badge.accent{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3)}
-        .header-stat-badge .badge-emoji{font-size:1rem;margin-bottom:4px}
-        .header-stat-badge .badge-value{font-size:1.25rem;font-weight:700;margin-bottom:2px}
-        .header-stat-badge .badge-label{font-size:0.6875rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px}
+        .header-stat-badge .badge-emoji{font-size:0.875rem;margin-bottom:2px}
+        .header-stat-badge .badge-value{font-size:1.125rem;font-weight:700;margin-bottom:1px}
+        .header-stat-badge .badge-label{font-size:0.625rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px}
         .section-label{font-size:0.8125rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px;margin:1.5rem 0 0.75rem 0}
         .usage-bar-mini{width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-top:8px;overflow:hidden}
         .usage-bar-mini .usage-bar-fill{height:100%;border-radius:3px;transition:width 0.3s ease,background 0.3s ease;background:linear-gradient(90deg,#fff,#fff)}
@@ -209,8 +209,19 @@
         .polish-accept:hover{background:rgb(45,190,135)}
         .polish-reject{background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8)}
         .polish-reject:hover{border-color:rgba(255,255,255,0.3)}
-        .send-ai-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 0.2s}
-        .send-ai-modal-overlay.active{opacity:1;visibility:visible}
+        .send-ai-modal-overlay,.confirm-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 0.2s}
+        .send-ai-modal-overlay.active,.confirm-modal-overlay.active{opacity:1;visibility:visible}
+        .confirm-modal{background:linear-gradient(180deg,#111 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px;max-width:380px;width:90%;text-align:center}
+        .confirm-modal-icon{font-size:2.5rem;margin-bottom:16px}
+        .confirm-modal h3{font-size:1.125rem;font-weight:600;margin-bottom:12px}
+        .confirm-modal p{color:rgba(255,255,255,0.6);font-size:0.9375rem;margin-bottom:24px;line-height:1.5}
+        .confirm-modal-actions{display:flex;gap:12px}
+        .confirm-modal-cancel{flex:1;padding:12px 20px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:0.9375rem;font-weight:500;cursor:pointer;transition:all 0.15s}
+        .confirm-modal-cancel:hover{background:#222;border-color:rgba(255,255,255,0.25)}
+        .confirm-modal-confirm{flex:1;padding:12px 20px;background:#ef4444;border:none;border-radius:10px;color:#fff;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 0.15s}
+        .confirm-modal-confirm:hover{background:#dc2626}
+        .confirm-modal-confirm.success{background:rgb(52,211,153)}
+        .confirm-modal-confirm.success:hover{background:rgb(45,185,135)}
         .send-ai-modal{background:linear-gradient(180deg,#111 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;max-width:480px;width:90%;max-height:90vh;overflow-y:auto}
         .send-ai-modal h3{font-size:1.25rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:10px}
         .send-ai-subtitle{color:rgba(255,255,255,0.6);font-size:0.9375rem;margin-bottom:24px}
@@ -893,13 +904,6 @@
                             </div>
                         </div>
 
-                        <!-- View Analytics Button -->
-                        <div style="text-align:center;margin:1.5rem 0;">
-                            <button class="btn btn-secondary" onclick="switchPage('analytics')" style="padding:12px 24px;">
-                                📊 View All Analytics
-                            </button>
-                        </div>
-
                         <!-- Row 2: Today's Activity -->
                         <div class="section-label">Today's Numbers</div>
                         <div class="stats-grid">
@@ -931,6 +935,13 @@
                                     <div class="stat-label">AI Follow Ups Scheduled</div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- View Analytics Button -->
+                        <div style="text-align:center;margin:1.5rem 0;">
+                            <button class="btn btn-secondary" onclick="switchPage('analytics')" style="padding:12px 24px;">
+                                📊 View All Analytics
+                            </button>
                         </div>
 
                         <!-- Today's Priorities Section -->
@@ -1953,6 +1964,19 @@
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div class="confirm-modal-overlay" id="confirmModal">
+        <div class="confirm-modal">
+            <div class="confirm-modal-icon" id="confirmModalIcon">⚠️</div>
+            <h3 id="confirmModalTitle">Confirm Action</h3>
+            <p id="confirmModalMessage">Are you sure you want to proceed?</p>
+            <div class="confirm-modal-actions">
+                <button class="confirm-modal-cancel" id="confirmModalCancel">Cancel</button>
+                <button class="confirm-modal-confirm" id="confirmModalConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Schedule Booking Modal -->
     <div class="schedule-modal-overlay" id="scheduleModal">
         <div class="schedule-modal">
@@ -2103,6 +2127,38 @@
         document.getElementById('toastContainer').appendChild(toast);
         setTimeout(function() { toast.remove(); }, 4000);
     }
+
+    // Custom Confirmation Modal
+    var confirmResolve = null;
+    function showConfirmModal(title, message, icon, isDestructive) {
+        return new Promise(function(resolve) {
+            confirmResolve = resolve;
+            document.getElementById('confirmModalIcon').textContent = icon || '⚠️';
+            document.getElementById('confirmModalTitle').textContent = title;
+            document.getElementById('confirmModalMessage').textContent = message;
+            var confirmBtn = document.getElementById('confirmModalConfirm');
+            confirmBtn.className = 'confirm-modal-confirm' + (isDestructive === false ? ' success' : '');
+            confirmBtn.textContent = isDestructive === false ? 'Confirm' : 'Yes, proceed';
+            document.getElementById('confirmModal').classList.add('active');
+        });
+    }
+
+    document.getElementById('confirmModalCancel').addEventListener('click', function() {
+        document.getElementById('confirmModal').classList.remove('active');
+        if (confirmResolve) confirmResolve(false);
+    });
+
+    document.getElementById('confirmModalConfirm').addEventListener('click', function() {
+        document.getElementById('confirmModal').classList.remove('active');
+        if (confirmResolve) confirmResolve(true);
+    });
+
+    document.getElementById('confirmModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('active');
+            if (confirmResolve) confirmResolve(false);
+        }
+    });
 
     // Theme
     (function() {
@@ -2449,7 +2505,6 @@
             if (data.records && data.records.length > 0) {
                 currentUserRecord = data.records[0];
                 loadLeadsData();
-                startAutoRefresh();
             } else {
                 document.getElementById('statProspects').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
@@ -2506,17 +2561,6 @@
         } catch (err) {
             console.error('Failed to load leads:', err);
         }
-    }
-
-    // Auto-refresh data every 60 seconds for live updates (silent refresh)
-    var autoRefreshInterval = null;
-    function startAutoRefresh() {
-        if (autoRefreshInterval) clearInterval(autoRefreshInterval);
-        autoRefreshInterval = setInterval(function() {
-            if (document.visibilityState === 'visible' && currentUserRecord) {
-                loadLeadsData(true); // Pass true to indicate this is a refresh
-            }
-        }, 60000); // 60 seconds
     }
 
     function updateDashboard() {
@@ -3830,7 +3874,7 @@
             var dateObj = new Date(year, month, d);
             dateObj.setHours(0,0,0,0);
             var dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-            var isPast = dateObj.getTime() < today.getTime();
+            var isPast = dateObj.getTime() <= today.getTime(); // Block today and past dates - first selectable is tomorrow
             var isSelected = selectedCalendarDate === dateStr;
             var classes = 'calendar-day';
             if (isPast) classes += ' past';
@@ -3987,7 +4031,14 @@
     // Do Not Call from modal
     document.getElementById('modalDNCBtn')?.addEventListener('click', async function() {
         if (!currentLeadId) return;
-        if (!confirm('Are you sure you want to mark this lead as Do Not Call?')) return;
+
+        var confirmed = await showConfirmModal(
+            'Mark as Do Not Call?',
+            'This lead will be marked as DNC and removed from all call queues. This action cannot be undone.',
+            '🚫',
+            true
+        );
+        if (!confirmed) return;
 
         var btn = this;
         btn.disabled = true;
@@ -4052,7 +4103,13 @@
     }
 
     async function quickMarkDNC(leadId) {
-        if (!confirm('Mark this lead as Do Not Call?')) return;
+        var confirmed = await showConfirmModal(
+            'Mark as Do Not Call?',
+            'This lead will be removed from all call queues. This action cannot be undone.',
+            '🚫',
+            true
+        );
+        if (!confirmed) return;
 
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
@@ -4078,10 +4135,13 @@
         var lead = allLeads.find(function(l) { return l.id === leadId; });
         if (lead) {
             scheduleLeadId = leadId;
+            scheduleLeadData = lead.fields;
             var name = ((lead.fields['First Name'] || '') + ' ' + (lead.fields['Last Name'] || '')).trim() || 'Lead';
-            document.getElementById('scheduleLeadName').textContent = name;
+            document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + name;
+            calendarMonth = new Date();
+            selectedDate = null;
+            renderCalendar();
             document.getElementById('scheduleModal').classList.add('active');
-            initCalendar();
         }
     }
 
@@ -4446,17 +4506,24 @@
     // Delete booking
     async function deleteBookingFromModal() {
         if (!currentLeadId) return;
-        if (!confirm('Remove this booking?')) return;
-        
+
+        var confirmed = await showConfirmModal(
+            'Remove Booking?',
+            'The scheduled meeting will be removed from this lead.',
+            '📅',
+            true
+        );
+        if (!confirmed) return;
+
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
                 body: { fields: { 'Booked Time': null } }
             });
-            
+
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
             if (lead) lead.fields['Booked Time'] = null;
-            
+
             openLeadModal(currentLeadId);
             updatePrioList();
             showToast('Booking removed', 'success');
@@ -4505,7 +4572,14 @@
     // Delete call attempt
     async function deleteCallAttempt(index) {
         if (!currentLeadId) return;
-        if (!confirm('Delete this call attempt?')) return;
+
+        var confirmed = await showConfirmModal(
+            'Delete Call Attempt?',
+            'This call attempt record will be permanently removed.',
+            '📞',
+            true
+        );
+        if (!confirmed) return;
 
         try {
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
@@ -4573,7 +4647,14 @@
     // Delete note
     async function deleteNote(index) {
         if (!currentLeadId) return;
-        if (!confirm('Delete this note?')) return;
+
+        var confirmed = await showConfirmModal(
+            'Delete Note?',
+            'This note will be permanently removed.',
+            '📝',
+            true
+        );
+        if (!confirmed) return;
 
         var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
         var notes = lead.fields['Client Notes'] || '';
@@ -4904,7 +4985,19 @@
         statusEl.className = 'status-badge ' + getStatusClass(status);
         
         document.getElementById('modalLastCalled').textContent = formatDateTime(getMostRecentLastCalled(f));
-        document.getElementById('modalBookedTime').textContent = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
+
+        // Booked Time with edit/delete buttons
+        var bookedTime = f['Booked Time'];
+        var bookedTimeValue = document.getElementById('modalBookedTimeValue');
+        var scheduleBtn = document.getElementById('modalScheduleBtn');
+        if (bookedTime) {
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + new Date(bookedTime).toLocaleString() + '</span><button class="btn-edit-booking" onclick="editBookingFromModal()" title="Edit booking">✏️</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            if (scheduleBtn) scheduleBtn.style.display = 'none';
+        } else {
+            bookedTimeValue.textContent = '-';
+            if (scheduleBtn) scheduleBtn.style.display = 'inline-flex';
+        }
+
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || 'No summary available';
         
         // Notes
