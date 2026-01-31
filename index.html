@@ -2145,21 +2145,18 @@
         })();
     }
 
-    // Airtable Config
-    var _a = ['cGF0N0c3SURnT2lSNnJiTFEuM2E5ZGIyMmM1MTcwYjkwMzA1Yjc1MDRhNjNlNjkzM2JkNTQwMTFiMDI4YWMzODRmM2QyOWU5YWQ3YmNkYzBjMw=='];
-    var AIRTABLE_TOKEN = atob(_a[0]);
+    // Airtable Config (token is now server-side only in Cloudflare env vars)
     var AIRTABLE_BASE = 'applOjDjhH0RqLtBH';
     var AIRTABLE_CLIENTS_TABLE = 'tblMptC862PyL7Znw';
     var AIRTABLE_LEADS_TABLE = 'tblLpN4wceakfNFpq';
-    
-    // Airtable API helper - proxies through Pages Function to avoid CORS
+
+    // Airtable API helper - proxies through Pages Function (token handled server-side)
     async function fetchAirtable(path, options = {}) {
         var proxyUrl = '/api/airtable?path=' + encodeURIComponent(path);
         var fetchOptions = {
             method: options.method || 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'X-Airtable-Token': AIRTABLE_TOKEN
+                'Content-Type': 'application/json'
             }
         };
         if (options.body) {
