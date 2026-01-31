@@ -29,8 +29,8 @@
         .overview-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap}
         .overview-header-left{flex:1;min-width:280px}
         .overview-header-right{display:flex;gap:0.75rem;flex-wrap:wrap}
-        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.875rem 1rem;width:80px;height:80px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-        .header-stat-badge.usage-badge{width:200px;height:auto;min-height:80px;padding:0.75rem 1.25rem}
+        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.5rem 0.75rem;width:65px;height:65px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .header-stat-badge.usage-badge{width:180px;height:65px;padding:0.5rem 1rem}
         .header-stat-badge.accent{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3)}
         .header-stat-badge .badge-emoji{font-size:1rem;margin-bottom:4px}
         .header-stat-badge .badge-value{font-size:1.25rem;font-weight:700;margin-bottom:2px}
@@ -2467,36 +2467,39 @@
     }
 
     // Load leads data with optimizations
-    async function loadLeadsData() {
+    async function loadLeadsData(isRefresh) {
         if (!currentUserRecord) return;
-        
+
         try {
             var email = currentUser.email.toLowerCase();
             var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client Email})))';
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
-            
-            allLeads = [];
+
+            // Use temp array to avoid flickering on refresh
+            var tempLeads = [];
             var offset = null;
             var isFirstPage = true;
-            
+
             do {
                 var fetchPath = basePath + (offset ? '&offset=' + offset : '');
                 var data = await fetchAirtable(fetchPath);
-                
+
                 if (data.records) {
-                    allLeads = allLeads.concat(data.records);
+                    tempLeads = tempLeads.concat(data.records);
                 }
                 offset = data.offset;
-                
-                // Render after first page so user sees data fast
-                if (isFirstPage && allLeads.length > 0) {
+
+                // On initial load, render after first page so user sees data fast
+                if (!isRefresh && isFirstPage && tempLeads.length > 0) {
                     isFirstPage = false;
+                    allLeads = tempLeads.slice(); // Copy current data
                     updateDashboard();
                     updatePrioList();
                 }
             } while (offset);
-            
-            // Final update with all data & cache it
+
+            // Replace allLeads with complete new data
+            allLeads = tempLeads;
             updateDashboard();
             updatePrioList();
             cacheData();
@@ -2505,23 +2508,16 @@
         }
     }
 
-    // Auto-refresh data every 30 seconds for live updates
+    // Auto-refresh data every 60 seconds for live updates (silent refresh)
     var autoRefreshInterval = null;
     function startAutoRefresh() {
         if (autoRefreshInterval) clearInterval(autoRefreshInterval);
         autoRefreshInterval = setInterval(function() {
             if (document.visibilityState === 'visible' && currentUserRecord) {
-                loadLeadsData();
+                loadLeadsData(true); // Pass true to indicate this is a refresh
             }
-        }, 30000); // 30 seconds
+        }, 60000); // 60 seconds
     }
-
-    // Start auto-refresh when user logs in
-    document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible' && currentUserRecord) {
-            loadLeadsData(); // Refresh when tab becomes visible
-        }
-    });
 
     function updateDashboard() {
         updateStats();
