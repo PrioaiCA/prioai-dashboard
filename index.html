@@ -197,6 +197,34 @@
         .polish-accept:hover{background:rgb(45,190,135)}
         .polish-reject{background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8)}
         .polish-reject:hover{border-color:rgba(255,255,255,0.3)}
+        .send-ai-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 0.2s}
+        .send-ai-modal-overlay.active{opacity:1;visibility:visible}
+        .send-ai-modal{background:linear-gradient(180deg,#111 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;max-width:480px;width:90%;max-height:90vh;overflow-y:auto}
+        .send-ai-modal h3{font-size:1.25rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+        .send-ai-subtitle{color:rgba(255,255,255,0.6);font-size:0.9375rem;margin-bottom:24px}
+        .send-ai-section{margin-bottom:24px}
+        .send-ai-label{display:block;font-size:0.75rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+        .send-ai-reasons{display:flex;flex-direction:column;gap:10px}
+        .reason-btn{padding:14px 18px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.9);font-size:0.9375rem;text-align:left;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:10px}
+        .reason-btn:hover{border-color:rgba(255,255,255,0.25);background:#222}
+        .reason-btn.active{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
+        .send-ai-other-input{width:100%;margin-top:10px;padding:14px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:0.9375rem;resize:none;min-height:80px}
+        .send-ai-timing{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+        .timing-btn{padding:12px 16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:rgba(255,255,255,0.9);font-size:0.875rem;cursor:pointer;transition:all 0.15s}
+        .timing-btn:hover{border-color:rgba(255,255,255,0.25);background:#222}
+        .timing-btn.active{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
+        .timing-btn:nth-child(5){grid-column:span 2}
+        .send-ai-date-input{width:100%;margin-top:10px;padding:14px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:0.9375rem}
+        .send-ai-time-pref{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+        .time-pref-btn{padding:12px 16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:rgba(255,255,255,0.9);font-size:0.875rem;cursor:pointer;transition:all 0.15s}
+        .time-pref-btn:hover{border-color:rgba(255,255,255,0.25);background:#222}
+        .time-pref-btn.active{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
+        .send-ai-actions{display:flex;gap:12px;margin-top:28px}
+        .send-ai-cancel{flex:1;padding:14px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(255,255,255,0.8);font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 0.15s}
+        .send-ai-cancel:hover{border-color:rgba(255,255,255,0.3)}
+        .send-ai-confirm{flex:1.5;padding:14px;background:rgb(52,211,153);border:none;border-radius:12px;color:#000;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 0.15s}
+        .send-ai-confirm:hover{background:rgb(45,190,135)}
+        .send-ai-confirm:disabled{opacity:0.5;cursor:not-allowed}
         @media(max-width:600px){.polish-comparison{grid-template-columns:1fr}}
         .lead-modal-body{padding:24px;overflow-y:auto;flex:1}
         .lead-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
@@ -1841,7 +1869,52 @@
         </div>
         <div class="share-info-content" id="shareInfoContent"></div>
     </div>
-    
+
+    <!-- Send to AI Modal -->
+    <div class="send-ai-modal-overlay" id="sendAIModal">
+        <div class="send-ai-modal">
+            <h3>🤖 Send Back to AI</h3>
+            <p class="send-ai-subtitle">Why are you sending this lead back?</p>
+
+            <div class="send-ai-section">
+                <label class="send-ai-label">REASON</label>
+                <div class="send-ai-reasons" id="sendAIReasons">
+                    <button class="reason-btn" data-reason="No longer interested">😐 No longer interested</button>
+                    <button class="reason-btn" data-reason="Did not pick up">📵 Did not pick up</button>
+                    <button class="reason-btn" data-reason="Stopped responding">💬 Stopped responding</button>
+                    <button class="reason-btn" data-reason="other">✏️ Other</button>
+                </div>
+                <textarea id="sendAIOtherReason" class="send-ai-other-input" placeholder="Enter your reason..." style="display:none;"></textarea>
+            </div>
+
+            <div class="send-ai-section">
+                <label class="send-ai-label">WHEN SHOULD AI CALL BACK?</label>
+                <div class="send-ai-timing" id="sendAITiming">
+                    <button class="timing-btn" data-months="3">3 months</button>
+                    <button class="timing-btn" data-months="6">6 months</button>
+                    <button class="timing-btn" data-months="9">9 months</button>
+                    <button class="timing-btn" data-months="12">12 months</button>
+                    <button class="timing-btn" data-months="custom">📅 Pick a date</button>
+                </div>
+                <input type="date" id="sendAICustomDate" class="send-ai-date-input" style="display:none;">
+            </div>
+
+            <div class="send-ai-section">
+                <label class="send-ai-label">PREFERRED TIME OF DAY</label>
+                <div class="send-ai-time-pref" id="sendAITimePref">
+                    <button class="time-pref-btn" data-time="Morning">🌅 Morning</button>
+                    <button class="time-pref-btn active" data-time="Afternoon">☀️ Afternoon</button>
+                    <button class="time-pref-btn" data-time="Evening">🌆 Evening</button>
+                </div>
+            </div>
+
+            <div class="send-ai-actions">
+                <button class="send-ai-cancel" id="sendAICancelBtn">Cancel</button>
+                <button class="send-ai-confirm" id="sendAIConfirmBtn">Send to AI</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Schedule Booking Modal -->
     <div class="schedule-modal-overlay" id="scheduleModal">
         <div class="schedule-modal">
@@ -3581,34 +3654,154 @@
         btn.disabled = false;
     });
 
-    // Send Back to AI
-    document.getElementById('modalSendBackBtn').addEventListener('click', async function() {
+    // Send Back to AI - Open modal
+    var sendAILeadId = null;
+    var sendAISelectedReason = null;
+    var sendAISelectedMonths = null;
+    var sendAISelectedTime = 'Afternoon';
+
+    document.getElementById('modalSendBackBtn').addEventListener('click', function() {
         if (!currentLeadId) return;
+        sendAILeadId = currentLeadId;
+        sendAISelectedReason = null;
+        sendAISelectedMonths = null;
+        sendAISelectedTime = 'Afternoon';
+
+        // Reset modal state
+        document.querySelectorAll('#sendAIReasons .reason-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('#sendAITimePref .time-pref-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelector('#sendAITimePref .time-pref-btn[data-time="Afternoon"]').classList.add('active');
+        document.getElementById('sendAIOtherReason').style.display = 'none';
+        document.getElementById('sendAIOtherReason').value = '';
+        document.getElementById('sendAICustomDate').style.display = 'none';
+        document.getElementById('sendAICustomDate').value = '';
+        document.getElementById('sendAIConfirmBtn').disabled = true;
+
+        document.getElementById('sendAIModal').classList.add('active');
+    });
+
+    // Reason buttons
+    document.querySelectorAll('#sendAIReasons .reason-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#sendAIReasons .reason-btn').forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            sendAISelectedReason = this.dataset.reason;
+
+            var otherInput = document.getElementById('sendAIOtherReason');
+            if (sendAISelectedReason === 'other') {
+                otherInput.style.display = 'block';
+                otherInput.focus();
+            } else {
+                otherInput.style.display = 'none';
+            }
+            updateSendAIConfirmState();
+        });
+    });
+
+    // Timing buttons
+    document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            sendAISelectedMonths = this.dataset.months;
+
+            var customDate = document.getElementById('sendAICustomDate');
+            if (sendAISelectedMonths === 'custom') {
+                customDate.style.display = 'block';
+                customDate.focus();
+            } else {
+                customDate.style.display = 'none';
+            }
+            updateSendAIConfirmState();
+        });
+    });
+
+    // Time preference buttons
+    document.querySelectorAll('#sendAITimePref .time-pref-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#sendAITimePref .time-pref-btn').forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            sendAISelectedTime = this.dataset.time;
+        });
+    });
+
+    function updateSendAIConfirmState() {
+        var reasonValid = sendAISelectedReason && (sendAISelectedReason !== 'other' || document.getElementById('sendAIOtherReason').value.trim());
+        var timingValid = sendAISelectedMonths && (sendAISelectedMonths !== 'custom' || document.getElementById('sendAICustomDate').value);
+        document.getElementById('sendAIConfirmBtn').disabled = !(reasonValid && timingValid);
+    }
+
+    document.getElementById('sendAIOtherReason').addEventListener('input', updateSendAIConfirmState);
+    document.getElementById('sendAICustomDate').addEventListener('change', updateSendAIConfirmState);
+
+    // Cancel button
+    document.getElementById('sendAICancelBtn').addEventListener('click', function() {
+        document.getElementById('sendAIModal').classList.remove('active');
+    });
+
+    // Confirm Send to AI
+    document.getElementById('sendAIConfirmBtn').addEventListener('click', async function() {
+        if (!sendAILeadId) return;
+
         var btn = this;
         btn.disabled = true;
-        btn.innerHTML = '🔄 Sending...';
+        btn.textContent = 'Sending...';
 
         try {
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
-                method: 'PATCH',
-                body: { fields: { 'Call Status': 'Queued', 'Status': 'New' } }
-            });
-
-            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            if (lead) {
-                lead.fields['Call Status'] = 'Queued';
-                lead.fields['Status'] = 'New';
+            // Calculate callback date
+            var callbackDate;
+            if (sendAISelectedMonths === 'custom') {
+                callbackDate = document.getElementById('sendAICustomDate').value;
+            } else {
+                var months = parseInt(sendAISelectedMonths);
+                var date = new Date();
+                date.setMonth(date.getMonth() + months);
+                callbackDate = date.toISOString().split('T')[0];
             }
 
-            showToast('Lead sent back to AI queue', 'success');
+            // Get reason text
+            var reasonText = sendAISelectedReason === 'other'
+                ? document.getElementById('sendAIOtherReason').value.trim()
+                : sendAISelectedReason;
+
+            // Build note
+            var noteText = 'Sent back to AI - Reason: ' + reasonText + ' | Callback: ' + callbackDate + ' (' + sendAISelectedTime + ')';
+
+            // Get existing notes
+            var lead = allLeads.find(function(l) { return l.id === sendAILeadId; });
+            var existingNotes = lead?.fields['Client Notes'] || '';
+            var timestamp = new Date().toLocaleString();
+            var newNotes = existingNotes ? existingNotes + '\n---\n[' + timestamp + '] ' + noteText : '[' + timestamp + '] ' + noteText;
+
+            // Update lead
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
+                method: 'PATCH',
+                body: {
+                    fields: {
+                        'Status': 'Follow Up',
+                        'Callback Date': callbackDate,
+                        'Client Notes': newNotes
+                    }
+                }
+            });
+
+            if (lead) {
+                lead.fields['Status'] = 'Follow Up';
+                lead.fields['Callback Date'] = callbackDate;
+                lead.fields['Client Notes'] = newNotes;
+            }
+
+            document.getElementById('sendAIModal').classList.remove('active');
             document.getElementById('leadModal').classList.remove('active');
+            showToast('Lead scheduled for AI follow-up', 'success');
             updateDashboard();
             updatePrioList();
         } catch (err) {
-            showToast('Failed to send to AI: ' + err.message, 'error');
+            showToast('Failed: ' + err.message, 'error');
         }
         btn.disabled = false;
-        btn.innerHTML = '🔄 Send Back to AI';
+        btn.textContent = 'Send to AI';
     });
 
     // Do Not Call from modal
@@ -3657,24 +3850,25 @@
         }
     }
 
-    async function quickSendToAI(leadId) {
-        try {
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
-                method: 'PATCH',
-                body: { fields: { 'Call Status': 'Queued', 'Status': 'New' } }
-            });
+    function quickSendToAI(leadId) {
+        // Open the Send to AI modal
+        sendAILeadId = leadId;
+        sendAISelectedReason = null;
+        sendAISelectedMonths = null;
+        sendAISelectedTime = 'Afternoon';
 
-            var lead = allLeads.find(function(l) { return l.id === leadId; });
-            if (lead) {
-                lead.fields['Call Status'] = 'Queued';
-                lead.fields['Status'] = 'New';
-            }
+        // Reset modal state
+        document.querySelectorAll('#sendAIReasons .reason-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('#sendAITimePref .time-pref-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelector('#sendAITimePref .time-pref-btn[data-time="Afternoon"]').classList.add('active');
+        document.getElementById('sendAIOtherReason').style.display = 'none';
+        document.getElementById('sendAIOtherReason').value = '';
+        document.getElementById('sendAICustomDate').style.display = 'none';
+        document.getElementById('sendAICustomDate').value = '';
+        document.getElementById('sendAIConfirmBtn').disabled = true;
 
-            showToast('Sent to AI queue', 'success');
-            updateDashboard();
-        } catch (err) {
-            showToast('Failed: ' + err.message, 'error');
-        }
+        document.getElementById('sendAIModal').classList.add('active');
     }
 
     async function quickMarkDNC(leadId) {
