@@ -29,8 +29,8 @@
         .overview-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap}
         .overview-header-left{flex:1;min-width:280px}
         .overview-header-right{display:flex;gap:0.75rem;flex-wrap:wrap}
-        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.875rem 1rem;min-width:70px;min-height:70px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-        .header-stat-badge.usage-badge{min-width:180px;padding:0.75rem 1.25rem}
+        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.875rem 1rem;width:80px;height:80px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .header-stat-badge.usage-badge{width:200px;height:auto;min-height:80px;padding:0.75rem 1.25rem}
         .header-stat-badge.accent{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3)}
         .header-stat-badge .badge-emoji{font-size:1rem;margin-bottom:4px}
         .header-stat-badge .badge-value{font-size:1.25rem;font-weight:700;margin-bottom:2px}
@@ -97,7 +97,7 @@
         .missed-meeting-separator{display:flex;align-items:center;gap:16px;margin:24px 0 8px 0;padding:0 8px}
         .missed-meeting-separator::before,.missed-meeting-separator::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent)}
         .missed-meeting-separator span{font-size:0.8125rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:8px}
-        .missed-count{background:#ef4444;color:#fff;font-size:0.75rem;padding:2px 8px;border-radius:10px;font-weight:700}
+        .missed-meeting-separator .missed-count{background:#ef4444;color:#fff !important;font-size:0.75rem;padding:2px 8px;border-radius:10px;font-weight:700}
         .missed-meeting-info{font-size:0.8125rem;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:16px;padding:8px 16px;background:rgba(239,68,68,0.08);border-radius:8px}
         .priority-card-lg.missed-meeting{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05)}
         .priority-card-lg.missed-meeting:hover{border-color:#ef4444}
@@ -248,8 +248,12 @@
         .lead-section h3{font-size:0.875rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9)}
         .lead-summary-content{font-size:0.875rem;line-height:1.6;color:rgba(255,255,255,0.8);white-space:pre-wrap}
         .lead-notes-list{max-height:150px;overflow-y:auto;margin-bottom:12px}
-        .lead-note-item{padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:6px;margin-bottom:8px;font-size:0.8125rem}
+        .lead-note-item{padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:6px;margin-bottom:8px;font-size:0.8125rem;position:relative}
         .lead-note-item:last-child{margin-bottom:0}
+        .lead-note-item .note-content{margin-bottom:4px}
+        .lead-note-item .note-date{font-size:0.75rem;color:rgba(255,255,255,0.4)}
+        .lead-note-item .note-actions{position:absolute;top:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity 0.15s}
+        .lead-note-item:hover .note-actions{opacity:1}
         .lead-note-date{font-size:0.6875rem;color:rgba(255,255,255,0.4);margin-top:4px}
         #modalNotesInput{width:100%;min-height:80px;padding:12px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.875rem;resize:vertical;margin-bottom:8px}
         .lead-notes-actions{display:flex;justify-content:flex-end}
@@ -273,8 +277,12 @@
         /* Booked Time Display */
         .booked-time-display{display:flex;align-items:center;gap:8px}
         .booked-time-value{font-weight:500}
-        .btn-delete-booking{background:none;border:none;color:rgba(239,68,68,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
-        .btn-delete-booking:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        .btn-delete-booking,.btn-delete-attempt,.btn-delete-note{background:none;border:none;color:rgba(239,68,68,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
+        .btn-delete-booking:hover,.btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        .btn-edit-booking{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
+        .btn-edit-booking:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
+        .btn-edit-note{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
+        .btn-edit-note:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
         
         /* Share Popup */
         .share-popup-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1999;display:none}
@@ -848,40 +856,7 @@
                             </div>
                         </div>
 
-                        <!-- Row 1: Today's Activity -->
-                        <div class="section-label">Today's Numbers</div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-icon">📞</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statCallsToday">0</div>
-                                    <div class="stat-label">AI Calls</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">💬</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statConversationsToday">0</div>
-                                    <div class="stat-label">Qualified AI Conversations</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">📅</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statMeetingsToday">0</div>
-                                    <div class="stat-label">AI Meetings Scheduled</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">🔄</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statFollowUpsToday">0</div>
-                                    <div class="stat-label">AI Follow Ups Scheduled</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Row 2: Lead Categories -->
+                        <!-- Row 1: Pipeline Overview -->
                         <div class="section-label">Pipeline Overview</div>
                         <div class="overview-grid">
                             <div class="overview-card" onclick="switchPage('prio')">
@@ -923,6 +898,39 @@
                             <button class="btn btn-secondary" onclick="switchPage('analytics')" style="padding:12px 24px;">
                                 📊 View All Analytics
                             </button>
+                        </div>
+
+                        <!-- Row 2: Today's Activity -->
+                        <div class="section-label">Today's Numbers</div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">📞</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statCallsToday">0</div>
+                                    <div class="stat-label">AI Calls</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">💬</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statConversationsToday">0</div>
+                                    <div class="stat-label">Qualified AI Conversations</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">📅</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statMeetingsToday">0</div>
+                                    <div class="stat-label">AI Meetings Scheduled</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🔄</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statFollowUpsToday">0</div>
+                                    <div class="stat-label">AI Follow Ups Scheduled</div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Today's Priorities Section -->
@@ -2441,6 +2449,7 @@
             if (data.records && data.records.length > 0) {
                 currentUserRecord = data.records[0];
                 loadLeadsData();
+                startAutoRefresh();
             } else {
                 document.getElementById('statProspects').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
@@ -2495,7 +2504,25 @@
             console.error('Failed to load leads:', err);
         }
     }
-    
+
+    // Auto-refresh data every 30 seconds for live updates
+    var autoRefreshInterval = null;
+    function startAutoRefresh() {
+        if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+        autoRefreshInterval = setInterval(function() {
+            if (document.visibilityState === 'visible' && currentUserRecord) {
+                loadLeadsData();
+            }
+        }, 30000); // 30 seconds
+    }
+
+    // Start auto-refresh when user logs in
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible' && currentUserRecord) {
+            loadLeadsData(); // Refresh when tab becomes visible
+        }
+    });
+
     function updateDashboard() {
         updateStats();
     }
@@ -3377,13 +3404,13 @@
         var lastCalled = f['Last Call Timestamp'];
         document.getElementById('modalLastCalled').textContent = lastCalled ? formatTimeAgo(lastCalled) : 'Not called';
         
-        // Booked Time with delete button
+        // Booked Time with edit/delete buttons
         var bookedTime = f['Booked Time'];
         var bookedTimeContainer = document.getElementById('modalBookedTime');
         var bookedTimeValue = document.getElementById('modalBookedTimeValue');
         var scheduleBtn = document.getElementById('modalScheduleBtn');
         if (bookedTime) {
-            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + new Date(bookedTime).toLocaleString() + '</span><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + new Date(bookedTime).toLocaleString() + '</span><button class="btn-edit-booking" onclick="editBookingFromModal()" title="Edit booking">✏️</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
             scheduleBtn.style.display = 'none';
         } else {
             bookedTimeValue.textContent = '-';
@@ -3405,13 +3432,25 @@
             shareBtn.innerHTML = '🔗 Share';
         }
         
-        // Notes
+        // Notes with edit/delete
         var notes = f['Client Notes'] || f['Notes'];
         var notesList = document.getElementById('modalNotesList');
         if (notes && notes.trim()) {
             var notesArr = notes.split('\n---\n').filter(function(n) { return n.trim(); });
-            notesList.innerHTML = notesArr.map(function(note) {
-                return '<div class="lead-note-item">' + escapeHtml(note) + '</div>';
+            notesList.innerHTML = notesArr.map(function(note, idx) {
+                // Parse timestamp from note format: [timestamp] text
+                var match = note.match(/^\[([^\]]+)\]\s*/);
+                var dateStr = '';
+                var noteText = note;
+                if (match) {
+                    dateStr = match[1];
+                    noteText = note.slice(match[0].length);
+                }
+                return '<div class="lead-note-item" data-note-index="' + idx + '">' +
+                    '<div class="note-content">' + escapeHtml(noteText) + '</div>' +
+                    (dateStr ? '<div class="note-date">' + dateStr + '</div>' : '') +
+                    '<div class="note-actions"><button class="btn-edit-note" onclick="editNote(' + idx + ')" title="Edit">✏️</button><button class="btn-delete-note" onclick="deleteNote(' + idx + ')" title="Delete">✕</button></div>' +
+                '</div>';
             }).join('');
         } else {
             notesList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</p>';
@@ -3419,7 +3458,7 @@
         document.getElementById('modalNotesInput').value = '';
         
         // Attempts - parse JSON if available
-        var attemptsRaw = f['Call Attempts'] || f['Client Attempts'] || f['Attempts'] || '[]';
+        var attemptsRaw = f['Client Attempts'] || '[]';
         var attemptsArray = [];
         try {
             if (typeof attemptsRaw === 'string') {
@@ -3436,7 +3475,7 @@
         if (attemptsCount > 0) {
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
                 var timeStr = attempt.time ? new Date(attempt.time).toLocaleString() : 'Unknown time';
-                return '<div class="lead-attempt-item"><span>Call #' + (i + 1) + '</span><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span></div>';
+                return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
             attemptsList.innerHTML = attemptsHtml;
         } else {
@@ -3560,7 +3599,14 @@
         input.dataset.baseText = input.value;
         document.getElementById('voiceInputBtn').classList.add('recording');
         isRecording = true;
-        voiceRecognition.start();
+        try {
+            voiceRecognition.start();
+            showToast('Listening... Speak now', 'success');
+        } catch (err) {
+            console.error('Voice start error:', err);
+            stopVoiceRecording();
+            showToast('Failed to start voice input. Please check microphone permissions.', 'error');
+        }
     }
 
     function stopVoiceRecording() {
@@ -3647,7 +3693,7 @@
 
         try {
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            var attemptsRaw = lead.fields['Call Attempts'] || lead.fields['Client Attempts'] || '[]';
+            var attemptsRaw = lead.fields['Client Attempts'] || '[]';
             var attemptsArray = [];
             try {
                 attemptsArray = typeof attemptsRaw === 'string' ? JSON.parse(attemptsRaw) : (Array.isArray(attemptsRaw) ? attemptsRaw : []);
@@ -3656,14 +3702,14 @@
             }
 
             // Add new attempt with current timestamp
-            attemptsArray.push({ time: new Date().toISOString() });
+            attemptsArray.push({ time: new Date().toISOString(), note: '' });
 
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Call Attempts': JSON.stringify(attemptsArray) } }
+                body: { fields: { 'Client Attempts': JSON.stringify(attemptsArray) } }
             });
 
-            lead.fields['Call Attempts'] = JSON.stringify(attemptsArray);
+            lead.fields['Client Attempts'] = JSON.stringify(attemptsArray);
             openLeadModal(currentLeadId);
             showToast('Call attempt logged', 'success');
         } catch (err) {
@@ -3786,8 +3832,9 @@
         // Days of month
         for (var d = 1; d <= daysInMonth; d++) {
             var dateObj = new Date(year, month, d);
+            dateObj.setHours(0,0,0,0);
             var dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-            var isPast = dateObj < today;
+            var isPast = dateObj.getTime() < today.getTime();
             var isSelected = selectedCalendarDate === dateStr;
             var classes = 'calendar-day';
             if (isPast) classes += ' past';
@@ -3894,21 +3941,38 @@
             var timestamp = new Date().toLocaleString();
             var newNotes = existingNotes ? existingNotes + '\n---\n[' + timestamp + '] ' + noteText : '[' + timestamp + '] ' + noteText;
 
-            // Update lead
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
-                method: 'PATCH',
-                body: {
-                    fields: {
-                        'Status': 'Follow Up',
-                        'Callback Date': callbackDate,
-                        'Client Notes': newNotes
-                    }
+            // Update lead - try Follow Up Date first, fall back to Callback Date
+            var updateFields = {
+                'Status': 'Follow Up',
+                'Client Notes': newNotes
+            };
+
+            // Try to set callback date - Airtable expects YYYY-MM-DD format
+            try {
+                await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
+                    method: 'PATCH',
+                    body: { fields: { ...updateFields, 'Follow Up Date': callbackDate } }
+                });
+                if (lead) lead.fields['Follow Up Date'] = callbackDate;
+            } catch (dateErr) {
+                // If Follow Up Date fails, try Callback Date
+                try {
+                    await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
+                        method: 'PATCH',
+                        body: { fields: { ...updateFields, 'Callback Date': callbackDate } }
+                    });
+                    if (lead) lead.fields['Callback Date'] = callbackDate;
+                } catch (dateErr2) {
+                    // Just update status and notes without callback date
+                    await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
+                        method: 'PATCH',
+                        body: { fields: updateFields }
+                    });
                 }
-            });
+            }
 
             if (lead) {
                 lead.fields['Status'] = 'Follow Up';
-                lead.fields['Callback Date'] = callbackDate;
                 lead.fields['Client Notes'] = newNotes;
             }
 
@@ -4349,15 +4413,28 @@
                 lead.fields['Booked Time'] = bookedDateTime.toISOString();
                 lead.fields['Status'] = 'Booked';
             }
-            
-            // Open Google Calendar
+
+            // Sync to Google Calendar via n8n webhook
             var leadName = ((scheduleLeadData['First Name'] || '') + ' ' + (scheduleLeadData['Last Name'] || '')).trim() || 'Lead';
             var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
-            var gcalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-                '&text=' + encodeURIComponent('Meeting with ' + leadName) +
-                '&dates=' + bookedDateTime.toISOString().replace(/-|:|\.\d{3}/g, '') + '/' + new Date(bookedDateTime.getTime() + 3600000).toISOString().replace(/-|:|\.\d{3}/g, '') +
-                '&details=' + encodeURIComponent('Phone: ' + phone);
-            window.open(gcalUrl, '_blank');
+            var email = scheduleLeadData['Email'] || '';
+            try {
+                await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        leadId: scheduleLeadId,
+                        leadName: leadName,
+                        phone: phone,
+                        email: email,
+                        bookedTime: bookedDateTime.toISOString(),
+                        agentEmail: currentUser?.email || '',
+                        agentName: currentUser?.name || ''
+                    })
+                });
+            } catch (calErr) {
+                console.error('Calendar sync error:', calErr);
+            }
             
             document.getElementById('scheduleModal').classList.remove('active');
             if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
@@ -4393,7 +4470,138 @@
     }
     // Make available globally for onclick
     window.deleteBookingFromModal = deleteBookingFromModal;
-    
+
+    // Edit booking - opens schedule modal with existing time
+    function editBookingFromModal() {
+        if (!currentLeadId) return;
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        if (!lead) return;
+
+        var f = lead.fields;
+        var leadName = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+        document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + leadName;
+        scheduleLeadId = currentLeadId;
+        scheduleLeadData = f;
+
+        // Pre-fill with existing booked time
+        var existingTime = f['Booked Time'] ? new Date(f['Booked Time']) : new Date();
+        calendarMonth = new Date(existingTime.getFullYear(), existingTime.getMonth(), 1);
+        selectedDate = new Date(existingTime);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        // Set hour and minute dropdowns
+        var hour = existingTime.getHours();
+        var minute = existingTime.getMinutes();
+        document.getElementById('scheduleHour').value = hour;
+        var minuteSelect = document.getElementById('scheduleMinute');
+        // Find closest minute option
+        var minuteOptions = [0, 15, 30, 45];
+        var closestMinute = minuteOptions.reduce(function(prev, curr) {
+            return Math.abs(curr - minute) < Math.abs(prev - minute) ? curr : prev;
+        });
+        minuteSelect.value = closestMinute;
+
+        renderCalendar();
+        document.getElementById('scheduleModal').classList.add('active');
+    }
+    window.editBookingFromModal = editBookingFromModal;
+
+    // Delete call attempt
+    async function deleteCallAttempt(index) {
+        if (!currentLeadId) return;
+        if (!confirm('Delete this call attempt?')) return;
+
+        try {
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            var attemptsRaw = lead.fields['Client Attempts'] || '[]';
+            var attemptsArray = [];
+            try {
+                attemptsArray = typeof attemptsRaw === 'string' ? JSON.parse(attemptsRaw) : (Array.isArray(attemptsRaw) ? attemptsRaw : []);
+            } catch (e) {
+                attemptsArray = [];
+            }
+
+            // Remove the attempt at the given index
+            attemptsArray.splice(index, 1);
+
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Client Attempts': JSON.stringify(attemptsArray) } }
+            });
+
+            lead.fields['Client Attempts'] = JSON.stringify(attemptsArray);
+            openLeadModal(currentLeadId);
+            showToast('Call attempt deleted', 'success');
+        } catch (err) {
+            showToast('Failed to delete call attempt', 'error');
+        }
+    }
+    window.deleteCallAttempt = deleteCallAttempt;
+
+    // Edit note
+    async function editNote(index) {
+        if (!currentLeadId) return;
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        var notes = lead.fields['Client Notes'] || '';
+        var notesArr = notes.split('\n---\n').filter(function(n) { return n.trim(); });
+
+        if (index >= notesArr.length) return;
+
+        // Parse timestamp from note
+        var note = notesArr[index];
+        var match = note.match(/^\[([^\]]+)\]\s*/);
+        var noteText = match ? note.slice(match[0].length) : note;
+
+        var newText = prompt('Edit note:', noteText);
+        if (newText === null || newText.trim() === noteText) return;
+
+        // Update the note keeping the original timestamp
+        var timestamp = match ? match[1] : new Date().toLocaleString();
+        notesArr[index] = '[' + timestamp + '] ' + newText.trim();
+
+        try {
+            var newNotes = notesArr.join('\n---\n');
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Client Notes': newNotes } }
+            });
+            lead.fields['Client Notes'] = newNotes;
+            openLeadModal(currentLeadId);
+            showToast('Note updated', 'success');
+        } catch (err) {
+            showToast('Failed to update note', 'error');
+        }
+    }
+    window.editNote = editNote;
+
+    // Delete note
+    async function deleteNote(index) {
+        if (!currentLeadId) return;
+        if (!confirm('Delete this note?')) return;
+
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        var notes = lead.fields['Client Notes'] || '';
+        var notesArr = notes.split('\n---\n').filter(function(n) { return n.trim(); });
+
+        if (index >= notesArr.length) return;
+
+        notesArr.splice(index, 1);
+
+        try {
+            var newNotes = notesArr.join('\n---\n');
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Client Notes': newNotes } }
+            });
+            lead.fields['Client Notes'] = newNotes;
+            openLeadModal(currentLeadId);
+            showToast('Note deleted', 'success');
+        } catch (err) {
+            showToast('Failed to delete note', 'error');
+        }
+    }
+    window.deleteNote = deleteNote;
+
     // ===== PROSPECTS TAB =====
     var prospectsSort = { field: 'bookedTime', direction: 'desc' };
     
@@ -4716,14 +4924,33 @@
         }
         document.getElementById('modalNotesInput').value = '';
         
-        // Attempts
-        var attempts = f['Client Attempts'] || 0;
-        document.getElementById('modalAttemptsCount').textContent = attempts;
+        // Attempts - parse JSON if available
+        var attemptsRaw = f['Client Attempts'] || '[]';
+        var attemptsArray = [];
+        try {
+            if (typeof attemptsRaw === 'string') {
+                attemptsArray = JSON.parse(attemptsRaw);
+            } else if (Array.isArray(attemptsRaw)) {
+                attemptsArray = attemptsRaw;
+            } else if (typeof attemptsRaw === 'number') {
+                attemptsArray = [];
+            }
+        } catch (e) {
+            attemptsArray = [];
+        }
+        var attemptsCount = Array.isArray(attemptsArray) ? attemptsArray.length : 0;
+        document.getElementById('modalAttemptsCount').textContent = attemptsCount;
         
-        // Transcript
-        var transcript = f['Transcript (from Calls)'] || '';
-        if (Array.isArray(transcript)) transcript = transcript.join('\n\n---\n\n');
-        document.getElementById('modalTranscript').textContent = transcript || 'No transcript available';
+        // Transcript with colored speakers
+        var transcript = f['Transcript (from Calls)'];
+        var transcriptEl = document.getElementById('modalTranscript');
+        var leadName = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+        if (transcript && transcript.length) {
+            var transcriptText = Array.isArray(transcript) ? transcript[0] : transcript;
+            transcriptEl.innerHTML = formatTranscript(transcriptText, leadName);
+        } else {
+            transcriptEl.textContent = 'No transcript available';
+        }
         
         // PRIO button state and icon
         var prioBtn = document.getElementById('modalPrioBtn');
