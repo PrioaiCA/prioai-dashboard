@@ -8,6 +8,7 @@ const ALLOWED_TABLES = ['tblMptC862PyL7Znw', 'tblLpN4wceakfNFpq'];
 // CORS - restrict to your domains only
 const ALLOWED_ORIGINS = [
     'https://dashboard.prioai.ca',
+    'https://dash.prioai.ca',
     'https://prioai.ca',
     'https://www.prioai.ca',
     'http://localhost:3000',

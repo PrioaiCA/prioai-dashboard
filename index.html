@@ -88,6 +88,14 @@
         .priority-card-lg-notes-col .col-label{font-size:0.8125rem;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;font-weight:600}
         .priority-card-lg-notes-col .col-content{font-size:1rem;line-height:1.5;color:rgba(255,255,255,0.8);flex:1;overflow:hidden}
         @media(max-width:900px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-summary-col{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-notes-col{flex:none}}
+        .missed-meeting-separator{display:flex;align-items:center;gap:16px;margin:24px 0 16px 0;padding:0 8px}
+        .missed-meeting-separator::before,.missed-meeting-separator::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent)}
+        .missed-meeting-separator span{font-size:0.8125rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+        .priority-card-lg.missed-meeting{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05)}
+        .priority-card-lg.missed-meeting:hover{border-color:#ef4444}
+        .priority-card-lg.missed-meeting .priority-card-lg-time-col{background:rgba(239,68,68,0.15)}
+        .priority-card-lg.missed-meeting .priority-card-lg-time-col .time-value{color:#ef4444}
+        .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
         .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
         .section-header h3{font-size:1.125rem;font-weight:600}
         .prio-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -2413,8 +2421,11 @@
         });
         document.getElementById('overviewPipeline').textContent = pipelineLeads.length;
         
-        // Today's priorities (booked time or callback today)
+        // Today's priorities (booked time or callback today) + missed meetings (past scheduled with no call logged)
         var today = new Date().toISOString().split('T')[0];
+        var todayDate = new Date(today);
+
+        // Today's scheduled calls
         var todayPriorities = allLeads.filter(function(l) {
             var bookedTime = l.fields['Booked Time'] || '';
             var callbackDate = l.fields['Callback Date'] || l.fields['Follow Up Date'] || '';
@@ -2424,8 +2435,39 @@
             var timeB = b.fields['Booked Time'] || b.fields['Callback Date'] || '';
             return timeA.localeCompare(timeB);
         });
-        document.getElementById('prioritiesCount').textContent = todayPriorities.length;
-        updateTodayPriorities(todayPriorities);
+
+        // Find missed meetings (scheduled in past but no call logged on that day)
+        var missedMeetings = allLeads.filter(function(l) {
+            var bookedTime = l.fields['Booked Time'] || '';
+            var callbackDate = l.fields['Callback Date'] || l.fields['Follow Up Date'] || '';
+            var scheduledDate = bookedTime || callbackDate;
+
+            if (!scheduledDate) return false;
+
+            var scheduledDateOnly = scheduledDate.split('T')[0];
+            var scheduledDateObj = new Date(scheduledDateOnly);
+
+            // Only check past dates (not today)
+            if (scheduledDateObj >= todayDate) return false;
+
+            // Check if a call was logged on or after the scheduled date
+            var lastCallTimestamp = l.fields['Last Call Timestamp'];
+            if (!lastCallTimestamp) return true; // No call logged = missed
+
+            var lastCallDate = new Date(lastCallTimestamp.split('T')[0]);
+
+            // If last call was before the scheduled date, it's missed
+            return lastCallDate < scheduledDateObj;
+        }).sort(function(a, b) {
+            // Sort by scheduled date descending (most recent missed first)
+            var timeA = a.fields['Booked Time'] || a.fields['Callback Date'] || '';
+            var timeB = b.fields['Booked Time'] || b.fields['Callback Date'] || '';
+            return timeB.localeCompare(timeA);
+        });
+
+        var totalCount = todayPriorities.length + missedMeetings.length;
+        document.getElementById('prioritiesCount').textContent = totalCount;
+        updateTodayPriorities(todayPriorities, missedMeetings);
         
         // Update welcome name - check Supabase metadata first, then Airtable Agent Name
         var name = currentUser?.user_metadata?.full_name ||
@@ -2440,63 +2482,62 @@
     }
     
     // Update today's priorities list with taller cards
-    function updateTodayPriorities(priorities) {
+    function updateTodayPriorities(priorities, missedMeetings) {
         var list = document.getElementById('todayPriorities');
-        if (!priorities || priorities.length === 0) {
+        missedMeetings = missedMeetings || [];
+
+        if ((!priorities || priorities.length === 0) && missedMeetings.length === 0) {
             list.innerHTML = '<div class="priorities-empty"><p>No meetings or callbacks scheduled for today</p></div>';
             return;
         }
-        
-        list.innerHTML = priorities.map(function(lead, index) {
+
+        function renderPriorityCard(lead, index, isMissed) {
             var f = lead.fields;
             var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
             var phone = f['Phone #'] || f['Phone'] || '-';
             var bookedTime = f['Booked Time'];
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
-            var isBooked = !!bookedTime;
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notesRaw = f['Client Notes'] || f['Notes'] || '';
             var lastCalledTimestamp = f['Last Call Timestamp'];
             var lastCalled = lastCalledTimestamp ? formatTimeAgo(lastCalledTimestamp) : '-';
             var lastCalledColor = getLastCalledColor(lastCalledTimestamp);
-            
+
             // Parse notes
             var notesArray = parseNotesJson(notesRaw);
-            var notesHtml = '';
-            if (notesArray.length > 0) {
-                notesHtml = notesArray.map(function(note) {
-                    return '<div class="prio-note-item">' +
-                        '<div class="prio-note-text">' + escapeHtml(note.text) + '</div>' +
-                        '<div class="prio-note-date">' + formatNoteDate(note.date) + '</div>' +
-                    '</div>';
-                }).join('');
-            } else {
-                notesHtml = '<div style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</div>';
-            }
-            
+
+            // Get last note text
+            var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+
             var timeDisplay = '-';
+            var dateDisplay = '';
             if (bookedTime) {
                 var d = new Date(bookedTime);
                 timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                if (isMissed) {
+                    dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                }
             } else if (callbackDate) {
                 var d = new Date(callbackDate);
                 timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                if (isMissed) {
+                    dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                }
             }
-            
-            var cardId = 'priority-card-' + index;
-            
-            // Get last note text
-            var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
-            
-            return '<div class="priority-card-lg" data-id="' + lead.id + '" onclick="openLeadModal(\'' + lead.id + '\')">' +
+
+            var missedClass = isMissed ? ' missed-meeting' : '';
+            var timeCol = isMissed && dateDisplay
+                ? '<span class="time-value missed-date">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>'
+                : '<span class="time-value">' + timeDisplay + '</span>';
+
+            return '<div class="priority-card-lg' + missedClass + '" data-id="' + lead.id + '" onclick="openLeadModal(\'' + lead.id + '\')">' +
                 '<div class="priority-card-lg-left">' +
                     '<div class="priority-card-lg-time-col">' +
-                        '<span class="time-value">' + timeDisplay + '</span>' +
+                        timeCol +
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + '</div>' +
-                            '' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(phone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Last Called <span class="lastcall-dot ' + lastCalledColor + '"></span> ' + lastCalled + '</div>' +
@@ -2511,7 +2552,26 @@
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
             '</div>';
-        }).join('');
+        }
+
+        var html = '';
+
+        // Render today's priorities first
+        if (priorities && priorities.length > 0) {
+            html += priorities.map(function(lead, index) {
+                return renderPriorityCard(lead, index, false);
+            }).join('');
+        }
+
+        // Add red separator and missed meetings if any
+        if (missedMeetings.length > 0) {
+            html += '<div class="missed-meeting-separator"><span>Missed Meeting</span></div>';
+            html += missedMeetings.map(function(lead, index) {
+                return renderPriorityCard(lead, index, true);
+            }).join('');
+        }
+
+        list.innerHTML = html;
     }
     
     // Switch tabs on Priority cards
