@@ -2454,7 +2454,14 @@
             var lastCallTimestamp = l.fields['Last Call Timestamp'];
             if (!lastCallTimestamp) return true; // No call logged = missed
 
-            var lastCallDate = new Date(lastCallTimestamp.split('T')[0]);
+            // Handle both string dates and numeric timestamps
+            var lastCallDate;
+            if (typeof lastCallTimestamp === 'string') {
+                lastCallDate = new Date(lastCallTimestamp.split('T')[0]);
+            } else {
+                lastCallDate = new Date(lastCallTimestamp);
+                lastCallDate = new Date(lastCallDate.toISOString().split('T')[0]);
+            }
 
             // If last call was before the scheduled date, it's missed
             return lastCallDate < scheduledDateObj;
