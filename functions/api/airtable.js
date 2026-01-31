@@ -17,7 +17,7 @@ const ALLOWED_ORIGINS = [
 
 // Simple in-memory rate limiting (resets on worker restart)
 const rateLimits = new Map();
-const RATE_LIMIT = 100; // requests per window
+const RATE_LIMIT = 1000; // requests per window (high to allow analytics pagination)
 const RATE_WINDOW = 60000; // 1 minute
 
 function checkRateLimit(ip) {
