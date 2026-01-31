@@ -172,25 +172,29 @@
         
         /* Lead Detail Modal */
         .lead-modal{max-width:900px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#0f0f0f 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.08);box-shadow:0 25px 50px -12px rgba(0,0,0,0.8)}
-        .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)}
-        .lead-modal-title h2{font-size:1.25rem;font-weight:600;margin-bottom:8px}
-        .lead-modal-actions{display:flex;gap:8px;flex-wrap:wrap}
-        .btn-prio-toggle{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
+        .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)}
+        .modal-name-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+        .modal-prio-icon{width:28px;height:28px;border-radius:6px}
+        .lead-modal-title h2{font-size:1.75rem;font-weight:700;margin:0}
+        .lead-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+        .btn-prio-toggle{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
         .btn-prio-toggle.active{background:#f59e0b;color:#000}
         .btn-prio-toggle:hover{background:rgba(245,158,11,0.25)}
-        .btn-send-back{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
+        .btn-send-back{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
         .btn-send-back:hover{background:rgba(52,211,153,0.25)}
-        .btn-dnc{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s}
+        .btn-dnc{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
         .btn-dnc:hover{background:rgba(239,68,68,0.25)}
         .notes-input-container{position:relative}
-        .notes-input-tools{display:flex;gap:8px;margin-top:8px;justify-content:flex-end}
-        .voice-input-btn{width:40px;height:40px;border-radius:10px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.125rem;transition:all 0.2s}
+        .notes-action-row{display:flex;gap:10px;margin-top:12px;justify-content:center;align-items:center}
+        .voice-input-btn{width:48px;height:48px;border-radius:12px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
         .voice-input-btn:hover{background:rgba(52,211,153,0.15);border-color:rgb(52,211,153);color:rgb(52,211,153)}
         .voice-input-btn.recording{background:rgba(239,68,68,0.2);border-color:#ef4444;color:#ef4444;animation:pulse-recording 1.5s infinite}
+        .voice-input-btn svg{width:22px;height:22px}
         @keyframes pulse-recording{0%,100%{opacity:1}50%{opacity:0.5}}
-        .polish-notes-btn{padding:10px 14px;border-radius:10px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border:none;color:white;font-size:0.8125rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+        .polish-notes-btn{padding:12px 20px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border:none;color:white;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px}
         .polish-notes-btn:hover{opacity:0.9;transform:translateY(-1px)}
         .polish-notes-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+        .notes-action-row .btn{padding:12px 20px;font-size:0.9375rem;border-radius:12px}
         .polish-preview-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1200;opacity:0;visibility:hidden;transition:all 0.2s}
         .polish-preview-modal.active{opacity:1;visibility:visible}
         .polish-preview-content{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
@@ -236,8 +240,10 @@
         @media(max-width:600px){.polish-comparison{grid-template-columns:1fr}}
         .lead-modal-body{padding:24px;overflow-y:auto;flex:1}
         .lead-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
-        .lead-info-item label{display:block;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:4px}
-        .lead-info-item .value{font-size:0.9375rem;font-weight:500}
+        .lead-info-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px}
+        .lead-info-item label{display:block;font-size:0.8125rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
+        .lead-info-item .value{font-size:1.125rem;font-weight:600}
+        .send-ai-calendar{margin-top:16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px}
         .lead-section{margin-bottom:20px;padding:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
         .lead-section h3{font-size:0.875rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9)}
         .lead-summary-content{font-size:0.875rem;line-height:1.6;color:rgba(255,255,255,0.8);white-space:pre-wrap}
@@ -256,7 +262,7 @@
         .lead-transcript-line{margin-bottom:8px}
         
         /* Share Button */
-        .btn-share{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:6px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:4px}
+        .btn-share{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
         .btn-share:hover{background:rgba(59,130,246,0.25)}
         .btn-share.shared{background:rgba(52,211,153,0.15);color:rgb(52,211,153);border-color:rgba(52,211,153,0.3)}
         
@@ -327,6 +333,8 @@
         .calendar-day.today:not(.selected){border:2px solid rgb(52,211,153)}
         .calendar-day.disabled{color:rgba(255,255,255,0.3);cursor:not-allowed}
         .calendar-day.other-month{opacity:0.3}
+        .calendar-day.past{color:rgba(255,255,255,0.3);cursor:not-allowed}
+        .calendar-day.empty{cursor:default}
         @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr}}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -1759,7 +1767,10 @@
         <div class="modal lead-modal">
             <div class="lead-modal-header">
                 <div class="lead-modal-title">
-                    <h2 id="modalLeadName">Lead Name</h2>
+                    <div class="modal-name-row">
+                        <img src="/assets/favicon.png" class="modal-prio-icon" id="modalPrioIcon" style="display:none;">
+                        <h2 id="modalLeadName">Lead Name</h2>
+                    </div>
                     <div class="lead-modal-actions">
                         <button class="btn-share" id="modalShareBtn" title="Share with another agent">
                             🔗 Share
@@ -1810,13 +1821,13 @@
                     <div class="lead-notes-list" id="modalNotesList"></div>
                     <div class="notes-input-container">
                         <textarea id="modalNotesInput" placeholder="Add a note about this lead..."></textarea>
-                        <div class="notes-input-tools">
-                            <button id="voiceInputBtn" class="voice-input-btn" title="Voice to text">🎤</button>
-                            <button id="polishNotesBtn" class="polish-notes-btn" title="Polish with AI">✨ Polish</button>
+                        <div class="notes-action-row">
+                            <button id="voiceInputBtn" class="voice-input-btn" title="Voice to text">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                            </button>
+                            <button id="polishNotesBtn" class="polish-notes-btn" title="Polish with AI">✨ Polish & Save</button>
+                            <button class="btn btn-primary" id="modalSaveNoteBtn">💾 Save</button>
                         </div>
-                    </div>
-                    <div class="lead-notes-actions">
-                        <button class="btn btn-primary btn-sm" id="modalSaveNoteBtn">💾 Save Note</button>
                     </div>
                 </div>
 
@@ -1904,7 +1915,18 @@
                     <button class="timing-btn" data-months="12">12 months</button>
                     <button class="timing-btn" data-months="custom">📅 Pick a date</button>
                 </div>
-                <input type="date" id="sendAICustomDate" class="send-ai-date-input" style="display:none;">
+                <div class="send-ai-calendar" id="sendAICalendar" style="display:none;">
+                    <div class="calendar-header">
+                        <button type="button" id="sendAICalPrev">‹</button>
+                        <span class="calendar-month" id="sendAICalMonth"></span>
+                        <button type="button" id="sendAICalNext">›</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                    </div>
+                    <div class="calendar-days" id="sendAICalDays"></div>
+                </div>
+                <input type="hidden" id="sendAICustomDate">
             </div>
 
             <div class="send-ai-section">
@@ -3396,18 +3418,29 @@
         }
         document.getElementById('modalNotesInput').value = '';
         
-        // Attempts
-        var attempts = f['Client Attempts'] || f['Attempts'] || 0;
-        document.getElementById('modalAttemptsCount').textContent = attempts;
-        var attemptsList = document.getElementById('modalAttemptsList');
-        if (attempts > 0) {
-            var attemptsHtml = '';
-            for (var i = 0; i < Math.min(attempts, 5); i++) {
-                attemptsHtml += '<div class="lead-attempt-item"><span>Call #' + (i + 1) + '</span></div>';
+        // Attempts - parse JSON if available
+        var attemptsRaw = f['Call Attempts'] || f['Client Attempts'] || f['Attempts'] || '[]';
+        var attemptsArray = [];
+        try {
+            if (typeof attemptsRaw === 'string') {
+                attemptsArray = JSON.parse(attemptsRaw);
+            } else if (Array.isArray(attemptsRaw)) {
+                attemptsArray = attemptsRaw;
             }
+        } catch (e) {
+            attemptsArray = [];
+        }
+        var attemptsCount = Array.isArray(attemptsArray) ? attemptsArray.length : 0;
+        document.getElementById('modalAttemptsCount').textContent = attemptsCount;
+        var attemptsList = document.getElementById('modalAttemptsList');
+        if (attemptsCount > 0) {
+            var attemptsHtml = attemptsArray.map(function(attempt, i) {
+                var timeStr = attempt.time ? new Date(attempt.time).toLocaleString() : 'Unknown time';
+                return '<div class="lead-attempt-item"><span>Call #' + (i + 1) + '</span><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span></div>';
+            }).join('');
             attemptsList.innerHTML = attemptsHtml;
         } else {
-            attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No attempts logged</p>';
+            attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p>';
         }
         
         // Transcript with colored speakers
@@ -3421,16 +3454,19 @@
             transcriptEl.textContent = 'No transcript available';
         }
         
-        // PRIO button state
+        // PRIO button state and icon
         var prioBtn = document.getElementById('modalPrioBtn');
+        var prioIcon = document.getElementById('modalPrioIcon');
         if (f['Is Prio']) {
             prioBtn.classList.add('active');
             prioBtn.textContent = '⭐ PRIO';
+            prioIcon.style.display = 'block';
         } else {
             prioBtn.classList.remove('active');
             prioBtn.textContent = '☆ Mark PRIO';
+            prioIcon.style.display = 'none';
         }
-        
+
         leadModal.classList.add('active');
     }
     
@@ -3607,23 +3643,35 @@
         if (!currentLeadId) return;
         var btn = this;
         btn.disabled = true;
-        
+        btn.textContent = 'Logging...';
+
         try {
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            var currentAttempts = parseInt(lead.fields['Client Attempts'] || 0) + 1;
-            
+            var attemptsRaw = lead.fields['Call Attempts'] || lead.fields['Client Attempts'] || '[]';
+            var attemptsArray = [];
+            try {
+                attemptsArray = typeof attemptsRaw === 'string' ? JSON.parse(attemptsRaw) : (Array.isArray(attemptsRaw) ? attemptsRaw : []);
+            } catch (e) {
+                attemptsArray = [];
+            }
+
+            // Add new attempt with current timestamp
+            attemptsArray.push({ time: new Date().toISOString() });
+
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Client Attempts': currentAttempts } }
+                body: { fields: { 'Call Attempts': JSON.stringify(attemptsArray) } }
             });
-            
-            lead.fields['Client Attempts'] = currentAttempts;
+
+            lead.fields['Call Attempts'] = JSON.stringify(attemptsArray);
             openLeadModal(currentLeadId);
-            showToast('Call logged', 'success');
+            showToast('Call attempt logged', 'success');
         } catch (err) {
-            showToast('Failed to log call', 'error');
+            console.error('Log attempt error:', err);
+            showToast('Failed to log call: ' + err.message, 'error');
         }
         btn.disabled = false;
+        btn.textContent = '+ Log Call Attempt';
     });
     
     // Unprio from table
@@ -3687,7 +3735,7 @@
         document.querySelector('#sendAITimePref .time-pref-btn[data-time="Afternoon"]').classList.add('active');
         document.getElementById('sendAIOtherReason').style.display = 'none';
         document.getElementById('sendAIOtherReason').value = '';
-        document.getElementById('sendAICustomDate').style.display = 'none';
+        document.getElementById('sendAICalendar').style.display = 'none';
         document.getElementById('sendAICustomDate').value = '';
         document.getElementById('sendAIConfirmBtn').disabled = true;
 
@@ -3713,18 +3761,77 @@
     });
 
     // Timing buttons
+    // Calendar state
+    var calendarDate = new Date();
+    var selectedCalendarDate = null;
+
+    function renderSendAICalendar() {
+        var year = calendarDate.getFullYear();
+        var month = calendarDate.getMonth();
+        var today = new Date();
+        today.setHours(0,0,0,0);
+
+        var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+        document.getElementById('sendAICalMonth').textContent = monthNames[month] + ' ' + year;
+
+        var firstDay = new Date(year, month, 1).getDay();
+        var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        var daysHtml = '';
+        // Empty cells for days before first
+        for (var i = 0; i < firstDay; i++) {
+            daysHtml += '<span class="calendar-day empty"></span>';
+        }
+        // Days of month
+        for (var d = 1; d <= daysInMonth; d++) {
+            var dateObj = new Date(year, month, d);
+            var dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+            var isPast = dateObj < today;
+            var isSelected = selectedCalendarDate === dateStr;
+            var classes = 'calendar-day';
+            if (isPast) classes += ' past';
+            if (isSelected) classes += ' selected';
+            daysHtml += '<span class="' + classes + '" data-date="' + dateStr + '"' + (isPast ? '' : '') + '>' + d + '</span>';
+        }
+        document.getElementById('sendAICalDays').innerHTML = daysHtml;
+
+        // Add click handlers
+        document.querySelectorAll('#sendAICalDays .calendar-day:not(.empty):not(.past)').forEach(function(day) {
+            day.addEventListener('click', function() {
+                selectedCalendarDate = this.dataset.date;
+                document.getElementById('sendAICustomDate').value = selectedCalendarDate;
+                renderSendAICalendar();
+                updateSendAIConfirmState();
+            });
+        });
+    }
+
+    // Calendar navigation
+    document.getElementById('sendAICalPrev').addEventListener('click', function() {
+        calendarDate.setMonth(calendarDate.getMonth() - 1);
+        renderSendAICalendar();
+    });
+    document.getElementById('sendAICalNext').addEventListener('click', function() {
+        calendarDate.setMonth(calendarDate.getMonth() + 1);
+        renderSendAICalendar();
+    });
+
     document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
             document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(b) { b.classList.remove('active'); });
             this.classList.add('active');
             sendAISelectedMonths = this.dataset.months;
 
-            var customDate = document.getElementById('sendAICustomDate');
+            var calendar = document.getElementById('sendAICalendar');
             if (sendAISelectedMonths === 'custom') {
-                customDate.style.display = 'block';
-                customDate.focus();
+                calendar.style.display = 'block';
+                calendarDate = new Date();
+                selectedCalendarDate = null;
+                document.getElementById('sendAICustomDate').value = '';
+                renderSendAICalendar();
             } else {
-                customDate.style.display = 'none';
+                calendar.style.display = 'none';
             }
             updateSendAIConfirmState();
         });
@@ -3877,7 +3984,7 @@
         document.querySelector('#sendAITimePref .time-pref-btn[data-time="Afternoon"]').classList.add('active');
         document.getElementById('sendAIOtherReason').style.display = 'none';
         document.getElementById('sendAIOtherReason').value = '';
-        document.getElementById('sendAICustomDate').style.display = 'none';
+        document.getElementById('sendAICalendar').style.display = 'none';
         document.getElementById('sendAICustomDate').value = '';
         document.getElementById('sendAIConfirmBtn').disabled = true;
 
@@ -3922,19 +4029,31 @@
     function formatTranscript(text, prospectName) {
         if (!text) return 'No transcript available';
         var lines = text.split('\n');
-        var firstName = prospectName.split(' ')[0] || 'Lead';
+        var firstName = prospectName ? prospectName.split(' ')[0] : 'Lead';
         return lines.map(function(line) {
             var trimmed = line.trim();
             if (!trimmed) return '';
-            // Match "Speaker:" at start of line
-            if (trimmed.toLowerCase().startsWith('prio ai:') || trimmed.toLowerCase().startsWith('prio:') || trimmed.toLowerCase().startsWith('ai:') || trimmed.toLowerCase().startsWith('sarah:')) {
+            var lowerLine = trimmed.toLowerCase();
+
+            // Agent/AI lines - show as "Prio AI" in white
+            if (lowerLine.startsWith('agent:') || lowerLine.startsWith('prio ai:') || lowerLine.startsWith('prio:') || lowerLine.startsWith('ai:') || lowerLine.startsWith('sarah:')) {
                 var colonIdx = trimmed.indexOf(':');
                 return '<div class="lead-transcript-line"><span class="speaker-ai">Prio AI:</span>' + escapeHtml(trimmed.slice(colonIdx + 1)) + '</div>';
-            } else if (trimmed.includes(':')) {
+            }
+            // User lines - show as lead name in green
+            if (lowerLine.startsWith('user:')) {
+                var colonIdx = trimmed.indexOf(':');
+                return '<div class="lead-transcript-line"><span class="speaker-prospect">' + escapeHtml(firstName) + ':</span>' + escapeHtml(trimmed.slice(colonIdx + 1)) + '</div>';
+            }
+            // Other speaker lines
+            if (trimmed.includes(':')) {
                 var colonIdx = trimmed.indexOf(':');
                 var speaker = trimmed.slice(0, colonIdx);
                 var content = trimmed.slice(colonIdx + 1);
-                return '<div class="lead-transcript-line"><span class="speaker-prospect">' + escapeHtml(speaker) + ':</span>' + escapeHtml(content) + '</div>';
+                // Check if it's a name-like speaker (no spaces before colon means it's a name)
+                if (speaker.indexOf(' ') === -1 || speaker.length < 20) {
+                    return '<div class="lead-transcript-line"><span class="speaker-prospect">' + escapeHtml(firstName) + ':</span>' + escapeHtml(content) + '</div>';
+                }
             }
             return '<div class="lead-transcript-line">' + escapeHtml(trimmed) + '</div>';
         }).filter(function(l) { return l; }).join('');
@@ -3971,7 +4090,7 @@
             if (allActiveAgents.length === 0) await fetchAllActiveAgents();
             
             shareableAgents = allActiveAgents.filter(function(a) {
-                return a.email && a.email.toLowerCase() !== currentUserEmail.toLowerCase() && allowedEmails.includes(a.email.toLowerCase());
+                return a.email && currentUser && a.email.toLowerCase() !== currentUser.email.toLowerCase() && allowedEmails.includes(a.email.toLowerCase());
             });
         } catch (err) {
             console.error('Error fetching shareable agents:', err);
@@ -4606,16 +4725,19 @@
         if (Array.isArray(transcript)) transcript = transcript.join('\n\n---\n\n');
         document.getElementById('modalTranscript').textContent = transcript || 'No transcript available';
         
-        // PRIO button state
+        // PRIO button state and icon
         var prioBtn = document.getElementById('modalPrioBtn');
+        var prioIcon = document.getElementById('modalPrioIcon');
         if (f['Is Prio']) {
             prioBtn.classList.add('active');
             prioBtn.textContent = '⭐ PRIO';
+            if (prioIcon) prioIcon.style.display = 'block';
         } else {
             prioBtn.classList.remove('active');
             prioBtn.textContent = '☆ PRIO';
+            if (prioIcon) prioIcon.style.display = 'none';
         }
-        
+
         // Show modal
         document.getElementById('leadModal').classList.add('active');
     }
