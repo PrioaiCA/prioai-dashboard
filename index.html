@@ -4133,20 +4133,17 @@
             var existingNotes = lead?.fields['Client Notes'] || '';
             var newNotes = existingNotes ? existingNotes + '\n---\n' + noteText : noteText;
 
-            // Update lead with Client Notes only (Lead Status and Next Call Date may be formula/linked fields)
-            // The AI system will handle the status change via n8n webhook
-            try {
-                await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
-                    method: 'PATCH',
-                    body: {
-                        fields: {
-                            'Client Notes': newNotes
-                        }
+            // Update lead with Client Notes, Status = Follow Up, and Next Call Date
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
+                method: 'PATCH',
+                body: {
+                    fields: {
+                        'Client Notes': newNotes,
+                        'Status': 'Follow Up',
+                        'Next Call Date': nextCallDateISO
                     }
-                });
-            } catch (updateErr) {
-                console.error('Failed to update notes:', updateErr);
-            }
+                }
+            });
 
             // Remove lead from local data (it's being sent back to AI)
             allLeads = allLeads.filter(function(l) { return l.id !== sendAILeadId; });
@@ -4181,16 +4178,10 @@
         btn.disabled = true;
 
         try {
-            // Add DNC note to Client Notes (Lead Status field may not be editable)
-            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            var existingNotes = lead?.fields['Client Notes'] || '';
-            var timestamp = new Date().toLocaleString();
-            var dncNote = '[' + timestamp + '] *** MARKED AS DO NOT CALL ***';
-            var newNotes = existingNotes ? existingNotes + '\n---\n' + dncNote : dncNote;
-
+            // Update Status to DNC and set Is Prio to false
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Client Notes': newNotes, 'Is Prio': false } }
+                body: { fields: { 'Status': 'DNC', 'Is Prio': false } }
             });
 
             // Remove from local data and update UI immediately
@@ -4253,16 +4244,10 @@
         if (!confirmed) return;
 
         try {
-            // Add DNC note to Client Notes (Lead Status field may not be editable)
-            var lead = allLeads.find(function(l) { return l.id === leadId; });
-            var existingNotes = lead?.fields['Client Notes'] || '';
-            var timestamp = new Date().toLocaleString();
-            var dncNote = '[' + timestamp + '] *** MARKED AS DO NOT CALL ***';
-            var newNotes = existingNotes ? existingNotes + '\n---\n' + dncNote : dncNote;
-
+            // Update Status to DNC and set Is Prio to false
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
                 method: 'PATCH',
-                body: { fields: { 'Client Notes': newNotes, 'Is Prio': false } }
+                body: { fields: { 'Status': 'DNC', 'Is Prio': false } }
             });
 
             // Remove from local data and update UI immediately
