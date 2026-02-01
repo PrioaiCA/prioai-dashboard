@@ -3196,7 +3196,7 @@
         return div.innerHTML;
     }
 
-    // Format date in friendly format: February 1st, 2026, 1:08:32 PM
+    // Format date in friendly format: February 1st, 1:08 PM
     function formatFriendlyDateTime(dateStr) {
         if (!dateStr) return 'Unknown time';
         var date = new Date(dateStr);
@@ -3213,9 +3213,8 @@
         var ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
         var minutes = date.getMinutes().toString().padStart(2, '0');
-        var seconds = date.getSeconds().toString().padStart(2, '0');
 
-        return months[date.getMonth()] + ' ' + day + suffix + ', ' + date.getFullYear() + ', ' + hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+        return months[date.getMonth()] + ' ' + day + suffix + ', ' + hours + ':' + minutes + ' ' + ampm;
     }
 
     // Update card display when lead data changes
@@ -3923,6 +3922,7 @@
     var polishedText = '';
 
     document.getElementById('polishNotesBtn').addEventListener('click', async function() {
+        if (!currentLeadId) return;
         var noteText = document.getElementById('modalNotesInput').value.trim();
         if (!noteText) {
             showToast('Please enter a note first', 'warning');
@@ -3938,6 +3938,7 @@
         btn.innerHTML = '✨ Polishing...';
 
         try {
+            // Polish the note
             var response = await fetch(POLISH_NOTES_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -3950,10 +3951,27 @@
 
             var data = await response.json();
             if (data.polished || data.cleaned || data.result) {
-                polishedText = data.polished || data.cleaned || data.result;
-                document.getElementById('polishOriginalText').textContent = noteText;
-                document.getElementById('polishNewText').textContent = polishedText;
-                document.getElementById('polishPreviewModal').classList.add('active');
+                var polishedNote = data.polished || data.cleaned || data.result;
+
+                // Auto-save the polished note
+                btn.innerHTML = '✨ Saving...';
+                var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+                var existingNotesRaw = lead.fields['Client Notes'] || '';
+                var notesArray = parseNotesJson(existingNotesRaw);
+                notesArray.push({ text: polishedNote, date: new Date().toISOString() });
+                var newNotes = JSON.stringify(notesArray);
+
+                await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                    method: 'PATCH',
+                    body: { fields: { 'Client Notes': newNotes } }
+                });
+
+                lead.fields['Client Notes'] = newNotes;
+                lead.fields['Updated At'] = new Date().toISOString();
+                document.getElementById('modalNotesInput').value = '';
+                openLeadModal(currentLeadId);
+                updateLeadCardDisplay(currentLeadId);
+                showToast('Note polished and saved!', 'success');
             } else {
                 throw new Error(data.error || 'Failed to polish notes');
             }
@@ -3962,17 +3980,7 @@
             showToast('Polish failed: ' + err.message, 'error');
         }
         btn.disabled = false;
-        btn.innerHTML = '✨ Polish';
-    });
-
-    document.getElementById('polishAcceptBtn').addEventListener('click', function() {
-        document.getElementById('modalNotesInput').value = polishedText;
-        document.getElementById('polishPreviewModal').classList.remove('active');
-        showToast('Polished note applied!', 'success');
-    });
-
-    document.getElementById('polishRejectBtn').addEventListener('click', function() {
-        document.getElementById('polishPreviewModal').classList.remove('active');
+        btn.innerHTML = '✨ Polish & Save';
     });
 
     // Log call attempt
@@ -5456,10 +5464,9 @@
         var suffix = ['th', 'st', 'nd', 'rd'][(day % 100 > 10 && day % 100 < 14) ? 0 : (day % 10 < 4 ? day % 10 : 0)];
         var hours = date.getHours();
         var minutes = date.getMinutes().toString().padStart(2, '0');
-        var seconds = date.getSeconds().toString().padStart(2, '0');
         var ampm = hours >= 12 ? 'PM' : 'AM';
         var hour12 = hours % 12 || 12;
-        return months[date.getMonth()] + ' ' + day + suffix + ', ' + date.getFullYear() + ', ' + hour12 + ':' + minutes + ':' + seconds + ' ' + ampm;
+        return months[date.getMonth()] + ' ' + day + suffix + ', ' + hour12 + ':' + minutes + ' ' + ampm;
     }
     
     // Helper: Format phone
