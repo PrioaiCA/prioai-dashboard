@@ -3609,22 +3609,15 @@
             sharedInfoDiv.style.display = 'none';
         }
         
-        // Notes with edit/delete
-        var notes = f['Client Notes'] || f['Notes'];
+        // Notes with edit/delete - using JSON array format
+        var notesRaw = f['Client Notes'] || f['Notes'] || '';
         var notesList = document.getElementById('modalNotesList');
-        if (notes && notes.trim()) {
-            var notesArr = notes.split('\n---\n').filter(function(n) { return n.trim(); });
+        var notesArr = parseNotesJson(notesRaw);
+        if (notesArr.length > 0) {
             notesList.innerHTML = notesArr.map(function(note, idx) {
-                // Parse timestamp from note format: [timestamp] text
-                var match = note.match(/^\[([^\]]+)\]\s*/);
-                var dateStr = '';
-                var noteText = note;
-                if (match) {
-                    dateStr = match[1];
-                    noteText = note.slice(match[0].length);
-                }
+                var dateStr = note.date ? formatNoteDate(note.date) : '';
                 return '<div class="lead-note-item" data-note-index="' + idx + '">' +
-                    '<div class="note-content">' + escapeHtml(noteText) + '</div>' +
+                    '<div class="note-content">' + escapeHtml(note.text) + '</div>' +
                     (dateStr ? '<div class="note-date">' + dateStr + '</div>' : '') +
                     '<div class="note-actions"><button class="btn-edit-note" onclick="editNote(' + idx + ')" title="Edit">✏️</button><button class="btn-delete-note" onclick="deleteNote(' + idx + ')" title="Delete">✕</button></div>' +
                 '</div>';
@@ -3710,9 +3703,10 @@
 
         try {
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            var existingNotes = lead.fields['Client Notes'] || '';
-            var timestamp = new Date().toLocaleString();
-            var newNotes = existingNotes ? existingNotes + '\n---\n[' + timestamp + '] ' + noteText : '[' + timestamp + '] ' + noteText;
+            var existingNotesRaw = lead.fields['Client Notes'] || '';
+            var notesArray = parseNotesJson(existingNotesRaw);
+            notesArray.push({ text: noteText, date: new Date().toISOString() });
+            var newNotes = JSON.stringify(notesArray);
 
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
@@ -4128,18 +4122,21 @@
             nextCallDate.setHours(timeHour, 0, 0, 0);
             var nextCallDateISO = nextCallDate.toISOString();
 
-            // Get existing notes
+            // Get existing notes as JSON array and add new note
             var lead = allLeads.find(function(l) { return l.id === sendAILeadId; });
-            var existingNotes = lead?.fields['Client Notes'] || '';
-            var newNotes = existingNotes ? existingNotes + '\n---\n' + noteText : noteText;
+            var existingNotesRaw = lead?.fields['Client Notes'] || '';
+            var notesArray = parseNotesJson(existingNotesRaw);
+            notesArray.push({ text: noteText, date: new Date().toISOString() });
+            var newNotes = JSON.stringify(notesArray);
 
-            // Update lead with Client Notes, Status = Follow Up, and Next Call Date
+            // Update lead with Client Notes, Status, Last Outcome, and Next Call Date
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
                 method: 'PATCH',
                 body: {
                     fields: {
                         'Client Notes': newNotes,
                         'Status': 'Follow Up',
+                        'Last Outcome': 'Follow Up',
                         'Next Call Date': nextCallDateISO
                     }
                 }
@@ -4178,10 +4175,10 @@
         btn.disabled = true;
 
         try {
-            // Update Status to DNC and set Is Prio to false
+            // Update Status to DNC, Last Outcome to DNC, and set Is Prio to false
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Status': 'DNC', 'Is Prio': false } }
+                body: { fields: { 'Status': 'DNC', 'Last Outcome': 'DNC', 'Is Prio': false } }
             });
 
             // Remove from local data and update UI immediately
@@ -4244,10 +4241,10 @@
         if (!confirmed) return;
 
         try {
-            // Update Status to DNC and set Is Prio to false
+            // Update Status to DNC, Last Outcome to DNC, and set Is Prio to false
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
                 method: 'PATCH',
-                body: { fields: { 'Status': 'DNC', 'Is Prio': false } }
+                body: { fields: { 'Status': 'DNC', 'Last Outcome': 'DNC', 'Is Prio': false } }
             });
 
             // Remove from local data and update UI immediately
@@ -4943,25 +4940,20 @@
     async function editNote(index) {
         if (!currentLeadId) return;
         var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-        var notes = lead.fields['Client Notes'] || '';
-        var notesArr = notes.split('\n---\n').filter(function(n) { return n.trim(); });
+        var notesRaw = lead.fields['Client Notes'] || '';
+        var notesArr = parseNotesJson(notesRaw);
 
         if (index >= notesArr.length) return;
 
-        // Parse timestamp from note
         var note = notesArr[index];
-        var match = note.match(/^\[([^\]]+)\]\s*/);
-        var noteText = match ? note.slice(match[0].length) : note;
+        var newText = prompt('Edit note:', note.text);
+        if (newText === null || newText.trim() === note.text) return;
 
-        var newText = prompt('Edit note:', noteText);
-        if (newText === null || newText.trim() === noteText) return;
-
-        // Update the note keeping the original timestamp
-        var timestamp = match ? match[1] : new Date().toLocaleString();
-        notesArr[index] = '[' + timestamp + '] ' + newText.trim();
+        // Update the note text, keeping the original timestamp
+        notesArr[index].text = newText.trim();
 
         try {
-            var newNotes = notesArr.join('\n---\n');
+            var newNotes = JSON.stringify(notesArr);
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
                 body: { fields: { 'Client Notes': newNotes } }
@@ -4988,15 +4980,15 @@
         if (!confirmed) return;
 
         var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-        var notes = lead.fields['Client Notes'] || '';
-        var notesArr = notes.split('\n---\n').filter(function(n) { return n.trim(); });
+        var notesRaw = lead.fields['Client Notes'] || '';
+        var notesArr = parseNotesJson(notesRaw);
 
         if (index >= notesArr.length) return;
 
         notesArr.splice(index, 1);
 
         try {
-            var newNotes = notesArr.join('\n---\n');
+            var newNotes = JSON.stringify(notesArr);
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
                 body: { fields: { 'Client Notes': newNotes } }
@@ -5346,13 +5338,18 @@
 
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || 'No summary available';
         
-        // Notes
+        // Notes with edit/delete
         var notesRaw = f['Client Notes'] || '';
         var notes = parseNotesJson(notesRaw);
         var notesList = document.getElementById('modalNotesList');
         if (notes.length > 0) {
-            notesList.innerHTML = notes.map(function(note) {
-                return '<div class="lead-note-item">' + escapeHtml(note.text) + '<div class="lead-note-date">' + formatNoteDate(note.date || note.time) + '</div></div>';
+            notesList.innerHTML = notes.map(function(note, idx) {
+                var dateStr = note.date ? formatNoteDate(note.date) : '';
+                return '<div class="lead-note-item" data-note-index="' + idx + '">' +
+                    '<div class="note-content">' + escapeHtml(note.text) + '</div>' +
+                    (dateStr ? '<div class="note-date">' + dateStr + '</div>' : '') +
+                    '<div class="note-actions"><button class="btn-edit-note" onclick="editNote(' + idx + ')" title="Edit">✏️</button><button class="btn-delete-note" onclick="deleteNote(' + idx + ')" title="Delete">✕</button></div>' +
+                '</div>';
             }).join('');
         } else {
             notesList.innerHTML = '<div style="color:rgba(255,255,255,0.4)">No notes yet</div>';
@@ -5951,22 +5948,29 @@
         if (!searchedLead) return;
         var btn = this;
         var notesText = document.getElementById('searchLeadNotesInput')?.value.trim();
-        
+        if (!notesText) return;
+
         btn.disabled = true;
         btn.textContent = 'Saving...';
-        
+
         try {
-            var newNotes = JSON.stringify([{ time: new Date().toISOString(), text: notesText }]);
+            // Append to existing notes as JSON array
+            var existingNotesRaw = searchedLead.fields['Client Notes'] || '';
+            var notesArray = parseNotesJson(existingNotesRaw);
+            notesArray.push({ text: notesText, date: new Date().toISOString() });
+            var newNotes = JSON.stringify(notesArray);
+
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + searchedLead.id, {
                 method: 'PATCH',
                 body: { fields: { 'Client Notes': newNotes } }
             });
             searchedLead.fields['Client Notes'] = newNotes;
+            document.getElementById('searchLeadNotesInput').value = '';
             showToast('Notes saved', 'success');
         } catch (err) {
             showToast('Failed to save notes', 'error');
         }
-        
+
         btn.disabled = false;
         btn.textContent = 'Save Notes';
     });
