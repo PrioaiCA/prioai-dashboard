@@ -3196,6 +3196,65 @@
         return div.innerHTML;
     }
 
+    // Format date in friendly format: February 1st, 2026, 1:08:32 PM
+    function formatFriendlyDateTime(dateStr) {
+        if (!dateStr) return 'Unknown time';
+        var date = new Date(dateStr);
+        if (isNaN(date.getTime())) return 'Unknown time';
+
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var day = date.getDate();
+        var suffix = 'th';
+        if (day === 1 || day === 21 || day === 31) suffix = 'st';
+        else if (day === 2 || day === 22) suffix = 'nd';
+        else if (day === 3 || day === 23) suffix = 'rd';
+
+        var hours = date.getHours();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        var minutes = date.getMinutes().toString().padStart(2, '0');
+        var seconds = date.getSeconds().toString().padStart(2, '0');
+
+        return months[date.getMonth()] + ' ' + day + suffix + ', ' + date.getFullYear() + ', ' + hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+    }
+
+    // Update card display when lead data changes
+    function updateLeadCardDisplay(leadId) {
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        if (!lead) return;
+
+        var f = lead.fields;
+        var notesRaw = f['Client Notes'] || '';
+        var notesArray = parseNotesJson(notesRaw);
+        var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+
+        // Update priority card (large)
+        var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadId + '"]');
+        if (priorityCard) {
+            var notesCol = priorityCard.querySelector('.priority-card-lg-notes-col .col-content');
+            if (notesCol) {
+                notesCol.textContent = lastNoteText;
+            }
+        }
+
+        // Update prio card (small)
+        var prioCard = document.querySelector('.prio-card[data-id="' + leadId + '"]');
+        if (prioCard) {
+            var notesList = prioCard.querySelector('.prio-card-notes-list');
+            if (notesList && notesArray.length > 0) {
+                var notesHtml = notesArray.map(function(note) {
+                    return '<div class="prio-note-item">' +
+                        '<div class="prio-note-text">' + escapeHtml(note.text) + '</div>' +
+                        '<div class="prio-note-date">' + formatNoteDate(note.date) + '</div>' +
+                    '</div>';
+                }).join('');
+                notesList.innerHTML = notesHtml;
+            } else if (notesList) {
+                notesList.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</div>';
+            }
+        }
+    }
+
     function formatTimeAgo(dateStr) {
         if (!dateStr) return '';
         var date = new Date(dateStr);
@@ -3649,7 +3708,7 @@
         var attemptsList = document.getElementById('modalAttemptsList');
         if (attemptsCount > 0) {
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
-                var timeStr = attempt.time ? new Date(attempt.time).toLocaleString() : 'Unknown time';
+                var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
                 return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
             attemptsList.innerHTML = attemptsHtml;
@@ -3721,12 +3780,13 @@
             lead.fields['Client Notes'] = newNotes;
             document.getElementById('modalNotesInput').value = '';
             openLeadModal(currentLeadId); // Refresh modal
+            updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note saved', 'success');
         } catch (err) {
             showToast('Failed to save note', 'error');
         }
         btn.disabled = false;
-        btn.textContent = '💾 Save Note';
+        btn.textContent = '💾 Save';
     });
 
     // === VOICE INPUT ===
@@ -5044,6 +5104,7 @@
             });
             lead.fields['Client Notes'] = newNotes;
             openLeadModal(currentLeadId);
+            updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note updated', 'success');
         } catch (err) {
             showToast('Failed to update note', 'error');
@@ -5079,6 +5140,7 @@
             });
             lead.fields['Client Notes'] = newNotes;
             openLeadModal(currentLeadId);
+            updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note deleted', 'success');
         } catch (err) {
             showToast('Failed to delete note', 'error');
@@ -5459,7 +5521,7 @@
         var attemptsList = document.getElementById('modalAttemptsList');
         if (attemptsCount > 0) {
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
-                var timeStr = attempt.time ? new Date(attempt.time).toLocaleString() : 'Unknown time';
+                var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
                 return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
             attemptsList.innerHTML = attemptsHtml;
