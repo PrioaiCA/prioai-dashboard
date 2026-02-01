@@ -29,12 +29,12 @@
         .overview-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap}
         .overview-header-left{flex:1;min-width:280px}
         .overview-header-right{display:flex;gap:0.75rem;flex-wrap:wrap}
-        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.75rem 1rem;min-width:85px;height:70px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-        .header-stat-badge.usage-badge{min-width:180px;height:70px;padding:0.75rem 1.25rem}
+        .header-stat-badge{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.75rem 1rem;min-width:85px;min-height:70px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+        .header-stat-badge.usage-badge{min-width:180px;min-height:70px;padding:0.5rem 1.25rem}
         .header-stat-badge.accent{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3)}
-        .header-stat-badge .badge-emoji{font-size:0.875rem;margin-bottom:2px}
-        .header-stat-badge .badge-value{font-size:1.25rem;font-weight:700;margin-bottom:1px}
-        .header-stat-badge .badge-label{font-size:0.6875rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px}
+        .header-stat-badge .badge-emoji{font-size:0.75rem;margin-bottom:1px;line-height:1}
+        .header-stat-badge .badge-value{font-size:1.25rem;font-weight:700;margin-bottom:1px;line-height:1.2}
+        .header-stat-badge .badge-label{font-size:0.6875rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px;line-height:1}
         .section-label{font-size:0.8125rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px;margin:1.5rem 0 0.75rem 0}
         .usage-bar-mini{width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-top:8px;overflow:hidden}
         .usage-bar-mini .usage-bar-fill{height:100%;border-radius:3px;transition:width 0.3s ease,background 0.3s ease;background:linear-gradient(90deg,#fff,#fff)}
@@ -696,23 +696,23 @@
         .sidebar-collapse-btn{display:none;width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);cursor:pointer;align-items:center;justify-content:center;transition:all 0.2s;font-size:1rem;flex-shrink:0}
         .sidebar-collapse-btn:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)}
         @media(min-width:1024px){.sidebar-collapse-btn{display:flex}}
-        .sidebar.collapsed{width:56px;min-width:56px}
+        .sidebar.collapsed{width:64px;min-width:64px}
         .sidebar.collapsed .sidebar-logo{display:none !important}
         .sidebar.collapsed .sidebar-logo-mini{display:block !important;width:32px;height:32px;border-radius:6px;margin:0 auto}
         .sidebar.collapsed .nav-item span:not(.nav-item-icon){display:none}
         .sidebar.collapsed .nav-section-title{display:none}
-        .sidebar.collapsed .nav-item{justify-content:center;padding:8px 6px}
-        .sidebar.collapsed .nav-item-icon{width:20px;height:20px;font-size:14px;display:flex;align-items:center;justify-content:center}
+        .sidebar.collapsed .nav-item{justify-content:center;padding:10px 8px}
+        .sidebar.collapsed .nav-item-icon{width:32px;height:32px;font-size:20px;display:flex;align-items:center;justify-content:center}
         .sidebar.collapsed .user-info{display:none}
-        .sidebar.collapsed .user-avatar{width:28px;height:28px;font-size:12px}
-        .sidebar.collapsed .user-card{justify-content:center;padding:6px}
+        .sidebar.collapsed .user-avatar{width:32px;height:32px;font-size:14px}
+        .sidebar.collapsed .user-card{justify-content:center;padding:8px}
         .sidebar.collapsed .notification-btn{display:none}
-        .sidebar.collapsed .profile-menu{left:56px;bottom:50px;width:180px}
-        .sidebar.collapsed .notifications-popup{left:56px}
-        .sidebar.collapsed .sidebar-header{justify-content:center;padding:10px 8px;position:relative}
+        .sidebar.collapsed .profile-menu{left:64px;bottom:50px;width:180px}
+        .sidebar.collapsed .notifications-popup{left:64px}
+        .sidebar.collapsed .sidebar-header{justify-content:center;padding:12px 10px;position:relative}
         .sidebar.collapsed .sidebar-collapse-btn{position:absolute;right:-12px;top:50%;transform:translateY(-50%);z-index:10;width:24px;height:24px;border-radius:50%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);font-size:0.75rem}
         .sidebar.collapsed .sidebar-footer-row{justify-content:center}
-        .app-container.sidebar-collapsed .main-content{margin-left:56px}
+        .app-container.sidebar-collapsed .main-content{margin-left:64px}
         @media(max-width:1023px){.app-container.sidebar-collapsed .main-content{margin-left:0}}
 
         /* Sidebar Resize Handle */
@@ -927,7 +927,7 @@
                                 <div class="overview-card-value" id="overviewScheduled">0</div>
                                 <div class="overview-card-desc">Callbacks & meetings booked</div>
                             </div>
-                            <div class="overview-card" onclick="switchPage('pipeline')">
+                            <div class="overview-card" style="cursor:default">
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">📞</span>
                                     <h4>Active Leads</h4>
@@ -959,7 +959,7 @@
                                 <div class="stat-icon">💬</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statConversationsToday">0</div>
-                                    <div class="stat-label">Qualified AI Conversations</div>
+                                    <div class="stat-label">AI Qualified Conversations</div>
                                 </div>
                             </div>
                             <div class="stat-card">
@@ -2715,7 +2715,7 @@
         }).length;
         document.getElementById('statCallsToday').textContent = callsToday;
 
-        // Qualified AI Conversations - Outcome = Booked, Timeline, Follow Up, Callback, or Not Interested
+        // AI Qualified Conversations - Outcome = Booked, Timeline, Follow Up, Callback, or Not Interested
         var qualifiedOutcomes = ['booked', 'timeline', 'follow up', 'callback', 'not interested'];
         var conversationsToday = allLeads.filter(function(l) {
             var lastCall = l.fields['Last Call Timestamp'];
@@ -3196,6 +3196,65 @@
         return div.innerHTML;
     }
 
+    // Format date in friendly format: February 1st, 2026, 1:08:32 PM
+    function formatFriendlyDateTime(dateStr) {
+        if (!dateStr) return 'Unknown time';
+        var date = new Date(dateStr);
+        if (isNaN(date.getTime())) return 'Unknown time';
+
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var day = date.getDate();
+        var suffix = 'th';
+        if (day === 1 || day === 21 || day === 31) suffix = 'st';
+        else if (day === 2 || day === 22) suffix = 'nd';
+        else if (day === 3 || day === 23) suffix = 'rd';
+
+        var hours = date.getHours();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        var minutes = date.getMinutes().toString().padStart(2, '0');
+        var seconds = date.getSeconds().toString().padStart(2, '0');
+
+        return months[date.getMonth()] + ' ' + day + suffix + ', ' + date.getFullYear() + ', ' + hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+    }
+
+    // Update card display when lead data changes
+    function updateLeadCardDisplay(leadId) {
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        if (!lead) return;
+
+        var f = lead.fields;
+        var notesRaw = f['Client Notes'] || '';
+        var notesArray = parseNotesJson(notesRaw);
+        var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+
+        // Update priority card (large)
+        var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadId + '"]');
+        if (priorityCard) {
+            var notesCol = priorityCard.querySelector('.priority-card-lg-notes-col .col-content');
+            if (notesCol) {
+                notesCol.textContent = lastNoteText;
+            }
+        }
+
+        // Update prio card (small)
+        var prioCard = document.querySelector('.prio-card[data-id="' + leadId + '"]');
+        if (prioCard) {
+            var notesList = prioCard.querySelector('.prio-card-notes-list');
+            if (notesList && notesArray.length > 0) {
+                var notesHtml = notesArray.map(function(note) {
+                    return '<div class="prio-note-item">' +
+                        '<div class="prio-note-text">' + escapeHtml(note.text) + '</div>' +
+                        '<div class="prio-note-date">' + formatNoteDate(note.date) + '</div>' +
+                    '</div>';
+                }).join('');
+                notesList.innerHTML = notesHtml;
+            } else if (notesList) {
+                notesList.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</div>';
+            }
+        }
+    }
+
     function formatTimeAgo(dateStr) {
         if (!dateStr) return '';
         var date = new Date(dateStr);
@@ -3649,7 +3708,7 @@
         var attemptsList = document.getElementById('modalAttemptsList');
         if (attemptsCount > 0) {
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
-                var timeStr = attempt.time ? new Date(attempt.time).toLocaleString() : 'Unknown time';
+                var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
                 return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
             attemptsList.innerHTML = attemptsHtml;
@@ -3721,12 +3780,13 @@
             lead.fields['Client Notes'] = newNotes;
             document.getElementById('modalNotesInput').value = '';
             openLeadModal(currentLeadId); // Refresh modal
+            updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note saved', 'success');
         } catch (err) {
             showToast('Failed to save note', 'error');
         }
         btn.disabled = false;
-        btn.textContent = '💾 Save Note';
+        btn.textContent = '💾 Save';
     });
 
     // === VOICE INPUT ===
@@ -5044,6 +5104,7 @@
             });
             lead.fields['Client Notes'] = newNotes;
             openLeadModal(currentLeadId);
+            updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note updated', 'success');
         } catch (err) {
             showToast('Failed to update note', 'error');
@@ -5079,6 +5140,7 @@
             });
             lead.fields['Client Notes'] = newNotes;
             openLeadModal(currentLeadId);
+            updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note deleted', 'success');
         } catch (err) {
             showToast('Failed to delete note', 'error');
@@ -5459,7 +5521,7 @@
         var attemptsList = document.getElementById('modalAttemptsList');
         if (attemptsCount > 0) {
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
-                var timeStr = attempt.time ? new Date(attempt.time).toLocaleString() : 'Unknown time';
+                var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
                 return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
             attemptsList.innerHTML = attemptsHtml;
