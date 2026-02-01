@@ -78,6 +78,7 @@
         .priority-card-lg-left{flex:0 0 320px;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
         .priority-card-lg-time-col{flex:0 0 85px;background:rgba(52,211,153,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
         .priority-card-lg-time-col .time-value{font-size:1rem;font-weight:700;color:rgb(52,211,153);white-space:nowrap;min-width:70px;text-align:center}
+        .priority-card-lg-time-col .date-value{font-size:0.75rem;font-weight:500;color:rgb(52,211,153);opacity:0.8;margin-bottom:2px;text-align:center}
         .priority-card-lg-info{flex:1;padding:14px;display:flex;flex-direction:column;justify-content:center}
         .priority-card-lg-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
         .priority-card-lg-name{font-size:1rem;font-weight:600}
@@ -118,6 +119,8 @@
         .action-btn.action-ai:hover{background:rgba(52,211,153,0.2);border-color:rgb(52,211,153)}
         .action-btn.action-dnc:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
         .action-btn.action-reschedule:hover{background:rgba(245,158,11,0.2);border-color:#f59e0b}
+        .action-btn.action-prio:hover{background:rgba(245,158,11,0.2);border-color:#f59e0b}
+        .action-btn.action-unprio:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
         .priorities-cards:not(.list-view){display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
         .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
         .priorities-cards:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
@@ -131,7 +134,7 @@
         .prio-filters{display:flex;gap:0.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
         .prio-filter{padding:0.5rem 1rem;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.7);background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer}
         .prio-filter.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
-        .prio-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem;padding:0}
+        .prio-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
         .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;min-height:280px}
         .prio-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
         .prio-card-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
@@ -552,7 +555,9 @@
         .prospects-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
         .prospects-header-text h2{font-size:1.5rem;font-weight:700;margin-bottom:0.5rem}
         .prospects-header-text p{color:rgba(255,255,255,0.5);font-size:0.9rem}
-        
+        .prospects-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
+        .prospects-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
+
         /* Pipeline Styles */
         .pipeline-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
         .pipeline-header-text h2{font-size:1.5rem;font-weight:700;margin-bottom:0.5rem}
@@ -1090,26 +1095,9 @@
                             </div>
                         </div>
 
-                        <!-- Prospects Table -->
-                        <div class="table-container">
-                            <table class="data-table" id="prospectsTable">
-                                <thead>
-                                    <tr>
-                                        <th class="sortable" data-sort="firstName">Name</th>
-                                        <th>Phone</th>
-                                        <th class="sortable" data-sort="status">Status</th>
-                                        <th class="sortable" data-sort="lastCalled">Last Updated</th>
-                                        <th class="sortable" data-sort="bookedTime">Booked Time</th>
-                                        <th>Summary</th>
-                                        <th>Notes</th>
-                                        <th>Sharing</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="prospectsTableBody">
-                                    <tr><td colspan="9" class="empty-state"><div class="spinner" style="margin:0 auto"></div><p style="margin-top:12px">Loading prospects...</p></td></tr>
-                                </tbody>
-                            </table>
+                        <!-- Prospects Cards -->
+                        <div class="prospects-list" id="prospectsList">
+                            <div class="page-loading"><div class="spinner"></div><p>Loading prospects...</p></div>
                         </div>
                     </div>
 
@@ -3032,7 +3020,7 @@
     // Update Prio Prospects list
     function updatePrioList() {
         var prioList = document.getElementById('prioList');
-        
+
         // Get leads where Is Prio = true, sorted by priority score
         var prioLeads = allLeads.filter(function(l) {
             return l.fields['Is Prio'] === true;
@@ -3050,101 +3038,83 @@
         }).sort(function(a, b) {
             return b._score - a._score;
         });
-        
+
         document.getElementById('prioCount').textContent = prioLeads.length;
-        
+
         if (prioLeads.length === 0) {
             prioList.innerHTML = '<div class="prio-empty">No priority leads yet. Import some leads to get started!</div>';
             return;
         }
-        
-        prioList.innerHTML = prioLeads.map(function(lead, index) {
+
+        prioList.innerHTML = prioLeads.map(function(lead) {
             var f = lead.fields;
-            var firstName = f['First Name'] || '';
-            var lastName = f['Last Name'] || '';
-            var name = (firstName + ' ' + lastName).trim() || 'Unknown';
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
             var phone = f['Phone #'] || f['Phone'] || '-';
+            var formattedPhone = formatPhoneNumber(phone);
             var lastUpdatedTimestamp = f['Updated At'];
             var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
             var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
             var bookedTime = f['Booked Time'] || null;
+            var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notesRaw = f['Client Notes'] || f['Notes'] || '';
             var isShared = f['Shared With'] || f['Shared With Email'];
-            
-            // Parse notes as JSON array or create from string
+
+            // Parse notes
             var notesArray = parseNotesJson(notesRaw);
-            
-            // Format booked time as friendly date
-            var bookedDisplay = '';
+            var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+
+            // Get date and time display
+            var dateDisplay = '';
+            var timeDisplay = '-';
             if (bookedTime) {
-                bookedDisplay = formatFriendlyDateTime(bookedTime);
+                var d = new Date(bookedTime);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            } else if (callbackDate) {
+                var d = new Date(callbackDate);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
             }
-            
-            // Build notes HTML
-            var notesHtml = '';
-            if (notesArray.length > 0) {
-                notesHtml = notesArray.map(function(note) {
-                    return '<div class="prio-note-item">' +
-                        '<div class="prio-note-text">' + escapeHtml(note.text) + '</div>' +
-                        '<div class="prio-note-date">' + formatNoteDate(note.date) + '</div>' +
-                    '</div>';
-                }).join('');
-            } else {
-                notesHtml = '<div style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</div>';
-            }
-            
-            var cardId = 'prio-card-' + index;
-            
-            return '<div class="prio-card" data-id="' + lead.id + '">' +
-                '<div class="prio-card-header">' +
-                    '<div class="prio-card-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
-                    '<div class="prio-card-meta">' +
-                        '<span class="prio-card-phone">📞 ' + escapeHtml(phone) + '</span>' +
-                        '<span class="prio-card-lastcall"><span class="lastcall-dot ' + lastUpdatedColor + '"></span>' + lastUpdated + '</span>' +
+
+            var timeCol = dateDisplay
+                ? '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>'
+                : '<span class="time-value">' + timeDisplay + '</span>';
+
+            var prioIndicator = '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">';
+
+            return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
+                '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="priority-card-lg-time-col">' +
+                        prioIndicator +
+                        timeCol +
                     '</div>' +
-                    (bookedTime ? '<div class="prio-card-booked"><span class="booked-time">📅 ' + bookedDisplay + '</span></div>' : 
-                        '<div class="prio-card-booked"><button class="btn-schedule" onclick="event.stopPropagation()">Schedule</button></div>') +
-                '</div>' +
-                '<div class="prio-card-tabs">' +
-                    '<button class="prio-card-tab active" onclick="event.stopPropagation();switchPrioTab(\'' + cardId + '\',\'summary\')">Summary</button>' +
-                    '<button class="prio-card-tab" onclick="event.stopPropagation();switchPrioTab(\'' + cardId + '\',\'notes\')">Notes</button>' +
-                '</div>' +
-                '<div class="prio-card-content" id="' + cardId + '">' +
-                    '<div class="prio-card-panel active" data-panel="summary">' +
-                        '<div class="prio-card-summary">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
-                    '</div>' +
-                    '<div class="prio-card-panel" data-panel="notes">' +
-                        '<div class="prio-card-notes-list">' + notesHtml + '</div>' +
+                    '<div class="priority-card-lg-info">' +
+                        '<div class="priority-card-lg-top">' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                        '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
-                '<div class="prio-card-footer">' +
-                    '<button class="btn-share" onclick="event.stopPropagation()" title="Share lead">+ Share</button>' +
-                    '<button class="btn-unprio" onclick="event.stopPropagation();unprio(\'' + lead.id + '\')">Unprio</button>' +
+                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Summary</div>' +
+                    '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Notes</div>' +
+                    '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-actions">' +
+                    '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
+                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
+                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
+                    '<button class="action-btn action-unprio" onclick="event.stopPropagation();unprio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Unprio</span></button>' +
                 '</div>' +
             '</div>';
         }).join('');
     }
-    
-    // Switch tabs on Prio Prospect cards
-    function switchPrioTab(cardId, tab) {
-        var card = document.getElementById(cardId);
-        if (!card) return;
-        var tabsContainer = card.previousElementSibling;
-        
-        // Update tab buttons
-        tabsContainer.querySelectorAll('.prio-card-tab').forEach(function(btn) {
-            btn.classList.remove('active');
-        });
-        tabsContainer.querySelector('.prio-card-tab:' + (tab === 'summary' ? 'first-child' : 'last-child')).classList.add('active');
-        
-        // Update panels
-        card.querySelectorAll('.prio-card-panel').forEach(function(panel) {
-            panel.classList.remove('active');
-            if (panel.dataset.panel === tab) panel.classList.add('active');
-        });
-    }
-    
+
     // Get color class based on days since last call
     function getLastCalledColor(timestamp) {
         if (!timestamp) return 'lastcall-red';
@@ -5217,50 +5187,50 @@
 
     // ===== PROSPECTS TAB =====
     var prospectsSort = { field: 'bookedTime', direction: 'desc' };
-    
+
     function updateProspectsTable() {
-        var tbody = document.getElementById('prospectsTableBody');
-        if (!tbody) return;
-        
+        var prospectsList = document.getElementById('prospectsList');
+        if (!prospectsList) return;
+
         // Get Booked/Callback leads (excluding PRIO)
         var searchVal = (document.getElementById('prospectsSearch')?.value || '').toLowerCase();
         var statusFilter = document.getElementById('prospectsStatus')?.value || 'all';
         var ownershipFilter = document.getElementById('prospectsOwnership')?.value || 'all';
         var timeframeFilter = document.getElementById('prospectsTimeframe')?.value || 'all';
-        
+
         var prospects = allLeads.filter(function(l) {
             var f = l.fields;
             var status = f['Status'] || f['Disposition'] || '';
-            
+
             // Only Booked or Callback, and NOT in PRIO
             if (f['Is Prio'] === true) return false;
             if (status !== 'Booked' && status !== 'Appointment Booked' && status !== 'Callback' && status !== 'Callback Requested') return false;
-            
+
             // Status filter
             if (statusFilter !== 'all') {
                 if (statusFilter === 'Booked' && !status.includes('Booked')) return false;
                 if (statusFilter === 'Callback' && !status.includes('Callback')) return false;
             }
-            
+
             // Search filter
             if (searchVal) {
                 var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
                 var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
                 if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
             }
-            
+
             // Ownership filter
             if (ownershipFilter !== 'all') {
                 var isOwned = isLeadOwnedByUser(l);
                 var isSharedByMe = !l.isShared && f['Shared With Email'];
                 var isSharedWithMe = l.isShared === true;
-                
+
                 if (ownershipFilter === 'mine' && !isOwned) return false;
                 if (ownershipFilter === 'shared-by' && !isSharedByMe) return false;
                 if (ownershipFilter === 'not-shared' && (isSharedByMe || isSharedWithMe)) return false;
                 if (ownershipFilter === 'shared-with' && !isSharedWithMe) return false;
             }
-            
+
             // Timeframe filter
             if (timeframeFilter !== 'all') {
                 var lastCall = f['Last Call Timestamp'] || f['Client Last Call Timestamp'];
@@ -5271,15 +5241,15 @@
                 if (timeframeFilter === '30days' && daysDiff > 30) return false;
                 if (timeframeFilter === '90days' && daysDiff > 90) return false;
             }
-            
+
             return true;
         });
-        
+
         // Sort
         prospects.sort(function(a, b) {
             var aVal, bVal;
             var fa = a.fields, fb = b.fields;
-            
+
             switch (prospectsSort.field) {
                 case 'firstName':
                     aVal = (fa['First Name'] || '').toLowerCase();
@@ -5298,49 +5268,86 @@
                     aVal = new Date(fa['Booked Time'] || 0).getTime();
                     bVal = new Date(fb['Booked Time'] || 0).getTime();
             }
-            
+
             if (prospectsSort.direction === 'asc') {
                 return aVal > bVal ? 1 : -1;
             } else {
                 return aVal < bVal ? 1 : -1;
             }
         });
-        
+
         if (prospects.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No prospects found</td></tr>';
+            prospectsList.innerHTML = '<div class="prospects-empty">No prospects found</div>';
             return;
         }
-        
-        tbody.innerHTML = prospects.map(function(lead) {
+
+        prospectsList.innerHTML = prospects.map(function(lead) {
             var f = lead.fields;
             var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
-            var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
-            var status = f['Status'] || f['Disposition'] || '-';
-            var statusClass = getStatusClass(status);
-            var lastCalled = formatDateTime(getMostRecentLastCalled(f));
-            var bookedTime = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
-            var summaryRaw = f['Last Call Summary'] || '';
-            var summary = Array.isArray(summaryRaw) ? summaryRaw.join(' ') : String(summaryRaw || '');
-            var notesRaw = f['Client Notes'] || '';
-            var notes = parseNotesJson(notesRaw);
-            var lastNoteRaw = notes.length > 0 ? notes[notes.length - 1].text : '';
-            var lastNote = String(lastNoteRaw || '');
+            var phone = f['Phone #'] || f['Phone'] || '-';
+            var formattedPhone = formatPhoneNumber(phone);
+            var lastUpdatedTimestamp = f['Updated At'];
+            var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
+            var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
+            var bookedTime = f['Booked Time'] || null;
+            var callbackDate = f['Callback Date'] || f['Follow Up Date'];
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var notesRaw = f['Client Notes'] || f['Notes'] || '';
             var isShared = f['Shared With'] || f['Shared With Email'];
-            
-            return '<tr onclick="openLeadModal(\'' + lead.id + '\')" style="cursor:pointer">' +
-                '<td><strong>' + escapeHtml(name) + '</strong></td>' +
-                '<td style="font-family:monospace">' + escapeHtml(phone) + '</td>' +
-                '<td><span class="status-badge ' + statusClass + '">' + escapeHtml(status) + '</span></td>' +
-                '<td>' + lastCalled + '</td>' +
-                '<td>' + bookedTime + '</td>' +
-                '<td class="summary-cell" title="' + escapeHtml(summary) + '">' + escapeHtml(summary.substring(0, 60)) + (summary.length > 60 ? '...' : '') + '</td>' +
-                '<td class="notes-cell" title="' + escapeHtml(lastNote) + '">' + escapeHtml(lastNote.substring(0, 40)) + (lastNote.length > 40 ? '...' : '') + '</td>' +
-                '<td><span class="sharing-indicator ' + (isShared ? 'shared' : 'not-shared') + '">' + (isShared ? '🔗' : '-') + '</span></td>' +
-                '<td class="table-actions">' +
-                    '<button class="table-action-btn view" onclick="event.stopPropagation();openLeadModal(\'' + lead.id + '\')">View</button>' +
-                    '<button class="table-action-btn prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')">⭐</button>' +
-                '</td>' +
-            '</tr>';
+            var isPrio = f['Is Prio'] === true;
+
+            // Parse notes
+            var notesArray = parseNotesJson(notesRaw);
+            var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+
+            // Get date and time display
+            var dateDisplay = '';
+            var timeDisplay = '-';
+            if (bookedTime) {
+                var d = new Date(bookedTime);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            } else if (callbackDate) {
+                var d = new Date(callbackDate);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            }
+
+            var timeCol = dateDisplay
+                ? '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>'
+                : '<span class="time-value">' + timeDisplay + '</span>';
+
+            var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
+
+            return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
+                '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="priority-card-lg-time-col">' +
+                        prioIndicator +
+                        timeCol +
+                    '</div>' +
+                    '<div class="priority-card-lg-info">' +
+                        '<div class="priority-card-lg-top">' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                        '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Summary</div>' +
+                    '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Notes</div>' +
+                    '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-actions">' +
+                    '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
+                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
+                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
+                    '<button class="action-btn action-prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Prio</span></button>' +
+                '</div>' +
+            '</div>';
         }).join('');
     }
     
