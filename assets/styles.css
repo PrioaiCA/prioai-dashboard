@@ -1210,22 +1210,27 @@ tr:hover td {
 /* Toast */
 .toast-container {
     position: fixed;
-    bottom: var(--space-6);
-    right: var(--space-6);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 9999;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--space-3);
+    pointer-events: none;
 }
 
 .toast {
     background: var(--bg-elevated);
     border: 1px solid var(--border-primary);
     border-radius: var(--radius-md);
-    padding: var(--space-3) var(--space-5);
-    font-size: var(--text-sm);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    animation: slideIn 0.2s ease;
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--text-base);
+    font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    animation: toastFadeInOut 4s ease forwards;
+    pointer-events: auto;
 }
 
 .toast.success {
@@ -1241,6 +1246,25 @@ tr:hover td {
 .toast.warning {
     border-color: #f59e0b;
     color: #f59e0b;
+}
+
+@keyframes toastFadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    10% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    80% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
 }
 
 @keyframes slideIn {

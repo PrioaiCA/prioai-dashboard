@@ -3228,12 +3228,22 @@
         var notesArray = parseNotesJson(notesRaw);
         var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
 
+        // Get updated timestamp info
+        var lastUpdatedTimestamp = f['Updated At'];
+        var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
+        var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
+
         // Update priority card (large)
         var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadId + '"]');
         if (priorityCard) {
             var notesCol = priorityCard.querySelector('.priority-card-lg-notes-col .col-content');
             if (notesCol) {
                 notesCol.textContent = lastNoteText;
+            }
+            // Update the "Updated X ago" display
+            var lastCallEl = priorityCard.querySelector('.priority-card-lg-lastcall');
+            if (lastCallEl) {
+                lastCallEl.innerHTML = 'Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span>';
             }
         }
 
@@ -3251,6 +3261,11 @@
                 notesList.innerHTML = notesHtml;
             } else if (notesList) {
                 notesList.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</div>';
+            }
+            // Update the "Updated X ago" display
+            var lastCallEl = prioCard.querySelector('.prio-card-lastcall');
+            if (lastCallEl) {
+                lastCallEl.innerHTML = '<span class="lastcall-dot ' + lastUpdatedColor + '"></span>' + lastUpdated;
             }
         }
     }
