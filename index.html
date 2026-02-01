@@ -3743,15 +3743,33 @@
         leadModal.classList.add('active');
     }
     
-    // Close modal
-    document.getElementById('leadModalClose').addEventListener('click', function() {
+    // Check for unsaved notes before closing
+    function hasUnsavedNotes() {
+        var notesInput = document.getElementById('modalNotesInput');
+        return notesInput && notesInput.value.trim().length > 0;
+    }
+
+    async function closeLeadModalWithCheck() {
+        if (hasUnsavedNotes()) {
+            var confirmed = await showConfirmModal(
+                'Unsaved Changes',
+                'You have unsaved notes. Are you sure you want to discard them?',
+                '📝',
+                true
+            );
+            if (!confirmed) return;
+        }
         leadModal.classList.remove('active');
         currentLeadId = null;
+    }
+
+    // Close modal
+    document.getElementById('leadModalClose').addEventListener('click', function() {
+        closeLeadModalWithCheck();
     });
     leadModal.addEventListener('click', function(e) {
         if (e.target === leadModal) {
-            leadModal.classList.remove('active');
-            currentLeadId = null;
+            closeLeadModalWithCheck();
         }
     });
     
@@ -3778,6 +3796,7 @@
             });
 
             lead.fields['Client Notes'] = newNotes;
+            lead.fields['Updated At'] = new Date().toISOString(); // Update timestamp live
             document.getElementById('modalNotesInput').value = '';
             openLeadModal(currentLeadId); // Refresh modal
             updateLeadCardDisplay(currentLeadId); // Update card live
@@ -3967,7 +3986,9 @@
             });
 
             lead.fields['Client Attempts'] = JSON.stringify(attemptsArray);
+            lead.fields['Updated At'] = new Date().toISOString(); // Update timestamp live
             openLeadModal(currentLeadId);
+            updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Call attempt logged', 'success');
         } catch (err) {
             console.error('Log attempt error:', err);
@@ -4708,10 +4729,10 @@
         var leadName = ((leadData['First Name'] || '') + ' ' + (leadData['Last Name'] || '')).trim() || 'Lead';
         document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + leadName;
 
-        var today = new Date();
-        today.setHours(0, 0, 0, 0);
-        selectedDate = today;
-        calendarMonth = new Date();
+        // Create selectedDate consistently (same method as calendar click handler)
+        var now = new Date();
+        selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        calendarMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
         renderCalendar();
         updateTimeDropdowns();
@@ -4894,8 +4915,9 @@
             var leadName = ((scheduleLeadData['First Name'] || '') + ' ' + (scheduleLeadData['Last Name'] || '')).trim() || 'Lead';
             var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
             var email = scheduleLeadData['Email'] || '';
+            var calendarSyncSuccess = false;
             try {
-                await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
+                var calResponse = await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -4908,14 +4930,22 @@
                         agentName: currentUser?.name || ''
                     })
                 });
+                calendarSyncSuccess = calResponse.ok;
+                if (!calResponse.ok) {
+                    console.error('Calendar sync failed:', calResponse.status, calResponse.statusText);
+                }
             } catch (calErr) {
                 console.error('Calendar sync error:', calErr);
             }
-            
+
             document.getElementById('scheduleModal').classList.remove('active');
             if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
             updatePrioList();
-            showToast('Meeting scheduled!', 'success');
+            if (calendarSyncSuccess) {
+                showToast('Meeting scheduled and synced to calendar!', 'success');
+            } else {
+                showToast('Meeting scheduled! (Calendar sync failed - please add manually)', 'warning');
+            }
         } catch (err) {
             showToast('Failed to schedule meeting', 'error');
         }
@@ -4969,22 +4999,33 @@
         // Pre-fill with existing booked time
         var existingTime = f['Booked Time'] ? new Date(f['Booked Time']) : new Date();
         calendarMonth = new Date(existingTime.getFullYear(), existingTime.getMonth(), 1);
-        selectedDate = new Date(existingTime);
-        selectedDate.setHours(0, 0, 0, 0);
-
-        // Set hour and minute dropdowns
-        var hour = existingTime.getHours();
-        var minute = existingTime.getMinutes();
-        document.getElementById('scheduleHour').value = hour;
-        var minuteSelect = document.getElementById('scheduleMinute');
-        // Find closest minute option
-        var minuteOptions = [0, 15, 30, 45];
-        var closestMinute = minuteOptions.reduce(function(prev, curr) {
-            return Math.abs(curr - minute) < Math.abs(prev - minute) ? curr : prev;
-        });
-        minuteSelect.value = closestMinute;
+        selectedDate = new Date(existingTime.getFullYear(), existingTime.getMonth(), existingTime.getDate());
 
         renderCalendar();
+        updateTimeDropdowns(); // Populate dropdowns with proper disabled states
+
+        // Set hour and minute to existing booking values (if not past)
+        var hour = existingTime.getHours();
+        var minute = existingTime.getMinutes();
+        var hourSelect = document.getElementById('scheduleHour');
+        var minuteSelect = document.getElementById('scheduleMinute');
+
+        // Only set if the option exists and is not disabled
+        var hourOption = hourSelect.querySelector('option[value="' + hour + '"]');
+        if (hourOption && !hourOption.disabled) {
+            hourSelect.value = hour;
+            updateMinuteDropdown(); // Update minutes for selected hour
+            // Find closest minute option
+            var minuteOptions = [0, 15, 30, 45];
+            var closestMinute = minuteOptions.reduce(function(prev, curr) {
+                return Math.abs(curr - minute) < Math.abs(prev - minute) ? curr : prev;
+            });
+            var minOption = minuteSelect.querySelector('option[value="' + closestMinute + '"]');
+            if (minOption && !minOption.disabled) {
+                minuteSelect.value = closestMinute;
+            }
+        }
+
         document.getElementById('scheduleModal').classList.add('active');
     }
     window.editBookingFromModal = editBookingFromModal;

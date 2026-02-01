@@ -1238,6 +1238,11 @@ tr:hover td {
     color: #ef4444;
 }
 
+.toast.warning {
+    border-color: #f59e0b;
+    color: #f59e0b;
+}
+
 @keyframes slideIn {
     from {
         opacity: 0;
