@@ -113,6 +113,8 @@
         .action-btn .action-label{font-size:0.6875rem;font-weight:500;white-space:nowrap}
         .action-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.3);color:#fff}
         .action-btn.action-share:hover{background:rgba(59,130,246,0.2);border-color:#3B82F6}
+        .action-btn.action-share.shared{background:rgba(52,211,153,0.15);border-color:rgba(52,211,153,0.3);color:rgb(52,211,153)}
+        .action-btn.action-share.shared:hover{background:rgba(52,211,153,0.25);border-color:rgb(52,211,153)}
         .action-btn.action-ai:hover{background:rgba(52,211,153,0.2);border-color:rgb(52,211,153)}
         .action-btn.action-dnc:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
         .action-btn.action-reschedule:hover{background:rgba(245,158,11,0.2);border-color:#f59e0b}
@@ -689,23 +691,29 @@
         .sidebar-collapse-btn{display:none;width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);cursor:pointer;align-items:center;justify-content:center;transition:all 0.2s;font-size:1rem;flex-shrink:0}
         .sidebar-collapse-btn:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)}
         @media(min-width:1024px){.sidebar-collapse-btn{display:flex}}
-        .sidebar.collapsed{width:70px}
+        .sidebar.collapsed{width:72px;min-width:72px}
         .sidebar.collapsed .sidebar-logo{display:none}
-        .sidebar.collapsed .sidebar-logo-mini{display:block !important;width:32px;height:32px;border-radius:8px}
+        .sidebar.collapsed .sidebar-logo-mini{display:block !important;width:40px;height:40px;border-radius:8px;margin:0 auto}
         .sidebar.collapsed .nav-item span:not(.nav-item-icon){display:none}
         .sidebar.collapsed .nav-section-title{display:none}
-        .sidebar.collapsed .nav-item{justify-content:center;padding:12px}
-        .sidebar.collapsed .nav-item-icon{width:24px;height:24px;font-size:18px}
+        .sidebar.collapsed .nav-item{justify-content:center;padding:14px 12px}
+        .sidebar.collapsed .nav-item-icon{width:28px;height:28px;font-size:20px;display:flex;align-items:center;justify-content:center}
         .sidebar.collapsed .user-info{display:none}
-        .sidebar.collapsed .user-avatar{width:36px;height:36px;font-size:14px}
-        .sidebar.collapsed .user-card{justify-content:center}
+        .sidebar.collapsed .user-avatar{width:40px;height:40px;font-size:16px}
+        .sidebar.collapsed .user-card{justify-content:center;padding:8px}
         .sidebar.collapsed .notification-btn{display:none}
-        .sidebar.collapsed .profile-menu{left:70px;bottom:60px;width:180px}
-        .sidebar.collapsed .notifications-popup{left:70px}
-        .sidebar.collapsed .sidebar-header{justify-content:center;padding:12px}
-        .sidebar.collapsed .sidebar-collapse-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%)}
-        .app-container.sidebar-collapsed .main-content{margin-left:70px}
+        .sidebar.collapsed .profile-menu{left:72px;bottom:60px;width:180px}
+        .sidebar.collapsed .notifications-popup{left:72px}
+        .sidebar.collapsed .sidebar-header{justify-content:center;padding:16px 12px;position:relative}
+        .sidebar.collapsed .sidebar-collapse-btn{position:absolute;right:-14px;top:50%;transform:translateY(-50%);z-index:10;width:28px;height:28px;border-radius:50%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15)}
+        .sidebar.collapsed .sidebar-footer-row{justify-content:center}
+        .app-container.sidebar-collapsed .main-content{margin-left:72px}
         @media(max-width:1023px){.app-container.sidebar-collapsed .main-content{margin-left:0}}
+
+        /* Sidebar Resize Handle */
+        .sidebar-resize-handle{position:absolute;top:0;right:-4px;width:8px;height:100%;cursor:ew-resize;z-index:100;background:transparent}
+        .sidebar-resize-handle:hover,.sidebar-resize-handle.active{background:rgba(52,211,153,0.3)}
+        .sidebar.collapsed .sidebar-resize-handle{display:none}
     </style>
 </head>
 <body>
@@ -725,6 +733,7 @@
 
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
+            <div class="sidebar-resize-handle" id="sidebarResizeHandle"></div>
             <div class="sidebar-header">
                 <img src="/assets/logo_white.png" alt="Prio AI" class="sidebar-logo logo-dark">
                 <img src="/assets/logo_black.png" alt="Prio AI" class="sidebar-logo logo-light" style="display:none;">
@@ -1855,6 +1864,10 @@
                             <button class="btn-schedule" id="modalScheduleBtn" style="display:none;">📅 Schedule</button>
                         </div>
                     </div>
+                    <div class="lead-info-item" id="modalSharedInfo" style="display:none;">
+                        <label id="modalSharedLabel">🔗 Shared With</label>
+                        <div class="value" id="modalSharedValue">-</div>
+                    </div>
                 </div>
 
                 <div class="lead-section">
@@ -1933,6 +1946,9 @@
             <button class="share-popup-close" id="shareInfoClose">&times;</button>
         </div>
         <div class="share-info-content" id="shareInfoContent"></div>
+        <div class="share-popup-actions" id="shareInfoActions" style="display:none;">
+            <button class="btn-share-cancel" id="stopSharingBtn" style="background:rgba(239,68,68,0.15);color:#ef4444;border-color:rgba(239,68,68,0.3);">Stop Sharing</button>
+        </div>
     </div>
 
     <!-- Send to AI Modal -->
@@ -2233,11 +2249,21 @@
         if (sidebarCollapsed) {
             sidebar.classList.add('collapsed');
             appContainer.classList.add('sidebar-collapsed');
+            sidebar.style.width = '';
+            document.querySelector('.main-content').style.marginLeft = '';
             collapseBtn.innerHTML = '▶';
             collapseBtn.title = 'Expand sidebar';
         } else {
             sidebar.classList.remove('collapsed');
             appContainer.classList.remove('sidebar-collapsed');
+            var savedWidth = localStorage.getItem('sidebarWidth');
+            if (savedWidth) {
+                sidebar.style.width = savedWidth + 'px';
+                document.querySelector('.main-content').style.marginLeft = savedWidth + 'px';
+            } else {
+                sidebar.style.width = '';
+                document.querySelector('.main-content').style.marginLeft = '';
+            }
             collapseBtn.innerHTML = '◀';
             collapseBtn.title = 'Collapse sidebar';
         }
@@ -2250,6 +2276,44 @@
         sidebarCollapsed = !sidebarCollapsed;
         localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
         updateSidebarState();
+    });
+
+    // Sidebar Resize Functionality
+    var resizeHandle = document.getElementById('sidebarResizeHandle');
+    var isResizing = false;
+    var savedSidebarWidth = localStorage.getItem('sidebarWidth');
+    if (savedSidebarWidth && !sidebarCollapsed) {
+        sidebar.style.width = savedSidebarWidth + 'px';
+        document.querySelector('.main-content').style.marginLeft = savedSidebarWidth + 'px';
+    }
+
+    resizeHandle.addEventListener('mousedown', function(e) {
+        if (sidebarCollapsed) return;
+        isResizing = true;
+        resizeHandle.classList.add('active');
+        document.body.style.cursor = 'ew-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!isResizing) return;
+        var newWidth = Math.min(Math.max(e.clientX, 180), 400);
+        sidebar.style.width = newWidth + 'px';
+        document.querySelector('.main-content').style.marginLeft = newWidth + 'px';
+    });
+
+    document.addEventListener('mouseup', function() {
+        if (isResizing) {
+            isResizing = false;
+            resizeHandle.classList.remove('active');
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+            var currentWidth = parseInt(sidebar.style.width);
+            if (currentWidth) {
+                localStorage.setItem('sidebarWidth', currentWidth);
+            }
+        }
     });
 
     // Navigation
@@ -2841,6 +2905,7 @@
             var lastCalled = lastCalledTimestamp ? formatTimeAgo(lastCalledTimestamp) : '-';
             var lastCalledColor = getLastCalledColor(lastCalledTimestamp);
             var isPrio = f['Is Prio'] === true;
+            var isShared = lead.isShared || f['Shared With'] || f['Shared With Email'];
 
             // Parse notes
             var notesArray = parseNotesJson(notesRaw);
@@ -2894,7 +2959,7 @@
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
                 '<div class="priority-card-lg-actions">' +
-                    '<button class="action-btn action-share" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">🔗</span><span class="action-label">Share</span></button>' +
+                    '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
                     '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
                     '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Reschedule</span></button>' +
@@ -3514,17 +3579,34 @@
         
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || f['Summary'] || 'No summary available';
         
-        // Share button state
+        // Share button state and shared info display
         var shareBtn = document.getElementById('modalShareBtn');
         var sharedWithEmail = f['Shared With Email'];
         if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
         var isSharedToUser = lead.isShared;
+        var sharedInfoDiv = document.getElementById('modalSharedInfo');
+        var sharedLabel = document.getElementById('modalSharedLabel');
+        var sharedValue = document.getElementById('modalSharedValue');
+
         if (sharedWithEmail || isSharedToUser) {
             shareBtn.classList.add('shared');
             shareBtn.innerHTML = '🔗 ' + (isSharedToUser ? 'Shared with you' : 'Shared');
+
+            // Show shared info in modal
+            sharedInfoDiv.style.display = 'block';
+            if (isSharedToUser) {
+                sharedLabel.textContent = '🔗 Shared By';
+                var ownerEmail = f['Client Email'];
+                if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
+                sharedValue.textContent = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
+            } else {
+                sharedLabel.textContent = '🔗 Shared With';
+                sharedValue.textContent = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
+            }
         } else {
             shareBtn.classList.remove('shared');
             shareBtn.innerHTML = '🔗 Share';
+            sharedInfoDiv.style.display = 'none';
         }
         
         // Notes with edit/delete
@@ -4027,41 +4109,73 @@
                 ? document.getElementById('sendAIOtherReason').value.trim()
                 : sendAISelectedReason;
 
-            // Format callback date as friendly date
+            // Format callback date as friendly date with year
             var callbackDateObj = new Date(callbackDate + 'T12:00:00');
-            var friendlyDate = callbackDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-            // Add ordinal suffix
+            var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             var day = callbackDateObj.getDate();
             var suffix = ['th', 'st', 'nd', 'rd'][(day % 100 > 10 && day % 100 < 14) ? 0 : (day % 10 < 4 ? day % 10 : 0)];
-            friendlyDate = friendlyDate.replace(/(\d+),/, day + suffix + ',');
+            var friendlyDate = months[callbackDateObj.getMonth()] + ' ' + day + suffix + ', ' + callbackDateObj.getFullYear();
 
-            // Build note - no timestamp prefix, just clean text
-            var noteText = 'Sent back to AI - Reason: ' + reasonText + '\nCallback Scheduled For: ' + friendlyDate + ' in the ' + sendAISelectedTime;
+            // Build note with new format: "Sent back to AI - Reason: [reason] | Callback Scheduled: [date] in the [time]"
+            var noteText = 'Sent back to AI - Reason: ' + reasonText + ' | Callback Scheduled: ' + friendlyDate + ' in the ' + sendAISelectedTime;
+
+            // Calculate Next Call Date based on time of day
+            var timeHour = 9; // Default Morning
+            if (sendAISelectedTime === 'Afternoon') timeHour = 13;
+            else if (sendAISelectedTime === 'Evening') timeHour = 17;
+
+            var nextCallDate = new Date(callbackDate + 'T00:00:00');
+            nextCallDate.setHours(timeHour, 0, 0, 0);
+            var nextCallDateISO = nextCallDate.toISOString();
 
             // Get existing notes
             var lead = allLeads.find(function(l) { return l.id === sendAILeadId; });
             var existingNotes = lead?.fields['Client Notes'] || '';
             var newNotes = existingNotes ? existingNotes + '\n---\n' + noteText : noteText;
 
-            // Update lead with just Client Notes (avoid Status fields that may cause 422)
+            // Update lead with Client Notes, Lead Status = Follow Up, and Next Call Date
             try {
                 await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
                     method: 'PATCH',
-                    body: { fields: { 'Client Notes': newNotes } }
+                    body: {
+                        fields: {
+                            'Client Notes': newNotes,
+                            'Lead Status': 'Follow Up',
+                            'Next Call Date': nextCallDateISO
+                        }
+                    }
                 });
-            } catch (notesErr) {
-                console.error('Failed to update notes:', notesErr);
+            } catch (updateErr) {
+                console.error('Failed to update lead:', updateErr);
+                // Fallback: try without Lead Status if it fails
+                try {
+                    await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
+                        method: 'PATCH',
+                        body: {
+                            fields: {
+                                'Client Notes': newNotes,
+                                'Next Call Date': nextCallDateISO
+                            }
+                        }
+                    });
+                } catch (fallbackErr) {
+                    console.error('Fallback also failed:', fallbackErr);
+                }
             }
 
-            if (lead) {
-                lead.fields['Client Notes'] = newNotes;
-            }
+            // Remove lead from local data (it's now in Follow Up status)
+            allLeads = allLeads.filter(function(l) { return l.id !== sendAILeadId; });
 
             document.getElementById('sendAIModal').classList.remove('active');
             document.getElementById('leadModal').classList.remove('active');
-            showToast('Lead scheduled for AI follow-up', 'success');
+            showToast('Lead sent back to AI for follow-up', 'success');
+
+            // Refresh dashboard views
             updateDashboard();
             updatePrioList();
+            if (currentPage === 'prio') renderPrioPage();
+            else if (currentPage === 'overview') renderOverviewPage();
+            else if (currentPage === 'prospects') renderProspectsPage();
         } catch (err) {
             showToast('Failed: ' + err.message, 'error');
         }
@@ -4327,20 +4441,27 @@
         var overlay = document.getElementById('sharePopupOverlay');
         var content = document.getElementById('shareInfoContent');
         var title = document.getElementById('shareInfoTitle');
-        
+        var actionsDiv = document.getElementById('shareInfoActions');
+
         var sharedWithEmail = lead.fields['Shared With Email'];
         if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
-        
+
+        currentShareLeadId = lead.id;
+
         if (lead.isShared) {
+            // Lead was shared WITH the current user
             title.textContent = 'Shared With You';
             var ownerEmail = lead.fields['Client Email'];
             if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
             content.innerHTML = '<div class="share-info-label">Shared By</div><div class="share-info-name">' + getAgentNameByEmail(ownerEmail) + '</div>';
+            actionsDiv.style.display = 'none'; // Can't stop sharing if it was shared with you
         } else {
+            // Current user shared this lead
             title.textContent = 'You Shared This';
             content.innerHTML = '<div class="share-info-label">Shared With</div><div class="share-info-name">' + getAgentNameByEmail(sharedWithEmail) + '</div>';
+            actionsDiv.style.display = 'flex'; // Show Stop Sharing button
         }
-        
+
         overlay.classList.add('active');
         popup.classList.add('active');
     }
@@ -4356,7 +4477,67 @@
     document.getElementById('sharePopupCancel').addEventListener('click', closeSharePopup);
     document.getElementById('shareInfoClose').addEventListener('click', closeSharePopup);
     document.getElementById('sharePopupOverlay').addEventListener('click', closeSharePopup);
-    
+
+    // Stop Sharing handler
+    document.getElementById('stopSharingBtn').addEventListener('click', async function() {
+        if (!currentShareLeadId) return;
+
+        var btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Stopping...';
+
+        try {
+            // Clear the Shared With field
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentShareLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Shared With': null } }
+            });
+
+            // Update local data
+            var lead = allLeads.find(function(l) { return l.id === currentShareLeadId; });
+            if (lead) {
+                lead.fields['Shared With Email'] = null;
+                lead.fields['Shared With'] = null;
+            }
+
+            showToast('Sharing stopped', 'success');
+            closeSharePopup();
+
+            // Update the modal share button
+            var shareBtn = document.getElementById('modalShareBtn');
+            if (shareBtn) {
+                shareBtn.classList.remove('shared');
+                shareBtn.innerHTML = '🔗 Share';
+            }
+
+            // Update card display - remove share icon
+            var cardEl = document.querySelector('.prio-card[data-id="' + currentShareLeadId + '"]');
+            if (cardEl) {
+                var sharedIcon = cardEl.querySelector('.shared-icon');
+                if (sharedIcon) sharedIcon.remove();
+                var shareActionBtn = cardEl.querySelector('.action-share');
+                if (shareActionBtn) {
+                    shareActionBtn.innerHTML = '<span class="action-icon">🔗</span><span class="action-label">Share</span>';
+                }
+            }
+
+            // Update priority card
+            var priorityCard = document.querySelector('.priority-card-lg[data-id="' + currentShareLeadId + '"]');
+            if (priorityCard) {
+                var prioSharedIcon = priorityCard.querySelector('.shared-icon');
+                if (prioSharedIcon) prioSharedIcon.remove();
+            }
+
+            // Re-render current page
+            if (currentPage === 'prio') renderPrioPage();
+            else if (currentPage === 'prospects') renderProspectsPage();
+        } catch (err) {
+            showToast('Failed to stop sharing', 'error');
+        }
+        btn.disabled = false;
+        btn.textContent = 'Stop Sharing';
+    });
+
     document.getElementById('sharePopupConfirm').addEventListener('click', async function() {
         if (!currentShareLeadId) return;
         var selectedAgent = document.querySelector('input[name="shareAgent"]:checked');
@@ -4454,41 +4635,37 @@
         var now = new Date();
         var isToday = selectedDate && selectedDate.toDateString() === now.toDateString();
 
-        // Calculate earliest available time
-        var startHour = 9; // Default start at 9 AM
-        var startMinute = 0;
+        // Calculate earliest available time (current time + 15 min rounded to nearest 15)
+        var earliestHour = 9;
+        var earliestMinute = 0;
 
         if (isToday) {
-            // Get current time + 15 minutes, rounded up to nearest 15 min
             var currentMinutes = now.getHours() * 60 + now.getMinutes() + 15;
             currentMinutes = Math.ceil(currentMinutes / 15) * 15;
-            startHour = Math.floor(currentMinutes / 60);
-            startMinute = currentMinutes % 60;
-
-            // Ensure we don't go past 8 PM (20:00)
-            if (startHour >= 20) {
-                startHour = 20;
-                startMinute = 0;
+            earliestHour = Math.floor(currentMinutes / 60);
+            earliestMinute = currentMinutes % 60;
+            if (earliestMinute >= 60) {
+                earliestHour++;
+                earliestMinute = 0;
             }
         }
 
-        // Populate hour dropdown (9 AM to 8 PM)
+        // Populate hour dropdown (9 AM to 8 PM) - grey out past hours
         var hourOptions = '';
-        for (var h = Math.max(9, startHour); h <= 20; h++) {
-            var displayHour = h > 12 ? h - 12 : h;
+        var firstAvailableHour = null;
+        for (var h = 9; h <= 20; h++) {
+            var displayHour = h > 12 ? h - 12 : (h === 0 ? 12 : h);
             var ampm = h >= 12 ? 'PM' : 'AM';
-            hourOptions += '<option value="' + h + '">' + displayHour + ' ' + ampm + '</option>';
+            var isPast = isToday && h < earliestHour;
+            if (!isPast && firstAvailableHour === null) firstAvailableHour = h;
+            hourOptions += '<option value="' + h + '"' + (isPast ? ' disabled style="color:#666"' : '') + '>' + displayHour + ' ' + ampm + '</option>';
         }
         hourSelect.innerHTML = hourOptions;
 
-        // Set default selected hour
-        if (isToday && startHour >= 9) {
-            hourSelect.value = startHour;
-        } else {
-            hourSelect.value = Math.max(9, parseInt(hourSelect.options[0]?.value || 9));
-        }
+        // Select first available hour
+        hourSelect.value = firstAvailableHour || 9;
 
-        // Update minute dropdown based on selected hour
+        // Update minute dropdown
         updateMinuteDropdown();
     }
 
@@ -4499,23 +4676,32 @@
         var now = new Date();
         var isToday = selectedDate && selectedDate.toDateString() === now.toDateString();
 
-        var startMinute = 0;
-        if (isToday && selectedHour === now.getHours()) {
-            // If selected hour is current hour, start at next 15-min slot
-            var currentMinutes = now.getMinutes() + 15;
-            startMinute = Math.ceil(currentMinutes / 15) * 15;
-            if (startMinute >= 60) startMinute = 0;
+        // Calculate earliest available minute for this hour
+        var earliestMinute = 0;
+        if (isToday) {
+            if (selectedHour === now.getHours()) {
+                var currentMinutes = now.getMinutes() + 15;
+                earliestMinute = Math.ceil(currentMinutes / 15) * 15;
+                if (earliestMinute >= 60) earliestMinute = 60; // All minutes in this hour are past
+            } else if (selectedHour < now.getHours()) {
+                earliestMinute = 60; // All minutes are past
+            }
         }
 
+        // Populate minute dropdown - grey out past minutes
         var minuteOptions = '';
         var minutes = [0, 15, 30, 45];
+        var firstAvailableMinute = null;
         minutes.forEach(function(m) {
-            if (!isToday || selectedHour > now.getHours() || m >= startMinute) {
-                minuteOptions += '<option value="' + m + '">' + (m < 10 ? '0' : '') + m + '</option>';
-            }
+            var isPast = isToday && m < earliestMinute;
+            if (!isPast && firstAvailableMinute === null) firstAvailableMinute = m;
+            minuteOptions += '<option value="' + m + '"' + (isPast ? ' disabled style="color:#666"' : '') + '>' + (m < 10 ? '0' : '') + m + '</option>';
         });
 
-        minuteSelect.innerHTML = minuteOptions || '<option value="0">00</option>';
+        minuteSelect.innerHTML = minuteOptions;
+        if (firstAvailableMinute !== null) {
+            minuteSelect.value = firstAvailableMinute;
+        }
     }
 
     // Update minutes when hour changes
@@ -5212,6 +5398,40 @@
             prioBtn.classList.remove('active');
             prioBtn.textContent = '☆ PRIO';
             if (prioIcon) prioIcon.style.display = 'none';
+        }
+
+        // Share button state and shared info display
+        var shareBtn = document.getElementById('modalShareBtn');
+        var sharedWithEmail = f['Shared With Email'];
+        if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
+        var isSharedToUser = lead.isShared;
+        var sharedInfoDiv = document.getElementById('modalSharedInfo');
+        var sharedLabel = document.getElementById('modalSharedLabel');
+        var sharedValue = document.getElementById('modalSharedValue');
+
+        if (sharedWithEmail || isSharedToUser) {
+            if (shareBtn) {
+                shareBtn.classList.add('shared');
+                shareBtn.innerHTML = '🔗 ' + (isSharedToUser ? 'Shared with you' : 'Shared');
+            }
+            if (sharedInfoDiv) {
+                sharedInfoDiv.style.display = 'block';
+                if (isSharedToUser) {
+                    sharedLabel.textContent = '🔗 Shared By';
+                    var ownerEmail = f['Client Email'];
+                    if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
+                    sharedValue.textContent = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
+                } else {
+                    sharedLabel.textContent = '🔗 Shared With';
+                    sharedValue.textContent = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
+                }
+            }
+        } else {
+            if (shareBtn) {
+                shareBtn.classList.remove('shared');
+                shareBtn.innerHTML = '🔗 Share';
+            }
+            if (sharedInfoDiv) sharedInfoDiv.style.display = 'none';
         }
 
         // Show modal
