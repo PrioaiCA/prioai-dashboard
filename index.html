@@ -265,8 +265,13 @@
         .lead-note-item:last-child{margin-bottom:0}
         .lead-note-item .note-content{margin-bottom:4px}
         .lead-note-item .note-date{font-size:0.75rem;color:rgba(255,255,255,0.4)}
-        .lead-note-item .note-actions{position:absolute;top:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity 0.15s}
+        .lead-note-item .note-actions{position:absolute;bottom:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity 0.15s}
         .lead-note-item:hover .note-actions{opacity:1}
+        .lead-note-item .note-edit-input{width:100%;min-height:60px;padding:8px;background:#0a0a0a;border:1px solid rgba(52,211,153,0.5);border-radius:6px;color:#fff;font-size:0.8125rem;resize:vertical;margin-bottom:8px}
+        .lead-note-item .note-edit-actions{display:flex;gap:8px;justify-content:flex-end}
+        .lead-note-item .note-edit-actions button{padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer}
+        .lead-note-item .btn-note-save{background:rgb(52,211,153);border:none;color:#000}
+        .lead-note-item .btn-note-cancel{background:#333;border:1px solid rgba(255,255,255,0.2);color:#fff}
         .lead-note-date{font-size:0.6875rem;color:rgba(255,255,255,0.4);margin-top:4px}
         #modalNotesInput{width:100%;min-height:80px;padding:12px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.875rem;resize:vertical;margin-bottom:8px}
         .lead-notes-actions{display:flex;justify-content:flex-end}
@@ -3761,11 +3766,29 @@
         };
     }
 
-    function startVoiceRecording() {
+    async function startVoiceRecording() {
         if (!voiceRecognition) {
             showToast('Voice input not supported in this browser', 'error');
             return;
         }
+
+        // First request microphone permission explicitly
+        try {
+            var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            // Permission granted - stop the stream immediately, we just needed the permission
+            stream.getTracks().forEach(function(track) { track.stop(); });
+        } catch (permErr) {
+            console.error('Microphone permission error:', permErr);
+            if (permErr.name === 'NotAllowedError' || permErr.name === 'PermissionDeniedError') {
+                showToast('Microphone access denied. Please allow microphone in browser settings.', 'error');
+            } else if (permErr.name === 'NotFoundError') {
+                showToast('No microphone found. Please connect a microphone.', 'error');
+            } else {
+                showToast('Failed to access microphone: ' + permErr.message, 'error');
+            }
+            return;
+        }
+
         var input = document.getElementById('modalNotesInput');
         input.dataset.baseText = input.value;
         document.getElementById('voiceInputBtn').classList.add('recording');
@@ -3790,11 +3813,11 @@
         delete input.dataset.baseText;
     }
 
-    document.getElementById('voiceInputBtn').addEventListener('click', function() {
+    document.getElementById('voiceInputBtn').addEventListener('click', async function() {
         if (isRecording) {
             stopVoiceRecording();
         } else {
-            startVoiceRecording();
+            await startVoiceRecording();
         }
     });
 
@@ -4458,15 +4481,18 @@
         btn.disabled = true;
         btn.textContent = 'Stopping...';
 
+        // Save the lead ID before closeSharePopup sets it to null
+        var leadIdToUpdate = currentShareLeadId;
+
         try {
             // Clear the Shared With field
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentShareLeadId, {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadIdToUpdate, {
                 method: 'PATCH',
                 body: { fields: { 'Shared With': null } }
             });
 
             // Update local data
-            var lead = allLeads.find(function(l) { return l.id === currentShareLeadId; });
+            var lead = allLeads.find(function(l) { return l.id === leadIdToUpdate; });
             if (lead) {
                 lead.fields['Shared With Email'] = null;
                 lead.fields['Shared With'] = null;
@@ -4483,7 +4509,7 @@
             }
 
             // Update card display - remove share icon
-            var cardEl = document.querySelector('.prio-card[data-id="' + currentShareLeadId + '"]');
+            var cardEl = document.querySelector('.prio-card[data-id="' + leadIdToUpdate + '"]');
             if (cardEl) {
                 var sharedIcon = cardEl.querySelector('.shared-icon');
                 if (sharedIcon) sharedIcon.remove();
@@ -4495,7 +4521,7 @@
             }
 
             // Update priority card
-            var priorityCard = document.querySelector('.priority-card-lg[data-id="' + currentShareLeadId + '"]');
+            var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadIdToUpdate + '"]');
             if (priorityCard) {
                 var prioSharedIcon = priorityCard.querySelector('.shared-icon');
                 if (prioSharedIcon) prioSharedIcon.remove();
@@ -4529,13 +4555,16 @@
         btn.disabled = true;
         btn.textContent = 'Sharing...';
 
+        // Save the lead ID before closeSharePopup sets it to null
+        var leadIdToUpdate = currentShareLeadId;
+
         try {
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentShareLeadId, {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadIdToUpdate, {
                 method: 'PATCH',
                 body: { fields: { 'Shared With': [selectedAgentId] } }
             });
 
-            var lead = allLeads.find(function(l) { return l.id === currentShareLeadId; });
+            var lead = allLeads.find(function(l) { return l.id === leadIdToUpdate; });
             if (lead) {
                 lead.fields['Shared With Email'] = selectedAgentEmail;
                 lead.fields['Shared With'] = [selectedAgentId];
@@ -4552,7 +4581,7 @@
             }
 
             // Update card display immediately - find card and update share icon
-            var cardEl = document.querySelector('.prio-card[data-id="' + currentShareLeadId + '"]');
+            var cardEl = document.querySelector('.prio-card[data-id="' + leadIdToUpdate + '"]');
             if (cardEl) {
                 var nameEl = cardEl.querySelector('.prio-card-name');
                 if (nameEl && !nameEl.querySelector('.shared-icon')) {
@@ -4567,7 +4596,7 @@
             }
 
             // Also update priority card if present
-            var priorityCard = document.querySelector('.priority-card-lg[data-id="' + currentShareLeadId + '"]');
+            var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadIdToUpdate + '"]');
             if (priorityCard) {
                 var prioNameEl = priorityCard.querySelector('.priority-card-lg-name');
                 if (prioNameEl && !prioNameEl.querySelector('.shared-icon')) {
@@ -4937,7 +4966,7 @@
     window.deleteCallAttempt = deleteCallAttempt;
 
     // Edit note
-    async function editNote(index) {
+    function editNote(index) {
         if (!currentLeadId) return;
         var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
         var notesRaw = lead.fields['Client Notes'] || '';
@@ -4946,11 +4975,66 @@
         if (index >= notesArr.length) return;
 
         var note = notesArr[index];
-        var newText = prompt('Edit note:', note.text);
-        if (newText === null || newText.trim() === note.text) return;
+        var noteItem = document.querySelector('.lead-note-item[data-note-index="' + index + '"]');
+        if (!noteItem) return;
+
+        // Store original HTML for cancel
+        var originalHtml = noteItem.innerHTML;
+
+        // Replace with inline edit form
+        noteItem.innerHTML = '<textarea class="note-edit-input">' + escapeHtml(note.text) + '</textarea>' +
+            '<div class="note-edit-actions">' +
+                '<button class="btn-note-cancel" onclick="cancelNoteEdit(' + index + ')">Cancel</button>' +
+                '<button class="btn-note-save" onclick="saveNoteEdit(' + index + ')">Save</button>' +
+            '</div>';
+
+        // Store original HTML for cancel
+        noteItem.dataset.originalHtml = originalHtml;
+
+        // Focus the textarea
+        var textarea = noteItem.querySelector('.note-edit-input');
+        if (textarea) {
+            textarea.focus();
+            textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+        }
+    }
+    window.editNote = editNote;
+
+    function cancelNoteEdit(index) {
+        var noteItem = document.querySelector('.lead-note-item[data-note-index="' + index + '"]');
+        if (!noteItem || !noteItem.dataset.originalHtml) return;
+        noteItem.innerHTML = noteItem.dataset.originalHtml;
+        delete noteItem.dataset.originalHtml;
+    }
+    window.cancelNoteEdit = cancelNoteEdit;
+
+    async function saveNoteEdit(index) {
+        if (!currentLeadId) return;
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        var notesRaw = lead.fields['Client Notes'] || '';
+        var notesArr = parseNotesJson(notesRaw);
+
+        if (index >= notesArr.length) return;
+
+        var noteItem = document.querySelector('.lead-note-item[data-note-index="' + index + '"]');
+        if (!noteItem) return;
+
+        var textarea = noteItem.querySelector('.note-edit-input');
+        if (!textarea) return;
+
+        var newText = textarea.value.trim();
+        if (!newText) {
+            showToast('Note cannot be empty', 'error');
+            return;
+        }
+
+        if (newText === notesArr[index].text) {
+            cancelNoteEdit(index);
+            return;
+        }
 
         // Update the note text, keeping the original timestamp
-        notesArr[index].text = newText.trim();
+        notesArr[index].text = newText;
 
         try {
             var newNotes = JSON.stringify(notesArr);
@@ -4965,7 +5049,7 @@
             showToast('Failed to update note', 'error');
         }
     }
-    window.editNote = editNote;
+    window.saveNoteEdit = saveNoteEdit;
 
     // Delete note
     async function deleteNote(index) {
@@ -5372,7 +5456,17 @@
         }
         var attemptsCount = Array.isArray(attemptsArray) ? attemptsArray.length : 0;
         document.getElementById('modalAttemptsCount').textContent = attemptsCount;
-        
+        var attemptsList = document.getElementById('modalAttemptsList');
+        if (attemptsCount > 0) {
+            var attemptsHtml = attemptsArray.map(function(attempt, i) {
+                var timeStr = attempt.time ? new Date(attempt.time).toLocaleString() : 'Unknown time';
+                return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
+            }).join('');
+            attemptsList.innerHTML = attemptsHtml;
+        } else {
+            attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p>';
+        }
+
         // Transcript with colored speakers
         var transcript = f['Transcript (from Calls)'];
         var transcriptEl = document.getElementById('modalTranscript');
