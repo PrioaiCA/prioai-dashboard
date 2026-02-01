@@ -403,7 +403,7 @@
         .profile-menu-divider{height:1px;background:rgba(255,255,255,0.1);margin:0.5rem 0}
         
         /* Notifications Popup */
-        .notifications-popup{position:absolute;bottom:100%;right:0;width:280px;background:#151515;border:1px solid rgba(255,255,255,0.1);border-radius:12px;margin-bottom:0.5rem;opacity:0;visibility:hidden;transform:translateY(10px);transition:all 0.2s}
+        .notifications-popup{position:absolute;bottom:100%;left:0;width:280px;background:#151515;border:1px solid rgba(255,255,255,0.1);border-radius:12px;margin-bottom:0.5rem;opacity:0;visibility:hidden;transform:translateY(10px);transition:all 0.2s;z-index:1000}
         .notifications-popup.active{opacity:1;visibility:visible;transform:translateY(0)}
         .notifications-header{padding:1rem;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:600;font-size:0.875rem}
         .notifications-empty{padding:2rem;text-align:center;color:rgba(255,255,255,0.5);font-size:0.875rem}
@@ -684,6 +684,28 @@
         .search-lead-section h4{font-size:0.875rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
         .search-lead-content{background:#0a0a0a;padding:16px;border-radius:8px;font-size:0.9375rem;line-height:1.6;white-space:pre-wrap}
         .search-lead-content.transcript{max-height:300px;overflow-y:auto}
+
+        /* Collapsible Sidebar */
+        .sidebar-collapse-btn{display:none;width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);cursor:pointer;align-items:center;justify-content:center;transition:all 0.2s;font-size:1rem;flex-shrink:0}
+        .sidebar-collapse-btn:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)}
+        @media(min-width:1024px){.sidebar-collapse-btn{display:flex}}
+        .sidebar.collapsed{width:70px}
+        .sidebar.collapsed .sidebar-logo{display:none}
+        .sidebar.collapsed .sidebar-logo-mini{display:block !important;width:32px;height:32px;border-radius:8px}
+        .sidebar.collapsed .nav-item span:not(.nav-item-icon){display:none}
+        .sidebar.collapsed .nav-section-title{display:none}
+        .sidebar.collapsed .nav-item{justify-content:center;padding:12px}
+        .sidebar.collapsed .nav-item-icon{width:24px;height:24px;font-size:18px}
+        .sidebar.collapsed .user-info{display:none}
+        .sidebar.collapsed .user-avatar{width:36px;height:36px;font-size:14px}
+        .sidebar.collapsed .user-card{justify-content:center}
+        .sidebar.collapsed .notification-btn{display:none}
+        .sidebar.collapsed .profile-menu{left:70px;bottom:60px;width:180px}
+        .sidebar.collapsed .notifications-popup{left:70px}
+        .sidebar.collapsed .sidebar-header{justify-content:center;padding:12px}
+        .sidebar.collapsed .sidebar-collapse-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%)}
+        .app-container.sidebar-collapsed .main-content{margin-left:70px}
+        @media(max-width:1023px){.app-container.sidebar-collapsed .main-content{margin-left:0}}
     </style>
 </head>
 <body>
@@ -706,6 +728,8 @@
             <div class="sidebar-header">
                 <img src="/assets/logo_white.png" alt="Prio AI" class="sidebar-logo logo-dark">
                 <img src="/assets/logo_black.png" alt="Prio AI" class="sidebar-logo logo-light" style="display:none;">
+                <img src="/assets/favicon.png" alt="Prio AI" class="sidebar-logo-mini" style="display:none;">
+                <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Collapse sidebar">◀</button>
                 <button class="sidebar-close" id="sidebarClose">&times;</button>
             </div>
 
@@ -829,7 +853,10 @@
                     <div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
                         <h2 style="margin-bottom: var(--space-4);">Welcome to Prio AI</h2>
                         <p style="color: var(--text-secondary); margin-bottom: var(--space-6);">Sign in to access your dashboard and start converting more leads.</p>
-                        <button class="btn btn-primary btn-lg" id="guestLoginBtn">Get Started</button>
+                        <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
+                            <button class="btn btn-primary btn-lg" id="guestLoginBtn" style="width:100%;max-width:200px;">Get Started</button>
+                            <button class="btn btn-secondary btn-lg" id="guestSignInBtn" style="width:100%;max-width:200px;">Sign In</button>
+                        </div>
                     </div>
                 </div>
 
@@ -2197,6 +2224,34 @@
         sidebarOverlay.classList.remove('active');
     }
 
+    // Sidebar Collapse/Expand (desktop)
+    var sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    var collapseBtn = document.getElementById('sidebarCollapseBtn');
+    var appContainer = document.getElementById('appContainer');
+
+    function updateSidebarState() {
+        if (sidebarCollapsed) {
+            sidebar.classList.add('collapsed');
+            appContainer.classList.add('sidebar-collapsed');
+            collapseBtn.innerHTML = '▶';
+            collapseBtn.title = 'Expand sidebar';
+        } else {
+            sidebar.classList.remove('collapsed');
+            appContainer.classList.remove('sidebar-collapsed');
+            collapseBtn.innerHTML = '◀';
+            collapseBtn.title = 'Collapse sidebar';
+        }
+    }
+
+    // Initialize collapsed state
+    updateSidebarState();
+
+    collapseBtn.addEventListener('click', function() {
+        sidebarCollapsed = !sidebarCollapsed;
+        localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
+        updateSidebarState();
+    });
+
     // Navigation
     document.querySelectorAll('.nav-item[data-page]').forEach(function(item) {
         item.addEventListener('click', function() {
@@ -2261,6 +2316,7 @@
 
     document.getElementById('loginBtn').addEventListener('click', function() { openAuthModal('login'); });
     document.getElementById('guestLoginBtn').addEventListener('click', function() { openAuthModal('signup'); });
+    document.getElementById('guestSignInBtn').addEventListener('click', function() { openAuthModal('login'); });
     document.getElementById('authModalClose').addEventListener('click', closeAuthModal);
     authModal.addEventListener('click', function(e) { if (e.target === authModal) closeAuthModal(); });
 
@@ -2949,11 +3005,10 @@
             // Parse notes as JSON array or create from string
             var notesArray = parseNotesJson(notesRaw);
             
-            // Format booked time
+            // Format booked time as friendly date
             var bookedDisplay = '';
             if (bookedTime) {
-                var d = new Date(bookedTime);
-                bookedDisplay = d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}) + ', ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+                bookedDisplay = formatFriendlyDateTime(bookedTime);
             }
             
             // Build notes HTML
@@ -3450,7 +3505,7 @@
         var bookedTimeValue = document.getElementById('modalBookedTimeValue');
         var scheduleBtn = document.getElementById('modalScheduleBtn');
         if (bookedTime) {
-            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + new Date(bookedTime).toLocaleString() + '</span><button class="btn-edit-booking" onclick="editBookingFromModal()" title="Edit booking">✏️</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-edit-booking" onclick="editBookingFromModal()" title="Edit booking">✏️</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
             scheduleBtn.style.display = 'none';
         } else {
             bookedTimeValue.textContent = '-';
@@ -3972,47 +4027,33 @@
                 ? document.getElementById('sendAIOtherReason').value.trim()
                 : sendAISelectedReason;
 
-            // Build note
-            var noteText = 'Sent back to AI - Reason: ' + reasonText + ' | Callback: ' + callbackDate + ' (' + sendAISelectedTime + ')';
+            // Format callback date as friendly date
+            var callbackDateObj = new Date(callbackDate + 'T12:00:00');
+            var friendlyDate = callbackDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            // Add ordinal suffix
+            var day = callbackDateObj.getDate();
+            var suffix = ['th', 'st', 'nd', 'rd'][(day % 100 > 10 && day % 100 < 14) ? 0 : (day % 10 < 4 ? day % 10 : 0)];
+            friendlyDate = friendlyDate.replace(/(\d+),/, day + suffix + ',');
+
+            // Build note - no timestamp prefix, just clean text
+            var noteText = 'Sent back to AI - Reason: ' + reasonText + '\nCallback Scheduled For: ' + friendlyDate + ' in the ' + sendAISelectedTime;
 
             // Get existing notes
             var lead = allLeads.find(function(l) { return l.id === sendAILeadId; });
             var existingNotes = lead?.fields['Client Notes'] || '';
-            var timestamp = new Date().toLocaleString();
-            var newNotes = existingNotes ? existingNotes + '\n---\n[' + timestamp + '] ' + noteText : '[' + timestamp + '] ' + noteText;
+            var newNotes = existingNotes ? existingNotes + '\n---\n' + noteText : noteText;
 
-            // Update lead - try Follow Up Date first, fall back to Callback Date
-            var updateFields = {
-                'Status': 'Follow Up',
-                'Client Notes': newNotes
-            };
-
-            // Try to set callback date - Airtable expects YYYY-MM-DD format
+            // Update lead with just Client Notes (avoid Status fields that may cause 422)
             try {
                 await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
                     method: 'PATCH',
-                    body: { fields: { ...updateFields, 'Follow Up Date': callbackDate } }
+                    body: { fields: { 'Client Notes': newNotes } }
                 });
-                if (lead) lead.fields['Follow Up Date'] = callbackDate;
-            } catch (dateErr) {
-                // If Follow Up Date fails, try Callback Date
-                try {
-                    await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
-                        method: 'PATCH',
-                        body: { fields: { ...updateFields, 'Callback Date': callbackDate } }
-                    });
-                    if (lead) lead.fields['Callback Date'] = callbackDate;
-                } catch (dateErr2) {
-                    // Just update status and notes without callback date
-                    await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
-                        method: 'PATCH',
-                        body: { fields: updateFields }
-                    });
-                }
+            } catch (notesErr) {
+                console.error('Failed to update notes:', notesErr);
             }
 
             if (lead) {
-                lead.fields['Status'] = 'Follow Up';
                 lead.fields['Client Notes'] = newNotes;
             }
 
@@ -4046,14 +4087,17 @@
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Status': 'DNC', 'Call Status': 'Completed' } }
+                body: { fields: { 'Lead Status': 'DNC' } }
             });
 
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
             if (lead) {
+                lead.fields['Lead Status'] = 'DNC';
                 lead.fields['Status'] = 'DNC';
-                lead.fields['Call Status'] = 'Completed';
             }
+
+            // Remove from local data and update UI immediately
+            allLeads = allLeads.filter(function(l) { return l.id !== currentLeadId; });
 
             showToast('Lead marked as Do Not Call', 'success');
             document.getElementById('leadModal').classList.remove('active');
@@ -4114,17 +4158,15 @@
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
                 method: 'PATCH',
-                body: { fields: { 'Status': 'DNC', 'Call Status': 'Completed' } }
+                body: { fields: { 'Lead Status': 'DNC' } }
             });
 
-            var lead = allLeads.find(function(l) { return l.id === leadId; });
-            if (lead) {
-                lead.fields['Status'] = 'DNC';
-                lead.fields['Call Status'] = 'Completed';
-            }
+            // Remove from local data and update UI immediately
+            allLeads = allLeads.filter(function(l) { return l.id !== leadId; });
 
             showToast('Marked as DNC', 'success');
             updateDashboard();
+            updatePrioList();
         } catch (err) {
             showToast('Failed: ' + err.message, 'error');
         }
@@ -4319,29 +4361,57 @@
         if (!currentShareLeadId) return;
         var selectedAgent = document.querySelector('input[name="shareAgent"]:checked');
         if (!selectedAgent) return;
-        
+
         var selectedAgentId = selectedAgent.value;
         var selectedAgentEmail = selectedAgent.dataset.email;
-        
+
         var btn = this;
         btn.disabled = true;
         btn.textContent = 'Sharing...';
-        
+
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentShareLeadId, {
                 method: 'PATCH',
                 body: { fields: { 'Shared With': [selectedAgentId] } }
             });
-            
+
             var lead = allLeads.find(function(l) { return l.id === currentShareLeadId; });
             if (lead) {
                 lead.fields['Shared With Email'] = selectedAgentEmail;
                 lead.fields['Shared With'] = [selectedAgentId];
             }
-            
+
             showToast('Prospect shared successfully!', 'success');
             closeSharePopup();
-            if (currentLeadId === currentShareLeadId) openLeadModal(currentLeadId);
+
+            // Update the modal share button immediately
+            var shareBtn = document.getElementById('modalShareBtn');
+            if (shareBtn) {
+                shareBtn.classList.add('shared');
+                shareBtn.innerHTML = '🔗 Shared';
+            }
+
+            // Update card display immediately - find card and update share icon
+            var cardEl = document.querySelector('.prio-card[data-id="' + currentShareLeadId + '"]');
+            if (cardEl) {
+                var nameEl = cardEl.querySelector('.prio-card-name');
+                if (nameEl && !nameEl.querySelector('.shared-icon')) {
+                    nameEl.innerHTML = nameEl.innerHTML + ' <span class="shared-icon" title="Shared lead">🔗</span>';
+                }
+            }
+
+            // Also update priority card if present
+            var priorityCard = document.querySelector('.priority-card-lg[data-id="' + currentShareLeadId + '"]');
+            if (priorityCard) {
+                var prioNameEl = priorityCard.querySelector('.priority-card-lg-name');
+                if (prioNameEl && !prioNameEl.querySelector('.shared-icon')) {
+                    prioNameEl.innerHTML = prioNameEl.innerHTML + ' <span class="shared-icon" title="Shared lead">🔗</span>';
+                }
+            }
+
+            // Re-render current page to ensure consistency
+            if (currentPage === 'prio') renderPrioPage();
+            else if (currentPage === 'prospects') renderProspectsPage();
         } catch (err) {
             showToast('Failed to share prospect', 'error');
         }
@@ -4367,15 +4437,89 @@
         scheduleLeadData = leadData;
         var leadName = ((leadData['First Name'] || '') + ' ' + (leadData['Last Name'] || '')).trim() || 'Lead';
         document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + leadName;
-        
+
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         selectedDate = today;
         calendarMonth = new Date();
-        
+
         renderCalendar();
+        updateTimeDropdowns();
         document.getElementById('scheduleModal').classList.add('active');
     }
+
+    function updateTimeDropdowns() {
+        var hourSelect = document.getElementById('scheduleHour');
+        var minuteSelect = document.getElementById('scheduleMinute');
+        var now = new Date();
+        var isToday = selectedDate && selectedDate.toDateString() === now.toDateString();
+
+        // Calculate earliest available time
+        var startHour = 9; // Default start at 9 AM
+        var startMinute = 0;
+
+        if (isToday) {
+            // Get current time + 15 minutes, rounded up to nearest 15 min
+            var currentMinutes = now.getHours() * 60 + now.getMinutes() + 15;
+            currentMinutes = Math.ceil(currentMinutes / 15) * 15;
+            startHour = Math.floor(currentMinutes / 60);
+            startMinute = currentMinutes % 60;
+
+            // Ensure we don't go past 8 PM (20:00)
+            if (startHour >= 20) {
+                startHour = 20;
+                startMinute = 0;
+            }
+        }
+
+        // Populate hour dropdown (9 AM to 8 PM)
+        var hourOptions = '';
+        for (var h = Math.max(9, startHour); h <= 20; h++) {
+            var displayHour = h > 12 ? h - 12 : h;
+            var ampm = h >= 12 ? 'PM' : 'AM';
+            hourOptions += '<option value="' + h + '">' + displayHour + ' ' + ampm + '</option>';
+        }
+        hourSelect.innerHTML = hourOptions;
+
+        // Set default selected hour
+        if (isToday && startHour >= 9) {
+            hourSelect.value = startHour;
+        } else {
+            hourSelect.value = Math.max(9, parseInt(hourSelect.options[0]?.value || 9));
+        }
+
+        // Update minute dropdown based on selected hour
+        updateMinuteDropdown();
+    }
+
+    function updateMinuteDropdown() {
+        var hourSelect = document.getElementById('scheduleHour');
+        var minuteSelect = document.getElementById('scheduleMinute');
+        var selectedHour = parseInt(hourSelect.value);
+        var now = new Date();
+        var isToday = selectedDate && selectedDate.toDateString() === now.toDateString();
+
+        var startMinute = 0;
+        if (isToday && selectedHour === now.getHours()) {
+            // If selected hour is current hour, start at next 15-min slot
+            var currentMinutes = now.getMinutes() + 15;
+            startMinute = Math.ceil(currentMinutes / 15) * 15;
+            if (startMinute >= 60) startMinute = 0;
+        }
+
+        var minuteOptions = '';
+        var minutes = [0, 15, 30, 45];
+        minutes.forEach(function(m) {
+            if (!isToday || selectedHour > now.getHours() || m >= startMinute) {
+                minuteOptions += '<option value="' + m + '">' + (m < 10 ? '0' : '') + m + '</option>';
+            }
+        });
+
+        minuteSelect.innerHTML = minuteOptions || '<option value="0">00</option>';
+    }
+
+    // Update minutes when hour changes
+    document.getElementById('scheduleHour').addEventListener('change', updateMinuteDropdown);
     
     function renderCalendar() {
         var year = calendarMonth.getFullYear();
@@ -4425,6 +4569,7 @@
                 this.classList.add('selected');
                 var parts = this.dataset.date.split('-');
                 selectedDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                updateTimeDropdowns();
             });
         });
     }
@@ -4925,6 +5070,21 @@
             minute: '2-digit'
         });
     }
+
+    // Helper: Format date/time as friendly (February 1st, 11:00 AM)
+    function formatFriendlyDateTime(dateVal) {
+        if (!dateVal) return '-';
+        var date = new Date(dateVal);
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var day = date.getDate();
+        var suffix = ['th', 'st', 'nd', 'rd'][(day % 100 > 10 && day % 100 < 14) ? 0 : (day % 10 < 4 ? day % 10 : 0)];
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        var hour12 = hours % 12 || 12;
+        var minuteStr = minutes < 10 ? '0' + minutes : minutes;
+        return months[date.getMonth()] + ' ' + day + suffix + ', ' + hour12 + ':' + minuteStr + ' ' + ampm;
+    }
     
     // Helper: Format phone
     function formatPhone(phone) {
@@ -4991,7 +5151,7 @@
         var bookedTimeValue = document.getElementById('modalBookedTimeValue');
         var scheduleBtn = document.getElementById('modalScheduleBtn');
         if (bookedTime) {
-            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + new Date(bookedTime).toLocaleString() + '</span><button class="btn-edit-booking" onclick="editBookingFromModal()" title="Edit booking">✏️</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-edit-booking" onclick="editBookingFromModal()" title="Edit booking">✏️</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
             if (scheduleBtn) scheduleBtn.style.display = 'none';
         } else {
             bookedTimeValue.textContent = '-';
@@ -5186,10 +5346,9 @@
             
             var bookedDisplay = '';
             if (bookedTime) {
-                var d = new Date(bookedTime);
-                bookedDisplay = d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}) + ', ' + d.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+                bookedDisplay = formatFriendlyDateTime(bookedTime);
             }
-            
+
             var notesHtml = '';
             if (notesArray.length > 0) {
                 notesHtml = notesArray.map(function(note) {
