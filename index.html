@@ -4133,37 +4133,22 @@
             var existingNotes = lead?.fields['Client Notes'] || '';
             var newNotes = existingNotes ? existingNotes + '\n---\n' + noteText : noteText;
 
-            // Update lead with Client Notes, Lead Status = Follow Up, and Next Call Date
+            // Update lead with Client Notes only (Lead Status and Next Call Date may be formula/linked fields)
+            // The AI system will handle the status change via n8n webhook
             try {
                 await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
                     method: 'PATCH',
                     body: {
                         fields: {
-                            'Client Notes': newNotes,
-                            'Lead Status': 'Follow Up',
-                            'Next Call Date': nextCallDateISO
+                            'Client Notes': newNotes
                         }
                     }
                 });
             } catch (updateErr) {
-                console.error('Failed to update lead:', updateErr);
-                // Fallback: try without Lead Status if it fails
-                try {
-                    await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + sendAILeadId, {
-                        method: 'PATCH',
-                        body: {
-                            fields: {
-                                'Client Notes': newNotes,
-                                'Next Call Date': nextCallDateISO
-                            }
-                        }
-                    });
-                } catch (fallbackErr) {
-                    console.error('Fallback also failed:', fallbackErr);
-                }
+                console.error('Failed to update notes:', updateErr);
             }
 
-            // Remove lead from local data (it's now in Follow Up status)
+            // Remove lead from local data (it's being sent back to AI)
             allLeads = allLeads.filter(function(l) { return l.id !== sendAILeadId; });
 
             document.getElementById('sendAIModal').classList.remove('active');
@@ -4173,9 +4158,6 @@
             // Refresh dashboard views
             updateDashboard();
             updatePrioList();
-            if (currentPage === 'prio') renderPrioPage();
-            else if (currentPage === 'overview') renderOverviewPage();
-            else if (currentPage === 'prospects') renderProspectsPage();
         } catch (err) {
             showToast('Failed: ' + err.message, 'error');
         }
@@ -4199,16 +4181,17 @@
         btn.disabled = true;
 
         try {
+            // Add DNC note to Client Notes (Lead Status field may not be editable)
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            var existingNotes = lead?.fields['Client Notes'] || '';
+            var timestamp = new Date().toLocaleString();
+            var dncNote = '[' + timestamp + '] *** MARKED AS DO NOT CALL ***';
+            var newNotes = existingNotes ? existingNotes + '\n---\n' + dncNote : dncNote;
+
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Lead Status': 'DNC' } }
+                body: { fields: { 'Client Notes': newNotes, 'Is Prio': false } }
             });
-
-            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            if (lead) {
-                lead.fields['Lead Status'] = 'DNC';
-                lead.fields['Status'] = 'DNC';
-            }
 
             // Remove from local data and update UI immediately
             allLeads = allLeads.filter(function(l) { return l.id !== currentLeadId; });
@@ -4270,9 +4253,16 @@
         if (!confirmed) return;
 
         try {
+            // Add DNC note to Client Notes (Lead Status field may not be editable)
+            var lead = allLeads.find(function(l) { return l.id === leadId; });
+            var existingNotes = lead?.fields['Client Notes'] || '';
+            var timestamp = new Date().toLocaleString();
+            var dncNote = '[' + timestamp + '] *** MARKED AS DO NOT CALL ***';
+            var newNotes = existingNotes ? existingNotes + '\n---\n' + dncNote : dncNote;
+
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
                 method: 'PATCH',
-                body: { fields: { 'Lead Status': 'DNC' } }
+                body: { fields: { 'Client Notes': newNotes, 'Is Prio': false } }
             });
 
             // Remove from local data and update UI immediately
@@ -4517,6 +4507,7 @@
                 if (sharedIcon) sharedIcon.remove();
                 var shareActionBtn = cardEl.querySelector('.action-share');
                 if (shareActionBtn) {
+                    shareActionBtn.classList.remove('shared');
                     shareActionBtn.innerHTML = '<span class="action-icon">🔗</span><span class="action-label">Share</span>';
                 }
             }
@@ -4526,11 +4517,17 @@
             if (priorityCard) {
                 var prioSharedIcon = priorityCard.querySelector('.shared-icon');
                 if (prioSharedIcon) prioSharedIcon.remove();
+                // Update quick action share button to show Share
+                var shareActionBtn = priorityCard.querySelector('.action-share');
+                if (shareActionBtn) {
+                    shareActionBtn.classList.remove('shared');
+                    shareActionBtn.innerHTML = '<span class="action-icon">🔗</span><span class="action-label">Share</span>';
+                }
             }
 
-            // Re-render current page
-            if (currentPage === 'prio') renderPrioPage();
-            else if (currentPage === 'prospects') renderProspectsPage();
+            // Update modal shared info display
+            var sharedInfoDiv = document.getElementById('modalSharedInfo');
+            if (sharedInfoDiv) sharedInfoDiv.style.display = 'none';
         } catch (err) {
             showToast('Failed to stop sharing', 'error');
         }
@@ -4579,6 +4576,12 @@
                 if (nameEl && !nameEl.querySelector('.shared-icon')) {
                     nameEl.innerHTML = nameEl.innerHTML + ' <span class="shared-icon" title="Shared lead">🔗</span>';
                 }
+                // Update quick action share button on small card if present
+                var cardShareBtn = cardEl.querySelector('.action-share');
+                if (cardShareBtn) {
+                    cardShareBtn.classList.add('shared');
+                    cardShareBtn.innerHTML = '<span class="action-icon">✓</span><span class="action-label">Shared</span>';
+                }
             }
 
             // Also update priority card if present
@@ -4588,11 +4591,23 @@
                 if (prioNameEl && !prioNameEl.querySelector('.shared-icon')) {
                     prioNameEl.innerHTML = prioNameEl.innerHTML + ' <span class="shared-icon" title="Shared lead">🔗</span>';
                 }
+                // Update quick action share button to show Shared
+                var shareActionBtn = priorityCard.querySelector('.action-share');
+                if (shareActionBtn) {
+                    shareActionBtn.classList.add('shared');
+                    shareActionBtn.innerHTML = '<span class="action-icon">✓</span><span class="action-label">Shared</span>';
+                }
             }
 
-            // Re-render current page to ensure consistency
-            if (currentPage === 'prio') renderPrioPage();
-            else if (currentPage === 'prospects') renderProspectsPage();
+            // Update modal shared info display
+            var sharedInfoDiv = document.getElementById('modalSharedInfo');
+            var sharedLabel = document.getElementById('modalSharedLabel');
+            var sharedValue = document.getElementById('modalSharedValue');
+            if (sharedInfoDiv) {
+                sharedInfoDiv.style.display = 'block';
+                sharedLabel.textContent = '🔗 Shared With';
+                sharedValue.textContent = getAgentNameByEmail(selectedAgentEmail) || selectedAgentEmail;
+            }
         } catch (err) {
             showToast('Failed to share prospect', 'error');
         }
