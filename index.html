@@ -753,8 +753,10 @@
         .search-lead-section h4{font-size:0.875rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
         .search-lead-content{background:#0a0a0a;padding:16px;border-radius:8px;font-size:0.9375rem;line-height:1.6;white-space:pre-wrap}
         .search-lead-content.transcript{max-height:300px;overflow-y:auto}
-        .search-lead-actions{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-        .search-lead-actions .btn{flex:1;min-width:120px}
+        .search-lead-actions{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+        .search-lead-actions .btn-share,.search-lead-actions .btn-takeover-modal{flex:1;max-width:280px}
+        .btn-dnc-text{padding:10px 16px;font-size:0.875rem;font-weight:600;background:transparent;color:rgba(239,68,68,0.8);border:none;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+        .btn-dnc-text:hover{color:#ef4444}
         .search-lead-notes-list,.search-lead-attempts-list,.search-lead-ai-calls-list{background:#0a0a0a;padding:16px;border-radius:8px;max-height:250px;overflow-y:auto}
         .search-note-item,.search-attempt-item,.search-ai-call-item{padding:12px;background:rgba(255,255,255,0.03);border-radius:6px;margin-bottom:8px;border-left:3px solid rgba(52,211,153,0.5)}
         .search-note-item:last-child,.search-attempt-item:last-child,.search-ai-call-item:last-child{margin-bottom:0}
@@ -767,6 +769,8 @@
         .search-ai-call-outcome.callback{background:rgba(245,158,11,0.2);color:#f59e0b}
         .search-ai-call-outcome.timeline,.search-ai-call-outcome.follow-up{background:rgba(99,102,241,0.2);color:#6366f1}
         .search-ai-call-outcome.not-interested,.search-ai-call-outcome.voicemail,.search-ai-call-outcome.no-answer{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)}
+        .search-ai-call-preview{font-size:0.8125rem;color:rgba(255,255,255,0.5);margin-top:8px;line-height:1.4;font-style:italic}
+        .search-ai-total-attempts{margin-top:12px;padding:8px 12px;background:rgba(255,255,255,0.05);border-radius:6px;font-size:0.875rem}
 
         /* Collapsible Sidebar */
         .sidebar-collapse-btn{display:none;width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);cursor:pointer;align-items:center;justify-content:center;transition:all 0.2s;font-size:1rem;flex-shrink:0}
@@ -1517,9 +1521,9 @@
 
                                 <!-- Action Buttons -->
                                 <div class="search-lead-actions">
-                                    <button class="btn btn-secondary" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
-                                    <button class="btn btn-secondary" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
-                                    <button class="btn btn-danger" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Do Not Call</button>
+                                    <button class="btn-share" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
+                                    <button class="btn-takeover-modal" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
+                                    <button class="btn-dnc-text" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Do Not Call</button>
                                 </div>
 
                                 <div class="search-lead-info-grid">
@@ -6923,16 +6927,38 @@
             attemptsListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.875rem;">No manual call attempts logged</p>';
         }
 
-        // AI Call History
+        // AI Call History - use transcripts array to show each call
         var aiCallsListEl = document.getElementById('searchLeadAICallsList');
+        var transcriptsArray = f['Transcript (from Calls)'] || [];
+        var callTimestamps = f['Call Timestamps (from Calls)'] || [];
+        var callOutcomes = f['Outcomes (from Calls)'] || [];
         var lastCallTimestamp = f['Last Call Timestamp'];
         var lastOutcome = f['Last Outcome'] || f['Disposition'] || f['Status'] || '';
         var totalAttempts = parseInt(f['Attempts'] || '0', 10);
 
-        // Build AI call history from available data
+        // Build AI call history
         var aiCallsHtml = '';
-        if (lastCallTimestamp || totalAttempts > 0) {
-            // Show last call if available
+
+        // If we have transcripts array, show each call
+        if (Array.isArray(transcriptsArray) && transcriptsArray.length > 0) {
+            transcriptsArray.forEach(function(transcript, i) {
+                var callNum = transcriptsArray.length - i;
+                var timestamp = Array.isArray(callTimestamps) && callTimestamps[i] ? callTimestamps[i] : (i === 0 ? lastCallTimestamp : null);
+                var outcome = Array.isArray(callOutcomes) && callOutcomes[i] ? callOutcomes[i] : (i === 0 ? lastOutcome : 'Completed');
+                var outcomeClass = (outcome || '').toLowerCase().replace(/\s+/g, '-');
+                var timeStr = timestamp ? formatFriendlyDateTime(timestamp) : 'Call #' + callNum;
+
+                aiCallsHtml += '<div class="search-ai-call-item">' +
+                    '<div class="search-ai-call-time">' + timeStr + '</div>' +
+                    '<div class="search-ai-call-result">' +
+                        '<span>AI Call #' + callNum + '</span>' +
+                        '<span class="search-ai-call-outcome ' + outcomeClass + '">' + escapeHtml(outcome || 'Completed') + '</span>' +
+                    '</div>' +
+                    '<div class="search-ai-call-preview">' + escapeHtml((transcript || '').substring(0, 150)) + (transcript && transcript.length > 150 ? '...' : '') + '</div>' +
+                '</div>';
+            });
+        } else if (lastCallTimestamp || totalAttempts > 0) {
+            // Fallback: show last call info if no transcripts array
             if (lastCallTimestamp) {
                 var outcomeClass = lastOutcome.toLowerCase().replace(/\s+/g, '-');
                 aiCallsHtml += '<div class="search-ai-call-item">' +
@@ -6943,13 +6969,16 @@
                     '</div>' +
                 '</div>';
             }
+        }
 
-            // Show total attempts count
-            if (totalAttempts > 0) {
-                aiCallsHtml += '<div style="margin-top:12px;padding:8px 12px;background:rgba(255,255,255,0.05);border-radius:6px;font-size:0.875rem;">' +
-                    '<strong>Total AI Attempts:</strong> ' + totalAttempts +
-                '</div>';
-            }
+        // Show total attempts count
+        if (totalAttempts > 0) {
+            aiCallsHtml += '<div class="search-ai-total-attempts">' +
+                '<strong>Total AI Attempts:</strong> ' + totalAttempts +
+            '</div>';
+        }
+
+        if (aiCallsHtml) {
             aiCallsListEl.innerHTML = aiCallsHtml;
         } else {
             aiCallsListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.875rem;">No AI calls recorded</p>';
