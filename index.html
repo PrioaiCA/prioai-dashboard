@@ -2912,10 +2912,10 @@
         'Can Share With', 'Retell Phone'
     ];
 
-    // Build fields query parameter
+    // Build fields query parameter (no encoding - fetchAirtable encodes entire path)
     function buildFieldsParam(fieldsArray) {
         if (!fieldsArray || fieldsArray.length === 0) return '';
-        return '&' + fieldsArray.map(function(f) { return 'fields[]=' + encodeURIComponent(f); }).join('&');
+        return '&' + fieldsArray.map(function(f) { return 'fields[]=' + f; }).join('&');
     }
 
     // === CACHE MANAGER (localStorage with TTL) ===
@@ -3129,7 +3129,7 @@
         }
 
         try {
-            var filterFormula = encodeURIComponent('({Email} = "' + currentUser.email + '")');
+            var filterFormula = '({Email} = "' + currentUser.email + '")';
             var path = AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + filterFormula + buildFieldsParam(CLIENT_FIELDS);
             var data = await fetchAirtable(path);
 
@@ -3189,7 +3189,7 @@
             // Include leads owned by user OR shared with user (use ARRAYJOIN for lookup fields)
             var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER(ARRAYJOIN({Shared With Email}))))';
             // Add selective field filtering for reduced payload
-            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100' + buildFieldsParam(LEAD_FIELDS);
+            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + filterFormula + '&pageSize=100' + buildFieldsParam(LEAD_FIELDS);
 
             // Use temp array to avoid flickering on refresh
             var tempLeads = [];
