@@ -4356,16 +4356,25 @@
                 }
             });
 
-            // Remove lead from local data (it's being sent back to AI)
-            allLeads = allLeads.filter(function(l) { return l.id !== sendAILeadId; });
+            // Update local lead data (keep in allLeads so it shows in Pipeline)
+            if (lead) {
+                lead.fields['Client Notes'] = newNotes;
+                lead.fields['Status'] = 'Follow Up';
+                lead.fields['Last Outcome'] = 'Follow Up';
+                lead.fields['Next Call Date'] = nextCallDateISO;
+                lead.fields['Is Prio'] = false; // Remove from Prio when sent to AI
+            }
 
             document.getElementById('sendAIModal').classList.remove('active');
             document.getElementById('leadModal').classList.remove('active');
+            currentLeadId = null;
             showToast('Lead sent back to AI for follow-up', 'success');
 
-            // Refresh dashboard views
+            // Refresh all views immediately
             updateDashboard();
-            updatePrioList();
+            updatePrioListFiltered();
+            updateProspectsTable();
+            updatePipelineList();
         } catch (err) {
             showToast('Failed: ' + err.message, 'error');
         }
@@ -6004,7 +6013,8 @@
 
             // Close modal if open
             if (currentLeadId === leadId) {
-                closeLeadModal();
+                document.getElementById('leadModal').classList.remove('active');
+                currentLeadId = null;
             }
 
         } catch (error) {
