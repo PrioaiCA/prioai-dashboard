@@ -2660,16 +2660,18 @@
             
             document.getElementById('loginBtn').classList.add('hidden');
             document.getElementById('dashboardContent').classList.remove('hidden');
-            
+
             // Show loading animation for logged in users
             var overlay = document.getElementById('pageLoadingOverlay');
             var appContainer = document.getElementById('appContainer');
             overlay.style.display = 'flex';
             appContainer.style.opacity = '1';
+            // Track when loading started - will hide when data actually loads
+            window.loadingStartTime = Date.now();
+            // Safety fallback - hide loading after max 15 seconds even if data hasn't loaded
             setTimeout(function() {
-                overlay.classList.add('fade-out');
-                setTimeout(function() { overlay.style.display = 'none'; }, 500);
-            }, 8000);
+                if (typeof hidePageLoading === 'function') hidePageLoading();
+            }, 15000);
         } else {
             document.getElementById('userName').textContent = 'Guest';
             document.getElementById('userEmail').textContent = 'Not signed in';
@@ -2770,6 +2772,8 @@
                 document.getElementById('statAppointments').textContent = '0';
                 document.getElementById('statCallsToday').textContent = '0';
                 document.getElementById('prioList').innerHTML = '<div class="prio-empty">No leads yet. Import some to get started!</div>';
+                // No user record - still hide loading overlay
+                if (typeof hidePageLoading === 'function') hidePageLoading();
             }
         } catch (err) {
             console.error('Failed to load user data:', err);
@@ -2778,6 +2782,8 @@
                 document.getElementById('statAppointments').textContent = '0';
                 document.getElementById('statCallsToday').textContent = '0';
             }
+            // Error occurred - still hide loading overlay
+            if (typeof hidePageLoading === 'function') hidePageLoading();
         }
     }
 
@@ -6500,27 +6506,44 @@
     // Update all tabs when data loads
     var originalLoadLeadsData = loadLeadsData;
     loadLeadsData = async function() {
-        await originalLoadLeadsData();
-        updateProspectsTable();
-        updatePipelineList();
-        updateSharedLeadsList();
+        try {
+            await originalLoadLeadsData();
+            updateProspectsTable();
+            updatePipelineList();
+            updateSharedLeadsList();
+        } finally {
+            // Data has loaded (or failed) - hide loading overlay either way
+            dataLoaded = true;
+            hidePageLoading();
+        }
     };
     
-    // Full page loading - show for 10 seconds then reveal
+    // Full page loading - hide when data is loaded (with minimum display time)
     var pageLoadingComplete = false;
+    var MIN_LOADING_TIME = 1500; // Minimum 1.5 seconds for smooth UX
+
     function hidePageLoading() {
         if (pageLoadingComplete) return;
-        pageLoadingComplete = true;
-        var overlay = document.getElementById('pageLoadingOverlay');
-        var appContainer = document.getElementById('appContainer');
-        if (overlay) overlay.classList.add('fade-out');
-        if (appContainer) appContainer.style.opacity = '1';
+
+        var elapsed = Date.now() - (window.loadingStartTime || 0);
+        var remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
+
+        // Wait for minimum time, then fade out
         setTimeout(function() {
-            if (overlay) overlay.style.display = 'none';
-        }, 500);
+            if (pageLoadingComplete) return;
+            pageLoadingComplete = true;
+            var overlay = document.getElementById('pageLoadingOverlay');
+            var appContainer = document.getElementById('appContainer');
+            if (overlay) overlay.classList.add('fade-out');
+            if (appContainer) appContainer.style.opacity = '1';
+            setTimeout(function() {
+                if (overlay) overlay.style.display = 'none';
+            }, 500);
+        }, remaining);
     }
-    
-    // Loading animation is now triggered in checkAuth after login
+
+    // Mark data as loaded flag
+    var dataLoaded = false;
     
     // ===== ANALYTICS PAGE =====
     var analyticsPeriod = 'daily';
