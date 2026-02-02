@@ -160,25 +160,8 @@ export async function onRequest(context) {
             return jsonResponse({ error: 'Server configuration error' }, 500, corsOrigin);
         }
 
-        // Build Airtable URL - need to properly encode query parameters
-        // The path comes decoded from searchParams.get(), so we need to re-encode the query string
-        const [basePath, queryString] = path.split('?');
-        let airtableUrl = `https://api.airtable.com/v0/${basePath}`;
-
-        if (queryString) {
-            // Manually encode each parameter - URLSearchParams uses + for spaces but Airtable needs %20
-            const pairs = queryString.split('&');
-            const encodedPairs = pairs.map(pair => {
-                const eqIndex = pair.indexOf('=');
-                if (eqIndex > -1) {
-                    const key = pair.slice(0, eqIndex);
-                    const value = pair.slice(eqIndex + 1);
-                    return encodeURIComponent(key) + '=' + encodeURIComponent(value);
-                }
-                return encodeURIComponent(pair);
-            });
-            airtableUrl += '?' + encodedPairs.join('&');
-        }
+        // Build Airtable URL
+        const airtableUrl = `https://api.airtable.com/v0/${path}`;
 
         // Forward the request to Airtable
         const airtableResponse = await fetch(airtableUrl, {
