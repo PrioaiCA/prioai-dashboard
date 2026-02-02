@@ -209,8 +209,8 @@
         .modal-nav-arrow:hover{background:rgba(52,211,153,0.2);border-color:rgb(52,211,153)}
         .modal-nav-arrow:disabled{opacity:0.3;cursor:not-allowed}
         .modal-nav-arrow:disabled:hover{background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.2)}
-        .modal-nav-prev{left:20px}
-        .modal-nav-next{right:20px}
+        .modal-nav-prev{left:calc(50% - 480px)}
+        .modal-nav-next{right:calc(50% - 480px)}
         @media(max-width:1100px){.modal-nav-arrow{display:none}}
         .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)}
         .modal-name-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
@@ -249,7 +249,7 @@
         .polish-accept:hover{background:rgb(45,190,135)}
         .polish-reject{background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8)}
         .polish-reject:hover{border-color:rgba(255,255,255,0.3)}
-        .send-ai-modal-overlay,.confirm-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 0.2s}
+        .send-ai-modal-overlay,.confirm-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 0.2s}
         .send-ai-modal-overlay.active,.confirm-modal-overlay.active{opacity:1;visibility:visible}
         .confirm-modal{background:linear-gradient(180deg,#111 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px;max-width:380px;width:90%;text-align:center}
         .confirm-modal-icon{font-size:2.5rem;margin-bottom:16px}
@@ -2895,7 +2895,8 @@
 
         try {
             var email = currentUser.email.toLowerCase();
-            var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client Email})))';
+            // Include leads owned by user OR shared with user
+            var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER({Shared With Email})))';
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
 
             // Use temp array to avoid flickering on refresh
@@ -2908,6 +2909,17 @@
                 var data = await fetchAirtable(fetchPath);
 
                 if (data.records) {
+                    // Mark leads that are shared WITH the user (not owned by them)
+                    data.records.forEach(function(record) {
+                        var clientEmails = record.fields['Client Email'] || [];
+                        var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
+                        var sharedWithEmail = (record.fields['Shared With Email'] || '').toLowerCase();
+
+                        // If user's email is not in Client Email but is in Shared With Email, mark as shared
+                        if (!clientEmailsLower.includes(email) && sharedWithEmail === email) {
+                            record.isShared = true;
+                        }
+                    });
                     tempLeads = tempLeads.concat(data.records);
                 }
                 offset = data.offset;
@@ -4021,11 +4033,14 @@
         // Update navigation arrows state
         updateNavArrows();
 
-        // Auto-focus notes textbox
+        // Auto-focus notes textbox after modal animation
         setTimeout(function() {
             var notesInput = document.getElementById('modalNotesInput');
-            if (notesInput) notesInput.focus();
-        }, 100);
+            if (notesInput) {
+                notesInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                notesInput.focus();
+            }
+        }, 300);
     }
 
     // Check for unsaved notes before closing
@@ -4036,15 +4051,17 @@
 
     async function closeLeadModalWithCheck() {
         if (hasUnsavedNotes()) {
-            var confirmed = await showConfirmModal(
+            var keepEditing = await showConfirmModal(
                 'Unsaved Changes',
                 'You have unsaved notes. Are you sure you want to discard them?',
                 '📝',
-                true,
-                'Exit',
-                'Keep Editing'
+                false,
+                'Keep Editing',
+                'Exit'
             );
-            if (!confirmed) return;
+            if (keepEditing) return;
+            // Clear the notes if user chose to exit
+            document.getElementById('modalNotesInput').value = '';
         }
         leadModal.classList.remove('active');
         currentLeadId = null;
@@ -4117,11 +4134,11 @@
                 'Unsaved Changes',
                 'You have unsaved notes. Are you sure you want to discard them?',
                 '📝',
-                true,
-                'Discard',
-                'Keep Editing'
-            ).then(function(confirmed) {
-                if (confirmed) {
+                false,
+                'Keep Editing',
+                'Discard'
+            ).then(function(keepEditing) {
+                if (!keepEditing) {
                     document.getElementById('modalNotesInput').value = '';
                     openLeadModal(leads[newIndex].id);
                 }
@@ -5378,6 +5395,8 @@
             document.getElementById('scheduleModal').classList.remove('active');
             if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
             updatePrioList();
+            updateDashboard(); // Refresh today's priorities immediately
+            updateProspectsTable(); // Refresh prospects list
             if (calendarSyncSuccess) {
                 showToast('Meeting scheduled and synced to calendar!', 'success');
             } else {
@@ -5413,6 +5432,8 @@
 
             openLeadModal(currentLeadId);
             updatePrioList();
+            updateDashboard(); // Refresh today's priorities
+            updateProspectsTable(); // Refresh prospects list
             showToast('Booking removed', 'success');
         } catch (err) {
             showToast('Failed to remove booking', 'error');
@@ -7240,6 +7261,25 @@
             shareBtn.textContent = '🔗 Share';
             shareBtn.classList.remove('shared');
         }
+
+        // Show Take Over only for pipeline leads (Timeline/Follow Up)
+        // Show Send Back to AI for prospects/prio leads (Booked/Callback)
+        var takeOverBtn = document.getElementById('searchTakeOverBtn');
+        var isPipelineLead = status === 'Timeline' || status === 'Follow Up';
+        var isProspectLead = status === 'Booked' || status === 'Appointment Booked' || status === 'Callback' || status === 'Callback Requested';
+
+        if (isPipelineLead) {
+            takeOverBtn.textContent = '📥 Take Over';
+            takeOverBtn.onclick = takeOverFromSearch;
+            takeOverBtn.style.display = 'inline-block';
+        } else if (isProspectLead) {
+            takeOverBtn.textContent = '🤖 Send Back to AI';
+            takeOverBtn.onclick = sendBackToAIFromSearch;
+            takeOverBtn.style.display = 'inline-block';
+        } else {
+            // For other statuses like Do Not Call, hide the button
+            takeOverBtn.style.display = 'none';
+        }
     }
 
     // Search page action functions
@@ -7283,6 +7323,13 @@
         }
     }
     window.takeOverFromSearch = takeOverFromSearch;
+
+    // Send prospect back to AI from search page
+    function sendBackToAIFromSearch() {
+        if (!searchedLead) return;
+        openSendAIModal(searchedLead.id, searchedLead.fields);
+    }
+    window.sendBackToAIFromSearch = sendBackToAIFromSearch;
 
     async function dncFromSearch() {
         if (!searchedLead) return;
