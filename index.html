@@ -2145,18 +2145,25 @@
                 </div>
 
                 <div class="lead-section">
-                    <h3>🔗 Links & Attachments <span class="attempts-count" id="modalAttachmentsCount">0</span></h3>
-                    <div class="lead-attachments-list" id="modalAttachmentsList">
-                        <div class="attachments-empty">No links or attachments yet</div>
+                    <h3>🔗 Links <span class="attempts-count" id="modalLinksCount">0</span></h3>
+                    <div class="lead-attachments-list" id="modalLinksList">
+                        <div class="attachments-empty">No links yet</div>
                     </div>
                     <div class="add-attachment-form">
                         <div class="add-attachment-row">
-                            <input type="text" id="attachmentTitleInput" placeholder="Title (e.g., Listing on MLS)">
+                            <input type="text" id="linkTitleInput" placeholder="Title (e.g., Listing on MLS)">
                         </div>
                         <div class="add-attachment-row">
-                            <input type="url" id="attachmentUrlInput" placeholder="URL (e.g., https://...)">
-                            <button class="btn-add-attachment" id="addAttachmentBtn">+ Add</button>
+                            <input type="url" id="linkUrlInput" placeholder="URL (e.g., https://...)">
+                            <button class="btn-add-attachment" id="addLinkBtn">+ Add</button>
                         </div>
+                    </div>
+                </div>
+
+                <div class="lead-section">
+                    <h3>📎 Attachments <span class="attempts-count" id="modalAttachmentsCount">0</span></h3>
+                    <div class="lead-attachments-list" id="modalAttachmentsList">
+                        <div class="attachments-empty">No attachments yet</div>
                     </div>
                 </div>
 
@@ -2982,8 +2989,8 @@
                         var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
                         var sharedWithEmail = (record.fields['Shared With Email'] || '').toLowerCase();
 
-                        // If user's email is not in Client Email but is in Shared With Email, mark as shared
-                        if (!clientEmailsLower.includes(email) && sharedWithEmail === email) {
+                        // If user's email is not in Client Email but is found in Shared With Email, mark as shared
+                        if (!clientEmailsLower.includes(email) && sharedWithEmail.includes(email)) {
                             record.isShared = true;
                         }
                     });
@@ -3237,7 +3244,7 @@
             var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
             var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
             var isPrio = f['Is Prio'] === true;
-            var isShared = lead.isShared || f['Shared With'] || f['Shared With Email'];
+            var isShared = lead.isShared || f['Shared With Email'];
 
             // Parse notes
             var notesArray = parseNotesJson(notesRaw);
@@ -3405,7 +3412,7 @@
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notesRaw = f['Client Notes'] || f['Notes'] || '';
-            var isShared = f['Shared With'] || f['Shared With Email'];
+            var isShared = lead.isShared || f['Shared With Email'];
 
             // Parse notes
             var notesArray = parseNotesJson(notesRaw);
@@ -4176,9 +4183,9 @@
                 return status === 'Timeline' || status === 'Follow Up';
             });
         } else if (pageId === 'page-shared') {
-            // Get shared leads
+            // Get shared leads (either shared with me or I shared it)
             leads = allLeads.filter(function(l) {
-                return l.isShared || l.fields['Shared With'] || l.fields['Shared With Email'];
+                return l.isShared || l.fields['Shared With Email'];
             });
         } else {
             // Default to all leads
@@ -5086,17 +5093,16 @@
         var leadIdToUpdate = currentShareLeadId;
 
         try {
-            // Clear the Shared With field
+            // Clear the Shared With Email field
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadIdToUpdate, {
                 method: 'PATCH',
-                body: { fields: { 'Shared With': null } }
+                body: { fields: { 'Shared With Email': null } }
             });
 
             // Update local data
             var lead = allLeads.find(function(l) { return l.id === leadIdToUpdate; });
             if (lead) {
                 lead.fields['Shared With Email'] = null;
-                lead.fields['Shared With'] = null;
             }
 
             showToast('Sharing stopped', 'success');
@@ -5162,13 +5168,12 @@
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadIdToUpdate, {
                 method: 'PATCH',
-                body: { fields: { 'Shared With': [selectedAgentId] } }
+                body: { fields: { 'Shared With Email': selectedAgentEmail } }
             });
 
             var lead = allLeads.find(function(l) { return l.id === leadIdToUpdate; });
             if (lead) {
                 lead.fields['Shared With Email'] = selectedAgentEmail;
-                lead.fields['Shared With'] = [selectedAgentId];
             }
 
             showToast('Prospect shared successfully!', 'success');
@@ -5830,7 +5835,7 @@
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notesRaw = f['Client Notes'] || f['Notes'] || '';
-            var isShared = f['Shared With'] || f['Shared With Email'];
+            var isShared = lead.isShared || f['Shared With Email'];
             var isPrio = f['Is Prio'] === true;
             var status = f['Status'] || f['Disposition'] || '';
 
@@ -5989,7 +5994,7 @@
             var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
             var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
             var summary = f['Last Call Summary'] || f['Summary'] || '';
-            var isShared = f['Shared With'] || f['Shared With Email'];
+            var isShared = lead.isShared || f['Shared With Email'];
 
             // Next Call Date display
             var dateDisplay = '';
@@ -6266,54 +6271,49 @@
             if (takeOverBtn) takeOverBtn.style.display = 'none';
         }
 
-        // Attachments/Links - parse JSON if available
-        var attachmentsRaw = f['Attachments'] || '[]';
-        var attachmentsArray = [];
+        // Links - stored as JSON in Links column
+        var linksRaw = f['Links'] || '[]';
+        var linksArray = [];
         try {
-            if (typeof attachmentsRaw === 'string') {
-                attachmentsArray = JSON.parse(attachmentsRaw);
-            } else if (Array.isArray(attachmentsRaw)) {
-                attachmentsArray = attachmentsRaw;
+            if (typeof linksRaw === 'string') {
+                linksArray = JSON.parse(linksRaw);
+            } else if (Array.isArray(linksRaw)) {
+                linksArray = linksRaw;
             }
         } catch (e) {
-            attachmentsArray = [];
+            linksArray = [];
         }
+        renderLinksList(linksArray);
+
+        // Attachments - actual files from Airtable Attachments column
+        var attachmentsArray = f['Attachments'] || [];
+        if (!Array.isArray(attachmentsArray)) attachmentsArray = [];
         renderAttachmentsList(attachmentsArray);
 
         // Show modal
         document.getElementById('leadModal').classList.add('active');
     }
 
-    // Close modal
-    document.getElementById('leadModalClose').addEventListener('click', function() {
-        document.getElementById('leadModal').classList.remove('active');
-        currentLeadId = null;
-    });
-    document.getElementById('leadModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.remove('active');
-            currentLeadId = null;
-        }
-    });
+    // Note: Modal close handlers are defined earlier with closeLeadModalWithCheck() for unsaved notes protection
 
-    // ===== ATTACHMENTS HANDLING =====
-    function renderAttachmentsList(attachments) {
-        var list = document.getElementById('modalAttachmentsList');
-        var countEl = document.getElementById('modalAttachmentsCount');
+    // ===== LINKS HANDLING =====
+    function renderLinksList(links) {
+        var list = document.getElementById('modalLinksList');
+        var countEl = document.getElementById('modalLinksCount');
         if (!list) return;
 
-        if (!Array.isArray(attachments) || attachments.length === 0) {
-            list.innerHTML = '<div class="attachments-empty">No links or attachments yet</div>';
+        if (!Array.isArray(links) || links.length === 0) {
+            list.innerHTML = '<div class="attachments-empty">No links yet</div>';
             if (countEl) countEl.textContent = '0';
             return;
         }
 
-        if (countEl) countEl.textContent = attachments.length;
+        if (countEl) countEl.textContent = links.length;
 
-        list.innerHTML = attachments.map(function(att, idx) {
+        list.innerHTML = links.map(function(link, idx) {
             var icon = '🔗';
-            if (att.url) {
-                var urlLower = att.url.toLowerCase();
+            if (link.url) {
+                var urlLower = link.url.toLowerCase();
                 if (urlLower.includes('zillow') || urlLower.includes('redfin') || urlLower.includes('realtor') || urlLower.includes('mls')) icon = '🏠';
                 else if (urlLower.includes('docs.google') || urlLower.includes('drive.google')) icon = '📄';
                 else if (urlLower.includes('dropbox')) icon = '📁';
@@ -6322,36 +6322,36 @@
             return '<div class="lead-attachment-item">' +
                 '<span class="attachment-icon">' + icon + '</span>' +
                 '<div class="attachment-info">' +
-                    '<div class="attachment-title">' + escapeHtml(att.title || 'Untitled') + '</div>' +
-                    '<div class="attachment-url">' + escapeHtml(att.url || '') + '</div>' +
+                    '<div class="attachment-title">' + escapeHtml(link.title || 'Untitled') + '</div>' +
+                    '<div class="attachment-url">' + escapeHtml(link.url || '') + '</div>' +
                 '</div>' +
                 '<div class="attachment-actions">' +
-                    '<a href="' + escapeHtml(att.url || '#') + '" target="_blank" rel="noopener" class="btn-attachment-open">Open</a>' +
-                    '<button class="btn-attachment-delete" onclick="deleteAttachment(' + idx + ')" title="Delete">✕</button>' +
+                    '<a href="' + escapeHtml(link.url || '#') + '" target="_blank" rel="noopener" class="btn-attachment-open">Open</a>' +
+                    '<button class="btn-attachment-delete" onclick="deleteLink(' + idx + ')" title="Delete">✕</button>' +
                 '</div>' +
             '</div>';
         }).join('');
     }
 
-    function getAttachmentsFromLead() {
+    function getLinksFromLead() {
         if (!currentLeadId) return [];
         var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
         if (!lead) return [];
-        var attachmentsRaw = lead.fields['Attachments'] || '[]';
+        var linksRaw = lead.fields['Links'] || '[]';
         try {
-            if (typeof attachmentsRaw === 'string') {
-                return JSON.parse(attachmentsRaw);
-            } else if (Array.isArray(attachmentsRaw)) {
-                return attachmentsRaw;
+            if (typeof linksRaw === 'string') {
+                return JSON.parse(linksRaw);
+            } else if (Array.isArray(linksRaw)) {
+                return linksRaw;
             }
         } catch (e) {}
         return [];
     }
 
-    async function addAttachment() {
+    async function addLink() {
         if (!currentLeadId) return;
-        var titleInput = document.getElementById('attachmentTitleInput');
-        var urlInput = document.getElementById('attachmentUrlInput');
+        var titleInput = document.getElementById('linkTitleInput');
+        var urlInput = document.getElementById('linkUrlInput');
         var title = (titleInput.value || '').trim();
         var url = (urlInput.value || '').trim();
 
@@ -6368,8 +6368,8 @@
             return;
         }
 
-        var attachments = getAttachmentsFromLead();
-        attachments.push({
+        var links = getLinksFromLead();
+        links.push({
             title: title || url,
             url: url,
             addedAt: new Date().toISOString()
@@ -6378,58 +6378,100 @@
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Attachments': JSON.stringify(attachments) } }
+                body: { fields: { 'Links': JSON.stringify(links) } }
             });
 
             // Update local data
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            if (lead) lead.fields['Attachments'] = JSON.stringify(attachments);
+            if (lead) lead.fields['Links'] = JSON.stringify(links);
 
             // Re-render
-            renderAttachmentsList(attachments);
+            renderLinksList(links);
 
             // Clear inputs
             titleInput.value = '';
             urlInput.value = '';
         } catch (err) {
-            console.error('Failed to save attachment:', err);
-            alert('Failed to save attachment. Please try again.');
+            console.error('Failed to save link:', err);
+            alert('Failed to save link. Please try again.');
         }
     }
 
-    async function deleteAttachment(index) {
+    async function deleteLink(index) {
         if (!currentLeadId) return;
         if (!confirm('Delete this link?')) return;
 
-        var attachments = getAttachmentsFromLead();
-        attachments.splice(index, 1);
+        var links = getLinksFromLead();
+        links.splice(index, 1);
 
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Attachments': JSON.stringify(attachments) } }
+                body: { fields: { 'Links': JSON.stringify(links) } }
             });
 
             // Update local data
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            if (lead) lead.fields['Attachments'] = JSON.stringify(attachments);
+            if (lead) lead.fields['Links'] = JSON.stringify(links);
 
             // Re-render
-            renderAttachmentsList(attachments);
+            renderLinksList(links);
         } catch (err) {
-            console.error('Failed to delete attachment:', err);
-            alert('Failed to delete attachment. Please try again.');
+            console.error('Failed to delete link:', err);
+            alert('Failed to delete link. Please try again.');
         }
     }
 
-    // Add attachment button listener
-    document.getElementById('addAttachmentBtn')?.addEventListener('click', addAttachment);
+    // ===== ATTACHMENTS HANDLING (Airtable file attachments) =====
+    function renderAttachmentsList(attachments) {
+        var list = document.getElementById('modalAttachmentsList');
+        var countEl = document.getElementById('modalAttachmentsCount');
+        if (!list) return;
 
-    // Allow Enter key to add attachment when in URL field
-    document.getElementById('attachmentUrlInput')?.addEventListener('keypress', function(e) {
+        if (!Array.isArray(attachments) || attachments.length === 0) {
+            list.innerHTML = '<div class="attachments-empty">No attachments yet</div>';
+            if (countEl) countEl.textContent = '0';
+            return;
+        }
+
+        if (countEl) countEl.textContent = attachments.length;
+
+        list.innerHTML = attachments.map(function(att) {
+            var filename = att.filename || 'Attachment';
+            var icon = '📎';
+            var filenameLower = filename.toLowerCase();
+            if (filenameLower.endsWith('.pdf')) icon = '📕';
+            else if (filenameLower.endsWith('.doc') || filenameLower.endsWith('.docx')) icon = '📄';
+            else if (filenameLower.endsWith('.xls') || filenameLower.endsWith('.xlsx')) icon = '📊';
+            else if (filenameLower.endsWith('.jpg') || filenameLower.endsWith('.jpeg') || filenameLower.endsWith('.png') || filenameLower.endsWith('.gif')) icon = '🖼️';
+
+            return '<div class="lead-attachment-item">' +
+                '<span class="attachment-icon">' + icon + '</span>' +
+                '<div class="attachment-info">' +
+                    '<div class="attachment-title">' + escapeHtml(filename) + '</div>' +
+                    '<div class="attachment-url">' + (att.size ? formatFileSize(att.size) : '') + '</div>' +
+                '</div>' +
+                '<div class="attachment-actions">' +
+                    '<a href="' + escapeHtml(att.url || '#') + '" target="_blank" rel="noopener" class="btn-attachment-open">Download</a>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    // Add link button listener
+    document.getElementById('addLinkBtn')?.addEventListener('click', addLink);
+
+    // Allow Enter key to add link when in URL field
+    document.getElementById('linkUrlInput')?.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            addAttachment();
+            addLink();
         }
     });
 
@@ -6735,7 +6777,7 @@
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notesRaw = f['Client Notes'] || f['Notes'] || '';
-            var isShared = f['Shared With'] || f['Shared With Email'];
+            var isShared = lead.isShared || f['Shared With Email'];
             var status = f['Status'] || f['Disposition'] || '';
 
             var notesArray = parseNotesJson(notesRaw);
@@ -6819,8 +6861,8 @@
         var sharedLeads = allLeads.filter(function(l) {
             var f = l.fields;
 
-            // Must be a shared lead
-            if (!l.isShared && !f['Shared With'] && !f['Shared With Email']) return false;
+            // Must be a shared lead (either shared with me or I shared it)
+            if (!l.isShared && !f['Shared With Email']) return false;
 
             // Search filter
             if (searchVal) {
@@ -7475,7 +7517,7 @@
         document.getElementById('searchLeadTranscript').textContent = transcript;
 
         // Update action button states
-        var isShared = f['Shared With'] || f['Shared With Email'];
+        var isShared = lead.isShared || f['Shared With Email'];
         var shareBtn = document.getElementById('searchShareBtn');
         if (isShared) {
             shareBtn.textContent = '✓ Shared';
