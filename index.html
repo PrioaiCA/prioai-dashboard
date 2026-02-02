@@ -74,12 +74,13 @@
         .view-toggle-btn:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8)}
         .view-toggle-btn.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
         .header-count-badge{background:rgb(52,211,153);color:#000;font-size:0.875rem;font-weight:700;padding:2px 10px;border-radius:20px;margin-left:10px;vertical-align:middle}
-        .sort-controls{display:flex;align-items:center;gap:4px}
-        .sort-select{padding-left:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2'%3E%3Cpath d='M3 6h18M7 12h10M11 18h2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:8px center;background-size:14px}
-        .sort-direction-btn{width:32px;height:32px;border:1px solid rgba(255,255,255,0.15);background:#111;color:rgba(255,255,255,0.6);border-radius:6px;cursor:pointer;font-size:1rem;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+        .filters-left{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
+        .sort-controls{display:flex;align-items:center;gap:8px}
+        .sort-label{font-size:0.875rem;color:rgba(255,255,255,0.6);white-space:nowrap}
+        .sort-select{min-width:120px}
+        .sort-direction-btn{width:32px;height:32px;border:1px solid rgba(255,255,255,0.15);background:#111;color:rgba(255,255,255,0.6);border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
         .sort-direction-btn:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.9)}
-        .sort-direction-btn.asc{transform:rotate(180deg)}
-        .prio-header-actions,.prospects-header-actions,.pipeline-header-right{display:flex;align-items:center;gap:1rem}
+        .prio-header-actions,.prospects-header-actions,.pipeline-header-actions{display:flex;align-items:center;gap:1rem}
         .filters-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;justify-content:space-between}
         .filter-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin-left:auto}
         .priorities-cards{display:grid;grid-template-columns:1fr;gap:1rem}
@@ -95,9 +96,9 @@
         .btn-takeover:hover{background:rgb(59,130,246);color:#fff}
         .btn-takeover-modal{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:rgb(59,130,246);border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
         .btn-takeover-modal:hover{background:rgba(59,130,246,0.25)}
-        .card-status-badge{font-size:0.625rem;padding:2px 6px;border-radius:4px;font-weight:600;text-transform:uppercase;display:inline-block;margin-top:4px}
-        .card-status-badge.booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
-        .card-status-badge.callback{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .card-status-badge{width:18px;height:18px;border-radius:50%;font-size:0.625rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-left:6px;vertical-align:middle}
+        .card-status-badge.booked{background:rgba(52,211,153,0.2);color:rgb(52,211,153)}
+        .card-status-badge.callback{background:rgba(245,158,11,0.2);color:#f59e0b}
         .priority-card-lg-info{flex:1;padding:14px;display:flex;flex-direction:column;justify-content:center}
         .priority-card-lg-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
         .priority-card-lg-name{font-size:1rem;font-weight:600;display:flex;align-items:center}
@@ -1065,11 +1066,11 @@
 
                         <!-- Prio Filters -->
                         <div class="filters-bar">
-                            <div class="search-box">
-                                <span class="search-icon">🔍</span>
-                                <input type="text" id="prioSearch" placeholder="Search by name or phone...">
-                            </div>
-                            <div class="filter-group">
+                            <div class="filters-left">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="prioSearch" placeholder="Search by name or phone...">
+                                </div>
                                 <select id="prioOwnership" class="filter-select">
                                     <option value="all">All Leads</option>
                                     <option value="mine">My Prospects</option>
@@ -1084,15 +1085,16 @@
                                     <option value="30days">Last 30 Days</option>
                                     <option value="90days">Last 90 Days</option>
                                 </select>
-                                <div class="sort-controls">
-                                    <select id="prioSort" class="filter-select sort-select">
-                                        <option value="priority">Priority</option>
-                                        <option value="name">Name</option>
-                                        <option value="meetingTime">Meeting Time</option>
-                                        <option value="lastUpdated">Last Updated</option>
-                                    </select>
-                                    <button class="sort-direction-btn" id="prioSortDir" onclick="togglePrioSortDir()" title="Toggle sort direction">↓</button>
-                                </div>
+                            </div>
+                            <div class="sort-controls">
+                                <span class="sort-label">Sort by</span>
+                                <select id="prioSort" class="filter-select sort-select">
+                                    <option value="priority">Priority</option>
+                                    <option value="name">Name</option>
+                                    <option value="meetingTime">Meeting Time</option>
+                                    <option value="lastUpdated">Last Updated</option>
+                                </select>
+                                <button class="sort-direction-btn" id="prioSortDir" onclick="togglePrioSortDir()" title="Toggle sort direction">↓</button>
                             </div>
                         </div>
 
@@ -1107,7 +1109,7 @@
                         <!-- Prospects Header -->
                         <div class="prospects-header">
                             <div class="prospects-header-text">
-                                <h2>📋 Prospects</h2>
+                                <h2>📋 Prospects <span class="header-count-badge" id="prospectsCount">0</span></h2>
                                 <p>Booked meetings and callback requests.</p>
                             </div>
                             <div class="prospects-header-actions">
@@ -1120,11 +1122,11 @@
 
                         <!-- Prospects Filters -->
                         <div class="filters-bar">
-                            <div class="search-box">
-                                <span class="search-icon">🔍</span>
-                                <input type="text" id="prospectsSearch" placeholder="Search by name or phone...">
-                            </div>
-                            <div class="filter-group">
+                            <div class="filters-left">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="prospectsSearch" placeholder="Search by name or phone...">
+                                </div>
                                 <select id="prospectsStatus" class="filter-select">
                                     <option value="all">All Status</option>
                                     <option value="Booked">Booked</option>
@@ -1144,14 +1146,15 @@
                                     <option value="30days">Last 30 Days</option>
                                     <option value="90days">Last 90 Days</option>
                                 </select>
-                                <div class="sort-controls">
-                                    <select id="prospectsSort" class="filter-select sort-select">
-                                        <option value="bookedTime">Meeting Time</option>
-                                        <option value="name">Name</option>
-                                        <option value="lastUpdated">Last Updated</option>
-                                    </select>
-                                    <button class="sort-direction-btn" id="prospectsSortDir" onclick="toggleProspectsSortDir()" title="Toggle sort direction">↓</button>
-                                </div>
+                            </div>
+                            <div class="sort-controls">
+                                <span class="sort-label">Sort by</span>
+                                <select id="prospectsSort" class="filter-select sort-select">
+                                    <option value="bookedTime">Meeting Time</option>
+                                    <option value="name">Name</option>
+                                    <option value="lastUpdated">Last Updated</option>
+                                </select>
+                                <button class="sort-direction-btn" id="prospectsSortDir" onclick="toggleProspectsSortDir()" title="Toggle sort direction">↓</button>
                             </div>
                         </div>
 
@@ -1166,20 +1169,10 @@
                         <!-- Pipeline Header -->
                         <div class="pipeline-header">
                             <div class="pipeline-header-text">
-                                <h2>🤖 AI Pipeline</h2>
+                                <h2>🤖 AI Pipeline <span class="header-count-badge" id="pipelineCount">0</span></h2>
                                 <p>Leads being followed up by AI. Timeline and scheduled follow-ups.</p>
                             </div>
-                            <div class="pipeline-header-right">
-                                <div class="pipeline-stats">
-                                    <div class="pipeline-stat">
-                                        <span class="pipeline-stat-value" id="pipelineTimeline">0</span>
-                                        <span class="pipeline-stat-label">Timeline</span>
-                                    </div>
-                                    <div class="pipeline-stat">
-                                        <span class="pipeline-stat-value" id="pipelineFollowUp">0</span>
-                                        <span class="pipeline-stat-label">Follow Up</span>
-                                    </div>
-                                </div>
+                            <div class="pipeline-header-actions">
                                 <div class="view-toggle">
                                     <button class="view-toggle-btn active" id="pipelineViewList" onclick="setPipelineView('list')" title="List view">☰</button>
                                     <button class="view-toggle-btn" id="pipelineViewGrid" onclick="setPipelineView('grid')" title="Grid view">▦</button>
@@ -1189,11 +1182,11 @@
 
                         <!-- Pipeline Filters -->
                         <div class="filters-bar">
-                            <div class="search-box">
-                                <span class="search-icon">🔍</span>
-                                <input type="text" id="pipelineSearch" placeholder="Search by name or phone...">
-                            </div>
-                            <div class="filter-group">
+                            <div class="filters-left">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="pipelineSearch" placeholder="Search by name or phone...">
+                                </div>
                                 <select id="pipelineStatus" class="filter-select">
                                     <option value="all">All Status</option>
                                     <option value="Timeline">Timeline</option>
@@ -1205,14 +1198,15 @@
                                     <option value="30days">Next 30 Days</option>
                                     <option value="90days">Next 90 Days</option>
                                 </select>
-                                <div class="sort-controls">
-                                    <select id="pipelineSort" class="filter-select sort-select">
-                                        <option value="nextCall">Next Call</option>
-                                        <option value="name">Name</option>
-                                        <option value="lastUpdated">Last Updated</option>
-                                    </select>
-                                    <button class="sort-direction-btn" id="pipelineSortDir" onclick="togglePipelineSortDir()" title="Toggle sort direction">↓</button>
-                                </div>
+                            </div>
+                            <div class="sort-controls">
+                                <span class="sort-label">Sort by</span>
+                                <select id="pipelineSort" class="filter-select sort-select">
+                                    <option value="nextCall">Next Call</option>
+                                    <option value="name">Name</option>
+                                    <option value="lastUpdated">Last Updated</option>
+                                </select>
+                                <button class="sort-direction-btn" id="pipelineSortDir" onclick="togglePipelineSortDir()" title="Toggle sort direction">↓</button>
                             </div>
                         </div>
 
@@ -3178,9 +3172,9 @@
             // Status badge
             var statusBadge = '';
             if (status.includes('Booked')) {
-                statusBadge = '<span class="card-status-badge booked">Booked</span>';
+                statusBadge = '<span class="card-status-badge booked">B</span>';
             } else if (status.includes('Callback')) {
-                statusBadge = '<span class="card-status-badge callback">Callback</span>';
+                statusBadge = '<span class="card-status-badge callback">C</span>';
             }
 
             var prioIndicator = '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">';
@@ -3193,9 +3187,8 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        (statusBadge ? '<div>' + statusBadge + '</div>' : '') +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
@@ -5402,6 +5395,10 @@
             return result * dir;
         });
 
+        // Update count badge
+        var prospectsCountEl = document.getElementById('prospectsCount');
+        if (prospectsCountEl) prospectsCountEl.textContent = prospects.length;
+
         if (prospects.length === 0) {
             prospectsList.innerHTML = '<div class="prospects-empty">No prospects found</div>';
             return;
@@ -5455,9 +5452,9 @@
             // Status badge
             var statusBadge = '';
             if (status.includes('Booked')) {
-                statusBadge = '<span class="card-status-badge booked">Booked</span>';
+                statusBadge = '<span class="card-status-badge booked">B</span>';
             } else if (status.includes('Callback')) {
-                statusBadge = '<span class="card-status-badge callback">Callback</span>';
+                statusBadge = '<span class="card-status-badge callback">C</span>';
             }
 
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
@@ -5470,9 +5467,8 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        (statusBadge ? '<div>' + statusBadge + '</div>' : '') +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
@@ -5561,11 +5557,9 @@
             return result * dir;
         });
 
-        // Update stats
-        var timelineCount = allLeads.filter(function(l) { return (l.fields['Status'] || l.fields['Disposition']) === 'Timeline'; }).length;
-        var followUpCount = allLeads.filter(function(l) { return (l.fields['Status'] || l.fields['Disposition']) === 'Follow Up'; }).length;
-        document.getElementById('pipelineTimeline').textContent = timelineCount;
-        document.getElementById('pipelineFollowUp').textContent = followUpCount;
+        // Update count badge
+        var pipelineCountEl = document.getElementById('pipelineCount');
+        if (pipelineCountEl) pipelineCountEl.textContent = pipelineLeads.length;
 
         if (pipelineLeads.length === 0) {
             pipelineList.innerHTML = '<div class="pipeline-empty">No leads in AI pipeline</div>';
@@ -5984,24 +5978,16 @@
 
         try {
             // Update status to Callback
-            var response = await fetch(AIRTABLE_API_URL + '/' + leadId, {
+            var updatedLead = await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
                 method: 'PATCH',
-                headers: {
-                    'Authorization': 'Bearer ' + AIRTABLE_API_KEY,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+                body: {
                     fields: {
                         'Status': 'Callback',
                         'Outcome': 'Callback',
                         'Updated At': new Date().toISOString()
                     }
-                })
+                }
             });
-
-            if (!response.ok) throw new Error('Failed to update lead');
-
-            var updatedLead = await response.json();
 
             // Update local data
             var idx = allLeads.findIndex(function(l) { return l.id === leadId; });
@@ -6181,9 +6167,9 @@
 
             var statusBadge = '';
             if (status.includes('Booked')) {
-                statusBadge = '<span class="card-status-badge booked">Booked</span>';
+                statusBadge = '<span class="card-status-badge booked">B</span>';
             } else if (status.includes('Callback')) {
-                statusBadge = '<span class="card-status-badge callback">Callback</span>';
+                statusBadge = '<span class="card-status-badge callback">C</span>';
             }
 
             var prioIndicator = '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">';
@@ -6196,9 +6182,8 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        (statusBadge ? '<div>' + statusBadge + '</div>' : '') +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
