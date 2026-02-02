@@ -7720,10 +7720,14 @@
         updateAnalyticsDisplay();
     };
 
-    // Auto-refresh dashboard after 30 seconds
-    setTimeout(function() {
-        window.location.reload();
-    }, 30000);
+    // One-time page refresh after 30 seconds (only on first visit per session)
+    var initialRefreshDone = sessionStorage.getItem('prio_initial_refresh');
+    if (!initialRefreshDone) {
+        sessionStorage.setItem('prio_initial_refresh', 'true');
+        setTimeout(function() {
+            window.location.reload();
+        }, 30000);
+    }
     </script>
 </body>
 </html>
