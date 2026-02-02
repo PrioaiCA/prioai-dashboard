@@ -5983,8 +5983,7 @@
                 body: {
                     fields: {
                         'Status': 'Callback',
-                        'Outcome': 'Callback',
-                        'Updated At': new Date().toISOString()
+                        'Last Outcome': 'Callback'
                     }
                 }
             });
@@ -5992,7 +5991,8 @@
             // Update local data
             var idx = allLeads.findIndex(function(l) { return l.id === leadId; });
             if (idx !== -1) {
-                allLeads[idx].fields = Object.assign({}, allLeads[idx].fields, updatedLead.fields);
+                allLeads[idx].fields['Status'] = 'Callback';
+                allLeads[idx].fields['Last Outcome'] = 'Callback';
             }
 
             // Show success message
