@@ -81,6 +81,10 @@
         .priority-card-lg-time-col .date-value{font-size:0.75rem;font-weight:500;color:rgb(52,211,153);opacity:0.8;margin-bottom:2px;text-align:center}
         .btn-schedule-card{background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s}
         .btn-schedule-card:hover{background:rgb(52,211,153);color:#000}
+        .btn-takeover{background:rgba(59,130,246,0.15);color:rgb(59,130,246);border:1px solid rgba(59,130,246,0.3);padding:10px 20px;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:8px}
+        .btn-takeover:hover{background:rgb(59,130,246);color:#fff}
+        .btn-takeover-modal{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:rgb(59,130,246);border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
+        .btn-takeover-modal:hover{background:rgba(59,130,246,0.25)}
         .card-status-badge{font-size:0.625rem;padding:2px 6px;border-radius:4px;font-weight:600;text-transform:uppercase;margin-left:8px}
         .card-status-badge.booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
         .card-status-badge.callback{background:rgba(245,158,11,0.15);color:#f59e0b}
@@ -585,7 +589,14 @@
         .pipeline-stat{text-align:center}
         .pipeline-stat-value{display:block;font-size:1.75rem;font-weight:700;color:rgb(52,211,153)}
         .pipeline-stat-label{font-size:0.75rem;color:rgba(255,255,255,0.5);text-transform:uppercase}
-        .pipeline-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}
+        .pipeline-list{display:grid;grid-template-columns:1fr;gap:1rem}
+        .pipeline-list.list-view{grid-template-columns:1fr}
+        .pipeline-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+        .pipeline-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
+        .pipeline-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .pipeline-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
+        .pipeline-list:not(.list-view) .priority-card-lg-summary-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .pipeline-list:not(.list-view) .priority-card-lg-actions{border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto}
         .pipeline-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
         
         /* Pipeline Card */
@@ -1174,11 +1185,20 @@
                                     <option value="30days">Next 30 Days</option>
                                     <option value="90days">Next 90 Days</option>
                                 </select>
+                                <select id="pipelineSort" class="filter-select">
+                                    <option value="nextCall">Sort: Next Call</option>
+                                    <option value="name">Sort: Name</option>
+                                    <option value="lastUpdated">Sort: Last Updated</option>
+                                </select>
+                                <div class="view-toggle">
+                                    <button class="view-toggle-btn active" id="pipelineViewList" onclick="setPipelineView('list')" title="List view">☰</button>
+                                    <button class="view-toggle-btn" id="pipelineViewGrid" onclick="setPipelineView('grid')" title="Grid view">▦</button>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Pipeline Cards -->
-                        <div class="pipeline-list" id="pipelineList">
+                        <div class="pipeline-list list-view" id="pipelineList">
                             <div class="page-loading"><div class="spinner"></div><p>Loading AI pipeline...</p></div>
                         </div>
                     </div>
@@ -1863,6 +1883,9 @@
                         </button>
                         <button class="btn-send-back" id="modalSendBackBtn">
                             🤖 Send to AI
+                        </button>
+                        <button class="btn-takeover-modal" id="modalTakeOverBtn" style="display:none;">
+                            👤 Take Over
                         </button>
                         <button class="btn-dnc" id="modalDNCBtn" title="Mark as Do Not Call">
                             🚫 DNC
@@ -3784,6 +3807,18 @@
             prioIcon.style.display = 'none';
         }
 
+        // Show/hide Send to AI vs Take Over based on lead status
+        var sendBackBtn = document.getElementById('modalSendBackBtn');
+        var takeOverBtn = document.getElementById('modalTakeOverBtn');
+        var isPipelineLead = status === 'Timeline' || status === 'Follow Up';
+        if (isPipelineLead) {
+            sendBackBtn.style.display = 'none';
+            takeOverBtn.style.display = 'inline-block';
+        } else {
+            sendBackBtn.style.display = 'inline-block';
+            takeOverBtn.style.display = 'none';
+        }
+
         leadModal.classList.add('active');
     }
     
@@ -4117,6 +4152,12 @@
         document.getElementById('sendAIConfirmBtn').disabled = true;
 
         document.getElementById('sendAIModal').classList.add('active');
+    });
+
+    // Take Over button in modal
+    document.getElementById('modalTakeOverBtn').addEventListener('click', function() {
+        if (!currentLeadId) return;
+        takeOverLead(currentLeadId);
     });
 
     // Reason buttons
@@ -5431,28 +5472,29 @@
     function updatePipelineList() {
         var pipelineList = document.getElementById('pipelineList');
         if (!pipelineList) return;
-        
+
         var searchVal = (document.getElementById('pipelineSearch')?.value || '').toLowerCase();
         var statusFilter = document.getElementById('pipelineStatus')?.value || 'all';
         var timeframeFilter = document.getElementById('pipelineTimeframe')?.value || 'all';
-        
+        var sortBy = document.getElementById('pipelineSort')?.value || 'nextCall';
+
         // Get Timeline and Follow Up leads
         var pipelineLeads = allLeads.filter(function(l) {
             var f = l.fields;
             var status = f['Status'] || f['Disposition'] || '';
-            
+
             if (status !== 'Timeline' && status !== 'Follow Up') return false;
-            
+
             // Status filter
             if (statusFilter !== 'all' && status !== statusFilter) return false;
-            
+
             // Search filter
             if (searchVal) {
                 var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
                 var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
                 if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
             }
-            
+
             // Timeframe filter (for Next Call Date)
             if (timeframeFilter !== 'all' && f['Next Call Date']) {
                 var nextCall = new Date(f['Next Call Date']);
@@ -5462,45 +5504,87 @@
                 if (timeframeFilter === '30days' && daysDiff > 30) return false;
                 if (timeframeFilter === '90days' && daysDiff > 90) return false;
             }
-            
+
             return true;
         });
-        
-        // Sort by Next Call Date
+
+        // Sort based on dropdown
         pipelineLeads.sort(function(a, b) {
-            var aDate = new Date(a.fields['Next Call Date'] || '9999-12-31');
-            var bDate = new Date(b.fields['Next Call Date'] || '9999-12-31');
-            return aDate - bDate;
+            var fa = a.fields, fb = b.fields;
+            switch (sortBy) {
+                case 'name':
+                    var nameA = ((fa['First Name'] || '') + ' ' + (fa['Last Name'] || '')).toLowerCase();
+                    var nameB = ((fb['First Name'] || '') + ' ' + (fb['Last Name'] || '')).toLowerCase();
+                    return nameA.localeCompare(nameB);
+                case 'lastUpdated':
+                    var updA = new Date(fa['Updated At'] || 0).getTime();
+                    var updB = new Date(fb['Updated At'] || 0).getTime();
+                    return updB - updA;
+                case 'nextCall':
+                default:
+                    var aDate = new Date(fa['Next Call Date'] || '9999-12-31').getTime();
+                    var bDate = new Date(fb['Next Call Date'] || '9999-12-31').getTime();
+                    return aDate - bDate;
+            }
         });
-        
+
         // Update stats
         var timelineCount = allLeads.filter(function(l) { return (l.fields['Status'] || l.fields['Disposition']) === 'Timeline'; }).length;
         var followUpCount = allLeads.filter(function(l) { return (l.fields['Status'] || l.fields['Disposition']) === 'Follow Up'; }).length;
         document.getElementById('pipelineTimeline').textContent = timelineCount;
         document.getElementById('pipelineFollowUp').textContent = followUpCount;
-        
+
         if (pipelineLeads.length === 0) {
             pipelineList.innerHTML = '<div class="pipeline-empty">No leads in AI pipeline</div>';
             return;
         }
-        
+
         pipelineList.innerHTML = pipelineLeads.map(function(lead) {
             var f = lead.fields;
             var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
-            var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
-            var status = f['Status'] || f['Disposition'] || '-';
-            var statusClass = status === 'Timeline' ? 'timeline' : 'follow-up';
-            var nextCall = f['Next Call Date'] ? formatDateTime(f['Next Call Date']) : 'Not scheduled';
-            var summary = f['Last Call Summary'] || 'No summary';
-            
-            return '<div class="pipeline-card" onclick="openLeadModal(\'' + lead.id + '\')">' +
-                '<div class="pipeline-card-header">' +
-                    '<div class="pipeline-card-name">' + escapeHtml(name) + '</div>' +
-                    '<div class="pipeline-card-phone">' + escapeHtml(phone) + '</div>' +
+            var phone = f['Phone #'] || f['Phone'] || '-';
+            var formattedPhone = formatPhoneNumber(phone);
+            var lastUpdatedTimestamp = f['Updated At'];
+            var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
+            var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var isShared = f['Shared With'] || f['Shared With Email'];
+
+            // Next Call Date display
+            var dateDisplay = '';
+            var timeDisplay = '';
+            var nextCallDate = f['Next Call Date'];
+            if (nextCallDate) {
+                var d = new Date(nextCallDate);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            } else {
+                dateDisplay = 'Not';
+                timeDisplay = 'scheduled';
+            }
+
+            var timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
+
+            return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
+                '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="priority-card-lg-time-col">' +
+                        timeCol +
+                    '</div>' +
+                    '<div class="priority-card-lg-info">' +
+                        '<div class="priority-card-lg-top">' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                        '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
+                    '</div>' +
                 '</div>' +
-                '<div class="pipeline-card-status"><span class="status-badge ' + statusClass + '">' + escapeHtml(status) + '</span></div>' +
-                '<div class="pipeline-card-nextcall">📅 Next call: <span class="date">' + nextCall + '</span></div>' +
-                '<div class="pipeline-card-summary">' + escapeHtml(summary) + '</div>' +
+                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Summary</div>' +
+                    '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-actions" style="display:flex;align-items:center;justify-content:center;padding:16px">' +
+                    '<button class="btn-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')">👤 Take Over</button>' +
+                '</div>' +
             '</div>';
         }).join('');
     }
@@ -5729,10 +5813,22 @@
             if (sharedInfoDiv) sharedInfoDiv.style.display = 'none';
         }
 
+        // Show/hide Send to AI vs Take Over based on lead status
+        var sendBackBtn = document.getElementById('modalSendBackBtn');
+        var takeOverBtn = document.getElementById('modalTakeOverBtn');
+        var isPipelineLead = status === 'Timeline' || status === 'Follow Up';
+        if (isPipelineLead) {
+            if (sendBackBtn) sendBackBtn.style.display = 'none';
+            if (takeOverBtn) takeOverBtn.style.display = 'inline-block';
+        } else {
+            if (sendBackBtn) sendBackBtn.style.display = 'inline-block';
+            if (takeOverBtn) takeOverBtn.style.display = 'none';
+        }
+
         // Show modal
         document.getElementById('leadModal').classList.add('active');
     }
-    
+
     // Close modal
     document.getElementById('leadModalClose').addEventListener('click', function() {
         document.getElementById('leadModal').classList.remove('active');
@@ -5791,11 +5887,81 @@
         }
     }
     window.setProspectsView = setProspectsView;
-    
+
+    function setPipelineView(view) {
+        var container = document.getElementById('pipelineList');
+        var listBtn = document.getElementById('pipelineViewList');
+        var gridBtn = document.getElementById('pipelineViewGrid');
+        if (view === 'list') {
+            container.classList.add('list-view');
+            listBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+        } else {
+            container.classList.remove('list-view');
+            listBtn.classList.remove('active');
+            gridBtn.classList.add('active');
+        }
+    }
+    window.setPipelineView = setPipelineView;
+
+    // Take over lead - change status to Callback and refresh
+    async function takeOverLead(leadId) {
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        if (!lead) return;
+
+        var name = ((lead.fields['First Name'] || '') + ' ' + (lead.fields['Last Name'] || '')).trim() || 'This lead';
+
+        try {
+            // Update status to Callback
+            var response = await fetch(AIRTABLE_API_URL + '/' + leadId, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': 'Bearer ' + AIRTABLE_API_KEY,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fields: {
+                        'Status': 'Callback',
+                        'Outcome': 'Callback',
+                        'Updated At': new Date().toISOString()
+                    }
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to update lead');
+
+            var updatedLead = await response.json();
+
+            // Update local data
+            var idx = allLeads.findIndex(function(l) { return l.id === leadId; });
+            if (idx !== -1) {
+                allLeads[idx].fields = Object.assign({}, allLeads[idx].fields, updatedLead.fields);
+            }
+
+            // Show success message
+            showToast(name + ' has been moved to Prospects');
+
+            // Refresh both pipeline and prospects lists immediately
+            updatePipelineList();
+            updateProspectsTable();
+
+            // Close modal if open
+            if (currentLeadId === leadId) {
+                closeLeadModal();
+            }
+
+        } catch (error) {
+            console.error('Error taking over lead:', error);
+            showToast('Failed to take over lead. Please try again.', 'error');
+        }
+    }
+    window.takeOverLead = takeOverLead;
+
     // Pipeline filters
     document.getElementById('pipelineSearch')?.addEventListener('input', debounce(updatePipelineList, 300));
     document.getElementById('pipelineStatus')?.addEventListener('change', updatePipelineList);
     document.getElementById('pipelineTimeframe')?.addEventListener('change', updatePipelineList);
+    document.getElementById('pipelineSort')?.addEventListener('change', updatePipelineList);
     
     // Debounce helper
     function debounce(func, wait) {
