@@ -2141,6 +2141,12 @@
                 </div>
 
                 <div class="lead-section">
+                    <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
+                    <div class="lead-attempts-list" id="modalAttemptsList"></div>
+                    <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
+                </div>
+
+                <div class="lead-section">
                     <h3>🔗 Links <span class="attempts-count" id="modalLinksCount">0</span></h3>
                     <div class="lead-attachments-list" id="modalLinksList">
                         <div class="attachments-empty">No links yet</div>
@@ -2161,12 +2167,6 @@
                     <div class="lead-attachments-list" id="modalAttachmentsList">
                         <div class="attachments-empty">No attachments yet</div>
                     </div>
-                </div>
-
-                <div class="lead-section">
-                    <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
-                    <div class="lead-attempts-list" id="modalAttemptsList"></div>
-                    <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
                 </div>
 
                 <div class="lead-section">
@@ -2968,8 +2968,8 @@
 
         try {
             var email = currentUser.email.toLowerCase();
-            // Include leads owned by user OR shared with user
-            var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER({Shared With Email})))';
+            // Include leads owned by user OR shared with user (use ARRAYJOIN for lookup fields)
+            var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER(ARRAYJOIN({Shared With Email}))))';
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
 
             // Use temp array to avoid flickering on refresh
@@ -2986,10 +2986,13 @@
                     data.records.forEach(function(record) {
                         var clientEmails = record.fields['Client Email'] || [];
                         var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
-                        var sharedWithEmail = (record.fields['Shared With Email'] || '').toLowerCase();
+                        // Shared With Email is a lookup field - can be array or string
+                        var sharedWithEmails = record.fields['Shared With Email'] || [];
+                        if (!Array.isArray(sharedWithEmails)) sharedWithEmails = [sharedWithEmails];
+                        var sharedWithEmailsLower = sharedWithEmails.map(function(e) { return (e || '').toLowerCase(); });
 
-                        // If user's email is not in Client Email but is found in Shared With Email, mark as shared
-                        if (!clientEmailsLower.includes(email) && sharedWithEmail.includes(email)) {
+                        // If user's email is not in Client Email but is in Shared With Email, mark as shared
+                        if (!clientEmailsLower.includes(email) && sharedWithEmailsLower.includes(email)) {
                             record.isShared = true;
                         }
                     });
@@ -3258,7 +3261,7 @@
             var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
             var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
             var isPrio = f['Is Prio'] === true;
-            var isShared = lead.isShared || f['Shared With Email'];
+            var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
 
             // Parse notes
             var notesArray = parseNotesJson(notesRaw);
@@ -3426,7 +3429,7 @@
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notesRaw = f['Client Notes'] || f['Notes'] || '';
-            var isShared = lead.isShared || f['Shared With Email'];
+            var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
 
             // Parse notes
             var notesArray = parseNotesJson(notesRaw);
@@ -5107,15 +5110,16 @@
         var leadIdToUpdate = currentShareLeadId;
 
         try {
-            // Clear the Shared With Email field
+            // Clear the Shared With linked record field (Shared With Email is a lookup, read-only)
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadIdToUpdate, {
                 method: 'PATCH',
-                body: { fields: { 'Shared With Email': null } }
+                body: { fields: { 'Shared With': null } }
             });
 
-            // Update local data
+            // Update local data - clear both the linked field and its lookup
             var lead = allLeads.find(function(l) { return l.id === leadIdToUpdate; });
             if (lead) {
+                lead.fields['Shared With'] = null;
                 lead.fields['Shared With Email'] = null;
             }
 
@@ -5180,14 +5184,16 @@
         var leadIdToUpdate = currentShareLeadId;
 
         try {
+            // Update the Shared With linked record field (Shared With Email is a lookup that auto-populates)
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadIdToUpdate, {
                 method: 'PATCH',
-                body: { fields: { 'Shared With Email': selectedAgentEmail } }
+                body: { fields: { 'Shared With': [selectedAgentId] } }
             });
 
             var lead = allLeads.find(function(l) { return l.id === leadIdToUpdate; });
             if (lead) {
-                lead.fields['Shared With Email'] = selectedAgentEmail;
+                lead.fields['Shared With'] = [selectedAgentId];
+                lead.fields['Shared With Email'] = [selectedAgentEmail]; // Update lookup locally for display
             }
 
             showToast('Prospect shared successfully!', 'success');
@@ -5778,7 +5784,9 @@
             // Ownership filter
             if (ownershipFilter !== 'all') {
                 var isOwned = isLeadOwnedByUser(l);
-                var isSharedByMe = !l.isShared && f['Shared With Email'];
+                var hasSharedWith = f['Shared With'] && f['Shared With'].length > 0;
+                var hasSharedWithEmail = f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']);
+                var isSharedByMe = !l.isShared && (hasSharedWith || hasSharedWithEmail);
                 var isSharedWithMe = l.isShared === true;
 
                 if (ownershipFilter === 'mine' && !isOwned) return false;
@@ -5849,7 +5857,7 @@
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notesRaw = f['Client Notes'] || f['Notes'] || '';
-            var isShared = lead.isShared || f['Shared With Email'];
+            var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
             var isPrio = f['Is Prio'] === true;
             var status = f['Status'] || f['Disposition'] || '';
 
@@ -6008,7 +6016,7 @@
             var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
             var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
             var summary = f['Last Call Summary'] || f['Summary'] || '';
-            var isShared = lead.isShared || f['Shared With Email'];
+            var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
 
             // Next Call Date display
             var dateDisplay = '';
@@ -6711,7 +6719,9 @@
             // Ownership filter
             if (ownershipFilter !== 'all') {
                 var isOwned = isLeadOwnedByUser(l);
-                var isSharedByMe = !l.isShared && f['Shared With Email'];
+                var hasSharedWith = f['Shared With'] && f['Shared With'].length > 0;
+                var hasSharedWithEmail = f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']);
+                var isSharedByMe = !l.isShared && (hasSharedWith || hasSharedWithEmail);
                 var isSharedWithMe = l.isShared === true;
 
                 if (ownershipFilter === 'mine' && !isOwned) return false;
@@ -6791,7 +6801,7 @@
             var callbackDate = f['Callback Date'] || f['Follow Up Date'];
             var summary = f['Last Call Summary'] || f['Summary'] || '';
             var notesRaw = f['Client Notes'] || f['Notes'] || '';
-            var isShared = lead.isShared || f['Shared With Email'];
+            var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
             var status = f['Status'] || f['Disposition'] || '';
 
             var notesArray = parseNotesJson(notesRaw);
@@ -6875,8 +6885,10 @@
         var sharedLeads = allLeads.filter(function(l) {
             var f = l.fields;
 
-            // Must be a shared lead (either shared with me or I shared it)
-            if (!l.isShared && !f['Shared With Email']) return false;
+            // Must be a shared lead (either shared with me via isShared flag, or I shared it via Shared With field)
+            var hasSharedWith = f['Shared With'] && f['Shared With'].length > 0;
+            var hasSharedWithEmail = f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']);
+            if (!l.isShared && !hasSharedWith && !hasSharedWithEmail) return false;
 
             // Search filter
             if (searchVal) {
@@ -7531,7 +7543,7 @@
         document.getElementById('searchLeadTranscript').textContent = transcript;
 
         // Update action button states
-        var isShared = lead.isShared || f['Shared With Email'];
+        var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
         var shareBtn = document.getElementById('searchShareBtn');
         if (isShared) {
             shareBtn.textContent = '✓ Shared';
