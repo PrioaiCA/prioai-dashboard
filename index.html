@@ -51,10 +51,6 @@
         .header-meta-divider{opacity:0.3}
         .meta-label{color:rgba(255,255,255,0.4)}
         .meta-value{color:rgb(52,211,153);font-family:monospace;font-weight:500}
-        .btn-refresh{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px 12px;color:rgba(255,255,255,0.7);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px;font-size:0.875rem}
-        .btn-refresh:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.25);color:#fff}
-        .btn-refresh.refreshing .refresh-icon{animation:spin 1s linear infinite}
-        .btn-refresh .refresh-icon{font-size:1rem;display:inline-block}
         .analytics-section{margin-top:2rem;margin-bottom:2rem}
         .analytics-header{margin-bottom:1rem}
         .analytics-header h3{font-size:1.125rem;font-weight:600}
@@ -1042,10 +1038,6 @@
                                 </div>
                             </div>
                             <div class="overview-header-right">
-                                <button class="btn-refresh" id="refreshDataBtn" title="Refresh data">
-                                    <span class="refresh-icon">↻</span>
-                                    <span>Refresh</span>
-                                </button>
                                 <div class="header-stat-badge usage-badge" id="usageCard">
                                     <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                     <span class="badge-emoji">📊</span>
@@ -2880,280 +2872,73 @@
     }
     updateWelcomeDate();
 
-    // === CACHE CONFIGURATION ===
-    var CACHE_CONFIG = {
-        version: '1.0.0',                           // Increment when schema changes
-        leadsTTL: 10 * 60 * 1000,                   // 10 minutes for leads
-        userTTL: 30 * 60 * 1000,                    // 30 minutes for user profile
-        staleTTL: 60 * 60 * 1000,                   // 1 hour - show stale data up to this age
-        backgroundRefreshInterval: 5 * 60 * 1000,  // 5 minutes
-        keys: {
-            leads: function(email) { return 'prio_v' + CACHE_CONFIG.version + '_leads_' + email; },
-            user: function(email) { return 'prio_v' + CACHE_CONFIG.version + '_user_' + email; },
-            lastRefresh: function(email) { return 'prio_v' + CACHE_CONFIG.version + '_lastRefresh_' + email; }
-        }
-    };
-
-    // === SELECTIVE FIELD FETCHING ===
-    var LEAD_FIELDS = [
-        'First Name', 'Last Name', 'Phone #', 'Phone', 'Client Email',
-        'Status', 'Disposition', 'Outcome', 'Last Outcome', 'Call Status', 'Is Prio',
-        'Updated At', 'Last Call Timestamp', 'Client Last Call Timestamp',
-        'Booked Time', 'Callback Date', 'Follow Up Date', 'Next Call Date',
-        'Last Call Summary', 'Summary', 'Client Notes', 'Notes', 'Client Attempts',
-        'Shared With', 'Shared With Email',
-        'Transcript (from Calls)', 'Links', 'Attachments'
-    ];
-
-    var CLIENT_FIELDS = [
-        'Agent Name', 'Email', 'Phone', 'Google Calendar Email',
-        'Available Start', 'Available End',
-        'Monthly Plan', 'Monthly Rate', 'Call Limit', 'Calls This Month', 'Status',
-        'Can Share With', 'Retell Phone'
-    ];
-
-    // Build fields query parameter (no encoding - fetchAirtable encodes entire path)
-    function buildFieldsParam(fieldsArray) {
-        if (!fieldsArray || fieldsArray.length === 0) return '';
-        return '&' + fieldsArray.map(function(f) { return 'fields[]=' + f; }).join('&');
-    }
-
-    // === CACHE MANAGER (localStorage with TTL) ===
-    var CacheManager = {
-        get: function(key, maxAge) {
-            try {
-                var cached = localStorage.getItem(key);
-                if (!cached) return null;
-
-                var data = JSON.parse(cached);
-                var age = Date.now() - data.timestamp;
-
-                return {
-                    data: data.payload,
-                    timestamp: data.timestamp,
-                    age: age,
-                    isFresh: age < maxAge,
-                    isStale: age >= maxAge && age < CACHE_CONFIG.staleTTL,
-                    isExpired: age >= CACHE_CONFIG.staleTTL
-                };
-            } catch (e) {
-                console.warn('Cache read error:', e);
-                return null;
-            }
-        },
-
-        set: function(key, payload) {
-            try {
-                var data = {
-                    timestamp: Date.now(),
-                    payload: payload
-                };
-                localStorage.setItem(key, JSON.stringify(data));
-                return true;
-            } catch (e) {
-                console.warn('Cache write error:', e);
-                if (e.name === 'QuotaExceededError') {
-                    this.clearOldCaches();
-                    try {
-                        localStorage.setItem(key, JSON.stringify(data));
-                        return true;
-                    } catch (e2) {
-                        return false;
-                    }
-                }
-                return false;
-            }
-        },
-
-        invalidate: function(key) {
-            try { localStorage.removeItem(key); } catch (e) {}
-        },
-
-        invalidateAll: function(email) {
-            try {
-                localStorage.removeItem(CACHE_CONFIG.keys.leads(email));
-                localStorage.removeItem(CACHE_CONFIG.keys.user(email));
-                localStorage.removeItem(CACHE_CONFIG.keys.lastRefresh(email));
-            } catch (e) {}
-        },
-
-        clearOldCaches: function() {
-            try {
-                var keysToRemove = [];
-                for (var i = 0; i < localStorage.length; i++) {
-                    var key = localStorage.key(i);
-                    if (key && key.startsWith('prio_') && !key.includes('_v' + CACHE_CONFIG.version + '_')) {
-                        keysToRemove.push(key);
-                    }
-                }
-                keysToRemove.forEach(function(key) { localStorage.removeItem(key); });
-            } catch (e) {}
-        }
-    };
-
-    // === BACKGROUND REFRESH ===
-    var backgroundRefreshTimer = null;
-
-    function scheduleBackgroundRefresh() {
-        if (backgroundRefreshTimer) clearInterval(backgroundRefreshTimer);
-
-        backgroundRefreshTimer = setInterval(function() {
-            if (document.visibilityState === 'visible' && currentUser) {
-                console.log('[Cache] Background refresh triggered');
-                loadLeadsData(true);
-            }
-        }, CACHE_CONFIG.backgroundRefreshInterval);
-    }
-
-    // Refresh when tab becomes visible after being hidden
-    document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible' && currentUser && currentUser.email) {
-            var lastRefreshKey = CACHE_CONFIG.keys.lastRefresh(currentUser.email);
-            var lastRefresh = CacheManager.get(lastRefreshKey, Infinity);
-
-            if (!lastRefresh || (Date.now() - lastRefresh.data) > CACHE_CONFIG.backgroundRefreshInterval) {
-                console.log('[Cache] Refreshing after tab became visible');
-                loadLeadsData(true);
-            }
-        }
-    });
-
-    window.addEventListener('beforeunload', function() {
-        if (backgroundRefreshTimer) clearInterval(backgroundRefreshTimer);
-    });
-
-    // === CACHE INVALIDATION ===
-    function afterLeadMutation(leadId, mutationType) {
-        console.log('[Cache] Lead mutation:', mutationType, leadId);
-        cacheData(); // Re-cache with updated allLeads
-    }
-
-    function onManualRefresh() {
-        console.log('[Cache] Manual refresh triggered');
-        if (currentUser && currentUser.email) {
-            CacheManager.invalidateAll(currentUser.email);
-        }
-        loadUserData();
-    }
-
-    // === CACHE FUNCTIONS ===
+    // Fetch all fields for now - field filtering can be added once field names are verified
+    var LEAD_FIELDS = '';
+    
+    // Try to load cached data first for instant display
     function loadCachedData() {
-        if (!currentUser || !currentUser.email) return { hasCache: false };
-
-        var cacheKey = CACHE_CONFIG.keys.leads(currentUser.email);
-        var cached = CacheManager.get(cacheKey, CACHE_CONFIG.leadsTTL);
-
-        if (!cached || cached.isExpired) {
-            return { hasCache: false };
-        }
-
-        allLeads = cached.data;
-        updateDashboard();
-        updatePrioList();
-
-        return {
-            hasCache: true,
-            isFresh: cached.isFresh,
-            isStale: cached.isStale,
-            age: cached.age
-        };
-    }
-
-    function cacheData() {
-        if (!currentUser || !currentUser.email) return;
-
-        var cacheKey = CACHE_CONFIG.keys.leads(currentUser.email);
-        CacheManager.set(cacheKey, allLeads);
-
-        if (currentUserRecord) {
-            var userKey = CACHE_CONFIG.keys.user(currentUser.email);
-            CacheManager.set(userKey, currentUserRecord);
-        }
-    }
-
-    // Helper to detect data changes for smart updates
-    function hasDataChanged(oldLeads, newLeads) {
-        if (!oldLeads || !newLeads) return true;
-        if (oldLeads.length !== newLeads.length) return true;
-
-        var oldMap = {};
-        oldLeads.forEach(function(lead) {
-            oldMap[lead.id] = JSON.stringify(lead.fields);
-        });
-
-        for (var i = 0; i < newLeads.length; i++) {
-            var newLead = newLeads[i];
-            var oldFields = oldMap[newLead.id];
-            if (!oldFields || oldFields !== JSON.stringify(newLead.fields)) {
-                return true;
+        try {
+            var cached = sessionStorage.getItem('prio_leads_' + currentUser.email);
+            if (cached) {
+                var data = JSON.parse(cached);
+                if (Date.now() - data.timestamp < 60000) { // Cache valid for 1 minute
+                    allLeads = data.leads;
+                    updateDashboard();
+                    updatePrioList();
+                    return true;
+                }
             }
-        }
+        } catch (e) {}
         return false;
     }
+    
+    function cacheData() {
+        try {
+            sessionStorage.setItem('prio_leads_' + currentUser.email, JSON.stringify({
+                timestamp: Date.now(),
+                leads: allLeads
+            }));
+        } catch (e) {}
+    }
 
-    // Load user data from Airtable with stale-while-revalidate
+    // Load user data from Airtable
     async function loadUserData() {
         if (!currentUser) return;
-
-        // Try to load cached data first (stale-while-revalidate)
-        var cacheResult = loadCachedData();
-        var hasCachedLeads = cacheResult.hasCache;
-
-        // Try to load cached user record
-        var userCacheKey = CACHE_CONFIG.keys.user(currentUser.email);
-        var cachedUser = CacheManager.get(userCacheKey, CACHE_CONFIG.userTTL);
-
-        if (cachedUser && !cachedUser.isExpired) {
-            currentUserRecord = cachedUser.data;
-            // If we have fresh cache for both user and leads, skip network
-            if (hasCachedLeads && cacheResult.isFresh) {
-                console.log('[Cache] Using fresh cache, skipping network request');
-                clearAllLoadingStates();
-                scheduleBackgroundRefresh();
-                return;
-            }
-        }
-
-        // Show loading state only if no cache at all
-        if (!hasCachedLeads) {
+        
+        // Show cached data immediately if available
+        var hasCached = loadCachedData();
+        
+        // Show loading state only if no cache
+        if (!hasCached) {
             document.getElementById('statProspects').textContent = '...';
             document.getElementById('statAppointments').textContent = '...';
             document.getElementById('statCallsToday').textContent = '...';
         }
-
-        // If we have stale cache, user sees data but we fetch in background
-        var isBackgroundRefresh = hasCachedLeads && cacheResult.isStale;
-        if (isBackgroundRefresh) {
-            console.log('[Cache] Showing stale cache, refreshing in background');
-            clearAllLoadingStates();
-        }
-
+        
         try {
-            var filterFormula = '({Email} = "' + currentUser.email + '")';
-            var path = AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + filterFormula + buildFieldsParam(CLIENT_FIELDS);
+            var filterFormula = encodeURIComponent('({Email} = "' + currentUser.email + '")');
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + filterFormula;
             var data = await fetchAirtable(path);
-
+            
             if (data.records && data.records.length > 0) {
                 currentUserRecord = data.records[0];
-                // Cache user record
-                CacheManager.set(userCacheKey, currentUserRecord);
-                loadLeadsData(isBackgroundRefresh);
+                loadLeadsData();
             } else {
-                if (!hasCachedLeads) {
-                    document.getElementById('statProspects').textContent = '0';
-                    document.getElementById('statAppointments').textContent = '0';
-                    document.getElementById('statCallsToday').textContent = '0';
-                    document.getElementById('prioList').innerHTML = '<div class="prio-empty">No leads yet. Import some to get started!</div>';
-                }
+                document.getElementById('statProspects').textContent = '0';
+                document.getElementById('statAppointments').textContent = '0';
+                document.getElementById('statCallsToday').textContent = '0';
+                document.getElementById('prioList').innerHTML = '<div class="prio-empty">No leads yet. Import some to get started!</div>';
+                // No user record - clear all loading states
                 clearAllLoadingStates();
             }
         } catch (err) {
             console.error('Failed to load user data:', err);
-            if (!hasCachedLeads) {
+            if (!hasCached) {
                 document.getElementById('statProspects').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
                 document.getElementById('statCallsToday').textContent = '0';
             }
+            // Error occurred - clear all loading states
             clearAllLoadingStates();
 
             // Retry loading user data after a delay
@@ -3164,9 +2949,6 @@
                 setTimeout(loadUserData, 2000 * window.userLoadRetryCount);
             }
         }
-
-        // Schedule background refresh for future
-        scheduleBackgroundRefresh();
     }
 
     // Helper to clear all loading states
@@ -3180,16 +2962,15 @@
         if (typeof hidePageLoading === 'function') hidePageLoading();
     }
 
-    // Load leads data with optimizations, field filtering, and smart updates
-    async function loadLeadsData(isBackgroundRefresh) {
+    // Load leads data with optimizations
+    async function loadLeadsData(isRefresh) {
         if (!currentUserRecord) return;
 
         try {
             var email = currentUser.email.toLowerCase();
             // Include leads owned by user OR shared with user (use ARRAYJOIN for lookup fields)
             var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER(ARRAYJOIN({Shared With Email}))))';
-            // Add selective field filtering for reduced payload
-            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + filterFormula + '&pageSize=100' + buildFieldsParam(LEAD_FIELDS);
+            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
 
             // Use temp array to avoid flickering on refresh
             var tempLeads = [];
@@ -3219,8 +3000,8 @@
                 }
                 offset = data.offset;
 
-                // On initial load (not background refresh), render after first page so user sees data fast
-                if (!isBackgroundRefresh && isFirstPage && tempLeads.length > 0) {
+                // On initial load, render after first page so user sees data fast
+                if (!isRefresh && isFirstPage && tempLeads.length > 0) {
                     isFirstPage = false;
                     allLeads = tempLeads.slice(); // Copy current data
                     updateDashboard();
@@ -3228,30 +3009,11 @@
                 }
             } while (offset);
 
-            // Smart update: only update UI if data actually changed (for background refresh)
-            if (isBackgroundRefresh) {
-                var dataChanged = hasDataChanged(allLeads, tempLeads);
-                if (dataChanged) {
-                    console.log('[Cache] Data changed, updating UI');
-                    allLeads = tempLeads;
-                    updateDashboard();
-                    updatePrioList();
-                    updateProspectsTable();
-                    updatePipelineList();
-                } else {
-                    console.log('[Cache] No data changes detected');
-                }
-            } else {
-                // Replace allLeads with complete new data
-                allLeads = tempLeads;
-                updateDashboard();
-                updatePrioList();
-            }
-
+            // Replace allLeads with complete new data
+            allLeads = tempLeads;
+            updateDashboard();
+            updatePrioList();
             cacheData();
-
-            // Update last refresh timestamp
-            CacheManager.set(CACHE_CONFIG.keys.lastRefresh(currentUser.email), Date.now());
 
             // Mark data as successfully loaded
             window.dataLoadedSuccessfully = true;
@@ -3266,7 +3028,7 @@
                 window.loadRetryCount++;
                 console.log('Retrying data load, attempt ' + window.loadRetryCount);
                 setTimeout(function() {
-                    loadLeadsData(isBackgroundRefresh);
+                    loadLeadsData(isRefresh);
                 }, 2000 * window.loadRetryCount); // Exponential backoff: 2s, 4s, 6s
             }
         }
@@ -4064,23 +3826,6 @@
         }
     });
 
-    // Refresh button handler
-    document.getElementById('refreshDataBtn')?.addEventListener('click', async function() {
-        var btn = this;
-        if (btn.classList.contains('refreshing')) return;
-
-        btn.classList.add('refreshing');
-
-        try {
-            onManualRefresh();
-            showToast('Refreshing data...', 'success');
-        } finally {
-            setTimeout(function() {
-                btn.classList.remove('refreshing');
-            }, 1500);
-        }
-    });
-
     // Init
     checkAuth().then(function() {
         if (currentUser) {
@@ -4573,7 +4318,6 @@
             openLeadModal(currentLeadId); // Refresh modal
             updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note saved', 'success');
-            afterLeadMutation(currentLeadId, 'note_add');
         } catch (err) {
             showToast('Failed to save note', 'error');
         }
@@ -4772,7 +4516,6 @@
             openLeadModal(currentLeadId);
             updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Call attempt logged', 'success');
-            afterLeadMutation(currentLeadId, 'attempt_add');
         } catch (err) {
             console.error('Log attempt error:', err);
             showToast('Failed to log call: ' + err.message, 'error');
@@ -4780,7 +4523,7 @@
         btn.disabled = false;
         btn.textContent = '+ Log Call Attempt';
     });
-
+    
     // Unprio from table
     async function unprio(leadId) {
         try {
@@ -4792,12 +4535,11 @@
             if (lead) lead.fields['Is Prio'] = false;
             updatePrioList();
             showToast('Removed from PRIO', 'success');
-            afterLeadMutation(leadId, 'prio_toggle');
         } catch (err) {
             showToast('Failed to update', 'error');
         }
     }
-
+    
     // Toggle PRIO
     document.getElementById('modalPrioBtn').addEventListener('click', async function() {
         if (!currentLeadId) return;
@@ -4817,7 +4559,6 @@
             openLeadModal(currentLeadId);
             updatePrioList();
             showToast(newPrioStatus ? 'Marked as PRIO' : 'Removed from PRIO', 'success');
-            afterLeadMutation(currentLeadId, 'prio_toggle');
         } catch (err) {
             showToast('Failed to update', 'error');
         }
@@ -5051,9 +4792,8 @@
 
             document.getElementById('sendAIModal').classList.remove('active');
             document.getElementById('leadModal').classList.remove('active');
-            showToast('Lead sent back to AI for follow-up', 'success');
-            afterLeadMutation(sendAILeadId, 'status_change');
             currentLeadId = null;
+            showToast('Lead sent back to AI for follow-up', 'success');
 
             // Refresh all views immediately
             updateDashboard();
@@ -5090,14 +4830,12 @@
             });
 
             // Remove from local data and update UI immediately
-            var dncLeadId = currentLeadId;
             allLeads = allLeads.filter(function(l) { return l.id !== currentLeadId; });
 
             showToast('Lead marked as Do Not Call', 'success');
             document.getElementById('leadModal').classList.remove('active');
             updateDashboard();
             updatePrioList();
-            afterLeadMutation(dncLeadId, 'status_change');
         } catch (err) {
             showToast('Failed to update: ' + err.message, 'error');
         }
@@ -5163,7 +4901,6 @@
             showToast('Marked as DNC', 'success');
             updateDashboard();
             updatePrioList();
-            afterLeadMutation(leadId, 'status_change');
         } catch (err) {
             showToast('Failed: ' + err.message, 'error');
         }
@@ -5757,7 +5494,6 @@
             updatePrioList();
             updateDashboard(); // Refresh today's priorities immediately
             updateProspectsTable(); // Refresh prospects list
-            afterLeadMutation(scheduleLeadId, 'booking_add');
             if (calendarSyncSuccess) {
                 showToast('Meeting scheduled and synced to calendar!', 'success');
             } else {
@@ -5769,7 +5505,7 @@
         btn.disabled = false;
         btn.textContent = 'Save Booking';
     });
-
+    
     // Delete booking
     async function deleteBookingFromModal() {
         if (!currentLeadId) return;
@@ -5796,7 +5532,6 @@
             updateDashboard(); // Refresh today's priorities
             updateProspectsTable(); // Refresh prospects list
             showToast('Booking removed', 'success');
-            afterLeadMutation(currentLeadId, 'booking_delete');
         } catch (err) {
             showToast('Failed to remove booking', 'error');
         }
@@ -5883,7 +5618,6 @@
             lead.fields['Client Attempts'] = JSON.stringify(attemptsArray);
             openLeadModal(currentLeadId);
             showToast('Call attempt deleted', 'success');
-            afterLeadMutation(currentLeadId, 'attempt_delete');
         } catch (err) {
             showToast('Failed to delete call attempt', 'error');
         }
@@ -5971,7 +5705,6 @@
             openLeadModal(currentLeadId);
             updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note updated', 'success');
-            afterLeadMutation(currentLeadId, 'note_edit');
         } catch (err) {
             showToast('Failed to update note', 'error');
         }
@@ -6008,7 +5741,6 @@
             openLeadModal(currentLeadId);
             updateLeadCardDisplay(currentLeadId); // Update card live
             showToast('Note deleted', 'success');
-            afterLeadMutation(currentLeadId, 'note_delete');
         } catch (err) {
             showToast('Failed to delete note', 'error');
         }
@@ -6408,12 +6140,11 @@
             updatePrioList();
             updateProspectsTable();
             showToast('Marked as PRIO', 'success');
-            afterLeadMutation(leadId, 'prio_toggle');
         } catch (err) {
             showToast('Failed to update', 'error');
         }
     }
-
+    
     // Open lead modal by ID
     function openLeadModal(leadId) {
         var lead = allLeads.find(function(l) { return l.id === leadId; });
@@ -6682,7 +6413,6 @@
             // Clear inputs
             titleInput.value = '';
             urlInput.value = '';
-            afterLeadMutation(currentLeadId, 'link_add');
         } catch (err) {
             console.error('Failed to save link:', err);
             alert('Failed to save link. Please try again.');
@@ -6708,7 +6438,6 @@
 
             // Re-render
             renderLinksList(links);
-            afterLeadMutation(currentLeadId, 'link_delete');
         } catch (err) {
             console.error('Failed to delete link:', err);
             alert('Failed to delete link. Please try again.');
