@@ -1000,10 +1000,6 @@
                     <h1 class="header-title" id="pageTitle">Overview</h1>
                 </div>
                 <div class="header-right">
-                    <button class="header-btn" id="themeToggle" title="Toggle theme">
-                        <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                        <svg class="moon-icon" viewBox="0 0 24 24" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                    </button>
                     <button class="btn btn-primary btn-sm" id="loginBtn">Sign In</button>
                 </div>
             </header>
@@ -2514,27 +2510,11 @@
         }
     });
 
-    // Theme
+    // Set dark theme
     (function() {
-        var html = document.documentElement;
-        var saved = localStorage.getItem('theme') || 'dark';
-        html.setAttribute('data-theme', saved);
-        updateThemeIcons();
-        
-        document.getElementById('themeToggle').addEventListener('click', function() {
-            var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-            updateThemeIcons();
-        });
-        
-        function updateThemeIcons() {
-            var isDark = html.getAttribute('data-theme') === 'dark';
-            document.querySelectorAll('.sun-icon').forEach(function(el) { el.style.display = isDark ? 'block' : 'none'; });
-            document.querySelectorAll('.moon-icon').forEach(function(el) { el.style.display = isDark ? 'none' : 'block'; });
-            document.querySelectorAll('.logo-dark').forEach(function(el) { el.style.display = isDark ? 'block' : 'none'; });
-            document.querySelectorAll('.logo-light').forEach(function(el) { el.style.display = isDark ? 'none' : 'block'; });
-        }
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.querySelectorAll('.logo-dark').forEach(function(el) { el.style.display = 'block'; });
+        document.querySelectorAll('.logo-light').forEach(function(el) { el.style.display = 'none'; });
     })();
 
     // Sidebar Toggle (mobile)
@@ -2948,8 +2928,8 @@
                 document.getElementById('statAppointments').textContent = '0';
                 document.getElementById('statCallsToday').textContent = '0';
                 document.getElementById('prioList').innerHTML = '<div class="prio-empty">No leads yet. Import some to get started!</div>';
-                // No user record - still hide loading overlay
-                if (typeof hidePageLoading === 'function') hidePageLoading();
+                // No user record - clear all loading states
+                clearAllLoadingStates();
             }
         } catch (err) {
             console.error('Failed to load user data:', err);
@@ -2958,9 +2938,28 @@
                 document.getElementById('statAppointments').textContent = '0';
                 document.getElementById('statCallsToday').textContent = '0';
             }
-            // Error occurred - still hide loading overlay
-            if (typeof hidePageLoading === 'function') hidePageLoading();
+            // Error occurred - clear all loading states
+            clearAllLoadingStates();
+
+            // Retry loading user data after a delay
+            if (!window.userLoadRetryCount) window.userLoadRetryCount = 0;
+            if (window.userLoadRetryCount < 3) {
+                window.userLoadRetryCount++;
+                console.log('Retrying user data load, attempt ' + window.userLoadRetryCount);
+                setTimeout(loadUserData, 2000 * window.userLoadRetryCount);
+            }
         }
+    }
+
+    // Helper to clear all loading states
+    function clearAllLoadingStates() {
+        // Clear dashboard loading spinners
+        var overviewPage = document.getElementById('page-overview');
+        if (overviewPage) {
+            overviewPage.classList.remove('dashboard-loading');
+        }
+        // Clear page loading overlay
+        if (typeof hidePageLoading === 'function') hidePageLoading();
     }
 
     // Load leads data with optimizations
@@ -3012,8 +3011,23 @@
             updateDashboard();
             updatePrioList();
             cacheData();
+
+            // Mark data as successfully loaded
+            window.dataLoadedSuccessfully = true;
         } catch (err) {
             console.error('Failed to load leads:', err);
+            // Still clear loading state on error so user isn't stuck
+            updateDashboard();
+
+            // Retry loading after a delay if not already retrying too much
+            if (!window.loadRetryCount) window.loadRetryCount = 0;
+            if (window.loadRetryCount < 3) {
+                window.loadRetryCount++;
+                console.log('Retrying data load, attempt ' + window.loadRetryCount);
+                setTimeout(function() {
+                    loadLeadsData(isRefresh);
+                }, 2000 * window.loadRetryCount); // Exponential backoff: 2s, 4s, 6s
+            }
         }
     }
 
