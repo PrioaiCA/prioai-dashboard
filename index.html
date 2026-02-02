@@ -209,8 +209,8 @@
         .modal-nav-arrow:hover{background:rgba(52,211,153,0.2);border-color:rgb(52,211,153)}
         .modal-nav-arrow:disabled{opacity:0.3;cursor:not-allowed}
         .modal-nav-arrow:disabled:hover{background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.2)}
-        .modal-nav-prev{left:calc(50% - 480px)}
-        .modal-nav-next{right:calc(50% - 480px)}
+        .modal-nav-prev{left:calc(50% - 520px)}
+        .modal-nav-next{right:calc(50% - 520px)}
         @media(max-width:1100px){.modal-nav-arrow{display:none}}
         .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)}
         .modal-name-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
@@ -320,7 +320,29 @@
         .lead-transcript .speaker-ai{color:#fff;font-weight:600}
         .lead-transcript .speaker-prospect{color:rgb(52,211,153);font-weight:600}
         .lead-transcript-line{margin-bottom:8px}
-        
+
+        /* Attachments Section */
+        .lead-attachments-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:200px;overflow-y:auto}
+        .lead-attachment-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:8px;transition:all 0.15s}
+        .lead-attachment-item:hover{background:rgba(255,255,255,0.08)}
+        .attachment-icon{font-size:1.25rem;flex-shrink:0}
+        .attachment-info{flex:1;min-width:0}
+        .attachment-title{font-size:0.875rem;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .attachment-url{font-size:0.75rem;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .attachment-actions{display:flex;gap:4px}
+        .btn-attachment-open{background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#3b82f6;padding:6px 10px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;transition:all 0.15s;text-decoration:none}
+        .btn-attachment-open:hover{background:rgba(59,130,246,0.25)}
+        .btn-attachment-delete{background:none;border:none;color:rgba(239,68,68,0.7);cursor:pointer;font-size:0.875rem;padding:4px 6px;border-radius:4px;transition:all 0.15s}
+        .btn-attachment-delete:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        .add-attachment-form{display:flex;flex-direction:column;gap:10px}
+        .add-attachment-row{display:flex;gap:8px}
+        .add-attachment-row input{flex:1;padding:10px 12px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.875rem}
+        .add-attachment-row input::placeholder{color:rgba(255,255,255,0.4)}
+        .btn-add-attachment{padding:10px 16px;background:rgb(52,211,153);border:none;color:#000;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+        .btn-add-attachment:hover{opacity:0.9}
+        .btn-add-attachment:disabled{opacity:0.5;cursor:not-allowed}
+        .attachments-empty{color:rgba(255,255,255,0.4);font-size:0.875rem;padding:12px;text-align:center}
+
         /* Share Button */
         .btn-share{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
         .btn-share:hover{background:rgba(59,130,246,0.25)}
@@ -404,6 +426,19 @@
         @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr}}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* Dashboard Loading State */
+        .dashboard-loading-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:#111;display:flex;align-items:center;justify-content:center;z-index:5;border-radius:12px}
+        .dashboard-loading-spinner{width:24px;height:24px;border:2px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
+        .overview-card{position:relative;overflow:hidden}
+        .stat-card{position:relative;overflow:hidden}
+        .header-stat-badge{position:relative;overflow:hidden}
+        .dashboard-loading .overview-card .dashboard-loading-overlay,
+        .dashboard-loading .stat-card .dashboard-loading-overlay,
+        .dashboard-loading .header-stat-badge .dashboard-loading-overlay{display:flex}
+        .overview-card .dashboard-loading-overlay,
+        .stat-card .dashboard-loading-overlay,
+        .header-stat-badge .dashboard-loading-overlay{display:none}
         .overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
         @media(min-width:768px){.overview-grid{grid-template-columns:repeat(4,1fr)}}
         .overview-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.15s}
@@ -995,7 +1030,7 @@
                 <!-- Dashboard Content -->
                 <div id="dashboardContent" class="hidden">
                     <!-- Page: Overview -->
-                    <div class="page" id="page-overview">
+                    <div class="page dashboard-loading" id="page-overview">
                         <!-- Welcome Header with Compact Stats -->
                         <div class="overview-header-row">
                             <div class="overview-header-left">
@@ -1008,17 +1043,20 @@
                             </div>
                             <div class="overview-header-right">
                                 <div class="header-stat-badge usage-badge" id="usageCard">
+                                    <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                     <span class="badge-emoji">📊</span>
                                     <div class="badge-value"><span id="usageCalls">0</span>/<span id="usageLimit">0</span></div>
                                     <div class="badge-label">Usage</div>
                                     <div class="usage-bar-mini"><div class="usage-bar-fill" id="usageBarFill"></div></div>
                                 </div>
                                 <div class="header-stat-badge">
+                                    <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                     <span class="badge-emoji">👥</span>
                                     <div class="badge-value" id="statProspects">-</div>
                                     <div class="badge-label">Leads</div>
                                 </div>
                                 <div class="header-stat-badge accent">
+                                    <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                     <span class="badge-emoji">✅</span>
                                     <div class="badge-value" id="statAppointments">-</div>
                                     <div class="badge-label">Booked</div>
@@ -1030,6 +1068,7 @@
                         <div class="section-label">Pipeline Overview</div>
                         <div class="overview-grid">
                             <div class="overview-card" onclick="switchPage('prio')">
+                                <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">⚡</span>
                                     <h4>Prio Prospects</h4>
@@ -1038,6 +1077,7 @@
                                 <div class="overview-card-desc">Priority leads to focus on</div>
                             </div>
                             <div class="overview-card" onclick="switchPage('prospects')">
+                                <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">📋</span>
                                     <h4>Prospects</h4>
@@ -1046,6 +1086,7 @@
                                 <div class="overview-card-desc">Callbacks & meetings booked</div>
                             </div>
                             <div class="overview-card" style="cursor:default">
+                                <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">📞</span>
                                     <h4>Active Leads</h4>
@@ -1054,6 +1095,7 @@
                                 <div class="overview-card-desc">Being called by AI</div>
                             </div>
                             <div class="overview-card" onclick="switchPage('pipeline')">
+                                <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">🤖</span>
                                     <h4>AI Pipeline</h4>
@@ -1067,6 +1109,7 @@
                         <div class="section-label">Today's Numbers</div>
                         <div class="stats-grid">
                             <div class="stat-card">
+                                <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="stat-icon">📞</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statCallsToday">0</div>
@@ -1074,6 +1117,7 @@
                                 </div>
                             </div>
                             <div class="stat-card">
+                                <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="stat-icon">💬</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statConversationsToday">0</div>
@@ -1081,6 +1125,7 @@
                                 </div>
                             </div>
                             <div class="stat-card">
+                                <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="stat-icon">📅</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statMeetingsToday">0</div>
@@ -1088,6 +1133,7 @@
                                 </div>
                             </div>
                             <div class="stat-card">
+                                <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="stat-icon">🔄</div>
                                 <div class="stat-content">
                                     <div class="stat-value" id="statFollowUpsToday">0</div>
@@ -2099,6 +2145,22 @@
                 </div>
 
                 <div class="lead-section">
+                    <h3>🔗 Links & Attachments <span class="attempts-count" id="modalAttachmentsCount">0</span></h3>
+                    <div class="lead-attachments-list" id="modalAttachmentsList">
+                        <div class="attachments-empty">No links or attachments yet</div>
+                    </div>
+                    <div class="add-attachment-form">
+                        <div class="add-attachment-row">
+                            <input type="text" id="attachmentTitleInput" placeholder="Title (e.g., Listing on MLS)">
+                        </div>
+                        <div class="add-attachment-row">
+                            <input type="url" id="attachmentUrlInput" placeholder="URL (e.g., https://...)">
+                            <button class="btn-add-attachment" id="addAttachmentBtn">+ Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lead-section">
                     <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
                     <div class="lead-attempts-list" id="modalAttemptsList"></div>
                     <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
@@ -2763,6 +2825,9 @@
             document.getElementById('loginBtn').classList.add('hidden');
             document.getElementById('dashboardContent').classList.remove('hidden');
 
+            // Show sidebar for logged in users
+            document.getElementById('sidebar').style.display = '';
+
             // Show loading animation for logged in users
             var overlay = document.getElementById('pageLoadingOverlay');
             var appContainer = document.getElementById('appContainer');
@@ -2780,6 +2845,8 @@
             document.getElementById('userAvatar').textContent = 'G';
             document.getElementById('loginBtn').classList.remove('hidden');
             document.getElementById('guestState').classList.remove('hidden');
+            // Hide sidebar for non-logged in users
+            document.getElementById('sidebar').style.display = 'none';
             // Show app container for non-logged in users
             document.getElementById('appContainer').style.opacity = '1';
         }
@@ -2945,6 +3012,11 @@
 
     function updateDashboard() {
         updateStats();
+        // Remove loading state from dashboard
+        var overviewPage = document.getElementById('page-overview');
+        if (overviewPage) {
+            overviewPage.classList.remove('dashboard-loading');
+        }
     }
 
     // Update stats
@@ -6194,6 +6266,20 @@
             if (takeOverBtn) takeOverBtn.style.display = 'none';
         }
 
+        // Attachments/Links - parse JSON if available
+        var attachmentsRaw = f['Attachments'] || '[]';
+        var attachmentsArray = [];
+        try {
+            if (typeof attachmentsRaw === 'string') {
+                attachmentsArray = JSON.parse(attachmentsRaw);
+            } else if (Array.isArray(attachmentsRaw)) {
+                attachmentsArray = attachmentsRaw;
+            }
+        } catch (e) {
+            attachmentsArray = [];
+        }
+        renderAttachmentsList(attachmentsArray);
+
         // Show modal
         document.getElementById('leadModal').classList.add('active');
     }
@@ -6209,7 +6295,144 @@
             currentLeadId = null;
         }
     });
-    
+
+    // ===== ATTACHMENTS HANDLING =====
+    function renderAttachmentsList(attachments) {
+        var list = document.getElementById('modalAttachmentsList');
+        var countEl = document.getElementById('modalAttachmentsCount');
+        if (!list) return;
+
+        if (!Array.isArray(attachments) || attachments.length === 0) {
+            list.innerHTML = '<div class="attachments-empty">No links or attachments yet</div>';
+            if (countEl) countEl.textContent = '0';
+            return;
+        }
+
+        if (countEl) countEl.textContent = attachments.length;
+
+        list.innerHTML = attachments.map(function(att, idx) {
+            var icon = '🔗';
+            if (att.url) {
+                var urlLower = att.url.toLowerCase();
+                if (urlLower.includes('zillow') || urlLower.includes('redfin') || urlLower.includes('realtor') || urlLower.includes('mls')) icon = '🏠';
+                else if (urlLower.includes('docs.google') || urlLower.includes('drive.google')) icon = '📄';
+                else if (urlLower.includes('dropbox')) icon = '📁';
+                else if (urlLower.includes('.pdf')) icon = '📕';
+            }
+            return '<div class="lead-attachment-item">' +
+                '<span class="attachment-icon">' + icon + '</span>' +
+                '<div class="attachment-info">' +
+                    '<div class="attachment-title">' + escapeHtml(att.title || 'Untitled') + '</div>' +
+                    '<div class="attachment-url">' + escapeHtml(att.url || '') + '</div>' +
+                '</div>' +
+                '<div class="attachment-actions">' +
+                    '<a href="' + escapeHtml(att.url || '#') + '" target="_blank" rel="noopener" class="btn-attachment-open">Open</a>' +
+                    '<button class="btn-attachment-delete" onclick="deleteAttachment(' + idx + ')" title="Delete">✕</button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    function getAttachmentsFromLead() {
+        if (!currentLeadId) return [];
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        if (!lead) return [];
+        var attachmentsRaw = lead.fields['Attachments'] || '[]';
+        try {
+            if (typeof attachmentsRaw === 'string') {
+                return JSON.parse(attachmentsRaw);
+            } else if (Array.isArray(attachmentsRaw)) {
+                return attachmentsRaw;
+            }
+        } catch (e) {}
+        return [];
+    }
+
+    async function addAttachment() {
+        if (!currentLeadId) return;
+        var titleInput = document.getElementById('attachmentTitleInput');
+        var urlInput = document.getElementById('attachmentUrlInput');
+        var title = (titleInput.value || '').trim();
+        var url = (urlInput.value || '').trim();
+
+        if (!url) {
+            alert('Please enter a URL');
+            return;
+        }
+
+        // Validate URL
+        try {
+            new URL(url);
+        } catch (e) {
+            alert('Please enter a valid URL (e.g., https://...)');
+            return;
+        }
+
+        var attachments = getAttachmentsFromLead();
+        attachments.push({
+            title: title || url,
+            url: url,
+            addedAt: new Date().toISOString()
+        });
+
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Attachments': JSON.stringify(attachments) } }
+            });
+
+            // Update local data
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            if (lead) lead.fields['Attachments'] = JSON.stringify(attachments);
+
+            // Re-render
+            renderAttachmentsList(attachments);
+
+            // Clear inputs
+            titleInput.value = '';
+            urlInput.value = '';
+        } catch (err) {
+            console.error('Failed to save attachment:', err);
+            alert('Failed to save attachment. Please try again.');
+        }
+    }
+
+    async function deleteAttachment(index) {
+        if (!currentLeadId) return;
+        if (!confirm('Delete this link?')) return;
+
+        var attachments = getAttachmentsFromLead();
+        attachments.splice(index, 1);
+
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Attachments': JSON.stringify(attachments) } }
+            });
+
+            // Update local data
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            if (lead) lead.fields['Attachments'] = JSON.stringify(attachments);
+
+            // Re-render
+            renderAttachmentsList(attachments);
+        } catch (err) {
+            console.error('Failed to delete attachment:', err);
+            alert('Failed to delete attachment. Please try again.');
+        }
+    }
+
+    // Add attachment button listener
+    document.getElementById('addAttachmentBtn')?.addEventListener('click', addAttachment);
+
+    // Allow Enter key to add attachment when in URL field
+    document.getElementById('attachmentUrlInput')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addAttachment();
+        }
+    });
+
     // ===== FILTER EVENT LISTENERS =====
     // Prio filters
     document.getElementById('prioSearch')?.addEventListener('input', debounce(updatePrioListFiltered, 300));
