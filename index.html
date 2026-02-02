@@ -753,6 +753,20 @@
         .search-lead-section h4{font-size:0.875rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
         .search-lead-content{background:#0a0a0a;padding:16px;border-radius:8px;font-size:0.9375rem;line-height:1.6;white-space:pre-wrap}
         .search-lead-content.transcript{max-height:300px;overflow-y:auto}
+        .search-lead-actions{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+        .search-lead-actions .btn{flex:1;min-width:120px}
+        .search-lead-notes-list,.search-lead-attempts-list,.search-lead-ai-calls-list{background:#0a0a0a;padding:16px;border-radius:8px;max-height:250px;overflow-y:auto}
+        .search-note-item,.search-attempt-item,.search-ai-call-item{padding:12px;background:rgba(255,255,255,0.03);border-radius:6px;margin-bottom:8px;border-left:3px solid rgba(52,211,153,0.5)}
+        .search-note-item:last-child,.search-attempt-item:last-child,.search-ai-call-item:last-child{margin-bottom:0}
+        .search-note-date,.search-attempt-time,.search-ai-call-time{font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:4px}
+        .search-note-text,.search-attempt-result{font-size:0.875rem;line-height:1.5}
+        .search-ai-call-item{border-left-color:rgba(99,102,241,0.5)}
+        .search-ai-call-result{display:flex;justify-content:space-between;align-items:center;gap:8px}
+        .search-ai-call-outcome{font-size:0.8125rem;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.1)}
+        .search-ai-call-outcome.booked{background:rgba(52,211,153,0.2);color:rgb(52,211,153)}
+        .search-ai-call-outcome.callback{background:rgba(245,158,11,0.2);color:#f59e0b}
+        .search-ai-call-outcome.timeline,.search-ai-call-outcome.follow-up{background:rgba(99,102,241,0.2);color:#6366f1}
+        .search-ai-call-outcome.not-interested,.search-ai-call-outcome.voicemail,.search-ai-call-outcome.no-answer{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)}
 
         /* Collapsible Sidebar */
         .sidebar-collapse-btn{display:none;width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);cursor:pointer;align-items:center;justify-content:center;transition:all 0.2s;font-size:1rem;flex-shrink:0}
@@ -1432,17 +1446,17 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Max Call Attempts</label>
-                                        <select id="singleLeadMaxAttempts" class="form-input">
-                                            <option value="">Default (5)</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="5">5</option>
-                                            <option value="10">10</option>
-                                        </select>
+                                        <input type="number" id="singleLeadMaxAttempts" placeholder="5" min="1" max="10" value="5" class="form-input">
+                                        <p class="form-hint">1-10 attempts (default: 5)</p>
                                     </div>
                                 </div>
-                                
+
+                                <div class="form-group">
+                                    <label>Context <span style="color:rgba(255,255,255,0.4);font-weight:400;">(optional)</span></label>
+                                    <textarea id="singleLeadContext" placeholder="Add any context for the AI to use when calling this lead..." class="form-input" rows="3"></textarea>
+                                    <p class="form-hint">If left empty, a default context will be used</p>
+                                </div>
+
                                 <div id="singleLeadStatus"></div>
                                 
                                 <button class="btn btn-primary btn-block" id="submitSingleLeadBtn">
@@ -1500,7 +1514,14 @@
                                     </div>
                                     <span id="searchLeadStatusBadge" class="status-badge">-</span>
                                 </div>
-                                
+
+                                <!-- Action Buttons -->
+                                <div class="search-lead-actions">
+                                    <button class="btn btn-secondary" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
+                                    <button class="btn btn-secondary" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
+                                    <button class="btn btn-danger" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Do Not Call</button>
+                                </div>
+
                                 <div class="search-lead-info-grid">
                                     <div class="info-item">
                                         <span class="info-label">Email</span>
@@ -1519,20 +1540,27 @@
                                         <span class="info-value" id="searchLeadBookedTime">-</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="search-lead-section">
-                                    <h4>📝 Client Notes</h4>
-                                    <textarea id="searchLeadNotesInput" class="form-input" rows="4" placeholder="Add notes about this lead..."></textarea>
-                                    <div style="display:flex;justify-content:flex-end;margin-top:8px;">
-                                        <button class="btn btn-primary btn-sm" id="searchLeadSaveNotes">Save Notes</button>
-                                    </div>
+                                    <h4>📝 Notes History</h4>
+                                    <div id="searchLeadNotesList" class="search-lead-notes-list">No notes available</div>
                                 </div>
-                                
+
+                                <div class="search-lead-section">
+                                    <h4>📞 Call Attempts (Manual)</h4>
+                                    <div id="searchLeadAttemptsList" class="search-lead-attempts-list">No call attempts logged</div>
+                                </div>
+
+                                <div class="search-lead-section">
+                                    <h4>🤖 AI Call History</h4>
+                                    <div id="searchLeadAICallsList" class="search-lead-ai-calls-list">No AI calls recorded</div>
+                                </div>
+
                                 <div class="search-lead-section">
                                     <h4>🤖 AI Summary</h4>
                                     <div id="searchLeadSummary" class="search-lead-content">No summary available</div>
                                 </div>
-                                
+
                                 <div class="search-lead-section">
                                     <h4>💬 Latest Transcript</h4>
                                     <div id="searchLeadTranscript" class="search-lead-content transcript">No transcript available</div>
@@ -6669,20 +6697,41 @@
         var phone = document.getElementById('singleLeadPhone')?.value.trim();
         var interest = document.getElementById('singleLeadInterest')?.value;
         var email = document.getElementById('singleLeadEmail')?.value.trim();
-        var maxAttempts = document.getElementById('singleLeadMaxAttempts')?.value;
-        
+        var maxAttemptsInput = document.getElementById('singleLeadMaxAttempts');
+        var maxAttempts = parseInt(maxAttemptsInput?.value, 10) || 5;
+        var context = document.getElementById('singleLeadContext')?.value.trim();
+
+        // Validate max attempts is between 1-10
+        if (maxAttempts < 1) maxAttempts = 1;
+        if (maxAttempts > 10) maxAttempts = 10;
+
         var statusEl = document.getElementById('singleLeadStatus');
-        
+
         if (!firstName || !phone || !interest) {
             if (statusEl) statusEl.innerHTML = '<p style="color:#ef4444">Please fill in required fields</p>';
             return;
         }
-        
+
         btn.disabled = true;
         btn.textContent = 'Adding...';
         if (statusEl) statusEl.innerHTML = '<p style="color:rgb(52,211,153)">Adding lead...</p>';
-        
+
         try {
+            // Build lead data
+            var leadData = {
+                firstName: firstName,
+                lastName: lastName,
+                phone: phone,
+                interest: interest,
+                email: email,
+                maxAttempts: maxAttempts
+            };
+
+            // Only include context if provided
+            if (context) {
+                leadData.context = context;
+            }
+
             // Send to n8n webhook
             await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
                 method: 'POST',
@@ -6690,29 +6739,24 @@
                 body: JSON.stringify({
                     email: currentUser?.email,
                     agentName: currentUserRecord?.fields?.['Agent Name'] || '',
-                    leads: [{
-                        firstName: firstName,
-                        lastName: lastName,
-                        phone: phone,
-                        interest: interest,
-                        email: email,
-                        maxAttempts: maxAttempts || 5
-                    }]
+                    leads: [leadData]
                 })
             });
-            
+
             if (statusEl) statusEl.innerHTML = '<p style="color:#22c55e">✓ Lead added successfully!</p>';
-            
+
             // Clear form
             document.getElementById('singleLeadFirstName').value = '';
             document.getElementById('singleLeadLastName').value = '';
             document.getElementById('singleLeadPhone').value = '';
             document.getElementById('singleLeadInterest').value = '';
             document.getElementById('singleLeadEmail').value = '';
+            document.getElementById('singleLeadMaxAttempts').value = '5';
+            document.getElementById('singleLeadContext').value = '';
         } catch (err) {
             if (statusEl) statusEl.innerHTML = '<p style="color:#ef4444">Failed to add lead: ' + err.message + '</p>';
         }
-        
+
         btn.disabled = false;
         btn.textContent = '➕ Add Lead';
     });
@@ -6822,70 +6866,202 @@
         if (!lead) return;
         searchedLead = lead;
         var f = lead.fields;
-        
+
         document.getElementById('searchMultipleResults').style.display = 'none';
         document.getElementById('searchLeadDetail').style.display = 'block';
-        
+
         document.getElementById('searchLeadName').textContent = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
         document.getElementById('searchLeadPhoneDisplay').textContent = formatPhone(f['Phone #'] || f['Phone'] || '-');
-        
+
         var status = f['Status'] || f['Disposition'] || '-';
         var statusBadge = document.getElementById('searchLeadStatusBadge');
         statusBadge.textContent = status;
         statusBadge.className = 'status-badge ' + getStatusClass(status);
-        
+
         document.getElementById('searchLeadEmail').textContent = f['Email'] || '-';
         document.getElementById('searchLeadCalls').textContent = f['Attempts'] || '0';
         document.getElementById('searchLeadLastCall').textContent = f['Updated At'] ? formatDateTime(f['Updated At']) : '-';
         document.getElementById('searchLeadBookedTime').textContent = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
-        
-        // Notes
+
+        // Notes History (read-only)
         var notesRaw = f['Client Notes'] || '';
         var notes = parseNotesJson(notesRaw);
-        document.getElementById('searchLeadNotesInput').value = notes.map(function(n) { return n.text; }).join('\n');
-        
+        var notesListEl = document.getElementById('searchLeadNotesList');
+        if (notes.length > 0) {
+            notesListEl.innerHTML = notes.map(function(n) {
+                var dateStr = n.date ? formatNoteDate(n.date) : '';
+                return '<div class="search-note-item">' +
+                    (dateStr ? '<div class="search-note-date">' + dateStr + '</div>' : '') +
+                    '<div class="search-note-text">' + escapeHtml(n.text) + '</div>' +
+                '</div>';
+            }).join('');
+        } else {
+            notesListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.875rem;">No notes available</p>';
+        }
+
+        // Manual Call Attempts (read-only)
+        var attemptsRaw = f['Call Attempts'] || '';
+        var attemptsArray = [];
+        try {
+            if (typeof attemptsRaw === 'string' && attemptsRaw) {
+                attemptsArray = JSON.parse(attemptsRaw);
+            } else if (Array.isArray(attemptsRaw)) {
+                attemptsArray = attemptsRaw;
+            }
+        } catch (e) {
+            attemptsArray = [];
+        }
+        var attemptsListEl = document.getElementById('searchLeadAttemptsList');
+        if (attemptsArray.length > 0) {
+            attemptsListEl.innerHTML = attemptsArray.map(function(attempt, i) {
+                var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
+                return '<div class="search-attempt-item">' +
+                    '<div class="search-attempt-time">Call #' + (i + 1) + ' - ' + timeStr + '</div>' +
+                '</div>';
+            }).join('');
+        } else {
+            attemptsListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.875rem;">No manual call attempts logged</p>';
+        }
+
+        // AI Call History
+        var aiCallsListEl = document.getElementById('searchLeadAICallsList');
+        var lastCallTimestamp = f['Last Call Timestamp'];
+        var lastOutcome = f['Last Outcome'] || f['Disposition'] || f['Status'] || '';
+        var totalAttempts = parseInt(f['Attempts'] || '0', 10);
+
+        // Build AI call history from available data
+        var aiCallsHtml = '';
+        if (lastCallTimestamp || totalAttempts > 0) {
+            // Show last call if available
+            if (lastCallTimestamp) {
+                var outcomeClass = lastOutcome.toLowerCase().replace(/\s+/g, '-');
+                aiCallsHtml += '<div class="search-ai-call-item">' +
+                    '<div class="search-ai-call-time">' + formatFriendlyDateTime(lastCallTimestamp) + '</div>' +
+                    '<div class="search-ai-call-result">' +
+                        '<span>Latest AI Call</span>' +
+                        '<span class="search-ai-call-outcome ' + outcomeClass + '">' + escapeHtml(lastOutcome || 'Unknown') + '</span>' +
+                    '</div>' +
+                '</div>';
+            }
+
+            // Show total attempts count
+            if (totalAttempts > 0) {
+                aiCallsHtml += '<div style="margin-top:12px;padding:8px 12px;background:rgba(255,255,255,0.05);border-radius:6px;font-size:0.875rem;">' +
+                    '<strong>Total AI Attempts:</strong> ' + totalAttempts +
+                '</div>';
+            }
+            aiCallsListEl.innerHTML = aiCallsHtml;
+        } else {
+            aiCallsListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.875rem;">No AI calls recorded</p>';
+        }
+
         // Summary
         var summaryRaw = f['Last Call Summary'] || '';
         var summary = Array.isArray(summaryRaw) ? summaryRaw.join('\n') : String(summaryRaw || 'No summary available');
         document.getElementById('searchLeadSummary').textContent = summary;
-        
+
         // Transcript
         var transcriptRaw = f['Transcript (from Calls)'] || '';
         var transcript = Array.isArray(transcriptRaw) ? transcriptRaw.join('\n\n---\n\n') : String(transcriptRaw || 'No transcript available');
         document.getElementById('searchLeadTranscript').textContent = transcript;
-    }
-    
-    // Save notes from search
-    document.getElementById('searchLeadSaveNotes')?.addEventListener('click', async function() {
-        if (!searchedLead) return;
-        var btn = this;
-        var notesText = document.getElementById('searchLeadNotesInput')?.value.trim();
-        if (!notesText) return;
 
-        btn.disabled = true;
-        btn.textContent = 'Saving...';
+        // Update action button states
+        var isShared = f['Shared With'] || f['Shared With Email'];
+        var shareBtn = document.getElementById('searchShareBtn');
+        if (isShared) {
+            shareBtn.textContent = '✓ Shared';
+            shareBtn.classList.add('shared');
+        } else {
+            shareBtn.textContent = '🔗 Share';
+            shareBtn.classList.remove('shared');
+        }
+    }
+
+    // Search page action functions
+    function shareFromSearch() {
+        if (!searchedLead) return;
+        quickShareLead(searchedLead.id);
+    }
+    window.shareFromSearch = shareFromSearch;
+
+    async function takeOverFromSearch() {
+        if (!searchedLead) return;
+        var name = ((searchedLead.fields['First Name'] || '') + ' ' + (searchedLead.fields['Last Name'] || '')).trim() || 'This lead';
 
         try {
-            // Append to existing notes as JSON array
-            var existingNotesRaw = searchedLead.fields['Client Notes'] || '';
-            var notesArray = parseNotesJson(existingNotesRaw);
-            notesArray.push({ text: notesText, date: new Date().toISOString() });
-            var newNotes = JSON.stringify(notesArray);
-
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + searchedLead.id, {
                 method: 'PATCH',
-                body: { fields: { 'Client Notes': newNotes } }
+                body: {
+                    fields: {
+                        'Status': 'Callback',
+                        'Last Outcome': 'Callback'
+                    }
+                }
             });
-            searchedLead.fields['Client Notes'] = newNotes;
-            document.getElementById('searchLeadNotesInput').value = '';
-            showToast('Notes saved', 'success');
-        } catch (err) {
-            showToast('Failed to save notes', 'error');
-        }
 
-        btn.disabled = false;
-        btn.textContent = 'Save Notes';
-    });
+            // Update local data
+            searchedLead.fields['Status'] = 'Callback';
+            searchedLead.fields['Last Outcome'] = 'Callback';
+            var idx = allLeads.findIndex(function(l) { return l.id === searchedLead.id; });
+            if (idx !== -1) {
+                allLeads[idx].fields['Status'] = 'Callback';
+                allLeads[idx].fields['Last Outcome'] = 'Callback';
+            }
+
+            showToast(name + ' has been taken over', 'success');
+            showSearchLeadDetail(searchedLead); // Refresh display
+            updatePipelineList();
+            updateProspectsTable();
+        } catch (err) {
+            console.error('Error taking over lead:', err);
+            showToast('Failed to take over lead', 'error');
+        }
+    }
+    window.takeOverFromSearch = takeOverFromSearch;
+
+    async function dncFromSearch() {
+        if (!searchedLead) return;
+        var name = ((searchedLead.fields['First Name'] || '') + ' ' + (searchedLead.fields['Last Name'] || '')).trim() || 'This lead';
+
+        var confirmed = await showConfirmModal(
+            'Mark as Do Not Call',
+            'Are you sure you want to mark ' + name + ' as Do Not Call? This will stop all AI outreach.',
+            '🚫',
+            true
+        );
+        if (!confirmed) return;
+
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + searchedLead.id, {
+                method: 'PATCH',
+                body: {
+                    fields: {
+                        'Status': 'Do Not Call',
+                        'Last Outcome': 'Do Not Call'
+                    }
+                }
+            });
+
+            // Update local data
+            searchedLead.fields['Status'] = 'Do Not Call';
+            searchedLead.fields['Last Outcome'] = 'Do Not Call';
+            var idx = allLeads.findIndex(function(l) { return l.id === searchedLead.id; });
+            if (idx !== -1) {
+                allLeads[idx].fields['Status'] = 'Do Not Call';
+                allLeads[idx].fields['Last Outcome'] = 'Do Not Call';
+            }
+
+            showToast(name + ' marked as Do Not Call', 'success');
+            showSearchLeadDetail(searchedLead); // Refresh display
+            updatePipelineList();
+            updateProspectsTable();
+            updatePrioListFiltered();
+        } catch (err) {
+            console.error('Error marking DNC:', err);
+            showToast('Failed to mark as Do Not Call', 'error');
+        }
+    }
+    window.dncFromSearch = dncFromSearch;
     
     // Update analytics when data loads
     var originalLoadLeadsData2 = loadLeadsData;
