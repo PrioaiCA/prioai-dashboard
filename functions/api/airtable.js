@@ -166,19 +166,18 @@ export async function onRequest(context) {
         let airtableUrl = `https://api.airtable.com/v0/${basePath}`;
 
         if (queryString) {
-            // Parse and re-encode query parameters properly
-            const params = new URLSearchParams();
-            // Split by & but handle the values properly
+            // Manually encode each parameter - URLSearchParams uses + for spaces but Airtable needs %20
             const pairs = queryString.split('&');
-            for (const pair of pairs) {
+            const encodedPairs = pairs.map(pair => {
                 const eqIndex = pair.indexOf('=');
                 if (eqIndex > -1) {
                     const key = pair.slice(0, eqIndex);
                     const value = pair.slice(eqIndex + 1);
-                    params.append(key, value);
+                    return encodeURIComponent(key) + '=' + encodeURIComponent(value);
                 }
-            }
-            airtableUrl += '?' + params.toString();
+                return encodeURIComponent(pair);
+            });
+            airtableUrl += '?' + encodedPairs.join('&');
         }
 
         // Forward the request to Airtable
