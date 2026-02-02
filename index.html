@@ -590,7 +590,17 @@
             .help-support-actions{flex-direction:column}
             .help-support-actions .btn{width:100%}
         }
-        
+
+        /* Feedback Form */
+        .feedback-form .form-group{margin-bottom:20px}
+        .feedback-form .form-label{display:block;margin-bottom:8px;font-weight:500;color:rgba(255,255,255,0.9)}
+        .feedback-form .form-input{width:100%;padding:12px 16px;background:#111;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:0.9375rem;transition:border-color 0.15s}
+        .feedback-form .form-input:focus{outline:none;border-color:rgb(52,211,153)}
+        .feedback-form textarea.form-input{resize:vertical;min-height:120px}
+        .feedback-form select.form-input{cursor:pointer}
+        .feedback-success{text-align:center;padding:32px;background:rgba(52,211,153,0.1);border-radius:12px;margin-top:20px}
+        .feedback-success p{margin-top:12px;color:rgba(255,255,255,0.8)}
+
         /* Filters Bar */
         .search-box{position:relative;flex:0 0 auto;min-width:200px;max-width:300px}
         .search-box input{width:100%;padding:10px 16px 10px 40px;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.875rem}
@@ -934,6 +944,10 @@
                     <div class="nav-item" data-page="import">
                         <span class="nav-item-icon">📥</span>
                         <span>Import Leads</span>
+                    </div>
+                    <div class="nav-item" data-page="feedback">
+                        <span class="nav-item-icon">💬</span>
+                        <span>Send Feedback</span>
                     </div>
                 </div>
 
@@ -2056,6 +2070,45 @@
                                 <a href="mailto:info@prioai.ca?subject=Support Request" class="btn btn-primary">📧 Email Support</a>
                                 <button class="btn btn-secondary" onclick="switchPage('feedback')">💬 Send Feedback</button>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Page: Feedback -->
+                    <div class="page hidden" id="page-feedback">
+                        <div class="settings-card">
+                            <h3 class="settings-title">💬 Send Feedback</h3>
+                            <p class="text-muted" style="margin-bottom:20px;">Help us improve Prio AI. Share your thoughts, report issues, or request features.</p>
+
+                            <form id="feedbackForm" class="feedback-form">
+                                <div class="form-group">
+                                    <label class="form-label">Category</label>
+                                    <select id="feedbackCategory" class="form-input" required>
+                                        <option value="">Select a category...</option>
+                                        <option value="bug">Bug Report</option>
+                                        <option value="feature">Feature Request</option>
+                                        <option value="improvement">Improvement Suggestion</option>
+                                        <option value="question">Question</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Your Feedback</label>
+                                    <textarea id="feedbackMessage" class="form-input" rows="6" placeholder="Tell us what's on your mind..." required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary" id="feedbackSubmitBtn" style="width:100%;">
+                                        <span id="feedbackBtnText">Send Feedback</span>
+                                        <span id="feedbackBtnLoading" style="display:none;">Sending...</span>
+                                    </button>
+                                </div>
+
+                                <div id="feedbackSuccess" class="feedback-success" style="display:none;">
+                                    <span style="font-size:2rem;">✅</span>
+                                    <p>Thank you for your feedback! We'll review it shortly.</p>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -4027,18 +4080,20 @@
 
         if (sharedWithEmail || isSharedToUser) {
             shareBtn.classList.add('shared');
-            shareBtn.innerHTML = '🔗 ' + (isSharedToUser ? 'Shared with you' : 'Shared');
-
             // Show shared info in modal
             sharedInfoDiv.style.display = 'block';
             if (isSharedToUser) {
                 sharedLabel.textContent = '🔗 Shared By';
                 var ownerEmail = f['Client Email'];
                 if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
-                sharedValue.textContent = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
+                var sharedByName = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
+                sharedValue.textContent = sharedByName;
+                shareBtn.innerHTML = '🔗 Shared by ' + sharedByName;
             } else {
                 sharedLabel.textContent = '🔗 Shared With';
-                sharedValue.textContent = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
+                var sharedWithName = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
+                sharedValue.textContent = sharedWithName;
+                shareBtn.innerHTML = '🔗 Shared with ' + sharedWithName;
             }
         } else {
             shareBtn.classList.remove('shared');
@@ -5200,11 +5255,14 @@
             showToast('Prospect shared successfully!', 'success');
             closeSharePopup();
 
+            // Get the name of the agent shared with
+            var sharedWithName = getAgentNameByEmail(selectedAgentEmail) || selectedAgentEmail;
+
             // Update the modal share button immediately
             var shareBtn = document.getElementById('modalShareBtn');
             if (shareBtn) {
                 shareBtn.classList.add('shared');
-                shareBtn.innerHTML = '🔗 Shared';
+                shareBtn.innerHTML = '🔗 Shared with ' + sharedWithName;
             }
 
             // Update card display immediately - find card and update share icon
@@ -5212,7 +5270,7 @@
             if (cardEl) {
                 var nameEl = cardEl.querySelector('.prio-card-name');
                 if (nameEl && !nameEl.querySelector('.shared-icon')) {
-                    nameEl.innerHTML = nameEl.innerHTML + ' <span class="shared-icon" title="Shared lead">🔗</span>';
+                    nameEl.innerHTML = nameEl.innerHTML + ' <span class="shared-icon" title="Shared with ' + sharedWithName + '">🔗</span>';
                 }
                 // Update quick action share button on small card if present
                 var cardShareBtn = cardEl.querySelector('.action-share');
@@ -5227,7 +5285,7 @@
             if (priorityCard) {
                 var prioNameEl = priorityCard.querySelector('.priority-card-lg-name');
                 if (prioNameEl && !prioNameEl.querySelector('.shared-icon')) {
-                    prioNameEl.innerHTML = prioNameEl.innerHTML + ' <span class="shared-icon" title="Shared lead">🔗</span>';
+                    prioNameEl.innerHTML = prioNameEl.innerHTML + ' <span class="shared-icon" title="Shared with ' + sharedWithName + '">🔗</span>';
                 }
                 // Update quick action share button to show Shared
                 var shareActionBtn = priorityCard.querySelector('.action-share');
@@ -6258,20 +6316,26 @@
         var sharedValue = document.getElementById('modalSharedValue');
 
         if (sharedWithEmail || isSharedToUser) {
-            if (shareBtn) {
-                shareBtn.classList.add('shared');
-                shareBtn.innerHTML = '🔗 ' + (isSharedToUser ? 'Shared with you' : 'Shared');
-            }
             if (sharedInfoDiv) {
                 sharedInfoDiv.style.display = 'block';
                 if (isSharedToUser) {
                     sharedLabel.textContent = '🔗 Shared By';
                     var ownerEmail = f['Client Email'];
                     if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
-                    sharedValue.textContent = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
+                    var sharedByName = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
+                    sharedValue.textContent = sharedByName;
+                    if (shareBtn) {
+                        shareBtn.classList.add('shared');
+                        shareBtn.innerHTML = '🔗 Shared by ' + sharedByName;
+                    }
                 } else {
                     sharedLabel.textContent = '🔗 Shared With';
-                    sharedValue.textContent = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
+                    var sharedWithName = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
+                    sharedValue.textContent = sharedWithName;
+                    if (shareBtn) {
+                        shareBtn.classList.add('shared');
+                        shareBtn.innerHTML = '🔗 Shared with ' + sharedWithName;
+                    }
                 }
             }
         } else {
@@ -7728,6 +7792,66 @@
             window.location.reload();
         }, 30000);
     }
+
+    // Feedback form submission
+    document.getElementById('feedbackForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        var category = document.getElementById('feedbackCategory').value;
+        var message = document.getElementById('feedbackMessage').value;
+        var submitBtn = document.getElementById('feedbackSubmitBtn');
+        var btnText = document.getElementById('feedbackBtnText');
+        var btnLoading = document.getElementById('feedbackBtnLoading');
+        var successDiv = document.getElementById('feedbackSuccess');
+
+        if (!category || !message.trim()) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        // Show loading state
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline';
+
+        try {
+            var response = await fetch('https://n8n.prioai.ca/webhook/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    category: category,
+                    message: message,
+                    email: currentUser?.email || 'anonymous',
+                    name: currentUser?.displayName || currentUserRecord?.fields?.['Agent Name'] || 'Unknown',
+                    timestamp: new Date().toISOString(),
+                    source: 'dashboard'
+                })
+            });
+
+            if (response.ok) {
+                // Show success message
+                document.getElementById('feedbackForm').style.display = 'none';
+                successDiv.style.display = 'block';
+
+                // Reset form after delay
+                setTimeout(function() {
+                    document.getElementById('feedbackCategory').value = '';
+                    document.getElementById('feedbackMessage').value = '';
+                    document.getElementById('feedbackForm').style.display = 'block';
+                    successDiv.style.display = 'none';
+                }, 3000);
+            } else {
+                throw new Error('Failed to send feedback');
+            }
+        } catch (err) {
+            console.error('Feedback error:', err);
+            alert('Failed to send feedback. Please try again.');
+        } finally {
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+        }
+    });
     </script>
 </body>
 </html>
