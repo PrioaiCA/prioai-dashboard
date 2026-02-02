@@ -753,24 +753,49 @@
         .search-lead-section h4{font-size:0.875rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
         .search-lead-content{background:#0a0a0a;padding:16px;border-radius:8px;font-size:0.9375rem;line-height:1.6;white-space:pre-wrap}
         .search-lead-content.transcript{max-height:300px;overflow-y:auto}
-        .search-lead-actions{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
-        .search-lead-actions .btn-share,.search-lead-actions .btn-takeover-modal{flex:1;max-width:280px}
-        .btn-dnc-text{padding:10px 16px;font-size:0.875rem;font-weight:600;background:transparent;color:rgba(239,68,68,0.8);border:none;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
-        .btn-dnc-text:hover{color:#ef4444}
-        .search-lead-notes-list,.search-lead-attempts-list,.search-lead-ai-calls-list{background:#0a0a0a;padding:16px;border-radius:8px;max-height:250px;overflow-y:auto}
+        .search-lead-actions{display:flex;gap:8px;margin-bottom:24px;align-items:center}
+        .search-action-btn{padding:12px 24px;font-size:0.875rem;font-weight:600;border-radius:8px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:140px}
+        .search-action-btn.share{background:#111;color:#fff;border:1px solid #333}
+        .search-action-btn.share:hover{background:#1a1a1a;border-color:#444}
+        .search-action-btn.share.shared{background:rgba(52,211,153,0.1);color:rgb(52,211,153);border-color:rgba(52,211,153,0.3)}
+        .search-action-btn.takeover{background:#111;color:#fff;border:1px solid #333}
+        .search-action-btn.takeover:hover{background:#1a1a1a;border-color:#444}
+        .search-action-btn.dnc{background:transparent;color:rgba(239,68,68,0.7);border:none;padding:12px 16px;min-width:auto}
+        .search-action-btn.dnc:hover{color:#ef4444}
+        .search-lead-notes-list,.search-lead-attempts-list,.search-lead-ai-calls-list{background:#0a0a0a;padding:16px;border-radius:8px;max-height:300px;overflow-y:auto}
         .search-note-item,.search-attempt-item,.search-ai-call-item{padding:12px;background:rgba(255,255,255,0.03);border-radius:6px;margin-bottom:8px;border-left:3px solid rgba(52,211,153,0.5)}
         .search-note-item:last-child,.search-attempt-item:last-child,.search-ai-call-item:last-child{margin-bottom:0}
         .search-note-date,.search-attempt-time,.search-ai-call-time{font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:4px}
         .search-note-text,.search-attempt-result{font-size:0.875rem;line-height:1.5}
-        .search-ai-call-item{border-left-color:rgba(99,102,241,0.5)}
-        .search-ai-call-result{display:flex;justify-content:space-between;align-items:center;gap:8px}
-        .search-ai-call-outcome{font-size:0.8125rem;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.1)}
+        .search-ai-call-item{border-left-color:rgba(99,102,241,0.5);position:relative}
+        .search-ai-call-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px}
+        .search-ai-call-title{font-weight:600;font-size:0.875rem}
+        .search-ai-call-outcome{font-size:0.75rem;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.1)}
         .search-ai-call-outcome.booked{background:rgba(52,211,153,0.2);color:rgb(52,211,153)}
         .search-ai-call-outcome.callback{background:rgba(245,158,11,0.2);color:#f59e0b}
         .search-ai-call-outcome.timeline,.search-ai-call-outcome.follow-up{background:rgba(99,102,241,0.2);color:#6366f1}
         .search-ai-call-outcome.not-interested,.search-ai-call-outcome.voicemail,.search-ai-call-outcome.no-answer{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)}
-        .search-ai-call-preview{font-size:0.8125rem;color:rgba(255,255,255,0.5);margin-top:8px;line-height:1.4;font-style:italic}
-        .search-ai-total-attempts{margin-top:12px;padding:8px 12px;background:rgba(255,255,255,0.05);border-radius:6px;font-size:0.875rem}
+        .search-ai-call-preview{font-size:0.8125rem;color:rgba(255,255,255,0.5);margin-top:6px;line-height:1.4;font-style:italic}
+        .search-ai-call-footer{display:flex;justify-content:flex-end;margin-top:8px}
+        .search-ai-view-btn{font-size:0.75rem;color:rgb(52,211,153);background:none;border:none;cursor:pointer;padding:4px 0;transition:opacity 0.2s}
+        .search-ai-view-btn:hover{opacity:0.8;text-decoration:underline}
+        .search-ai-total-attempts{margin-top:12px;padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:6px;font-size:0.875rem}
+        .search-ai-untracked{margin-top:8px;padding:10px 12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:6px;font-size:0.8125rem;color:rgba(245,158,11,0.9)}
+        .call-detail-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:10001;align-items:center;justify-content:center}
+        .call-detail-modal.active{display:flex}
+        .call-detail-content{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;max-width:700px;width:90%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
+        .call-detail-header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:center}
+        .call-detail-header h3{font-size:1.125rem;font-weight:600}
+        .call-detail-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.5rem;cursor:pointer;padding:0;line-height:1}
+        .call-detail-close:hover{color:#fff}
+        .call-detail-body{padding:24px;overflow-y:auto;flex:1}
+        .call-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+        .call-detail-stat{background:#0a0a0a;padding:16px;border-radius:8px;text-align:center}
+        .call-detail-stat-value{font-size:1.25rem;font-weight:700;color:rgb(52,211,153)}
+        .call-detail-stat-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:4px}
+        .call-detail-section{margin-bottom:20px}
+        .call-detail-section h4{font-size:0.875rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
+        .call-detail-transcript{background:#0a0a0a;padding:16px;border-radius:8px;font-size:0.875rem;line-height:1.6;max-height:300px;overflow-y:auto;white-space:pre-wrap}
 
         /* Collapsible Sidebar */
         .sidebar-collapse-btn{display:none;width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);cursor:pointer;align-items:center;justify-content:center;transition:all 0.2s;font-size:1rem;flex-shrink:0}
@@ -1521,9 +1546,9 @@
 
                                 <!-- Action Buttons -->
                                 <div class="search-lead-actions">
-                                    <button class="btn-share" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
-                                    <button class="btn-takeover-modal" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
-                                    <button class="btn-dnc-text" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Do Not Call</button>
+                                    <button class="search-action-btn share" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
+                                    <button class="search-action-btn takeover" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
+                                    <button class="search-action-btn dnc" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Do Not Call</button>
                                 </div>
 
                                 <div class="search-lead-info-grid">
@@ -2188,6 +2213,36 @@
             <div class="confirm-modal-actions">
                 <button class="confirm-modal-cancel" id="confirmModalCancel">Cancel</button>
                 <button class="confirm-modal-confirm" id="confirmModalConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call Detail Modal -->
+    <div class="call-detail-modal" id="callDetailModal">
+        <div class="call-detail-content">
+            <div class="call-detail-header">
+                <h3>📞 Call Details</h3>
+                <button class="call-detail-close" onclick="closeCallDetailModal()">&times;</button>
+            </div>
+            <div class="call-detail-body">
+                <div class="call-detail-grid">
+                    <div class="call-detail-stat">
+                        <div class="call-detail-stat-value" id="callDetailDuration">-</div>
+                        <div class="call-detail-stat-label">Duration</div>
+                    </div>
+                    <div class="call-detail-stat">
+                        <div class="call-detail-stat-value" id="callDetailOutcome">-</div>
+                        <div class="call-detail-stat-label">Outcome</div>
+                    </div>
+                    <div class="call-detail-stat">
+                        <div class="call-detail-stat-value" id="callDetailDate">-</div>
+                        <div class="call-detail-stat-label">Date</div>
+                    </div>
+                </div>
+                <div class="call-detail-section">
+                    <h4>💬 Full Transcript</h4>
+                    <div class="call-detail-transcript" id="callDetailTranscript">No transcript available</div>
+                </div>
             </div>
         </div>
     </div>
@@ -6932,39 +6987,68 @@
         var transcriptsArray = f['Transcript (from Calls)'] || [];
         var callTimestamps = f['Call Timestamps (from Calls)'] || [];
         var callOutcomes = f['Outcomes (from Calls)'] || [];
+        var callDurations = f['Duration (Seconds) (from Calls)'] || [];
         var lastCallTimestamp = f['Last Call Timestamp'];
         var lastOutcome = f['Last Outcome'] || f['Disposition'] || f['Status'] || '';
         var totalAttempts = parseInt(f['Attempts'] || '0', 10);
 
+        // Store calls data globally for modal
+        window.searchCallsData = [];
+
         // Build AI call history
         var aiCallsHtml = '';
+        var trackedCalls = 0;
 
         // If we have transcripts array, show each call
         if (Array.isArray(transcriptsArray) && transcriptsArray.length > 0) {
+            trackedCalls = transcriptsArray.length;
             transcriptsArray.forEach(function(transcript, i) {
                 var callNum = transcriptsArray.length - i;
                 var timestamp = Array.isArray(callTimestamps) && callTimestamps[i] ? callTimestamps[i] : (i === 0 ? lastCallTimestamp : null);
                 var outcome = Array.isArray(callOutcomes) && callOutcomes[i] ? callOutcomes[i] : (i === 0 ? lastOutcome : 'Completed');
+                var duration = Array.isArray(callDurations) && callDurations[i] ? callDurations[i] : null;
                 var outcomeClass = (outcome || '').toLowerCase().replace(/\s+/g, '-');
-                var timeStr = timestamp ? formatFriendlyDateTime(timestamp) : 'Call #' + callNum;
+                var timeStr = timestamp ? formatFriendlyDateTime(timestamp) : '';
+
+                // Store call data for modal
+                window.searchCallsData.push({
+                    callNum: callNum,
+                    timestamp: timestamp,
+                    outcome: outcome,
+                    duration: duration,
+                    transcript: transcript
+                });
 
                 aiCallsHtml += '<div class="search-ai-call-item">' +
                     '<div class="search-ai-call-time">' + timeStr + '</div>' +
-                    '<div class="search-ai-call-result">' +
-                        '<span>AI Call #' + callNum + '</span>' +
+                    '<div class="search-ai-call-header">' +
+                        '<span class="search-ai-call-title">AI Call #' + callNum + '</span>' +
                         '<span class="search-ai-call-outcome ' + outcomeClass + '">' + escapeHtml(outcome || 'Completed') + '</span>' +
                     '</div>' +
                     '<div class="search-ai-call-preview">' + escapeHtml((transcript || '').substring(0, 150)) + (transcript && transcript.length > 150 ? '...' : '') + '</div>' +
+                    '<div class="search-ai-call-footer">' +
+                        '<button class="search-ai-view-btn" onclick="openCallDetailModal(' + i + ')">View Full Details →</button>' +
+                    '</div>' +
                 '</div>';
             });
         } else if (lastCallTimestamp || totalAttempts > 0) {
             // Fallback: show last call info if no transcripts array
             if (lastCallTimestamp) {
+                trackedCalls = 1;
                 var outcomeClass = lastOutcome.toLowerCase().replace(/\s+/g, '-');
+
+                window.searchCallsData.push({
+                    callNum: 1,
+                    timestamp: lastCallTimestamp,
+                    outcome: lastOutcome,
+                    duration: null,
+                    transcript: null
+                });
+
                 aiCallsHtml += '<div class="search-ai-call-item">' +
                     '<div class="search-ai-call-time">' + formatFriendlyDateTime(lastCallTimestamp) + '</div>' +
-                    '<div class="search-ai-call-result">' +
-                        '<span>Latest AI Call</span>' +
+                    '<div class="search-ai-call-header">' +
+                        '<span class="search-ai-call-title">Latest AI Call</span>' +
                         '<span class="search-ai-call-outcome ' + outcomeClass + '">' + escapeHtml(lastOutcome || 'Unknown') + '</span>' +
                     '</div>' +
                 '</div>';
@@ -6975,6 +7059,15 @@
         if (totalAttempts > 0) {
             aiCallsHtml += '<div class="search-ai-total-attempts">' +
                 '<strong>Total AI Attempts:</strong> ' + totalAttempts +
+            '</div>';
+        }
+
+        // Show message if there are untracked calls
+        var untrackedCalls = totalAttempts - trackedCalls;
+        if (untrackedCalls > 0) {
+            aiCallsHtml += '<div class="search-ai-untracked">' +
+                '⚠️ ' + untrackedCalls + ' call' + (untrackedCalls > 1 ? 's were' : ' was') + ' not tracked. ' +
+                'Older leads may have limited call history. Contact support for more information.' +
             '</div>';
         }
 
@@ -7091,7 +7184,53 @@
         }
     }
     window.dncFromSearch = dncFromSearch;
-    
+
+    // Call detail modal functions
+    function openCallDetailModal(callIndex) {
+        var callData = window.searchCallsData && window.searchCallsData[callIndex];
+        if (!callData) return;
+
+        var modal = document.getElementById('callDetailModal');
+
+        // Format duration
+        var durationText = '-';
+        if (callData.duration) {
+            var secs = parseInt(callData.duration, 10);
+            var mins = Math.floor(secs / 60);
+            var remainingSecs = secs % 60;
+            if (mins > 0) {
+                durationText = mins + 'm ' + remainingSecs + 's';
+            } else {
+                durationText = secs + 's';
+            }
+        }
+
+        // Format date
+        var dateText = '-';
+        if (callData.timestamp) {
+            var d = new Date(callData.timestamp);
+            dateText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        document.getElementById('callDetailDuration').textContent = durationText;
+        document.getElementById('callDetailOutcome').textContent = callData.outcome || '-';
+        document.getElementById('callDetailDate').textContent = dateText;
+        document.getElementById('callDetailTranscript').textContent = callData.transcript || 'No transcript available for this call.';
+
+        modal.classList.add('active');
+    }
+    window.openCallDetailModal = openCallDetailModal;
+
+    function closeCallDetailModal() {
+        document.getElementById('callDetailModal').classList.remove('active');
+    }
+    window.closeCallDetailModal = closeCallDetailModal;
+
+    // Close call detail modal when clicking outside
+    document.getElementById('callDetailModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeCallDetailModal();
+    });
+
     // Update analytics when data loads
     var originalLoadLeadsData2 = loadLeadsData;
     loadLeadsData = async function() {
