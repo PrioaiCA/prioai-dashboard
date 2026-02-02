@@ -609,7 +609,23 @@
         .pipeline-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
         .pipeline-list:not(.list-view) .priority-card-lg-actions{border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .pipeline-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
-        
+
+        /* Shared Leads styles */
+        .shared-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+        .shared-header-text h2{font-size:1.5rem;font-weight:700;margin-bottom:0.5rem}
+        .shared-header-text p{color:rgba(255,255,255,0.5);font-size:0.9rem}
+        .shared-header-actions{display:flex;align-items:center;gap:1rem}
+        .shared-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
+        .shared-list.list-view{grid-template-columns:1fr}
+        .shared-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+        .shared-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:320px}
+        .shared-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .shared-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
+        .shared-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .shared-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .shared-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
+        .shared-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
+
         /* Pipeline Card */
         .pipeline-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px;cursor:pointer;transition:all 0.15s}
         .pipeline-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
@@ -810,6 +826,10 @@
                     <div class="nav-item" data-page="pipeline">
                         <span class="nav-item-icon">🤖</span>
                         <span>AI Pipeline</span>
+                    </div>
+                    <div class="nav-item" data-page="shared">
+                        <span class="nav-item-icon">🔗</span>
+                        <span>Shared Leads</span>
                     </div>
                 </div>
 
@@ -1213,6 +1233,62 @@
                         <!-- Pipeline Cards -->
                         <div class="pipeline-list list-view" id="pipelineList">
                             <div class="page-loading"><div class="spinner"></div><p>Loading AI pipeline...</p></div>
+                        </div>
+                    </div>
+
+                    <!-- Page: Shared Leads -->
+                    <div class="page hidden" id="page-shared">
+                        <!-- Shared Header -->
+                        <div class="shared-header">
+                            <div class="shared-header-text">
+                                <h2>🔗 Shared Leads <span class="header-count-badge" id="sharedCount">0</span></h2>
+                                <p>Leads that have been shared with you.</p>
+                            </div>
+                            <div class="shared-header-actions">
+                                <div class="view-toggle">
+                                    <button class="view-toggle-btn active" id="sharedViewList" onclick="setSharedView('list')" title="List view">☰</button>
+                                    <button class="view-toggle-btn" id="sharedViewGrid" onclick="setSharedView('grid')" title="Grid view">▦</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shared Filters -->
+                        <div class="filters-bar">
+                            <div class="filters-left">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="sharedSearch" placeholder="Search by name or phone...">
+                                </div>
+                                <select id="sharedStatus" class="filter-select">
+                                    <option value="all">All Status</option>
+                                    <option value="Booked">Booked</option>
+                                    <option value="Callback">Callback</option>
+                                    <option value="Timeline">Timeline</option>
+                                    <option value="Follow Up">Follow Up</option>
+                                </select>
+                                <select id="sharedTimeframe" class="filter-select">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="7days">Last 7 Days</option>
+                                    <option value="30days">Last 30 Days</option>
+                                    <option value="90days">Last 90 Days</option>
+                                </select>
+                            </div>
+                            <div class="sort-controls">
+                                <span class="sort-label">Sort by</span>
+                                <select id="sharedSort" class="filter-select sort-select">
+                                    <option value="priority">Priority</option>
+                                    <option value="name">Name</option>
+                                    <option value="meetingTime">Meeting Time</option>
+                                    <option value="lastUpdated">Last Updated</option>
+                                </select>
+                                <button class="sort-direction-btn" id="sharedSortDir" onclick="toggleSharedSortDir()" title="Toggle sort direction">↓</button>
+                            </div>
+                        </div>
+
+                        <!-- Shared Cards -->
+                        <div class="shared-list list-view" id="sharedList">
+                            <div class="page-loading"><div class="spinner"></div><p>Loading shared leads...</p></div>
                         </div>
                     </div>
 
@@ -2399,7 +2475,7 @@
         // Update title
         var titles = {
             overview: 'Overview', prio: 'PRIO', prospects: 'Prospects', pipeline: 'AI Pipeline',
-            analytics: 'Analytics', import: 'Import Leads', search: 'Search',
+            shared: 'Shared Leads', analytics: 'Analytics', import: 'Import Leads', search: 'Search',
             settings: 'Settings', billing: 'Billing', help: 'Help'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
@@ -5891,6 +5967,12 @@
     document.getElementById('prospectsTimeframe')?.addEventListener('change', updateProspectsTable);
     document.getElementById('prospectsSort')?.addEventListener('change', updateProspectsTable);
 
+    // Shared leads filters
+    document.getElementById('sharedSearch')?.addEventListener('input', debounce(updateSharedLeadsList, 300));
+    document.getElementById('sharedStatus')?.addEventListener('change', updateSharedLeadsList);
+    document.getElementById('sharedTimeframe')?.addEventListener('change', updateSharedLeadsList);
+    document.getElementById('sharedSort')?.addEventListener('change', updateSharedLeadsList);
+
     // View toggle functions
     function setPrioView(view) {
         var container = document.getElementById('prioList');
@@ -5940,10 +6022,27 @@
     }
     window.setPipelineView = setPipelineView;
 
+    function setSharedView(view) {
+        var container = document.getElementById('sharedList');
+        var listBtn = document.getElementById('sharedViewList');
+        var gridBtn = document.getElementById('sharedViewGrid');
+        if (view === 'list') {
+            container.classList.add('list-view');
+            listBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+        } else {
+            container.classList.remove('list-view');
+            listBtn.classList.remove('active');
+            gridBtn.classList.add('active');
+        }
+    }
+    window.setSharedView = setSharedView;
+
     // Sort direction state
     var prioSortAsc = false;
     var prospectsSortAsc = false;
     var pipelineSortAsc = true; // Default ascending for next call
+    var sharedSortAsc = false;
 
     function togglePrioSortDir() {
         prioSortAsc = !prioSortAsc;
@@ -5977,6 +6076,17 @@
         updatePipelineList();
     }
     window.togglePipelineSortDir = togglePipelineSortDir;
+
+    function toggleSharedSortDir() {
+        sharedSortAsc = !sharedSortAsc;
+        var btn = document.getElementById('sharedSortDir');
+        if (btn) {
+            btn.textContent = sharedSortAsc ? '↑' : '↓';
+            btn.classList.toggle('asc', sharedSortAsc);
+        }
+        updateSharedLeadsList();
+    }
+    window.toggleSharedSortDir = toggleSharedSortDir;
 
     // Take over lead - change status to Callback and refresh
     async function takeOverLead(leadId) {
@@ -6215,13 +6325,185 @@
             '</div>';
         }).join('');
     }
-    
+
+    // Update Shared Leads list
+    function updateSharedLeadsList() {
+        var sharedListEl = document.getElementById('sharedList');
+
+        var searchVal = (document.getElementById('sharedSearch')?.value || '').toLowerCase();
+        var statusFilter = document.getElementById('sharedStatus')?.value || 'all';
+        var timeframeFilter = document.getElementById('sharedTimeframe')?.value || 'all';
+        var sortBy = document.getElementById('sharedSort')?.value || 'priority';
+
+        // Filter to only shared leads (Shared With or isShared)
+        var sharedLeads = allLeads.filter(function(l) {
+            var f = l.fields;
+
+            // Must be a shared lead
+            if (!l.isShared && !f['Shared With'] && !f['Shared With Email']) return false;
+
+            // Search filter
+            if (searchVal) {
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+                var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
+                if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
+            }
+
+            // Status filter
+            if (statusFilter !== 'all') {
+                var status = f['Status'] || f['Disposition'] || '';
+                if (!status.includes(statusFilter)) return false;
+            }
+
+            // Timeframe filter
+            if (timeframeFilter !== 'all') {
+                var lastCall = f['Last Call Timestamp'] || f['Client Last Call Timestamp'] || f['Updated At'];
+                if (!lastCall) return false;
+                var daysDiff = getDaysDiff(new Date(lastCall));
+                if (timeframeFilter === 'today' && daysDiff > 0) return false;
+                if (timeframeFilter === '7days' && daysDiff > 7) return false;
+                if (timeframeFilter === '30days' && daysDiff > 30) return false;
+                if (timeframeFilter === '90days' && daysDiff > 90) return false;
+            }
+
+            return true;
+        });
+
+        // Sort based on selection and direction
+        var dir = sharedSortAsc ? 1 : -1;
+        sharedLeads.sort(function(a, b) {
+            var fa = a.fields, fb = b.fields;
+            var result;
+            switch (sortBy) {
+                case 'name':
+                    var nameA = ((fa['First Name'] || '') + ' ' + (fa['Last Name'] || '')).toLowerCase();
+                    var nameB = ((fb['First Name'] || '') + ' ' + (fb['Last Name'] || '')).toLowerCase();
+                    result = nameA.localeCompare(nameB);
+                    break;
+                case 'meetingTime':
+                    var timeA = new Date(fa['Booked Time'] || fa['Callback Date'] || 0).getTime();
+                    var timeB = new Date(fb['Booked Time'] || fb['Callback Date'] || 0).getTime();
+                    result = timeA - timeB;
+                    break;
+                case 'lastUpdated':
+                    var updA = new Date(fa['Updated At'] || 0).getTime();
+                    var updB = new Date(fb['Updated At'] || 0).getTime();
+                    result = updA - updB;
+                    break;
+                case 'priority':
+                default:
+                    var getScore = function(d) {
+                        if (d === 'Booked' || d === 'Appointment Booked') return 95;
+                        if (d === 'Callback' || d === 'Callback Requested') return 90;
+                        if (d === 'Interested') return 85;
+                        if (d === 'Timeline') return 70;
+                        if (d === 'Follow Up') return 60;
+                        return 50;
+                    };
+                    result = getScore(fa['Status'] || fa['Disposition'] || '') - getScore(fb['Status'] || fb['Disposition'] || '');
+                    break;
+            }
+            return result * dir;
+        });
+
+        document.getElementById('sharedCount').textContent = sharedLeads.length;
+
+        if (sharedLeads.length === 0) {
+            sharedListEl.innerHTML = '<div class="shared-empty">No shared leads match your filters</div>';
+            return;
+        }
+
+        // Render cards using same layout as Prio Prospects
+        sharedListEl.innerHTML = sharedLeads.map(function(lead) {
+            var f = lead.fields;
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var phone = f['Phone #'] || f['Phone'] || '-';
+            var formattedPhone = formatPhoneNumber(phone);
+            var lastUpdatedTimestamp = f['Updated At'];
+            var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
+            var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
+            var bookedTime = f['Booked Time'] || null;
+            var callbackDate = f['Callback Date'] || f['Follow Up Date'];
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var notesRaw = f['Client Notes'] || f['Notes'] || '';
+            var status = f['Status'] || f['Disposition'] || '';
+            var isPrio = f['Is Prio'] === true;
+
+            var notesArray = parseNotesJson(notesRaw);
+            var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+
+            var dateDisplay = '';
+            var timeDisplay = '';
+            var hasSchedule = false;
+            if (bookedTime) {
+                var d = new Date(bookedTime);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            } else if (callbackDate) {
+                var d = new Date(callbackDate);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            } else {
+                hasSchedule = true;
+            }
+
+            var timeCol;
+            if (hasSchedule) {
+                timeCol = '<button class="btn-schedule-card" onclick="event.stopPropagation();quickSchedule(\'' + lead.id + '\')">Schedule</button>';
+            } else if (dateDisplay) {
+                timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
+            } else {
+                timeCol = '<span class="time-value">' + timeDisplay + '</span>';
+            }
+
+            var statusBadge = '';
+            if (status.includes('Booked')) {
+                statusBadge = '<span class="card-status-badge booked">B</span>';
+            } else if (status.includes('Callback')) {
+                statusBadge = '<span class="card-status-badge callback">C</span>';
+            }
+
+            var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '<span class="prio-icon-placeholder"></span>';
+
+            return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
+                '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="priority-card-lg-time-col">' +
+                        prioIndicator +
+                        timeCol +
+                    '</div>' +
+                    '<div class="priority-card-lg-info">' +
+                        '<div class="priority-card-lg-top">' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + ' <span class="shared-icon" title="Shared lead">🔗</span></div>' +
+                        '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Summary</div>' +
+                    '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Notes</div>' +
+                    '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-actions">' +
+                    '<button class="action-btn action-share shared" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">✓</span><span class="action-label">Shared</span></button>' +
+                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
+                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
+                    (isPrio ? '<button class="action-btn action-unprio" onclick="event.stopPropagation();unprio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Unprio</span></button>' : '<button class="action-btn action-prio" onclick="event.stopPropagation();prio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Prio</span></button>') +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
     // Update all tabs when data loads
     var originalLoadLeadsData = loadLeadsData;
     loadLeadsData = async function() {
         await originalLoadLeadsData();
         updateProspectsTable();
         updatePipelineList();
+        updateSharedLeadsList();
     };
     
     // Full page loading - show for 10 seconds then reveal
