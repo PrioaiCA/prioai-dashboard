@@ -3083,8 +3083,9 @@
         if (!currentUserRecord) return;
 
         try {
-            var clientId = currentUserRecord.id;
-            var filterFormula = '{Client}="' + clientId + '"';
+            var email = currentUser.email.toLowerCase();
+            // Filter calls by client email (linked from Client record)
+            var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client Email})))';
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&fields[]=Timestamp&fields[]=Outcome';
 
             allCalls = [];
@@ -7384,37 +7385,106 @@
         return d.toLocaleDateString('en-US', { timeZone: 'America/New_York' });
     }
 
+    // Helper to get Monday of the week for a given date
+    function getWeekStart(date) {
+        var d = new Date(date);
+        var day = d.getDay();
+        var diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Sunday
+        return new Date(d.setDate(diff));
+    }
+
+    // Helper to get Sunday of the week for a given date
+    function getWeekEnd(date) {
+        var start = getWeekStart(date);
+        var end = new Date(start);
+        end.setDate(end.getDate() + 6);
+        return end;
+    }
+
     // Update date display
     function updateAnalyticsDateDisplay() {
         var todayEST = getTodayEST();
         var selectedEST = getESTDate(analyticsDate);
-        var isToday = selectedEST.toDateString() === todayEST.toDateString();
-        var yesterday = new Date(todayEST); yesterday.setDate(yesterday.getDate() - 1);
-        var isYesterday = selectedEST.toDateString() === yesterday.toDateString();
-
-        var dayLabel = isToday ? 'Today' : isYesterday ? 'Yesterday' : selectedEST.toLocaleDateString('en-US', { weekday: 'long' });
-        var fullDate = selectedEST.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
         var dateDisplay = document.getElementById('analyticsDateDisplay');
+        var nextBtn = document.getElementById('analyticsNextDay');
+        var prevBtn = document.getElementById('analyticsPrevDay');
+        var todayBtn = document.getElementById('analyticsTodayBtn');
+        var dateNav = document.querySelector('.analytics-date-nav');
+
+        var dayLabel, fullDate, periodLabel;
+        var isAtCurrent = false;
+
+        if (analyticsPeriod === 'daily') {
+            var isToday = selectedEST.toDateString() === todayEST.toDateString();
+            var yesterday = new Date(todayEST); yesterday.setDate(yesterday.getDate() - 1);
+            var isYesterday = selectedEST.toDateString() === yesterday.toDateString();
+
+            dayLabel = isToday ? 'Today' : isYesterday ? 'Yesterday' : selectedEST.toLocaleDateString('en-US', { weekday: 'long' });
+            fullDate = selectedEST.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            periodLabel = dayLabel;
+            isAtCurrent = isToday;
+        } else if (analyticsPeriod === 'weekly') {
+            var weekStart = getWeekStart(selectedEST);
+            var weekEnd = getWeekEnd(selectedEST);
+            var currentWeekStart = getWeekStart(todayEST);
+
+            // Cap week end at today if it's the current week
+            if (weekEnd > todayEST) weekEnd = todayEST;
+
+            var isThisWeek = weekStart.toDateString() === currentWeekStart.toDateString();
+            dayLabel = isThisWeek ? 'This Week' : 'Week of ' + weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            fullDate = weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' - ' + weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            periodLabel = dayLabel;
+            isAtCurrent = isThisWeek;
+        } else if (analyticsPeriod === 'monthly') {
+            var selectedMonth = selectedEST.getMonth();
+            var selectedYear = selectedEST.getFullYear();
+            var currentMonth = todayEST.getMonth();
+            var currentYear = todayEST.getFullYear();
+
+            var isThisMonth = selectedMonth === currentMonth && selectedYear === currentYear;
+            dayLabel = isThisMonth ? 'This Month' : selectedEST.toLocaleDateString('en-US', { month: 'long' });
+            fullDate = selectedEST.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            periodLabel = dayLabel;
+            isAtCurrent = isThisMonth;
+        } else {
+            // All time
+            dayLabel = 'All Time';
+            fullDate = 'Since Inception';
+            periodLabel = 'All Time';
+            isAtCurrent = true;
+        }
+
         if (dateDisplay) {
             dateDisplay.querySelector('.date-day').textContent = dayLabel;
             dateDisplay.querySelector('.date-full').textContent = fullDate;
         }
 
-        // Update period label
-        var periodLabel = analyticsPeriod === 'daily' ? dayLabel : analyticsPeriod === 'weekly' ? 'Past 7 Days' : analyticsPeriod === 'monthly' ? 'Past 30 Days' : 'All Time';
         var funnelPeriod = document.getElementById('analyticsFunnelPeriod');
         if (funnelPeriod) funnelPeriod.textContent = periodLabel;
 
-        // Disable next button if at today
-        var nextBtn = document.getElementById('analyticsNextDay');
-        if (nextBtn) {
-            if (isToday) {
-                nextBtn.style.opacity = '0.3';
-                nextBtn.style.pointerEvents = 'none';
-            } else {
-                nextBtn.style.opacity = '1';
-                nextBtn.style.pointerEvents = 'auto';
+        // Handle navigation buttons based on period
+        if (analyticsPeriod === 'all') {
+            // Grey out all navigation for all-time
+            if (nextBtn) { nextBtn.style.opacity = '0.3'; nextBtn.style.pointerEvents = 'none'; }
+            if (prevBtn) { prevBtn.style.opacity = '0.3'; prevBtn.style.pointerEvents = 'none'; }
+            if (todayBtn) { todayBtn.style.opacity = '0.3'; todayBtn.style.pointerEvents = 'none'; }
+            if (dateDisplay) { dateDisplay.style.opacity = '0.5'; dateDisplay.style.pointerEvents = 'none'; }
+        } else {
+            // Enable navigation
+            if (prevBtn) { prevBtn.style.opacity = '1'; prevBtn.style.pointerEvents = 'auto'; }
+            if (dateDisplay) { dateDisplay.style.opacity = '1'; dateDisplay.style.pointerEvents = 'auto'; }
+            if (todayBtn) { todayBtn.style.opacity = '1'; todayBtn.style.pointerEvents = 'auto'; }
+
+            // Disable next if at current period
+            if (nextBtn) {
+                if (isAtCurrent) {
+                    nextBtn.style.opacity = '0.3';
+                    nextBtn.style.pointerEvents = 'none';
+                } else {
+                    nextBtn.style.opacity = '1';
+                    nextBtn.style.pointerEvents = 'auto';
+                }
             }
         }
 
@@ -7453,29 +7523,59 @@
         if (overlay) overlay.remove();
     }
 
-    // Date navigation - prevent going to future
+    // Date navigation - moves by day/week/month based on period
     document.getElementById('analyticsPrevDay')?.addEventListener('click', function() {
-        analyticsDate.setDate(analyticsDate.getDate() - 1);
+        if (analyticsPeriod === 'all') return; // No navigation for all-time
+
+        if (analyticsPeriod === 'daily') {
+            analyticsDate.setDate(analyticsDate.getDate() - 1);
+        } else if (analyticsPeriod === 'weekly') {
+            analyticsDate.setDate(analyticsDate.getDate() - 7);
+        } else if (analyticsPeriod === 'monthly') {
+            analyticsDate.setMonth(analyticsDate.getMonth() - 1);
+        }
         updateAnalyticsDateDisplay();
         updateAnalyticsDisplay();
     });
 
     document.getElementById('analyticsNextDay')?.addEventListener('click', function() {
+        if (analyticsPeriod === 'all') return; // No navigation for all-time
+
         var todayEST = getTodayEST();
         var selectedEST = getESTDate(analyticsDate);
-        // Only allow next if not already at today
-        if (selectedEST.toDateString() !== todayEST.toDateString()) {
-            analyticsDate.setDate(analyticsDate.getDate() + 1);
-            // Don't go past today
-            if (getESTDate(analyticsDate) > todayEST) {
-                analyticsDate = new Date();
+
+        if (analyticsPeriod === 'daily') {
+            if (selectedEST.toDateString() !== todayEST.toDateString()) {
+                analyticsDate.setDate(analyticsDate.getDate() + 1);
+                if (getESTDate(analyticsDate) > todayEST) {
+                    analyticsDate = new Date();
+                }
             }
-            updateAnalyticsDateDisplay();
-            updateAnalyticsDisplay();
+        } else if (analyticsPeriod === 'weekly') {
+            var currentWeekStart = getWeekStart(todayEST);
+            var selectedWeekStart = getWeekStart(selectedEST);
+            if (selectedWeekStart < currentWeekStart) {
+                analyticsDate.setDate(analyticsDate.getDate() + 7);
+                // Don't go past current week
+                if (getWeekStart(getESTDate(analyticsDate)) > currentWeekStart) {
+                    analyticsDate = new Date();
+                }
+            }
+        } else if (analyticsPeriod === 'monthly') {
+            var currentMonth = todayEST.getMonth();
+            var currentYear = todayEST.getFullYear();
+            var selectedMonth = selectedEST.getMonth();
+            var selectedYear = selectedEST.getFullYear();
+            if (selectedYear < currentYear || (selectedYear === currentYear && selectedMonth < currentMonth)) {
+                analyticsDate.setMonth(analyticsDate.getMonth() + 1);
+            }
         }
+        updateAnalyticsDateDisplay();
+        updateAnalyticsDisplay();
     });
 
     document.getElementById('analyticsTodayBtn')?.addEventListener('click', function() {
+        if (analyticsPeriod === 'all') return; // No navigation for all-time
         analyticsDate = new Date();
         updateAnalyticsDateDisplay();
         updateAnalyticsDisplay();
@@ -7583,15 +7683,20 @@
                 if (analyticsPeriod === 'daily') {
                     if (callDateEST !== selectedDateStr) return;
                 } else if (analyticsPeriod === 'weekly') {
-                    var weekAgo = new Date(todayEST);
-                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    // Filter by selected week (Monday to Sunday)
+                    var selectedEST = getESTDate(analyticsDate);
+                    var weekStart = getWeekStart(selectedEST);
+                    var weekEnd = getWeekEnd(selectedEST);
+                    weekEnd.setHours(23, 59, 59, 999); // End of Sunday
                     var callDate = new Date(timestamp);
-                    if (callDate < weekAgo) return;
+                    if (callDate < weekStart || callDate > weekEnd) return;
                 } else if (analyticsPeriod === 'monthly') {
-                    var monthAgo = new Date(todayEST);
-                    monthAgo.setDate(monthAgo.getDate() - 30);
+                    // Filter by selected month
+                    var selectedEST = getESTDate(analyticsDate);
+                    var monthStart = new Date(selectedEST.getFullYear(), selectedEST.getMonth(), 1);
+                    var monthEnd = new Date(selectedEST.getFullYear(), selectedEST.getMonth() + 1, 0, 23, 59, 59, 999);
                     var callDate = new Date(timestamp);
-                    if (callDate < monthAgo) return;
+                    if (callDate < monthStart || callDate > monthEnd) return;
                 }
             }
 
