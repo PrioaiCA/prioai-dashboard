@@ -731,10 +731,34 @@
         .date-display .date-full{display:block;font-size:0.75rem;color:rgba(255,255,255,0.5)}
         .date-nav-today{background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:rgb(52,211,153);padding:8px 16px;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer;transition:all 0.15s}
         .date-nav-today:hover{background:rgba(52,211,153,0.25)}
-        .analytics-period-row{margin-bottom:24px}
+        .analytics-period-row{margin-bottom:24px;position:relative}
         .analytics-period-tabs{display:inline-flex;gap:4px;background:#111;padding:4px;border-radius:10px}
         .analytics-period-tab{background:none;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.6);transition:all 0.2s}
         .analytics-period-tab:hover{color:#fff}
+
+        /* Custom Date Picker */
+        .custom-date-picker{display:none;position:absolute;top:100%;right:0;z-index:100;margin-top:8px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.4);overflow:hidden}
+        .custom-date-picker.show{display:block}
+        .picker-calendar{padding:16px;width:280px}
+        .picker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .picker-month{font-weight:600;font-size:0.9375rem;color:#fff}
+        .picker-nav{background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:1rem;transition:all 0.2s}
+        .picker-nav:hover{background:rgba(255,255,255,0.1);color:#fff}
+        .picker-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;text-align:center}
+        .picker-weekdays span{font-size:0.75rem;color:rgba(255,255,255,0.4);font-weight:500;padding:4px}
+        .picker-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+        .picker-day{background:none;border:none;padding:8px;border-radius:6px;cursor:pointer;font-size:0.8125rem;color:rgba(255,255,255,0.7);transition:all 0.2s;text-align:center}
+        .picker-day:hover:not(:disabled){background:rgba(52,211,153,0.2);color:#fff}
+        .picker-day.today{border:1px solid #22c55e;color:#22c55e}
+        .picker-day.selected{background:#22c55e;color:#000;font-weight:600}
+        .picker-day:disabled{color:rgba(255,255,255,0.2);cursor:not-allowed}
+        .picker-day.other-month{color:rgba(255,255,255,0.3)}
+        .picker-dropdown{padding:8px;max-height:300px;overflow-y:auto;width:260px}
+        .picker-dropdown-list{display:flex;flex-direction:column;gap:4px}
+        .picker-dropdown-item{background:none;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-size:0.875rem;color:rgba(255,255,255,0.7);text-align:left;transition:all 0.2s}
+        .picker-dropdown-item:hover{background:rgba(52,211,153,0.15);color:#fff}
+        .picker-dropdown-item.selected{background:rgba(34,197,94,0.2);color:#22c55e;font-weight:500}
+        .picker-dropdown-item.current{border-left:2px solid #22c55e}
         .analytics-period-tab.active{background:rgb(52,211,153);color:#000}
         .date-picker-hidden{position:absolute;opacity:0;pointer-events:none}
 
@@ -768,7 +792,8 @@
         .funnel-bar.qualified{background:linear-gradient(90deg,rgba(59,130,246,0.3),rgba(59,130,246,0.1))}
         .funnel-bar.booked{background:linear-gradient(90deg,rgba(34,197,94,0.4),rgba(34,197,94,0.1))}
         .funnel-value{font-weight:700;font-size:1rem}
-        .funnel-label{font-size:0.8125rem;color:rgba(255,255,255,0.6);min-width:100px}
+        .funnel-label{font-size:0.8125rem;color:rgba(255,255,255,0.6);min-width:100px;display:flex;align-items:center;gap:8px}
+        .funnel-pct{color:#22c55e;font-weight:600;font-size:0.75rem;opacity:0.9}
 
         /* Two Column Layout */
         .analytics-two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
@@ -1463,7 +1488,7 @@
                                 <h2>Analytics</h2>
                                 <p class="analytics-subtitle">AI Calling Performance</p>
                             </div>
-                            <div class="analytics-date-nav">
+                            <div class="analytics-date-nav" style="position:relative">
                                 <button class="date-nav-btn" id="analyticsPrevDay" title="Previous">
                                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
                                 </button>
@@ -1475,6 +1500,30 @@
                                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
                                 </button>
                                 <button class="date-nav-today" id="analyticsTodayBtn">Today</button>
+
+                                <!-- Custom Date Picker Dropdown -->
+                                <div class="custom-date-picker" id="customDatePicker">
+                                    <!-- Daily Calendar View -->
+                                    <div class="picker-calendar" id="pickerCalendar">
+                                        <div class="picker-header">
+                                            <button class="picker-nav" id="pickerPrevMonth">&lt;</button>
+                                            <span class="picker-month" id="pickerMonthLabel">February 2026</span>
+                                            <button class="picker-nav" id="pickerNextMonth">&gt;</button>
+                                        </div>
+                                        <div class="picker-weekdays">
+                                            <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                                        </div>
+                                        <div class="picker-days" id="pickerDays"></div>
+                                    </div>
+                                    <!-- Weekly Dropdown -->
+                                    <div class="picker-dropdown" id="pickerWeekly">
+                                        <div class="picker-dropdown-list" id="weeklyList"></div>
+                                    </div>
+                                    <!-- Monthly Dropdown -->
+                                    <div class="picker-dropdown" id="pickerMonthly">
+                                        <div class="picker-dropdown-list" id="monthlyList"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -1486,7 +1535,6 @@
                                 <button class="analytics-period-tab" data-period="monthly">Month</button>
                                 <button class="analytics-period-tab" data-period="all">All Time</button>
                             </div>
-                            <input type="date" id="analyticsDatePicker" class="date-picker-hidden">
                         </div>
 
                         <!-- Hero Stats Row -->
@@ -1538,19 +1586,19 @@
                                     <div class="funnel-bar conversations" id="funnelConvBar" style="width:0%">
                                         <span class="funnel-value" id="funnelConversations">0</span>
                                     </div>
-                                    <span class="funnel-label">Conversations</span>
+                                    <span class="funnel-label">Conversations <span class="funnel-pct" id="funnelConvPct">0%</span></span>
                                 </div>
                                 <div class="funnel-stage">
                                     <div class="funnel-bar qualified" id="funnelQualBar" style="width:0%">
                                         <span class="funnel-value" id="funnelQualified">0</span>
                                     </div>
-                                    <span class="funnel-label">Qualified</span>
+                                    <span class="funnel-label">Qualified <span class="funnel-pct" id="funnelQualPct">0%</span></span>
                                 </div>
                                 <div class="funnel-stage">
                                     <div class="funnel-bar booked" id="funnelBookedBar" style="width:0%">
                                         <span class="funnel-value" id="funnelBooked">0</span>
                                     </div>
-                                    <span class="funnel-label">Booked</span>
+                                    <span class="funnel-label">Booked / Callback <span class="funnel-pct" id="funnelBookedPct">0%</span></span>
                                 </div>
                             </div>
                         </div>
@@ -7587,13 +7635,222 @@
         updateAnalyticsDisplay();
     });
 
+    // Custom date picker logic
+    var pickerMonth = new Date(); // Track which month is shown in calendar
+    var customPicker = document.getElementById('customDatePicker');
+
+    function showCustomPicker() {
+        if (analyticsPeriod === 'all') return;
+
+        // Hide all picker views first
+        document.getElementById('pickerCalendar').style.display = 'none';
+        document.getElementById('pickerWeekly').style.display = 'none';
+        document.getElementById('pickerMonthly').style.display = 'none';
+
+        if (analyticsPeriod === 'daily') {
+            pickerMonth = new Date(analyticsDate);
+            renderCalendar();
+            document.getElementById('pickerCalendar').style.display = 'block';
+        } else if (analyticsPeriod === 'weekly') {
+            renderWeeklyDropdown();
+            document.getElementById('pickerWeekly').style.display = 'block';
+        } else if (analyticsPeriod === 'monthly') {
+            renderMonthlyDropdown();
+            document.getElementById('pickerMonthly').style.display = 'block';
+        }
+
+        customPicker.classList.add('show');
+    }
+
+    function hideCustomPicker() {
+        customPicker.classList.remove('show');
+    }
+
+    function renderCalendar() {
+        var todayEST = getTodayEST();
+        var year = pickerMonth.getFullYear();
+        var month = pickerMonth.getMonth();
+
+        document.getElementById('pickerMonthLabel').textContent =
+            pickerMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+        var firstDay = new Date(year, month, 1);
+        var lastDay = new Date(year, month + 1, 0);
+        var startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Monday start
+
+        var daysHtml = '';
+
+        // Previous month days
+        var prevMonth = new Date(year, month, 0);
+        for (var i = startDay - 1; i >= 0; i--) {
+            var d = prevMonth.getDate() - i;
+            daysHtml += '<button class="picker-day other-month" disabled>' + d + '</button>';
+        }
+
+        // Current month days
+        var selectedDateStr = analyticsDate.toDateString();
+        var todayStr = todayEST.toDateString();
+
+        for (var d = 1; d <= lastDay.getDate(); d++) {
+            var date = new Date(year, month, d);
+            var dateStr = date.toDateString();
+            var isFuture = date > todayEST;
+            var isToday = dateStr === todayStr;
+            var isSelected = dateStr === selectedDateStr;
+
+            var classes = 'picker-day';
+            if (isToday) classes += ' today';
+            if (isSelected) classes += ' selected';
+
+            daysHtml += '<button class="' + classes + '"' +
+                (isFuture ? ' disabled' : '') +
+                ' data-date="' + date.toISOString() + '">' + d + '</button>';
+        }
+
+        // Next month days
+        var totalCells = Math.ceil((startDay + lastDay.getDate()) / 7) * 7;
+        var remaining = totalCells - startDay - lastDay.getDate();
+        for (var d = 1; d <= remaining; d++) {
+            daysHtml += '<button class="picker-day other-month" disabled>' + d + '</button>';
+        }
+
+        document.getElementById('pickerDays').innerHTML = daysHtml;
+
+        // Add click handlers to day buttons
+        document.querySelectorAll('#pickerDays .picker-day:not(:disabled)').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                analyticsDate = new Date(this.dataset.date);
+                hideCustomPicker();
+                updateAnalyticsDateDisplay();
+                updateAnalyticsDisplay();
+            });
+        });
+    }
+
+    function renderWeeklyDropdown() {
+        var todayEST = getTodayEST();
+        var currentWeekStart = getWeekStart(todayEST);
+        var selectedWeekStart = getWeekStart(analyticsDate);
+        var weeks = [];
+
+        // Generate last 12 weeks
+        for (var i = 0; i < 12; i++) {
+            var weekStart = new Date(currentWeekStart);
+            weekStart.setDate(weekStart.getDate() - (i * 7));
+            var weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+            if (weekEnd > todayEST) weekEnd = todayEST;
+
+            var isCurrent = i === 0;
+            var isSelected = weekStart.toDateString() === selectedWeekStart.toDateString();
+
+            weeks.push({
+                start: weekStart,
+                end: weekEnd,
+                label: isCurrent ? 'This Week' : 'Week of ' + weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                sublabel: weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' - ' + weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                isCurrent: isCurrent,
+                isSelected: isSelected
+            });
+        }
+
+        var html = weeks.map(function(w) {
+            var classes = 'picker-dropdown-item';
+            if (w.isSelected) classes += ' selected';
+            if (w.isCurrent) classes += ' current';
+            return '<button class="' + classes + '" data-date="' + w.start.toISOString() + '">' +
+                '<div style="font-weight:500">' + w.label + '</div>' +
+                '<div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px">' + w.sublabel + '</div>' +
+                '</button>';
+        }).join('');
+
+        document.getElementById('weeklyList').innerHTML = html;
+
+        document.querySelectorAll('#weeklyList .picker-dropdown-item').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                analyticsDate = new Date(this.dataset.date);
+                hideCustomPicker();
+                updateAnalyticsDateDisplay();
+                updateAnalyticsDisplay();
+            });
+        });
+    }
+
+    function renderMonthlyDropdown() {
+        var todayEST = getTodayEST();
+        var currentMonth = todayEST.getMonth();
+        var currentYear = todayEST.getFullYear();
+        var selectedMonth = analyticsDate.getMonth();
+        var selectedYear = analyticsDate.getFullYear();
+        var months = [];
+
+        // Generate last 12 months
+        for (var i = 0; i < 12; i++) {
+            var d = new Date(currentYear, currentMonth - i, 1);
+            var isCurrent = i === 0;
+            var isSelected = d.getMonth() === selectedMonth && d.getFullYear() === selectedYear;
+
+            months.push({
+                date: d,
+                label: isCurrent ? 'This Month' : d.toLocaleDateString('en-US', { month: 'long' }),
+                sublabel: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+                isCurrent: isCurrent,
+                isSelected: isSelected
+            });
+        }
+
+        var html = months.map(function(m) {
+            var classes = 'picker-dropdown-item';
+            if (m.isSelected) classes += ' selected';
+            if (m.isCurrent) classes += ' current';
+            return '<button class="' + classes + '" data-date="' + m.date.toISOString() + '">' +
+                '<div style="font-weight:500">' + m.label + '</div>' +
+                '<div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px">' + m.sublabel + '</div>' +
+                '</button>';
+        }).join('');
+
+        document.getElementById('monthlyList').innerHTML = html;
+
+        document.querySelectorAll('#monthlyList .picker-dropdown-item').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                analyticsDate = new Date(this.dataset.date);
+                hideCustomPicker();
+                updateAnalyticsDateDisplay();
+                updateAnalyticsDisplay();
+            });
+        });
+    }
+
+    // Calendar navigation
+    document.getElementById('pickerPrevMonth')?.addEventListener('click', function() {
+        pickerMonth.setMonth(pickerMonth.getMonth() - 1);
+        renderCalendar();
+    });
+
+    document.getElementById('pickerNextMonth')?.addEventListener('click', function() {
+        var todayEST = getTodayEST();
+        var nextMonth = new Date(pickerMonth);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        if (nextMonth.getFullYear() < todayEST.getFullYear() ||
+            (nextMonth.getFullYear() === todayEST.getFullYear() && nextMonth.getMonth() <= todayEST.getMonth())) {
+            pickerMonth = nextMonth;
+            renderCalendar();
+        }
+    });
+
+    // Toggle picker on date display click
     document.getElementById('analyticsDateDisplay')?.addEventListener('click', function() {
-        var picker = document.getElementById('analyticsDatePicker');
-        if (picker) {
-            // Set max to today
-            var todayEST = getTodayEST();
-            picker.max = todayEST.toISOString().split('T')[0];
-            picker.showPicker();
+        if (customPicker.classList.contains('show')) {
+            hideCustomPicker();
+        } else {
+            showCustomPicker();
+        }
+    });
+
+    // Close picker on outside click
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#customDatePicker') && !e.target.closest('#analyticsDateDisplay')) {
+            hideCustomPicker();
         }
     });
 
@@ -7623,23 +7880,6 @@
                 updateAnalyticsDisplay();
             }
         });
-    });
-
-    // Date picker change - prevent future dates
-    document.getElementById('analyticsDatePicker')?.addEventListener('change', function() {
-        var selected = new Date(this.value);
-        var todayEST = getTodayEST();
-
-        // Don't allow future dates
-        if (selected > todayEST) {
-            analyticsDate = new Date();
-            this.value = todayEST.toISOString().split('T')[0];
-        } else {
-            analyticsDate = selected;
-        }
-
-        updateAnalyticsDateDisplay();
-        updateAnalyticsDisplay();
     });
 
     // Initialize date display
@@ -7764,19 +8004,30 @@
         if (el('analyticsWrongPerson')) el('analyticsWrongPerson').textContent = statusCounts.wrongPerson;
         if (el('analyticsDNC')) el('analyticsDNC').textContent = statusCounts.dnc;
 
+        // Combined booked count (Booked + Callback)
+        var totalBooked = statusCounts.booked + statusCounts.callback;
+
         // Update conversion funnel
         if (el('funnelCalls')) el('funnelCalls').textContent = totalCalls;
         if (el('funnelConversations')) el('funnelConversations').textContent = conversations;
         if (el('funnelQualified')) el('funnelQualified').textContent = qualified;
-        if (el('funnelBooked')) el('funnelBooked').textContent = statusCounts.booked;
+        if (el('funnelBooked')) el('funnelBooked').textContent = totalBooked;
 
-        // Update funnel bar widths
-        var convPct = totalCalls > 0 ? Math.max(10, (conversations / totalCalls) * 100) : 0;
-        var qualPct = totalCalls > 0 ? Math.max(10, (qualified / totalCalls) * 100) : 0;
-        var bookedPct = totalCalls > 0 ? Math.max(10, (statusCounts.booked / totalCalls) * 100) : 0;
-        if (el('funnelConvBar')) el('funnelConvBar').style.width = convPct + '%';
-        if (el('funnelQualBar')) el('funnelQualBar').style.width = qualPct + '%';
-        if (el('funnelBookedBar')) el('funnelBookedBar').style.width = bookedPct + '%';
+        // Update funnel bar widths - proportional to calls made
+        var convPct = totalCalls > 0 ? (conversations / totalCalls) * 100 : 0;
+        var qualPct = totalCalls > 0 ? (qualified / totalCalls) * 100 : 0;
+        var bookedPct = totalCalls > 0 ? (totalBooked / totalCalls) * 100 : 0;
+        if (el('funnelConvBar')) el('funnelConvBar').style.width = Math.max(convPct, convPct > 0 ? 5 : 0) + '%';
+        if (el('funnelQualBar')) el('funnelQualBar').style.width = Math.max(qualPct, qualPct > 0 ? 5 : 0) + '%';
+        if (el('funnelBookedBar')) el('funnelBookedBar').style.width = Math.max(bookedPct, bookedPct > 0 ? 5 : 0) + '%';
+
+        // Add percentages to funnel
+        var convPctDisplay = totalCalls > 0 ? (convPct).toFixed(1) + '%' : '0%';
+        var qualPctDisplay = totalCalls > 0 ? (qualPct).toFixed(1) + '%' : '0%';
+        var bookedPctDisplay = totalCalls > 0 ? (bookedPct).toFixed(1) + '%' : '0%';
+        if (el('funnelConvPct')) el('funnelConvPct').textContent = convPctDisplay;
+        if (el('funnelQualPct')) el('funnelQualPct').textContent = qualPctDisplay;
+        if (el('funnelBookedPct')) el('funnelBookedPct').textContent = bookedPctDisplay;
 
         // Update outcome stat bars
         var maxQualified = Math.max(statusCounts.booked, statusCounts.callback, statusCounts.timeline, statusCounts.followUp, 1);
@@ -7785,14 +8036,18 @@
         if (el('timelineBar')) el('timelineBar').style.width = (statusCounts.timeline / maxQualified * 100) + '%';
         if (el('followupBar')) el('followupBar').style.width = (statusCounts.followUp / maxQualified * 100) + '%';
 
-        // Update booked count badge - get from leads with booked meetings
+        // Update booked count badge - use call data (Booked + Callback) filtered by time period
+        var bookedCount = totalBooked;
+        if (el('analyticsBookedCount')) el('analyticsBookedCount').textContent = bookedCount + ' meeting' + (bookedCount !== 1 ? 's' : '');
+
+        // Update hero stat for meetings booked
+        if (el('analyticsBooked')) el('analyticsBooked').textContent = totalBooked;
+
+        // Booked table - uses leads with booked status for meeting details
         var bookedLeads = allLeads.filter(function(l) {
             var status = (l.fields['Status'] || l.fields['Disposition'] || '').toLowerCase();
             return status === 'booked' || status === 'appointment booked';
         });
-        if (el('analyticsBookedCount')) el('analyticsBookedCount').textContent = bookedLeads.length + ' meeting' + (bookedLeads.length !== 1 ? 's' : '');
-
-        // Booked table - still uses leads for the meeting details
         var bookedTable = el('analyticsBookedTable');
         if (bookedTable) {
             if (bookedLeads.length === 0) {
