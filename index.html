@@ -3079,39 +3079,32 @@
     var callsLoaded = false;
 
     // Load calls from Calls table for analytics
-    // Calls are linked to Leads, so we filter by leads belonging to this client
+    // Client is a lookup field on Calls that pulls from Lead -> Client Email
     async function loadCallsData() {
-        if (!currentUserRecord || allLeads.length === 0) {
-            console.log('No leads loaded yet, skipping calls load');
+        if (!currentUserRecord) {
+            console.log('No user record, skipping calls load');
             return;
         }
 
         try {
-            // Build OR formula to match any of the user's lead IDs
-            var leadIds = allLeads.map(function(l) { return l.id; });
-            console.log('Loading calls for ' + leadIds.length + ' leads');
+            var email = currentUser.email.toLowerCase();
+            console.log('Loading calls for client email: ' + email);
+
+            // Filter by Client lookup field (contains client email from Lead)
+            var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client})))';
+            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&fields[]=Timestamp&fields[]=Outcome';
 
             allCalls = [];
-            var batchSize = 30; // Process leads in batches to avoid URL length issues
+            var offset = null;
 
-            for (var i = 0; i < leadIds.length; i += batchSize) {
-                var batchIds = leadIds.slice(i, i + batchSize);
-                var orConditions = batchIds.map(function(id) {
-                    return 'FIND("' + id + '", ARRAYJOIN({Leads}))';
-                });
-                var filterFormula = 'OR(' + orConditions.join(',') + ')';
-                var basePath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&fields[]=Timestamp&fields[]=Outcome';
-
-                var offset = null;
-                do {
-                    var path = basePath + (offset ? '&offset=' + offset : '');
-                    var data = await fetchAirtable(path);
-                    if (data.records) {
-                        allCalls = allCalls.concat(data.records);
-                    }
-                    offset = data.offset;
-                } while (offset);
-            }
+            do {
+                var path = basePath + (offset ? '&offset=' + offset : '');
+                var data = await fetchAirtable(path);
+                if (data.records) {
+                    allCalls = allCalls.concat(data.records);
+                }
+                offset = data.offset;
+            } while (offset);
 
             callsLoaded = true;
             console.log('Loaded ' + allCalls.length + ' call records for analytics');
