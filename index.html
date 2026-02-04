@@ -3083,9 +3083,9 @@
         if (!currentUserRecord) return;
 
         try {
-            var email = currentUser.email.toLowerCase();
-            // Filter calls by client email (linked from Client record)
-            var filterFormula = 'FIND("' + email + '", LOWER(ARRAYJOIN({Client Email})))';
+            var clientId = currentUserRecord.id;
+            // Filter calls by Client linked record (uses record ID)
+            var filterFormula = 'FIND("' + clientId + '", ARRAYJOIN({Client}))';
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&fields[]=Timestamp&fields[]=Outcome';
 
             allCalls = [];
