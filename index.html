@@ -806,11 +806,13 @@
         .outcome-stat.callback{border-left:3px solid #3B82F6}
         .outcome-stat.timeline{border-left:3px solid #f59e0b}
         .outcome-stat.followup{border-left:3px solid #8b5cf6}
-        .outcome-stat-value{font-size:1.5rem;font-weight:700}
+        .outcome-stat-value{font-size:1.5rem;font-weight:700;display:flex;align-items:baseline;gap:6px}
         .outcome-stat.booked .outcome-stat-value{color:#22c55e}
         .outcome-stat.callback .outcome-stat-value{color:#3B82F6}
         .outcome-stat.timeline .outcome-stat-value{color:#f59e0b}
         .outcome-stat.followup .outcome-stat-value{color:#8b5cf6}
+        .outcome-pct{font-size:0.625rem;font-weight:500;opacity:0.6}
+        .outcome-pct-small{font-size:0.625rem;font-weight:500;color:rgba(255,255,255,0.4);margin-left:6px}
         .outcome-stat-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
         .outcome-stat-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
         .bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
@@ -1612,22 +1614,22 @@
                                 </div>
                                 <div class="outcome-stats-grid">
                                     <div class="outcome-stat booked">
-                                        <div class="outcome-stat-value" id="analyticsBookedStat">0</div>
+                                        <div class="outcome-stat-value" id="analyticsBookedStat">0<span class="outcome-pct" id="bookedPct"></span></div>
                                         <div class="outcome-stat-label">Booked</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill booked" id="bookedBar"></div></div>
                                     </div>
                                     <div class="outcome-stat callback">
-                                        <div class="outcome-stat-value" id="analyticsCallbackCount">0</div>
+                                        <div class="outcome-stat-value" id="analyticsCallbackCount">0<span class="outcome-pct" id="callbackPct"></span></div>
                                         <div class="outcome-stat-label">Callback</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill callback" id="callbackBar"></div></div>
                                     </div>
                                     <div class="outcome-stat timeline">
-                                        <div class="outcome-stat-value" id="analyticsTimelineCount">0</div>
+                                        <div class="outcome-stat-value" id="analyticsTimelineCount">0<span class="outcome-pct" id="timelinePct"></span></div>
                                         <div class="outcome-stat-label">Timeline</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill timeline" id="timelineBar"></div></div>
                                     </div>
                                     <div class="outcome-stat followup">
-                                        <div class="outcome-stat-value" id="analyticsFollowUp">0</div>
+                                        <div class="outcome-stat-value" id="analyticsFollowUp">0<span class="outcome-pct" id="followupPct"></span></div>
                                         <div class="outcome-stat-label">Follow Up</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill followup" id="followupBar"></div></div>
                                     </div>
@@ -1642,31 +1644,31 @@
                                 <div class="other-outcomes-list">
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Not Interested</span>
-                                        <span class="outcome-value" id="analyticsNotInterested">0</span>
+                                        <span class="outcome-value"><span id="analyticsNotInterested">0</span><span class="outcome-pct-small" id="notInterestedPct"></span></span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Inconclusive</span>
-                                        <span class="outcome-value" id="analyticsInconclusive">0</span>
+                                        <span class="outcome-value"><span id="analyticsInconclusive">0</span><span class="outcome-pct-small" id="inconclusivePct"></span></span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">No Answer</span>
-                                        <span class="outcome-value" id="analyticsNoAnswer">0</span>
+                                        <span class="outcome-value"><span id="analyticsNoAnswer">0</span><span class="outcome-pct-small" id="noAnswerPct"></span></span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Voicemail</span>
-                                        <span class="outcome-value" id="analyticsVoicemail">0</span>
+                                        <span class="outcome-value"><span id="analyticsVoicemail">0</span><span class="outcome-pct-small" id="voicemailPct"></span></span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Max Attempts</span>
-                                        <span class="outcome-value" id="analyticsMaxAttempts">0</span>
+                                        <span class="outcome-value"><span id="analyticsMaxAttempts">0</span><span class="outcome-pct-small" id="maxAttemptsPct"></span></span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Wrong Person</span>
-                                        <span class="outcome-value" id="analyticsWrongPerson">0</span>
+                                        <span class="outcome-value"><span id="analyticsWrongPerson">0</span><span class="outcome-pct-small" id="wrongPersonPct"></span></span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">DNC</span>
-                                        <span class="outcome-value" id="analyticsDNC">0</span>
+                                        <span class="outcome-value"><span id="analyticsDNC">0</span><span class="outcome-pct-small" id="dncPct"></span></span>
                                     </div>
                                 </div>
                             </div>
@@ -7910,6 +7912,7 @@
         var totalCalls = 0;
         var conversations = 0;
         var qualified = 0;
+        var bookedCallsInPeriod = []; // Track booked/callback calls for the table
 
         var todayEST = getTodayEST();
         var selectedDateStr = toESTDateString(analyticsDate);
@@ -7953,10 +7956,12 @@
                 statusCounts.booked++;
                 conversations++;
                 qualified++;
+                bookedCallsInPeriod.push(call);
             } else if (outcome === 'callback') {
                 statusCounts.callback++;
                 conversations++;
                 qualified++;
+                bookedCallsInPeriod.push(call);
             } else if (outcome === 'follow up') {
                 statusCounts.followUp++;
                 conversations++;
@@ -8013,13 +8018,13 @@
         if (el('funnelQualified')) el('funnelQualified').textContent = qualified;
         if (el('funnelBooked')) el('funnelBooked').textContent = totalBooked;
 
-        // Update funnel bar widths - proportional to calls made
+        // Update funnel bar widths - proportional to calls made (no minimum)
         var convPct = totalCalls > 0 ? (conversations / totalCalls) * 100 : 0;
         var qualPct = totalCalls > 0 ? (qualified / totalCalls) * 100 : 0;
         var bookedPct = totalCalls > 0 ? (totalBooked / totalCalls) * 100 : 0;
-        if (el('funnelConvBar')) el('funnelConvBar').style.width = Math.max(convPct, convPct > 0 ? 5 : 0) + '%';
-        if (el('funnelQualBar')) el('funnelQualBar').style.width = Math.max(qualPct, qualPct > 0 ? 5 : 0) + '%';
-        if (el('funnelBookedBar')) el('funnelBookedBar').style.width = Math.max(bookedPct, bookedPct > 0 ? 5 : 0) + '%';
+        if (el('funnelConvBar')) el('funnelConvBar').style.width = convPct + '%';
+        if (el('funnelQualBar')) el('funnelQualBar').style.width = qualPct + '%';
+        if (el('funnelBookedBar')) el('funnelBookedBar').style.width = bookedPct + '%';
 
         // Add percentages to funnel
         var convPctDisplay = totalCalls > 0 ? (convPct).toFixed(1) + '%' : '0%';
@@ -8036,6 +8041,22 @@
         if (el('timelineBar')) el('timelineBar').style.width = (statusCounts.timeline / maxQualified * 100) + '%';
         if (el('followupBar')) el('followupBar').style.width = (statusCounts.followUp / maxQualified * 100) + '%';
 
+        // Update qualified outcome percentages
+        var pctFormat = function(count) { return totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) + '%' : ''; };
+        if (el('bookedPct')) el('bookedPct').textContent = pctFormat(statusCounts.booked);
+        if (el('callbackPct')) el('callbackPct').textContent = pctFormat(statusCounts.callback);
+        if (el('timelinePct')) el('timelinePct').textContent = pctFormat(statusCounts.timeline);
+        if (el('followupPct')) el('followupPct').textContent = pctFormat(statusCounts.followUp);
+
+        // Update other outcome percentages
+        if (el('notInterestedPct')) el('notInterestedPct').textContent = pctFormat(statusCounts.notInterested);
+        if (el('inconclusivePct')) el('inconclusivePct').textContent = pctFormat(statusCounts.inconclusive);
+        if (el('noAnswerPct')) el('noAnswerPct').textContent = pctFormat(statusCounts.noAnswer);
+        if (el('voicemailPct')) el('voicemailPct').textContent = pctFormat(statusCounts.voicemail);
+        if (el('maxAttemptsPct')) el('maxAttemptsPct').textContent = pctFormat(statusCounts.maxAttempts);
+        if (el('wrongPersonPct')) el('wrongPersonPct').textContent = pctFormat(statusCounts.wrongPerson);
+        if (el('dncPct')) el('dncPct').textContent = pctFormat(statusCounts.dnc);
+
         // Update booked count badge - use call data (Booked + Callback) filtered by time period
         var bookedCount = totalBooked;
         if (el('analyticsBookedCount')) el('analyticsBookedCount').textContent = bookedCount + ' meeting' + (bookedCount !== 1 ? 's' : '');
@@ -8043,11 +8064,16 @@
         // Update hero stat for meetings booked
         if (el('analyticsBooked')) el('analyticsBooked').textContent = totalBooked;
 
-        // Booked table - uses leads with booked status for meeting details
-        var bookedLeads = allLeads.filter(function(l) {
-            var status = (l.fields['Status'] || l.fields['Disposition'] || '').toLowerCase();
-            return status === 'booked' || status === 'appointment booked';
+        // Booked table - show leads with Booked/Callback calls in the selected time period
+        var bookedLeadIds = new Set();
+        bookedCallsInPeriod.forEach(function(call) {
+            var leadId = call.fields['Leads'];
+            if (leadId) {
+                if (Array.isArray(leadId)) leadId.forEach(function(id) { bookedLeadIds.add(id); });
+                else bookedLeadIds.add(leadId);
+            }
         });
+        var bookedLeads = allLeads.filter(function(l) { return bookedLeadIds.has(l.id); });
         var bookedTable = el('analyticsBookedTable');
         if (bookedTable) {
             if (bookedLeads.length === 0) {
