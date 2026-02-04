@@ -4049,7 +4049,10 @@
             // Check for signup parameter from main website
             var urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('signup') === 'true') {
-                openAuthModal('signup');
+                // Small delay to ensure modal elements are ready
+                setTimeout(function() {
+                    openAuthModal('signup');
+                }, 100);
                 // Clean up URL
                 window.history.replaceState({}, '', window.location.pathname);
             }
