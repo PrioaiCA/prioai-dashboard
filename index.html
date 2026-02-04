@@ -982,6 +982,35 @@
         .crop-btn-confirm{background:#22c55e;border:none;color:#000;font-weight:600}
         .crop-btn-confirm:hover{background:#16a34a}
         .crop-btn-confirm:disabled{opacity:0.5;cursor:not-allowed}
+
+        /* Unqualified Leads Page */
+        .unqualified-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+        .unqualified-header-text h2{margin-bottom:0.25rem}
+        .unqualified-header-text p{color:rgba(255,255,255,0.5);font-size:0.875rem}
+        .unqualified-header-actions{display:flex;align-items:center;gap:1rem}
+        .unqualified-tabs{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+        .unqualified-tab{padding:10px 18px;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.7);background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer;transition:all 0.15s}
+        .unqualified-tab:hover{border-color:rgba(255,255,255,0.2);color:#fff}
+        .unqualified-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000;font-weight:600}
+        .unqualified-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
+        .unqualified-list.list-view{grid-template-columns:1fr}
+        .unqualified-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+        .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:320px}
+        .unqualified-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .unqualified-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
+        .unqualified-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .unqualified-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .unqualified-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
+
+        /* Analytics Data Source Toggle */
+        .analytics-data-source-row{display:flex;justify-content:center;margin-bottom:1rem}
+        .analytics-data-toggle{display:flex;gap:0;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:4px;overflow:hidden}
+        .data-toggle-btn{padding:10px 24px;font-size:0.875rem;font-weight:600;color:rgba(255,255,255,0.6);background:transparent;border:none;border-radius:8px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.5px}
+        .data-toggle-btn:hover{color:#fff}
+        .data-toggle-btn.active{background:rgb(52,211,153);color:#000}
+
+        /* Search Result Item with Next Call */
+        .search-result-next-call{font-size:0.75rem;color:rgb(52,211,153);margin-top:2px}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 </head>
@@ -1037,6 +1066,10 @@
                     <div class="nav-item" data-page="pipeline">
                         <span class="nav-item-icon">🤖</span>
                         <span>AI Pipeline</span>
+                    </div>
+                    <div class="nav-item" data-page="unqualified">
+                        <span class="nav-item-icon">📁</span>
+                        <span>Unqualified Leads</span>
                     </div>
                     <div class="nav-item" data-page="search">
                         <span class="nav-item-icon">🔍</span>
@@ -1506,6 +1539,70 @@
                         </div>
                     </div>
 
+                    <!-- Page: Unqualified Leads -->
+                    <div class="page hidden" id="page-unqualified">
+                        <!-- Unqualified Header -->
+                        <div class="unqualified-header">
+                            <div class="unqualified-header-text">
+                                <h2>📁 Unqualified Leads <span class="header-count-badge" id="unqualifiedCount">0</span></h2>
+                                <p>Leads that are not yet booked or in an active pipeline.</p>
+                            </div>
+                            <div class="unqualified-header-actions">
+                                <div class="view-toggle">
+                                    <button class="view-toggle-btn active" id="unqualifiedViewList" onclick="setUnqualifiedView('list')" title="List view">☰</button>
+                                    <button class="view-toggle-btn" id="unqualifiedViewGrid" onclick="setUnqualifiedView('grid')" title="Grid view">▦</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Unqualified Status Tabs -->
+                        <div class="unqualified-tabs">
+                            <button class="unqualified-tab active" data-status="all">All</button>
+                            <button class="unqualified-tab" data-status="Not Booked">Not Booked</button>
+                            <button class="unqualified-tab" data-status="Callback">Callback</button>
+                            <button class="unqualified-tab" data-status="Follow Up">Follow Up</button>
+                            <button class="unqualified-tab" data-status="Timeline">Timeline</button>
+                        </div>
+
+                        <!-- Unqualified Filters -->
+                        <div class="filters-bar">
+                            <div class="filters-left">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="unqualifiedSearch" placeholder="Search by name or phone...">
+                                </div>
+                                <select id="unqualifiedOwnership" class="filter-select">
+                                    <option value="all">All Leads</option>
+                                    <option value="mine">My Prospects</option>
+                                    <option value="shared-by">Shared By Me</option>
+                                    <option value="not-shared">Not Shared</option>
+                                    <option value="shared-with">Shared With Me</option>
+                                </select>
+                                <select id="unqualifiedTimeframe" class="filter-select">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="7days">Last 7 Days</option>
+                                    <option value="30days">Last 30 Days</option>
+                                    <option value="90days">Last 90 Days</option>
+                                </select>
+                            </div>
+                            <div class="sort-controls">
+                                <span class="sort-label">Sort by</span>
+                                <select id="unqualifiedSort" class="filter-select sort-select">
+                                    <option value="lastUpdated">Last Updated</option>
+                                    <option value="name">Name</option>
+                                    <option value="nextCall">Next Call</option>
+                                </select>
+                                <button class="sort-direction-btn" id="unqualifiedSortDir" onclick="toggleUnqualifiedSortDir()" title="Toggle sort direction">↓</button>
+                            </div>
+                        </div>
+
+                        <!-- Unqualified Cards -->
+                        <div class="unqualified-list list-view" id="unqualifiedList">
+                            <div class="page-loading"><div class="spinner"></div><p>Loading unqualified leads...</p></div>
+                        </div>
+                    </div>
+
                     <!-- Page: Analytics -->
                     <div class="page hidden" id="page-analytics">
                         <!-- Modern Header with Date Navigation -->
@@ -1550,6 +1647,14 @@
                                         <div class="picker-dropdown-list" id="monthlyList"></div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Source Toggle -->
+                        <div class="analytics-data-source-row">
+                            <div class="analytics-data-toggle">
+                                <button class="data-toggle-btn active" id="viewCallsData" data-source="calls">CALLS DATA</button>
+                                <button class="data-toggle-btn" id="viewLeadsData" data-source="leads">LEADS DATA</button>
                             </div>
                         </div>
 
@@ -1845,6 +1950,10 @@
                                     <div class="info-item">
                                         <span class="info-label">Booked Time</span>
                                         <span class="info-value" id="searchLeadBookedTime">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Next Call Date</span>
+                                        <span class="info-value" id="searchLeadNextCall">-</span>
                                     </div>
                                 </div>
 
@@ -2914,8 +3023,8 @@
         // Update title
         var titles = {
             overview: 'Overview', prio: 'PRIO', prospects: 'Prospects', pipeline: 'AI Pipeline',
-            shared: 'Shared Leads', analytics: 'Analytics', import: 'Import Leads', search: 'Search',
-            settings: 'Settings', billing: 'Billing', help: 'Help'
+            unqualified: 'Unqualified Leads', shared: 'Shared Leads', analytics: 'Analytics',
+            import: 'Import Leads', search: 'Search', settings: 'Settings', billing: 'Billing', help: 'Help'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
         
@@ -5257,6 +5366,7 @@
             updatePrioListFiltered();
             updateProspectsTable();
             updatePipelineList();
+            updateUnqualifiedList();
         } catch (err) {
             showToast('Failed: ' + err.message, 'error');
         }
@@ -6516,7 +6626,231 @@
             '</div>';
         }).join('');
     }
-    
+
+    // ===== UNQUALIFIED LEADS TAB =====
+    var unqualifiedStatusFilter = 'all';
+    var unqualifiedSortAsc = false;
+
+    function setUnqualifiedView(view) {
+        var list = document.getElementById('unqualifiedList');
+        var listBtn = document.getElementById('unqualifiedViewList');
+        var gridBtn = document.getElementById('unqualifiedViewGrid');
+        if (view === 'list') {
+            list?.classList.add('list-view');
+            listBtn?.classList.add('active');
+            gridBtn?.classList.remove('active');
+        } else {
+            list?.classList.remove('list-view');
+            listBtn?.classList.remove('active');
+            gridBtn?.classList.add('active');
+        }
+    }
+
+    function toggleUnqualifiedSortDir() {
+        unqualifiedSortAsc = !unqualifiedSortAsc;
+        var btn = document.getElementById('unqualifiedSortDir');
+        if (btn) btn.textContent = unqualifiedSortAsc ? '↑' : '↓';
+        updateUnqualifiedList();
+    }
+
+    function updateUnqualifiedList() {
+        var unqualifiedList = document.getElementById('unqualifiedList');
+        if (!unqualifiedList) return;
+
+        var searchVal = (document.getElementById('unqualifiedSearch')?.value || '').toLowerCase();
+        var ownershipFilter = document.getElementById('unqualifiedOwnership')?.value || 'all';
+        var timeframeFilter = document.getElementById('unqualifiedTimeframe')?.value || 'all';
+        var sortBy = document.getElementById('unqualifiedSort')?.value || 'lastUpdated';
+
+        // Filter leads based on the selected status tab
+        var unqualifiedLeads = allLeads.filter(function(l) {
+            var f = l.fields;
+            var status = f['Status'] || f['Disposition'] || '';
+            var statusLower = status.toLowerCase();
+
+            // Exclude Booked leads (they are qualified)
+            if (statusLower === 'booked') return false;
+
+            // Filter by status tab
+            if (unqualifiedStatusFilter !== 'all') {
+                if (unqualifiedStatusFilter === 'Not Booked') {
+                    // Not Booked = leads without Booked, Callback, Follow Up, Timeline status
+                    var qualifiedStatuses = ['booked', 'callback', 'follow up', 'timeline'];
+                    if (qualifiedStatuses.includes(statusLower)) return false;
+                } else {
+                    if (status !== unqualifiedStatusFilter) return false;
+                }
+            }
+
+            // Ownership filter
+            if (ownershipFilter !== 'all') {
+                var isOwned = isLeadOwnedByUser(l);
+                var hasSharedWith = f['Shared With'] && f['Shared With'].length > 0;
+                var hasSharedWithEmail = f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']);
+                var isSharedByMe = !l.isShared && (hasSharedWith || hasSharedWithEmail);
+                var isSharedWithMe = l.isShared === true;
+                if (ownershipFilter === 'mine' && !isOwned) return false;
+                if (ownershipFilter === 'shared-by' && !isSharedByMe) return false;
+                if (ownershipFilter === 'not-shared' && (isSharedByMe || isSharedWithMe)) return false;
+                if (ownershipFilter === 'shared-with' && !isSharedWithMe) return false;
+            }
+
+            // Search filter
+            if (searchVal) {
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+                var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
+                if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
+            }
+
+            // Timeframe filter
+            if (timeframeFilter !== 'all') {
+                var lastUpdated = f['Updated At'] ? new Date(f['Updated At']) : null;
+                if (!lastUpdated) return timeframeFilter === 'all';
+                var now = new Date();
+                var daysDiff = Math.floor((now - lastUpdated) / (1000 * 60 * 60 * 24));
+                if (timeframeFilter === 'today' && daysDiff > 0) return false;
+                if (timeframeFilter === '7days' && daysDiff > 7) return false;
+                if (timeframeFilter === '30days' && daysDiff > 30) return false;
+                if (timeframeFilter === '90days' && daysDiff > 90) return false;
+            }
+
+            return true;
+        });
+
+        // Sort based on dropdown and direction
+        var dir = unqualifiedSortAsc ? 1 : -1;
+        unqualifiedLeads.sort(function(a, b) {
+            var fa = a.fields, fb = b.fields;
+            var result;
+            switch (sortBy) {
+                case 'name':
+                    var nameA = ((fa['First Name'] || '') + ' ' + (fa['Last Name'] || '')).toLowerCase();
+                    var nameB = ((fb['First Name'] || '') + ' ' + (fb['Last Name'] || '')).toLowerCase();
+                    result = nameA.localeCompare(nameB);
+                    break;
+                case 'nextCall':
+                    var aDate = new Date(fa['Next Call Date'] || '9999-12-31').getTime();
+                    var bDate = new Date(fb['Next Call Date'] || '9999-12-31').getTime();
+                    result = aDate - bDate;
+                    break;
+                case 'lastUpdated':
+                default:
+                    var updA = new Date(fa['Updated At'] || 0).getTime();
+                    var updB = new Date(fb['Updated At'] || 0).getTime();
+                    result = updB - updA; // Most recent first by default
+                    break;
+            }
+            return result * dir;
+        });
+
+        // Update count badge
+        var unqualifiedCountEl = document.getElementById('unqualifiedCount');
+        if (unqualifiedCountEl) unqualifiedCountEl.textContent = unqualifiedLeads.length;
+
+        if (unqualifiedLeads.length === 0) {
+            unqualifiedList.innerHTML = '<div class="pipeline-empty">No unqualified leads found</div>';
+            return;
+        }
+
+        unqualifiedList.innerHTML = unqualifiedLeads.map(function(lead) {
+            var f = lead.fields;
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var phone = f['Phone #'] || f['Phone'] || '-';
+            var formattedPhone = formatPhoneNumber(phone);
+            var lastUpdatedTimestamp = f['Updated At'];
+            var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
+            var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var notesRaw = f['Client Notes'] || f['Notes'] || '';
+            var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
+            var isPrio = f['Is Prio'] === true;
+            var status = f['Status'] || f['Disposition'] || 'Unknown';
+
+            // Parse notes
+            var notesArray = parseNotesJson(notesRaw);
+            var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+
+            // Next Call Date display
+            var dateDisplay = '';
+            var timeDisplay = '';
+            var nextCallDate = f['Next Call Date'];
+            if (nextCallDate) {
+                var d = new Date(nextCallDate);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            } else {
+                dateDisplay = 'No next';
+                timeDisplay = 'call';
+            }
+
+            var timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
+
+            // Status badge
+            var statusBadge = '';
+            var statusLower = status.toLowerCase();
+            if (statusLower === 'callback') {
+                statusBadge = '<span class="priority-card-lg-badge callback" style="background:rgba(59,130,246,0.15);color:#3B82F6">' + escapeHtml(status) + '</span>';
+            } else if (statusLower === 'follow up') {
+                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(139,92,246,0.15);color:#8B5CF6">' + escapeHtml(status) + '</span>';
+            } else if (statusLower === 'timeline') {
+                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b">' + escapeHtml(status) + '</span>';
+            } else {
+                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)">' + escapeHtml(status || 'Unknown') + '</span>';
+            }
+
+            var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
+
+            return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
+                '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="priority-card-lg-time-col">' +
+                        prioIndicator +
+                        timeCol +
+                    '</div>' +
+                    '<div class="priority-card-lg-info">' +
+                        '<div class="priority-card-lg-top">' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            statusBadge +
+                        '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Summary</div>' +
+                    '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Notes</div>' +
+                    '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-actions">' +
+                    '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
+                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
+                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
+                    '<button class="action-btn action-prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Prio</span></button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    // Unqualified Leads tab switching
+    document.querySelectorAll('.unqualified-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.unqualified-tab').forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+            unqualifiedStatusFilter = this.dataset.status;
+            updateUnqualifiedList();
+        });
+    });
+
+    // Unqualified Leads filter listeners
+    document.getElementById('unqualifiedSearch')?.addEventListener('input', debounce(function() {
+        updateUnqualifiedList();
+    }, 300));
+    document.getElementById('unqualifiedOwnership')?.addEventListener('change', updateUnqualifiedList);
+    document.getElementById('unqualifiedTimeframe')?.addEventListener('change', updateUnqualifiedList);
+    document.getElementById('unqualifiedSort')?.addEventListener('change', updateUnqualifiedList);
+
     // Helper: Check if lead is owned by current user
     function isLeadOwnedByUser(lead) {
         if (!currentUser) return false;
@@ -7127,9 +7461,10 @@
             // Show success message
             showToast(name + ' has been moved to Prospects');
 
-            // Refresh both pipeline and prospects lists immediately
+            // Refresh lists immediately
             updatePipelineList();
             updateProspectsTable();
+            updateUnqualifiedList();
 
             // Close modal if open
             if (currentLeadId === leadId) {
@@ -7519,6 +7854,7 @@
             updateProspectsTable();
             updatePipelineList();
             updateSharedLeadsList();
+            updateUnqualifiedList();
         } finally {
             // Data has loaded (or failed) - hide loading overlay either way
             dataLoaded = true;
@@ -7559,6 +7895,7 @@
     var analyticsLoading = false;
     var analyticsDataLoaded = { daily: false, weekly: false, monthly: false, all: false };
     var analyticsShowPercents = false; // Toggle state for numbers vs percentages
+    var analyticsDataSource = 'calls'; // Toggle state for calls vs leads data
 
     // Toggle between numbers and percentages
     function updateAnalyticsToggleDisplay() {
@@ -7582,6 +7919,25 @@
             this.classList.add('active');
             analyticsShowPercents = true;
             updateAnalyticsToggleDisplay();
+        }
+    });
+
+    // Toggle between Calls Data and Leads Data
+    document.getElementById('viewCallsData')?.addEventListener('click', function() {
+        if (!this.classList.contains('active')) {
+            document.getElementById('viewLeadsData')?.classList.remove('active');
+            this.classList.add('active');
+            analyticsDataSource = 'calls';
+            updateAnalyticsDisplay();
+        }
+    });
+
+    document.getElementById('viewLeadsData')?.addEventListener('click', function() {
+        if (!this.classList.contains('active')) {
+            document.getElementById('viewCallsData')?.classList.remove('active');
+            this.classList.add('active');
+            analyticsDataSource = 'leads';
+            updateAnalyticsDisplay();
         }
     });
 
@@ -8050,14 +8406,14 @@
     updateAnalyticsDateDisplay();
 
     async function updateAnalyticsDisplay() {
-        // Load calls data if not loaded yet
-        if (!callsLoaded && currentUserRecord) {
+        // Load calls data if not loaded yet (for calls mode)
+        if (analyticsDataSource === 'calls' && !callsLoaded && currentUserRecord) {
             showAnalyticsLoading();
             await loadCallsData();
             hideAnalyticsLoading();
         }
 
-        // Outcome counts based on Calls table Outcome field
+        // Outcome counts
         var statusCounts = {
             booked: 0,
             callback: 0,
@@ -8071,91 +8427,157 @@
             wrongPerson: 0,
             dnc: 0
         };
-        var totalCalls = 0;
+        var totalCount = 0;
         var conversations = 0;
         var qualified = 0;
-        var bookedCallsInPeriod = []; // Track booked/callback calls for the table
 
         var todayEST = getTodayEST();
         var selectedDateStr = toESTDateString(analyticsDate);
 
-        // Process calls data
-        allCalls.forEach(function(call) {
-            var f = call.fields;
-            var outcome = (f['Outcome'] || '').toLowerCase().trim();
-            var timestamp = f['Timestamp'];
+        if (analyticsDataSource === 'calls') {
+            // Process calls data
+            allCalls.forEach(function(call) {
+                var f = call.fields;
+                var outcome = (f['Outcome'] || '').toLowerCase().trim();
+                var timestamp = f['Timestamp'];
 
-            // Filter by period/date using EST timezone
-            if (analyticsPeriod !== 'all') {
-                if (!timestamp) return;
+                // Filter by period/date using EST timezone
+                if (analyticsPeriod !== 'all') {
+                    if (!timestamp) return;
 
-                var callDateEST = toESTDateString(timestamp);
+                    var callDateEST = toESTDateString(timestamp);
 
-                if (analyticsPeriod === 'daily') {
-                    if (callDateEST !== selectedDateStr) return;
-                } else if (analyticsPeriod === 'weekly') {
-                    // Filter by selected week (Monday to Sunday)
-                    var selectedEST = getESTDate(analyticsDate);
-                    var weekStart = getWeekStart(selectedEST);
-                    var weekEnd = getWeekEnd(selectedEST);
-                    weekEnd.setHours(23, 59, 59, 999); // End of Sunday
-                    var callDate = new Date(timestamp);
-                    if (callDate < weekStart || callDate > weekEnd) return;
-                } else if (analyticsPeriod === 'monthly') {
-                    // Filter by selected month
-                    var selectedEST = getESTDate(analyticsDate);
-                    var monthStart = new Date(selectedEST.getFullYear(), selectedEST.getMonth(), 1);
-                    var monthEnd = new Date(selectedEST.getFullYear(), selectedEST.getMonth() + 1, 0, 23, 59, 59, 999);
-                    var callDate = new Date(timestamp);
-                    if (callDate < monthStart || callDate > monthEnd) return;
+                    if (analyticsPeriod === 'daily') {
+                        if (callDateEST !== selectedDateStr) return;
+                    } else if (analyticsPeriod === 'weekly') {
+                        var selectedEST = getESTDate(analyticsDate);
+                        var weekStart = getWeekStart(selectedEST);
+                        var weekEnd = getWeekEnd(selectedEST);
+                        weekEnd.setHours(23, 59, 59, 999);
+                        var callDate = new Date(timestamp);
+                        if (callDate < weekStart || callDate > weekEnd) return;
+                    } else if (analyticsPeriod === 'monthly') {
+                        var selectedEST = getESTDate(analyticsDate);
+                        var monthStart = new Date(selectedEST.getFullYear(), selectedEST.getMonth(), 1);
+                        var monthEnd = new Date(selectedEST.getFullYear(), selectedEST.getMonth() + 1, 0, 23, 59, 59, 999);
+                        var callDate = new Date(timestamp);
+                        if (callDate < monthStart || callDate > monthEnd) return;
+                    }
                 }
-            }
 
-            totalCalls++;
+                totalCount++;
 
-            // Categorize by outcome
-            if (outcome === 'booked') {
-                statusCounts.booked++;
-                conversations++;
-                qualified++;
-                bookedCallsInPeriod.push(call);
-            } else if (outcome === 'callback') {
-                statusCounts.callback++;
-                conversations++;
-                qualified++;
-                bookedCallsInPeriod.push(call);
-            } else if (outcome === 'follow up') {
-                statusCounts.followUp++;
-                conversations++;
-                qualified++;
-            } else if (outcome === 'timeline') {
-                statusCounts.timeline++;
-                conversations++;
-                qualified++;
-            } else if (outcome === 'not interested') {
-                statusCounts.notInterested++;
-                conversations++;
-            } else if (outcome === 'inconclusive') {
-                statusCounts.inconclusive++;
-                conversations++;
-            } else if (outcome === 'no answer') {
-                statusCounts.noAnswer++;
-            } else if (outcome === 'voicemail') {
-                statusCounts.voicemail++;
-            } else if (outcome === 'max attempts') {
-                statusCounts.maxAttempts++;
-            } else if (outcome === 'wrong person') {
-                statusCounts.wrongPerson++;
-                conversations++;
-            } else if (outcome === 'dnc') {
-                statusCounts.dnc++;
-                conversations++;
-            }
-        });
+                // Categorize by outcome
+                if (outcome === 'booked') {
+                    statusCounts.booked++;
+                    conversations++;
+                    qualified++;
+                } else if (outcome === 'callback') {
+                    statusCounts.callback++;
+                    conversations++;
+                    qualified++;
+                } else if (outcome === 'follow up') {
+                    statusCounts.followUp++;
+                    conversations++;
+                    qualified++;
+                } else if (outcome === 'timeline') {
+                    statusCounts.timeline++;
+                    conversations++;
+                    qualified++;
+                } else if (outcome === 'not interested') {
+                    statusCounts.notInterested++;
+                    conversations++;
+                } else if (outcome === 'inconclusive') {
+                    statusCounts.inconclusive++;
+                    conversations++;
+                } else if (outcome === 'no answer') {
+                    statusCounts.noAnswer++;
+                } else if (outcome === 'voicemail') {
+                    statusCounts.voicemail++;
+                } else if (outcome === 'max attempts') {
+                    statusCounts.maxAttempts++;
+                } else if (outcome === 'wrong person') {
+                    statusCounts.wrongPerson++;
+                    conversations++;
+                } else if (outcome === 'dnc') {
+                    statusCounts.dnc++;
+                    conversations++;
+                }
+            });
+        } else {
+            // Process leads data
+            allLeads.forEach(function(lead) {
+                var f = lead.fields;
+                var status = (f['Status'] || f['Disposition'] || '').toLowerCase().trim();
+                var lastUpdated = f['Updated At'];
+
+                // Filter by period/date using EST timezone (based on last updated)
+                if (analyticsPeriod !== 'all') {
+                    if (!lastUpdated) return;
+
+                    var leadDateEST = toESTDateString(lastUpdated);
+
+                    if (analyticsPeriod === 'daily') {
+                        if (leadDateEST !== selectedDateStr) return;
+                    } else if (analyticsPeriod === 'weekly') {
+                        var selectedEST = getESTDate(analyticsDate);
+                        var weekStart = getWeekStart(selectedEST);
+                        var weekEnd = getWeekEnd(selectedEST);
+                        weekEnd.setHours(23, 59, 59, 999);
+                        var leadDate = new Date(lastUpdated);
+                        if (leadDate < weekStart || leadDate > weekEnd) return;
+                    } else if (analyticsPeriod === 'monthly') {
+                        var selectedEST = getESTDate(analyticsDate);
+                        var monthStart = new Date(selectedEST.getFullYear(), selectedEST.getMonth(), 1);
+                        var monthEnd = new Date(selectedEST.getFullYear(), selectedEST.getMonth() + 1, 0, 23, 59, 59, 999);
+                        var leadDate = new Date(lastUpdated);
+                        if (leadDate < monthStart || leadDate > monthEnd) return;
+                    }
+                }
+
+                totalCount++;
+
+                // Categorize by status
+                if (status === 'booked') {
+                    statusCounts.booked++;
+                    conversations++;
+                    qualified++;
+                } else if (status === 'callback') {
+                    statusCounts.callback++;
+                    conversations++;
+                    qualified++;
+                } else if (status === 'follow up') {
+                    statusCounts.followUp++;
+                    conversations++;
+                    qualified++;
+                } else if (status === 'timeline') {
+                    statusCounts.timeline++;
+                    conversations++;
+                    qualified++;
+                } else if (status === 'not interested') {
+                    statusCounts.notInterested++;
+                    conversations++;
+                } else if (status === 'inconclusive') {
+                    statusCounts.inconclusive++;
+                    conversations++;
+                } else if (status === 'no answer') {
+                    statusCounts.noAnswer++;
+                } else if (status === 'voicemail') {
+                    statusCounts.voicemail++;
+                } else if (status === 'max attempts') {
+                    statusCounts.maxAttempts++;
+                } else if (status === 'wrong person') {
+                    statusCounts.wrongPerson++;
+                    conversations++;
+                } else if (status === 'dnc') {
+                    statusCounts.dnc++;
+                }
+            });
+        }
 
         // Update UI
         var el = function(id) { return document.getElementById(id); };
-        if (el('analyticsTotalCalls')) el('analyticsTotalCalls').textContent = totalCalls;
+        if (el('analyticsTotalCalls')) el('analyticsTotalCalls').textContent = totalCount;
         if (el('analyticsConversations')) el('analyticsConversations').textContent = conversations;
         if (el('analyticsActivePipeline')) el('analyticsActivePipeline').textContent = statusCounts.timeline + statusCounts.followUp;
 
@@ -8164,7 +8586,7 @@
         if (el('analyticsBooked')) el('analyticsBooked').textContent = totalBooked;
 
         // Percentage formatter
-        var pctFormat = function(count) { return totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) + '%' : '0%'; };
+        var pctFormat = function(count) { return totalCount > 0 ? ((count / totalCount) * 100).toFixed(1) + '%' : '0%'; };
 
         // Helper to set toggleable element data
         var setToggleable = function(id, count, pct) {
@@ -8194,23 +8616,23 @@
         updateAnalyticsToggleDisplay();
 
         // Update conversion funnel
-        if (el('funnelCalls')) el('funnelCalls').textContent = totalCalls;
+        if (el('funnelCalls')) el('funnelCalls').textContent = totalCount;
         if (el('funnelConversations')) el('funnelConversations').textContent = conversations;
         if (el('funnelQualified')) el('funnelQualified').textContent = qualified;
         if (el('funnelBooked')) el('funnelBooked').textContent = totalBooked;
 
-        // Update funnel bar widths - proportional to calls made (no minimum)
-        var convPct = totalCalls > 0 ? (conversations / totalCalls) * 100 : 0;
-        var qualPct = totalCalls > 0 ? (qualified / totalCalls) * 100 : 0;
-        var bookedPct = totalCalls > 0 ? (totalBooked / totalCalls) * 100 : 0;
+        // Update funnel bar widths - proportional to total (no minimum)
+        var convPct = totalCount > 0 ? (conversations / totalCount) * 100 : 0;
+        var qualPct = totalCount > 0 ? (qualified / totalCount) * 100 : 0;
+        var bookedPct = totalCount > 0 ? (totalBooked / totalCount) * 100 : 0;
         if (el('funnelConvBar')) el('funnelConvBar').style.width = convPct + '%';
         if (el('funnelQualBar')) el('funnelQualBar').style.width = qualPct + '%';
         if (el('funnelBookedBar')) el('funnelBookedBar').style.width = bookedPct + '%';
 
         // Add percentages to funnel labels
-        var convPctDisplay = totalCalls > 0 ? (convPct).toFixed(1) + '%' : '0%';
-        var qualPctDisplay = totalCalls > 0 ? (qualPct).toFixed(1) + '%' : '0%';
-        var bookedPctDisplay = totalCalls > 0 ? (bookedPct).toFixed(1) + '%' : '0%';
+        var convPctDisplay = totalCount > 0 ? (convPct).toFixed(1) + '%' : '0%';
+        var qualPctDisplay = totalCount > 0 ? (qualPct).toFixed(1) + '%' : '0%';
+        var bookedPctDisplay = totalCount > 0 ? (bookedPct).toFixed(1) + '%' : '0%';
         if (el('funnelConvPct')) el('funnelConvPct').textContent = convPctDisplay;
         if (el('funnelQualPct')) el('funnelQualPct').textContent = qualPctDisplay;
         if (el('funnelBookedPct')) el('funnelBookedPct').textContent = bookedPctDisplay;
@@ -8404,8 +8826,12 @@
                 var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
                 var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
                 var status = f['Status'] || f['Disposition'] || '-';
+                var nextCallDate = f['Next Call Date'];
+                var nextCallDisplay = nextCallDate ? formatDateTime(nextCallDate) : '';
                 return '<div class="search-result-item" onclick="showSearchLeadDetail(allLeads.find(function(l){return l.id===\'' + lead.id + '\'}))">' +
-                    '<div><div style="font-weight:600">' + escapeHtml(name) + '</div><div style="color:rgba(255,255,255,0.5);font-family:monospace">' + escapeHtml(phone) + '</div></div>' +
+                    '<div><div style="font-weight:600">' + escapeHtml(name) + '</div><div style="color:rgba(255,255,255,0.5);font-family:monospace">' + escapeHtml(phone) + '</div>' +
+                    (nextCallDisplay ? '<div class="search-result-next-call">Next Call: ' + escapeHtml(nextCallDisplay) + '</div>' : '') +
+                    '</div>' +
                     '<span class="status-badge ' + getStatusClass(status) + '">' + escapeHtml(status) + '</span>' +
                 '</div>';
             }).join('');
@@ -8432,6 +8858,7 @@
         document.getElementById('searchLeadCalls').textContent = f['Attempts'] || '0';
         document.getElementById('searchLeadLastCall').textContent = f['Updated At'] ? formatDateTime(f['Updated At']) : '-';
         document.getElementById('searchLeadBookedTime').textContent = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
+        document.getElementById('searchLeadNextCall').textContent = f['Next Call Date'] ? formatDateTime(f['Next Call Date']) : '-';
 
         // Notes History (read-only)
         var notesRaw = f['Client Notes'] || '';
@@ -8644,6 +9071,7 @@
             showSearchLeadDetail(searchedLead); // Refresh display
             updatePipelineList();
             updateProspectsTable();
+            updateUnqualifiedList();
         } catch (err) {
             console.error('Error taking over lead:', err);
             showToast('Failed to take over lead', 'error');
@@ -8695,6 +9123,7 @@
             updatePipelineList();
             updateProspectsTable();
             updatePrioListFiltered();
+            updateUnqualifiedList();
         } catch (err) {
             console.error('Error marking DNC:', err);
             showToast('Failed to mark as Do Not Call', 'error');
