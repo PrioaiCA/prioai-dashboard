@@ -1071,6 +1071,10 @@
                         <span class="nav-item-icon">📁</span>
                         <span>Unqualified Leads</span>
                     </div>
+                    <div class="nav-item" data-page="open-leads">
+                        <span class="nav-item-icon">📂</span>
+                        <span>Open Leads</span>
+                    </div>
                     <div class="nav-item" data-page="search">
                         <span class="nav-item-icon">🔍</span>
                         <span>Search</span>
@@ -1555,13 +1559,13 @@
                             </div>
                         </div>
 
-                        <!-- Unqualified Status Tabs -->
+                        <!-- Unqualified Last Outcome Tabs -->
                         <div class="unqualified-tabs">
-                            <button class="unqualified-tab active" data-status="all">All</button>
-                            <button class="unqualified-tab" data-status="Not Booked">Not Booked</button>
-                            <button class="unqualified-tab" data-status="Callback">Callback</button>
-                            <button class="unqualified-tab" data-status="Follow Up">Follow Up</button>
-                            <button class="unqualified-tab" data-status="Timeline">Timeline</button>
+                            <button class="unqualified-tab active" data-outcome="all">All</button>
+                            <button class="unqualified-tab" data-outcome="Max Attempts">Max Attempts</button>
+                            <button class="unqualified-tab" data-outcome="Wrong Person">Wrong Person</button>
+                            <button class="unqualified-tab" data-outcome="DNC">DNC</button>
+                            <button class="unqualified-tab" data-outcome="Inconclusive">Inconclusive</button>
                         </div>
 
                         <!-- Unqualified Filters -->
@@ -1600,6 +1604,68 @@
                         <!-- Unqualified Cards -->
                         <div class="unqualified-list list-view" id="unqualifiedList">
                             <div class="page-loading"><div class="spinner"></div><p>Loading unqualified leads...</p></div>
+                        </div>
+                    </div>
+
+                    <!-- Page: Open Leads -->
+                    <div class="page hidden" id="page-open-leads">
+                        <!-- Open Leads Header -->
+                        <div class="unqualified-header">
+                            <div class="unqualified-header-text">
+                                <h2>📂 Open Leads <span class="header-count-badge" id="openLeadsCount">0</span></h2>
+                                <p>Leads with Status = New or Retry that are ready to be called.</p>
+                            </div>
+                            <div class="unqualified-header-actions">
+                                <div class="view-toggle">
+                                    <button class="view-toggle-btn active" id="openLeadsViewList" onclick="setOpenLeadsView('list')" title="List view">☰</button>
+                                    <button class="view-toggle-btn" id="openLeadsViewGrid" onclick="setOpenLeadsView('grid')" title="Grid view">▦</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Open Leads Status Tabs -->
+                        <div class="unqualified-tabs">
+                            <button class="unqualified-tab active" data-open-status="all">All</button>
+                            <button class="unqualified-tab" data-open-status="New">New</button>
+                            <button class="unqualified-tab" data-open-status="Retry">Retry</button>
+                        </div>
+
+                        <!-- Open Leads Filters -->
+                        <div class="filters-bar">
+                            <div class="filters-left">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="openLeadsSearch" placeholder="Search by name or phone...">
+                                </div>
+                                <select id="openLeadsOwnership" class="filter-select">
+                                    <option value="all">All Leads</option>
+                                    <option value="mine">My Prospects</option>
+                                    <option value="shared-by">Shared By Me</option>
+                                    <option value="not-shared">Not Shared</option>
+                                    <option value="shared-with">Shared With Me</option>
+                                </select>
+                                <select id="openLeadsTimeframe" class="filter-select">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="7days">Last 7 Days</option>
+                                    <option value="30days">Last 30 Days</option>
+                                    <option value="90days">Last 90 Days</option>
+                                </select>
+                            </div>
+                            <div class="sort-controls">
+                                <span class="sort-label">Sort by</span>
+                                <select id="openLeadsSort" class="filter-select sort-select">
+                                    <option value="lastUpdated">Last Updated</option>
+                                    <option value="name">Name</option>
+                                    <option value="nextCall">Next Call</option>
+                                </select>
+                                <button class="sort-direction-btn" id="openLeadsSortDir" onclick="toggleOpenLeadsSortDir()" title="Toggle sort direction">↓</button>
+                            </div>
+                        </div>
+
+                        <!-- Open Leads Cards -->
+                        <div class="unqualified-list list-view" id="openLeadsList">
+                            <div class="page-loading"><div class="spinner"></div><p>Loading open leads...</p></div>
                         </div>
                     </div>
 
@@ -5367,6 +5433,7 @@
             updateProspectsTable();
             updatePipelineList();
             updateUnqualifiedList();
+            updateOpenLeadsList();
         } catch (err) {
             showToast('Failed: ' + err.message, 'error');
         }
@@ -6628,7 +6695,7 @@
     }
 
     // ===== UNQUALIFIED LEADS TAB =====
-    var unqualifiedStatusFilter = 'all';
+    var unqualifiedOutcomeFilter = 'all';
     var unqualifiedSortAsc = false;
 
     function setUnqualifiedView(view) {
@@ -6662,24 +6729,24 @@
         var timeframeFilter = document.getElementById('unqualifiedTimeframe')?.value || 'all';
         var sortBy = document.getElementById('unqualifiedSort')?.value || 'lastUpdated';
 
-        // Filter leads based on the selected status tab
+        // Filter leads: Status = Closed or DNC, Last Outcome = Max Attempts, Wrong Person, DNC, or Inconclusive
         var unqualifiedLeads = allLeads.filter(function(l) {
             var f = l.fields;
             var status = f['Status'] || f['Disposition'] || '';
             var statusLower = status.toLowerCase();
+            var lastOutcome = f['Last Outcome'] || '';
+            var lastOutcomeLower = lastOutcome.toLowerCase();
 
-            // Exclude Booked leads (they are qualified)
-            if (statusLower === 'booked') return false;
+            // Only include leads with Status = Closed or DNC
+            if (statusLower !== 'closed' && statusLower !== 'dnc') return false;
 
-            // Filter by status tab
-            if (unqualifiedStatusFilter !== 'all') {
-                if (unqualifiedStatusFilter === 'Not Booked') {
-                    // Not Booked = leads without Booked, Callback, Follow Up, Timeline status
-                    var qualifiedStatuses = ['booked', 'callback', 'follow up', 'timeline'];
-                    if (qualifiedStatuses.includes(statusLower)) return false;
-                } else {
-                    if (status !== unqualifiedStatusFilter) return false;
-                }
+            // Only include leads with Last Outcome = Max Attempts, Wrong Person, DNC, or Inconclusive
+            var validOutcomes = ['max attempts', 'wrong person', 'dnc', 'inconclusive'];
+            if (!validOutcomes.includes(lastOutcomeLower)) return false;
+
+            // Filter by Last Outcome tab
+            if (unqualifiedOutcomeFilter !== 'all') {
+                if (lastOutcome !== unqualifiedOutcomeFilter) return false;
             }
 
             // Ownership filter
@@ -6825,7 +6892,7 @@
                 '</div>' +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
-                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
+                    '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
                     '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
                     '<button class="action-btn action-prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Prio</span></button>' +
                 '</div>' +
@@ -6833,12 +6900,12 @@
         }).join('');
     }
 
-    // Unqualified Leads tab switching
+    // Unqualified Leads tab switching (filters by Last Outcome)
     document.querySelectorAll('.unqualified-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
             document.querySelectorAll('.unqualified-tab').forEach(function(t) { t.classList.remove('active'); });
             this.classList.add('active');
-            unqualifiedStatusFilter = this.dataset.status;
+            unqualifiedOutcomeFilter = this.dataset.outcome;
             updateUnqualifiedList();
         });
     });
@@ -6850,6 +6917,222 @@
     document.getElementById('unqualifiedOwnership')?.addEventListener('change', updateUnqualifiedList);
     document.getElementById('unqualifiedTimeframe')?.addEventListener('change', updateUnqualifiedList);
     document.getElementById('unqualifiedSort')?.addEventListener('change', updateUnqualifiedList);
+
+    // ===== OPEN LEADS TAB =====
+    var openLeadsStatusFilter = 'all';
+    var openLeadsSortAsc = false;
+
+    function setOpenLeadsView(view) {
+        var list = document.getElementById('openLeadsList');
+        var listBtn = document.getElementById('openLeadsViewList');
+        var gridBtn = document.getElementById('openLeadsViewGrid');
+        if (view === 'list') {
+            list?.classList.add('list-view');
+            listBtn?.classList.add('active');
+            gridBtn?.classList.remove('active');
+        } else {
+            list?.classList.remove('list-view');
+            listBtn?.classList.remove('active');
+            gridBtn?.classList.add('active');
+        }
+    }
+
+    function toggleOpenLeadsSortDir() {
+        openLeadsSortAsc = !openLeadsSortAsc;
+        var btn = document.getElementById('openLeadsSortDir');
+        if (btn) btn.textContent = openLeadsSortAsc ? '↑' : '↓';
+        updateOpenLeadsList();
+    }
+
+    function updateOpenLeadsList() {
+        var openLeadsList = document.getElementById('openLeadsList');
+        if (!openLeadsList) return;
+
+        var searchVal = (document.getElementById('openLeadsSearch')?.value || '').toLowerCase();
+        var ownershipFilter = document.getElementById('openLeadsOwnership')?.value || 'all';
+        var timeframeFilter = document.getElementById('openLeadsTimeframe')?.value || 'all';
+        var sortBy = document.getElementById('openLeadsSort')?.value || 'lastUpdated';
+
+        // Filter leads: Status = New or Retry
+        var openLeads = allLeads.filter(function(l) {
+            var f = l.fields;
+            var status = f['Status'] || f['Disposition'] || '';
+            var statusLower = status.toLowerCase();
+
+            // Only include leads with Status = New or Retry
+            if (statusLower !== 'new' && statusLower !== 'retry') return false;
+
+            // Filter by Status tab
+            if (openLeadsStatusFilter !== 'all') {
+                if (status !== openLeadsStatusFilter) return false;
+            }
+
+            // Ownership filter
+            if (ownershipFilter !== 'all') {
+                var isOwned = isLeadOwnedByUser(l);
+                var hasSharedWith = f['Shared With'] && f['Shared With'].length > 0;
+                var hasSharedWithEmail = f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']);
+                var isSharedByMe = !l.isShared && (hasSharedWith || hasSharedWithEmail);
+                var isSharedWithMe = l.isShared === true;
+                if (ownershipFilter === 'mine' && !isOwned) return false;
+                if (ownershipFilter === 'shared-by' && !isSharedByMe) return false;
+                if (ownershipFilter === 'not-shared' && (isSharedByMe || isSharedWithMe)) return false;
+                if (ownershipFilter === 'shared-with' && !isSharedWithMe) return false;
+            }
+
+            // Search filter
+            if (searchVal) {
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+                var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
+                if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
+            }
+
+            // Timeframe filter
+            if (timeframeFilter !== 'all') {
+                var lastUpdated = f['Updated At'] ? new Date(f['Updated At']) : null;
+                if (!lastUpdated) return timeframeFilter === 'all';
+                var now = new Date();
+                var daysDiff = Math.floor((now - lastUpdated) / (1000 * 60 * 60 * 24));
+                if (timeframeFilter === 'today' && daysDiff > 0) return false;
+                if (timeframeFilter === '7days' && daysDiff > 7) return false;
+                if (timeframeFilter === '30days' && daysDiff > 30) return false;
+                if (timeframeFilter === '90days' && daysDiff > 90) return false;
+            }
+
+            return true;
+        });
+
+        // Sort based on dropdown and direction
+        var dir = openLeadsSortAsc ? 1 : -1;
+        openLeads.sort(function(a, b) {
+            var fa = a.fields, fb = b.fields;
+            var result;
+            switch (sortBy) {
+                case 'name':
+                    var nameA = ((fa['First Name'] || '') + ' ' + (fa['Last Name'] || '')).toLowerCase();
+                    var nameB = ((fb['First Name'] || '') + ' ' + (fb['Last Name'] || '')).toLowerCase();
+                    result = nameA.localeCompare(nameB);
+                    break;
+                case 'nextCall':
+                    var aDate = new Date(fa['Next Call Date'] || '9999-12-31').getTime();
+                    var bDate = new Date(fb['Next Call Date'] || '9999-12-31').getTime();
+                    result = aDate - bDate;
+                    break;
+                case 'lastUpdated':
+                default:
+                    var updA = new Date(fa['Updated At'] || 0).getTime();
+                    var updB = new Date(fb['Updated At'] || 0).getTime();
+                    result = updB - updA; // Most recent first by default
+                    break;
+            }
+            return result * dir;
+        });
+
+        // Update count badge
+        var openLeadsCountEl = document.getElementById('openLeadsCount');
+        if (openLeadsCountEl) openLeadsCountEl.textContent = openLeads.length;
+
+        if (openLeads.length === 0) {
+            openLeadsList.innerHTML = '<div class="pipeline-empty">No open leads found</div>';
+            return;
+        }
+
+        openLeadsList.innerHTML = openLeads.map(function(lead) {
+            var f = lead.fields;
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var phone = f['Phone #'] || f['Phone'] || '-';
+            var formattedPhone = formatPhoneNumber(phone);
+            var lastUpdatedTimestamp = f['Updated At'];
+            var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
+            var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var notesRaw = f['Client Notes'] || f['Notes'] || '';
+            var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
+            var isPrio = f['Is Prio'] === true;
+            var status = f['Status'] || f['Disposition'] || 'Unknown';
+
+            // Parse notes
+            var notesArray = parseNotesJson(notesRaw);
+            var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
+
+            // Next Call Date display
+            var dateDisplay = '';
+            var timeDisplay = '';
+            var nextCallDate = f['Next Call Date'];
+            if (nextCallDate) {
+                var d = new Date(nextCallDate);
+                dateDisplay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                timeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            } else {
+                dateDisplay = 'No next';
+                timeDisplay = 'call';
+            }
+
+            var timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
+
+            // Status badge
+            var statusBadge = '';
+            var statusLower = status.toLowerCase();
+            if (statusLower === 'new') {
+                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(52,211,153,0.15);color:#34D399">New</span>';
+            } else if (statusLower === 'retry') {
+                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(251,191,36,0.15);color:#FBbf24">Retry</span>';
+            } else {
+                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)">' + escapeHtml(status || 'Unknown') + '</span>';
+            }
+
+            var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
+
+            return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
+                '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="priority-card-lg-time-col">' +
+                        prioIndicator +
+                        timeCol +
+                    '</div>' +
+                    '<div class="priority-card-lg-info">' +
+                        '<div class="priority-card-lg-top">' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            statusBadge +
+                        '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Summary</div>' +
+                    '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">Notes</div>' +
+                    '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-actions">' +
+                    '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
+                    '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
+                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
+                    '<button class="action-btn action-prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Prio</span></button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    // Open Leads tab switching
+    document.querySelectorAll('#page-open-leads .unqualified-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('#page-open-leads .unqualified-tab').forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+            openLeadsStatusFilter = this.dataset.openStatus;
+            updateOpenLeadsList();
+        });
+    });
+
+    // Open Leads filter listeners
+    document.getElementById('openLeadsSearch')?.addEventListener('input', debounce(function() {
+        updateOpenLeadsList();
+    }, 300));
+    document.getElementById('openLeadsOwnership')?.addEventListener('change', updateOpenLeadsList);
+    document.getElementById('openLeadsTimeframe')?.addEventListener('change', updateOpenLeadsList);
+    document.getElementById('openLeadsSort')?.addEventListener('change', updateOpenLeadsList);
 
     // Helper: Check if lead is owned by current user
     function isLeadOwnedByUser(lead) {
@@ -7465,6 +7748,7 @@
             updatePipelineList();
             updateProspectsTable();
             updateUnqualifiedList();
+            updateOpenLeadsList();
 
             // Close modal if open
             if (currentLeadId === leadId) {
@@ -7855,6 +8139,7 @@
             updatePipelineList();
             updateSharedLeadsList();
             updateUnqualifiedList();
+            updateOpenLeadsList();
         } finally {
             // Data has loaded (or failed) - hide loading overlay either way
             dataLoaded = true;
@@ -9072,6 +9357,7 @@
             updatePipelineList();
             updateProspectsTable();
             updateUnqualifiedList();
+            updateOpenLeadsList();
         } catch (err) {
             console.error('Error taking over lead:', err);
             showToast('Failed to take over lead', 'error');
@@ -9124,6 +9410,7 @@
             updateProspectsTable();
             updatePrioListFiltered();
             updateUnqualifiedList();
+            updateOpenLeadsList();
         } catch (err) {
             console.error('Error marking DNC:', err);
             showToast('Failed to mark as Do Not Call', 'error');
