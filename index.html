@@ -3097,7 +3097,7 @@
             for (var i = 0; i < leadIds.length; i += batchSize) {
                 var batchIds = leadIds.slice(i, i + batchSize);
                 var orConditions = batchIds.map(function(id) {
-                    return 'FIND("' + id + '", ARRAYJOIN({Lead}))';
+                    return 'FIND("' + id + '", ARRAYJOIN({Leads}))';
                 });
                 var filterFormula = 'OR(' + orConditions.join(',') + ')';
                 var basePath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&fields[]=Timestamp&fields[]=Outcome';
