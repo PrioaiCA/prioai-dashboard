@@ -808,7 +808,10 @@
         .analytics-booked-table td{padding:14px 16px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.875rem}
         .analytics-booked-table tr:hover td{background:rgba(255,255,255,0.02)}
         .analytics-booked-table .empty-row td{text-align:center;color:rgba(255,255,255,0.4);padding:32px}
-        
+        .analytics-loading-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;border-radius:16px}
+        .analytics-loading-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
+        .analytics-loading-overlay p{margin-top:16px;color:rgba(255,255,255,0.6);font-size:0.875rem}
+
         /* Import Page */
         .import-header{margin-bottom:24px}
         .import-header h2{font-size:1.5rem;font-weight:700;margin-bottom:4px}
@@ -7310,16 +7313,37 @@
     // ===== ANALYTICS PAGE =====
     var analyticsPeriod = 'daily';
     var analyticsDate = new Date();
+    var analyticsLoading = false;
+    var analyticsDataLoaded = { daily: false, weekly: false, monthly: false, all: false };
+
+    // Get current date in EST timezone
+    function getESTDate(date) {
+        var d = date || new Date();
+        return new Date(d.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    }
+
+    // Get today in EST
+    function getTodayEST() {
+        return getESTDate(new Date());
+    }
+
+    // Convert any date to EST for comparison
+    function toESTDateString(date) {
+        if (!date) return '';
+        var d = new Date(date);
+        return d.toLocaleDateString('en-US', { timeZone: 'America/New_York' });
+    }
 
     // Update date display
     function updateAnalyticsDateDisplay() {
-        var today = new Date();
-        var isToday = analyticsDate.toDateString() === today.toDateString();
-        var yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
-        var isYesterday = analyticsDate.toDateString() === yesterday.toDateString();
+        var todayEST = getTodayEST();
+        var selectedEST = getESTDate(analyticsDate);
+        var isToday = selectedEST.toDateString() === todayEST.toDateString();
+        var yesterday = new Date(todayEST); yesterday.setDate(yesterday.getDate() - 1);
+        var isYesterday = selectedEST.toDateString() === yesterday.toDateString();
 
-        var dayLabel = isToday ? 'Today' : isYesterday ? 'Yesterday' : analyticsDate.toLocaleDateString('en-US', { weekday: 'long' });
-        var fullDate = analyticsDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        var dayLabel = isToday ? 'Today' : isYesterday ? 'Yesterday' : selectedEST.toLocaleDateString('en-US', { weekday: 'long' });
+        var fullDate = selectedEST.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
         var dateDisplay = document.getElementById('analyticsDateDisplay');
         if (dateDisplay) {
@@ -7328,12 +7352,58 @@
         }
 
         // Update period label
-        var periodLabel = analyticsPeriod === 'daily' ? dayLabel : analyticsPeriod === 'weekly' ? 'This Week' : analyticsPeriod === 'monthly' ? 'This Month' : 'All Time';
+        var periodLabel = analyticsPeriod === 'daily' ? dayLabel : analyticsPeriod === 'weekly' ? 'Past 7 Days' : analyticsPeriod === 'monthly' ? 'Past 30 Days' : 'All Time';
         var funnelPeriod = document.getElementById('analyticsFunnelPeriod');
         if (funnelPeriod) funnelPeriod.textContent = periodLabel;
+
+        // Disable next button if at today
+        var nextBtn = document.getElementById('analyticsNextDay');
+        if (nextBtn) {
+            if (isToday) {
+                nextBtn.style.opacity = '0.3';
+                nextBtn.style.pointerEvents = 'none';
+            } else {
+                nextBtn.style.opacity = '1';
+                nextBtn.style.pointerEvents = 'auto';
+            }
+        }
+
+        // Set max date on date picker to today
+        var picker = document.getElementById('analyticsDatePicker');
+        if (picker) {
+            var todayStr = todayEST.toISOString().split('T')[0];
+            picker.max = todayStr;
+        }
     }
 
-    // Date navigation
+    // Show loading state for analytics
+    function showAnalyticsLoading() {
+        analyticsLoading = true;
+        var container = document.getElementById('page-analytics');
+        if (!container) return;
+
+        // Add loading overlay
+        var existingOverlay = container.querySelector('.analytics-loading-overlay');
+        if (!existingOverlay) {
+            var overlay = document.createElement('div');
+            overlay.className = 'analytics-loading-overlay';
+            overlay.innerHTML = '<div class="analytics-loading-spinner"></div><p>Loading analytics...</p>';
+            overlay.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;border-radius:16px;';
+            container.style.position = 'relative';
+            container.appendChild(overlay);
+        }
+    }
+
+    // Hide loading state
+    function hideAnalyticsLoading() {
+        analyticsLoading = false;
+        var container = document.getElementById('page-analytics');
+        if (!container) return;
+        var overlay = container.querySelector('.analytics-loading-overlay');
+        if (overlay) overlay.remove();
+    }
+
+    // Date navigation - prevent going to future
     document.getElementById('analyticsPrevDay')?.addEventListener('click', function() {
         analyticsDate.setDate(analyticsDate.getDate() - 1);
         updateAnalyticsDateDisplay();
@@ -7341,10 +7411,15 @@
     });
 
     document.getElementById('analyticsNextDay')?.addEventListener('click', function() {
-        var tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        if (analyticsDate < tomorrow) {
+        var todayEST = getTodayEST();
+        var selectedEST = getESTDate(analyticsDate);
+        // Only allow next if not already at today
+        if (selectedEST.toDateString() !== todayEST.toDateString()) {
             analyticsDate.setDate(analyticsDate.getDate() + 1);
+            // Don't go past today
+            if (getESTDate(analyticsDate) > todayEST) {
+                analyticsDate = new Date();
+            }
             updateAnalyticsDateDisplay();
             updateAnalyticsDisplay();
         }
@@ -7359,24 +7434,54 @@
     document.getElementById('analyticsDateDisplay')?.addEventListener('click', function() {
         var picker = document.getElementById('analyticsDatePicker');
         if (picker) {
+            // Set max to today
+            var todayEST = getTodayEST();
+            picker.max = todayEST.toISOString().split('T')[0];
             picker.showPicker();
         }
     });
 
-    // Period tab clicks
+    // Period tab clicks - load on demand
     document.querySelectorAll('.analytics-period-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
             document.querySelectorAll('.analytics-period-tab').forEach(function(t) { t.classList.remove('active'); });
             this.classList.add('active');
-            analyticsPeriod = this.dataset.period;
+            var newPeriod = this.dataset.period;
+
+            // Show loading if switching to a period that hasn't been loaded
+            if (newPeriod !== 'daily' && !analyticsDataLoaded[newPeriod]) {
+                showAnalyticsLoading();
+            }
+
+            analyticsPeriod = newPeriod;
             updateAnalyticsDateDisplay();
-            updateAnalyticsDisplay();
+
+            // Simulate loading delay for non-daily views (they process more data)
+            if (newPeriod !== 'daily' && !analyticsDataLoaded[newPeriod]) {
+                setTimeout(function() {
+                    updateAnalyticsDisplay();
+                    analyticsDataLoaded[newPeriod] = true;
+                    hideAnalyticsLoading();
+                }, 300);
+            } else {
+                updateAnalyticsDisplay();
+            }
         });
     });
 
-    // Date picker change
+    // Date picker change - prevent future dates
     document.getElementById('analyticsDatePicker')?.addEventListener('change', function() {
-        analyticsDate = new Date(this.value);
+        var selected = new Date(this.value);
+        var todayEST = getTodayEST();
+
+        // Don't allow future dates
+        if (selected > todayEST) {
+            analyticsDate = new Date();
+            this.value = todayEST.toISOString().split('T')[0];
+        } else {
+            analyticsDate = selected;
+        }
+
         updateAnalyticsDateDisplay();
         updateAnalyticsDisplay();
     });
@@ -7391,23 +7496,31 @@
         var qualified = 0;
         var bookedLeads = [];
 
+        var todayEST = getTodayEST();
+        var selectedDateStr = toESTDateString(analyticsDate);
+
         allLeads.forEach(function(l) {
             var f = l.fields;
             var status = (f['Status'] || f['Disposition'] || '').toLowerCase();
             var lastCall = f['Last Call Timestamp'];
 
-            // Filter by period/date
-            if (analyticsPeriod !== 'all' && lastCall) {
-                var callDate = new Date(lastCall);
-                var now = new Date();
+            // Filter by period/date using EST timezone
+            if (analyticsPeriod !== 'all') {
+                if (!lastCall) return; // Skip leads with no call timestamp for date-filtered views
+
+                var callDateEST = toESTDateString(lastCall);
+
                 if (analyticsPeriod === 'daily') {
-                    var selectedDate = analyticsDate.toDateString();
-                    if (callDate.toDateString() !== selectedDate) return;
+                    if (callDateEST !== selectedDateStr) return;
                 } else if (analyticsPeriod === 'weekly') {
-                    var weekAgo = new Date(now); weekAgo.setDate(weekAgo.getDate() - 7);
+                    var weekAgo = new Date(todayEST);
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    var callDate = new Date(lastCall);
                     if (callDate < weekAgo) return;
                 } else if (analyticsPeriod === 'monthly') {
-                    var monthAgo = new Date(now); monthAgo.setMonth(monthAgo.getMonth() - 1);
+                    var monthAgo = new Date(todayEST);
+                    monthAgo.setDate(monthAgo.getDate() - 30);
+                    var callDate = new Date(lastCall);
                     if (callDate < monthAgo) return;
                 }
             }
