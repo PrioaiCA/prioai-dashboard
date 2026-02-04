@@ -961,7 +961,29 @@
         .sidebar-resize-handle{position:absolute;top:0;right:-4px;width:8px;height:100%;cursor:ew-resize;z-index:100;background:transparent}
         .sidebar-resize-handle:hover,.sidebar-resize-handle.active{background:rgba(52,211,153,0.3)}
         .sidebar.collapsed .sidebar-resize-handle{display:none}
+
+        /* Image Crop Modal */
+        .crop-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:10000;align-items:center;justify-content:center}
+        .crop-modal.show{display:flex}
+        .crop-modal-content{background:#1a1a1a;border-radius:16px;padding:24px;max-width:500px;width:90%;max-height:90vh;display:flex;flex-direction:column}
+        .crop-modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+        .crop-modal-header h3{margin:0;font-size:1.125rem;color:#fff}
+        .crop-modal-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.5rem;cursor:pointer;padding:4px}
+        .crop-modal-close:hover{color:#fff}
+        .crop-container{width:100%;height:300px;background:#000;border-radius:8px;overflow:hidden;position:relative}
+        .crop-container img{max-width:100%;display:block}
+        .crop-controls{display:flex;gap:12px;margin-top:16px;align-items:center;justify-content:center}
+        .crop-zoom-label{font-size:0.75rem;color:rgba(255,255,255,0.5)}
+        .crop-zoom-slider{width:150px;accent-color:#22c55e}
+        .crop-actions{display:flex;gap:12px;margin-top:20px;justify-content:flex-end}
+        .crop-btn{padding:10px 20px;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer;transition:all 0.2s}
+        .crop-btn-cancel{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff}
+        .crop-btn-cancel:hover{background:rgba(255,255,255,0.15)}
+        .crop-btn-confirm{background:#22c55e;border:none;color:#000;font-weight:600}
+        .crop-btn-confirm:hover{background:#16a34a}
+        .crop-btn-confirm:disabled{opacity:0.5;cursor:not-allowed}
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 </head>
 <body>
     <!-- Full Page Loading Overlay -->
@@ -2687,10 +2709,32 @@
 
 <!-- User modal removed - using sidebar profile popup instead -->
 
+    <!-- Image Crop Modal -->
+    <div class="crop-modal" id="cropModal">
+        <div class="crop-modal-content">
+            <div class="crop-modal-header">
+                <h3>Crop Profile Picture</h3>
+                <button class="crop-modal-close" id="cropModalClose">&times;</button>
+            </div>
+            <div class="crop-container">
+                <img id="cropImage" src="" alt="Crop preview">
+            </div>
+            <div class="crop-controls">
+                <span class="crop-zoom-label">Zoom</span>
+                <input type="range" class="crop-zoom-slider" id="cropZoom" min="0.1" max="3" step="0.1" value="1">
+            </div>
+            <div class="crop-actions">
+                <button class="crop-btn crop-btn-cancel" id="cropCancel">Cancel</button>
+                <button class="crop-btn crop-btn-confirm" id="cropConfirm">Save Photo</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script>
     // Supabase Setup
     var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
@@ -4061,50 +4105,159 @@
         btn.disabled = false; btn.textContent = 'Update Password';
     });
 
-    // Photo upload
+    // Photo upload with crop
+    var cropper = null;
+    var cropModal = document.getElementById('cropModal');
+    var cropImage = document.getElementById('cropImage');
+    var cropZoom = document.getElementById('cropZoom');
+
+    function openCropModal(imageSrc) {
+        cropImage.src = imageSrc;
+        cropModal.classList.add('show');
+
+        // Initialize cropper after image loads
+        cropImage.onload = function() {
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1,
+                cropBoxResizable: false,
+                cropBoxMovable: false,
+                guides: false,
+                center: true,
+                background: false,
+                ready: function() {
+                    cropZoom.value = 1;
+                }
+            });
+        };
+    }
+
+    function closeCropModal() {
+        cropModal.classList.remove('show');
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        document.getElementById('settingsPhotoInput').value = '';
+    }
+
+    // Zoom slider
+    cropZoom.addEventListener('input', function() {
+        if (cropper) {
+            cropper.zoomTo(parseFloat(this.value));
+        }
+    });
+
+    // Close modal handlers
+    document.getElementById('cropModalClose').addEventListener('click', closeCropModal);
+    document.getElementById('cropCancel').addEventListener('click', closeCropModal);
+    cropModal.addEventListener('click', function(e) {
+        if (e.target === cropModal) closeCropModal();
+    });
+
+    // Confirm crop and upload
+    document.getElementById('cropConfirm').addEventListener('click', async function() {
+        if (!cropper) return;
+
+        var btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Uploading...';
+
+        try {
+            // Get cropped canvas (200x200)
+            var canvas = cropper.getCroppedCanvas({
+                width: 200,
+                height: 200,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+
+            // Convert to blob
+            var blob = await new Promise(function(resolve) {
+                canvas.toBlob(resolve, 'image/jpeg', 0.9);
+            });
+
+            // Upload to Supabase Storage
+            var fileName = 'avatars/' + currentUser.id + '_' + Date.now() + '.jpg';
+            var { data: uploadData, error: uploadError } = await supabase.storage
+                .from('profile-pictures')
+                .upload(fileName, blob, {
+                    contentType: 'image/jpeg',
+                    upsert: true
+                });
+
+            if (uploadError) throw uploadError;
+
+            // Get public URL
+            var { data: urlData } = supabase.storage
+                .from('profile-pictures')
+                .getPublicUrl(fileName);
+
+            var publicUrl = urlData.publicUrl;
+
+            // Delete old avatar if exists
+            var oldUrl = currentUser.user_metadata?.profile_picture;
+            if (oldUrl && oldUrl.includes('profile-pictures')) {
+                var oldPath = oldUrl.split('profile-pictures/')[1];
+                if (oldPath) {
+                    await supabase.storage.from('profile-pictures').remove([oldPath]);
+                }
+            }
+
+            // Update user metadata with URL
+            var result = await supabase.auth.updateUser({ data: { profile_picture: publicUrl } });
+            if (result.error) throw result.error;
+
+            // Update UI
+            document.getElementById('settingsAvatar').innerHTML = '<img src="' + publicUrl + '" alt="">';
+            document.getElementById('userAvatar').innerHTML = '<img src="' + publicUrl + '" alt="">';
+            document.getElementById('settingsRemoveBtn').style.display = 'inline-flex';
+
+            closeCropModal();
+            showToast('Photo updated', 'success');
+        } catch (ex) {
+            console.error('Upload error:', ex);
+            showToast('Failed to upload photo: ' + (ex.message || 'Unknown error'), 'error');
+        }
+
+        btn.disabled = false;
+        btn.textContent = 'Save Photo';
+    });
+
     document.getElementById('settingsUploadBtn').addEventListener('click', function() {
         document.getElementById('settingsPhotoInput').click();
     });
-    
-    document.getElementById('settingsPhotoInput').addEventListener('change', async function() {
+
+    document.getElementById('settingsPhotoInput').addEventListener('change', function() {
         if (!this.files || !this.files[0]) return;
         var file = this.files[0];
-        if (file.size > 5 * 1024 * 1024) { showToast('Image too large (max 5MB)', 'error'); return; }
-        
-        // Simple base64 upload for now
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('Image too large (max 5MB)', 'error');
+            return;
+        }
+
+        // Read file and open crop modal
         var reader = new FileReader();
-        reader.onload = async function(e) {
-            try {
-                // Resize to 200x200
-                var img = new Image();
-                img.onload = async function() {
-                    var canvas = document.createElement('canvas');
-                    canvas.width = 200; canvas.height = 200;
-                    var ctx = canvas.getContext('2d');
-                    var size = Math.min(img.width, img.height);
-                    var x = (img.width - size) / 2;
-                    var y = (img.height - size) / 2;
-                    ctx.drawImage(img, x, y, size, size, 0, 0, 200, 200);
-                    var resized = canvas.toDataURL('image/jpeg', 0.85);
-                    
-                    var result = await supabase.auth.updateUser({ data: { profile_picture: resized } });
-                    if (result.error) throw result.error;
-                    
-                    document.getElementById('settingsAvatar').innerHTML = '<img src="' + resized + '" alt="">';
-                    document.getElementById('userAvatar').innerHTML = '<img src="' + resized + '" alt="">';
-                    document.getElementById('settingsRemoveBtn').style.display = 'inline-flex';
-                    showToast('Photo updated', 'success');
-                };
-                img.src = e.target.result;
-            } catch (ex) {
-                showToast('Failed to upload photo', 'error');
-            }
+        reader.onload = function(e) {
+            openCropModal(e.target.result);
         };
         reader.readAsDataURL(file);
     });
-    
+
     document.getElementById('settingsRemoveBtn').addEventListener('click', async function() {
         try {
+            // Delete from storage if it's a Supabase URL
+            var oldUrl = currentUser.user_metadata?.profile_picture;
+            if (oldUrl && oldUrl.includes('profile-pictures')) {
+                var oldPath = oldUrl.split('profile-pictures/')[1];
+                if (oldPath) {
+                    await supabase.storage.from('profile-pictures').remove([oldPath]);
+                }
+            }
+
             var result = await supabase.auth.updateUser({ data: { profile_picture: null } });
             if (result.error) throw result.error;
             var name = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
