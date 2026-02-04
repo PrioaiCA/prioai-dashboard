@@ -731,9 +731,13 @@
         .date-display .date-full{display:block;font-size:0.75rem;color:rgba(255,255,255,0.5)}
         .date-nav-today{background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:rgb(52,211,153);padding:8px 16px;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer;transition:all 0.15s}
         .date-nav-today:hover{background:rgba(52,211,153,0.25)}
-        .analytics-period-row{margin-bottom:24px;position:relative}
+        .analytics-period-row{margin-bottom:24px;position:relative;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
         .analytics-period-tabs{display:inline-flex;gap:4px;background:#111;padding:4px;border-radius:10px}
         .analytics-period-tab{background:none;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.6);transition:all 0.2s}
+        .analytics-view-toggle{display:flex;gap:2px;background:#111;padding:3px;border-radius:8px}
+        .view-toggle-btn{background:none;border:none;width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:0.875rem;font-weight:600;color:rgba(255,255,255,0.5);transition:all 0.2s}
+        .view-toggle-btn:hover{color:#fff}
+        .view-toggle-btn.active{background:rgba(52,211,153,0.2);color:#22c55e}
         .analytics-period-tab:hover{color:#fff}
 
         /* Custom Date Picker */
@@ -806,13 +810,11 @@
         .outcome-stat.callback{border-left:3px solid #3B82F6}
         .outcome-stat.timeline{border-left:3px solid #f59e0b}
         .outcome-stat.followup{border-left:3px solid #8b5cf6}
-        .outcome-stat-value{font-size:1.5rem;font-weight:700;display:flex;align-items:baseline;gap:6px}
+        .outcome-stat-value{font-size:1.5rem;font-weight:700}
         .outcome-stat.booked .outcome-stat-value{color:#22c55e}
         .outcome-stat.callback .outcome-stat-value{color:#3B82F6}
         .outcome-stat.timeline .outcome-stat-value{color:#f59e0b}
         .outcome-stat.followup .outcome-stat-value{color:#8b5cf6}
-        .outcome-pct{font-size:0.625rem;font-weight:500;opacity:0.6}
-        .outcome-pct-small{font-size:0.625rem;font-weight:500;color:rgba(255,255,255,0.4);margin-left:6px}
         .outcome-stat-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
         .outcome-stat-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
         .bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
@@ -1537,6 +1539,10 @@
                                 <button class="analytics-period-tab" data-period="monthly">Month</button>
                                 <button class="analytics-period-tab" data-period="all">All Time</button>
                             </div>
+                            <div class="analytics-view-toggle">
+                                <button class="view-toggle-btn active" id="viewNumbers" title="Show numbers">#</button>
+                                <button class="view-toggle-btn" id="viewPercents" title="Show percentages">%</button>
+                            </div>
                         </div>
 
                         <!-- Hero Stats Row -->
@@ -1614,22 +1620,22 @@
                                 </div>
                                 <div class="outcome-stats-grid">
                                     <div class="outcome-stat booked">
-                                        <div class="outcome-stat-value" id="analyticsBookedStat">0<span class="outcome-pct" id="bookedPct"></span></div>
+                                        <div class="outcome-stat-value analytics-toggleable" id="analyticsBookedStat" data-count="0" data-pct="0%">0</div>
                                         <div class="outcome-stat-label">Booked</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill booked" id="bookedBar"></div></div>
                                     </div>
                                     <div class="outcome-stat callback">
-                                        <div class="outcome-stat-value" id="analyticsCallbackCount">0<span class="outcome-pct" id="callbackPct"></span></div>
+                                        <div class="outcome-stat-value analytics-toggleable" id="analyticsCallbackCount" data-count="0" data-pct="0%">0</div>
                                         <div class="outcome-stat-label">Callback</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill callback" id="callbackBar"></div></div>
                                     </div>
                                     <div class="outcome-stat timeline">
-                                        <div class="outcome-stat-value" id="analyticsTimelineCount">0<span class="outcome-pct" id="timelinePct"></span></div>
+                                        <div class="outcome-stat-value analytics-toggleable" id="analyticsTimelineCount" data-count="0" data-pct="0%">0</div>
                                         <div class="outcome-stat-label">Timeline</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill timeline" id="timelineBar"></div></div>
                                     </div>
                                     <div class="outcome-stat followup">
-                                        <div class="outcome-stat-value" id="analyticsFollowUp">0<span class="outcome-pct" id="followupPct"></span></div>
+                                        <div class="outcome-stat-value analytics-toggleable" id="analyticsFollowUp" data-count="0" data-pct="0%">0</div>
                                         <div class="outcome-stat-label">Follow Up</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill followup" id="followupBar"></div></div>
                                     </div>
@@ -1644,56 +1650,33 @@
                                 <div class="other-outcomes-list">
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Not Interested</span>
-                                        <span class="outcome-value"><span id="analyticsNotInterested">0</span><span class="outcome-pct-small" id="notInterestedPct"></span></span>
+                                        <span class="outcome-value analytics-toggleable" id="analyticsNotInterested" data-count="0" data-pct="0%">0</span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Inconclusive</span>
-                                        <span class="outcome-value"><span id="analyticsInconclusive">0</span><span class="outcome-pct-small" id="inconclusivePct"></span></span>
+                                        <span class="outcome-value analytics-toggleable" id="analyticsInconclusive" data-count="0" data-pct="0%">0</span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">No Answer</span>
-                                        <span class="outcome-value"><span id="analyticsNoAnswer">0</span><span class="outcome-pct-small" id="noAnswerPct"></span></span>
+                                        <span class="outcome-value analytics-toggleable" id="analyticsNoAnswer" data-count="0" data-pct="0%">0</span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Voicemail</span>
-                                        <span class="outcome-value"><span id="analyticsVoicemail">0</span><span class="outcome-pct-small" id="voicemailPct"></span></span>
+                                        <span class="outcome-value analytics-toggleable" id="analyticsVoicemail" data-count="0" data-pct="0%">0</span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Max Attempts</span>
-                                        <span class="outcome-value"><span id="analyticsMaxAttempts">0</span><span class="outcome-pct-small" id="maxAttemptsPct"></span></span>
+                                        <span class="outcome-value analytics-toggleable" id="analyticsMaxAttempts" data-count="0" data-pct="0%">0</span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">Wrong Person</span>
-                                        <span class="outcome-value"><span id="analyticsWrongPerson">0</span><span class="outcome-pct-small" id="wrongPersonPct"></span></span>
+                                        <span class="outcome-value analytics-toggleable" id="analyticsWrongPerson" data-count="0" data-pct="0%">0</span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">DNC</span>
-                                        <span class="outcome-value"><span id="analyticsDNC">0</span><span class="outcome-pct-small" id="dncPct"></span></span>
+                                        <span class="outcome-value analytics-toggleable" id="analyticsDNC" data-count="0" data-pct="0%">0</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Booked Appointments Table -->
-                        <div class="analytics-card-section" id="analyticsBookedSection">
-                            <div class="analytics-card-header">
-                                <h3>📅 Booked Appointments</h3>
-                                <span class="booked-count" id="analyticsBookedCount">0 meetings</span>
-                            </div>
-                            <div class="booked-table-container">
-                                <table class="analytics-booked-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Lead</th>
-                                            <th>Phone</th>
-                                            <th>Summary</th>
-                                            <th>Meeting Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="analyticsBookedTable">
-                                        <tr class="empty-row"><td colspan="4">No appointments booked</td></tr>
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -7422,6 +7405,32 @@
     var analyticsDate = new Date();
     var analyticsLoading = false;
     var analyticsDataLoaded = { daily: false, weekly: false, monthly: false, all: false };
+    var analyticsShowPercents = false; // Toggle state for numbers vs percentages
+
+    // Toggle between numbers and percentages
+    function updateAnalyticsToggleDisplay() {
+        document.querySelectorAll('.analytics-toggleable').forEach(function(el) {
+            el.textContent = analyticsShowPercents ? el.dataset.pct : el.dataset.count;
+        });
+    }
+
+    document.getElementById('viewNumbers')?.addEventListener('click', function() {
+        if (!this.classList.contains('active')) {
+            document.getElementById('viewPercents')?.classList.remove('active');
+            this.classList.add('active');
+            analyticsShowPercents = false;
+            updateAnalyticsToggleDisplay();
+        }
+    });
+
+    document.getElementById('viewPercents')?.addEventListener('click', function() {
+        if (!this.classList.contains('active')) {
+            document.getElementById('viewNumbers')?.classList.remove('active');
+            this.classList.add('active');
+            analyticsShowPercents = true;
+            updateAnalyticsToggleDisplay();
+        }
+    });
 
     // Get current date in EST timezone
     function getESTDate(date) {
@@ -7996,21 +8005,40 @@
         if (el('analyticsTotalCalls')) el('analyticsTotalCalls').textContent = totalCalls;
         if (el('analyticsConversations')) el('analyticsConversations').textContent = conversations;
         if (el('analyticsActivePipeline')) el('analyticsActivePipeline').textContent = statusCounts.timeline + statusCounts.followUp;
-        if (el('analyticsBooked')) el('analyticsBooked').textContent = statusCounts.booked;
-        if (el('analyticsBookedStat')) el('analyticsBookedStat').textContent = statusCounts.booked;
-        if (el('analyticsCallbackCount')) el('analyticsCallbackCount').textContent = statusCounts.callback;
-        if (el('analyticsFollowUp')) el('analyticsFollowUp').textContent = statusCounts.followUp;
-        if (el('analyticsTimelineCount')) el('analyticsTimelineCount').textContent = statusCounts.timeline;
-        if (el('analyticsNotInterested')) el('analyticsNotInterested').textContent = statusCounts.notInterested;
-        if (el('analyticsInconclusive')) el('analyticsInconclusive').textContent = statusCounts.inconclusive;
-        if (el('analyticsNoAnswer')) el('analyticsNoAnswer').textContent = statusCounts.noAnswer;
-        if (el('analyticsVoicemail')) el('analyticsVoicemail').textContent = statusCounts.voicemail;
-        if (el('analyticsMaxAttempts')) el('analyticsMaxAttempts').textContent = statusCounts.maxAttempts;
-        if (el('analyticsWrongPerson')) el('analyticsWrongPerson').textContent = statusCounts.wrongPerson;
-        if (el('analyticsDNC')) el('analyticsDNC').textContent = statusCounts.dnc;
 
         // Combined booked count (Booked + Callback)
         var totalBooked = statusCounts.booked + statusCounts.callback;
+        if (el('analyticsBooked')) el('analyticsBooked').textContent = totalBooked;
+
+        // Percentage formatter
+        var pctFormat = function(count) { return totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) + '%' : '0%'; };
+
+        // Helper to set toggleable element data
+        var setToggleable = function(id, count, pct) {
+            var elem = el(id);
+            if (elem) {
+                elem.dataset.count = count;
+                elem.dataset.pct = pct;
+            }
+        };
+
+        // Update qualified outcomes with data attributes
+        setToggleable('analyticsBookedStat', statusCounts.booked, pctFormat(statusCounts.booked));
+        setToggleable('analyticsCallbackCount', statusCounts.callback, pctFormat(statusCounts.callback));
+        setToggleable('analyticsTimelineCount', statusCounts.timeline, pctFormat(statusCounts.timeline));
+        setToggleable('analyticsFollowUp', statusCounts.followUp, pctFormat(statusCounts.followUp));
+
+        // Update other outcomes with data attributes
+        setToggleable('analyticsNotInterested', statusCounts.notInterested, pctFormat(statusCounts.notInterested));
+        setToggleable('analyticsInconclusive', statusCounts.inconclusive, pctFormat(statusCounts.inconclusive));
+        setToggleable('analyticsNoAnswer', statusCounts.noAnswer, pctFormat(statusCounts.noAnswer));
+        setToggleable('analyticsVoicemail', statusCounts.voicemail, pctFormat(statusCounts.voicemail));
+        setToggleable('analyticsMaxAttempts', statusCounts.maxAttempts, pctFormat(statusCounts.maxAttempts));
+        setToggleable('analyticsWrongPerson', statusCounts.wrongPerson, pctFormat(statusCounts.wrongPerson));
+        setToggleable('analyticsDNC', statusCounts.dnc, pctFormat(statusCounts.dnc));
+
+        // Apply toggle display
+        updateAnalyticsToggleDisplay();
 
         // Update conversion funnel
         if (el('funnelCalls')) el('funnelCalls').textContent = totalCalls;
@@ -8026,7 +8054,7 @@
         if (el('funnelQualBar')) el('funnelQualBar').style.width = qualPct + '%';
         if (el('funnelBookedBar')) el('funnelBookedBar').style.width = bookedPct + '%';
 
-        // Add percentages to funnel
+        // Add percentages to funnel labels
         var convPctDisplay = totalCalls > 0 ? (convPct).toFixed(1) + '%' : '0%';
         var qualPctDisplay = totalCalls > 0 ? (qualPct).toFixed(1) + '%' : '0%';
         var bookedPctDisplay = totalCalls > 0 ? (bookedPct).toFixed(1) + '%' : '0%';
@@ -8040,61 +8068,6 @@
         if (el('callbackBar')) el('callbackBar').style.width = (statusCounts.callback / maxQualified * 100) + '%';
         if (el('timelineBar')) el('timelineBar').style.width = (statusCounts.timeline / maxQualified * 100) + '%';
         if (el('followupBar')) el('followupBar').style.width = (statusCounts.followUp / maxQualified * 100) + '%';
-
-        // Update qualified outcome percentages
-        var pctFormat = function(count) { return totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) + '%' : ''; };
-        if (el('bookedPct')) el('bookedPct').textContent = pctFormat(statusCounts.booked);
-        if (el('callbackPct')) el('callbackPct').textContent = pctFormat(statusCounts.callback);
-        if (el('timelinePct')) el('timelinePct').textContent = pctFormat(statusCounts.timeline);
-        if (el('followupPct')) el('followupPct').textContent = pctFormat(statusCounts.followUp);
-
-        // Update other outcome percentages
-        if (el('notInterestedPct')) el('notInterestedPct').textContent = pctFormat(statusCounts.notInterested);
-        if (el('inconclusivePct')) el('inconclusivePct').textContent = pctFormat(statusCounts.inconclusive);
-        if (el('noAnswerPct')) el('noAnswerPct').textContent = pctFormat(statusCounts.noAnswer);
-        if (el('voicemailPct')) el('voicemailPct').textContent = pctFormat(statusCounts.voicemail);
-        if (el('maxAttemptsPct')) el('maxAttemptsPct').textContent = pctFormat(statusCounts.maxAttempts);
-        if (el('wrongPersonPct')) el('wrongPersonPct').textContent = pctFormat(statusCounts.wrongPerson);
-        if (el('dncPct')) el('dncPct').textContent = pctFormat(statusCounts.dnc);
-
-        // Update booked count badge - use call data (Booked + Callback) filtered by time period
-        var bookedCount = totalBooked;
-        if (el('analyticsBookedCount')) el('analyticsBookedCount').textContent = bookedCount + ' meeting' + (bookedCount !== 1 ? 's' : '');
-
-        // Update hero stat for meetings booked
-        if (el('analyticsBooked')) el('analyticsBooked').textContent = totalBooked;
-
-        // Booked table - show leads with Booked/Callback calls in the selected time period
-        var bookedLeadIds = new Set();
-        bookedCallsInPeriod.forEach(function(call) {
-            var leadId = call.fields['Leads'];
-            if (leadId) {
-                if (Array.isArray(leadId)) leadId.forEach(function(id) { bookedLeadIds.add(id); });
-                else bookedLeadIds.add(leadId);
-            }
-        });
-        var bookedLeads = allLeads.filter(function(l) { return bookedLeadIds.has(l.id); });
-        var bookedTable = el('analyticsBookedTable');
-        if (bookedTable) {
-            if (bookedLeads.length === 0) {
-                bookedTable.innerHTML = '<tr class="empty-row"><td colspan="4">No appointments booked</td></tr>';
-            } else {
-                bookedTable.innerHTML = bookedLeads.map(function(lead) {
-                    var f = lead.fields;
-                    var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || f['Lead Name'] || 'Unknown';
-                    var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
-                    var summaryRaw = f['Last Call Summary'] || f['Summary'] || '';
-                    var summary = Array.isArray(summaryRaw) ? summaryRaw.join(' ') : String(summaryRaw || '');
-                    var bookedTime = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
-                    return '<tr onclick="openLeadModal(\'' + lead.id + '\')" style="cursor:pointer">' +
-                        '<td><strong>' + escapeHtml(name) + '</strong></td>' +
-                        '<td style="font-family:monospace;color:rgba(255,255,255,0.7)">' + escapeHtml(phone) + '</td>' +
-                        '<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;color:rgba(255,255,255,0.6)">' + escapeHtml(summary.substring(0,80)) + '</td>' +
-                        '<td style="color:#22c55e;font-weight:500">' + bookedTime + '</td>' +
-                    '</tr>';
-                }).join('');
-            }
-        }
     }
     
     // ===== IMPORT PAGE =====
