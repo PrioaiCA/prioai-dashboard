@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Prio AI - Check your email to confirm your account.">
+    <title>Check Your Email | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/assets/auth.css">
+</head>
+<body>
+    <main class="auth-page">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="email-icon">&#9993;</div>
+                <h1>Check your email</h1>
+                <p>We've sent a confirmation link to<br><strong id="userEmail">your email</strong></p>
+            </div>
+
+            <div class="info-card">
+                <h3>Next steps:</h3>
+                <ol>
+                    <li>Open the email from Prio AI</li>
+                    <li>Click "Confirm Email Address"</li>
+                    <li>You'll be redirected to complete your setup</li>
+                </ol>
+            </div>
+
+            <p class="text-center" style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-4);">
+                Didn't receive the email? Check your spam folder or
+            </p>
+
+            <button class="btn btn-secondary btn-block" id="resendBtn">Resend Confirmation Email</button>
+
+            <div class="form-message success mt-4" id="resendSuccess"></div>
+            <div class="form-message error mt-4" id="resendError"></div>
+
+            <div class="auth-footer">
+                <p>Wrong email? <a href="/signup/">Sign up again</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    // Theme
+    var savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Supabase
+    var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbG1pa2dvYWZkZmZlenJmcGdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzE2NTgsImV4cCI6MjA2MDQwNzY1OH0.UIyU0FJZS8JVpRYckfnUMG_z9qwEZJ4pdPLvLLN9fFM";
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Get email from URL or localStorage
+    var urlParams = new URLSearchParams(window.location.search);
+    var email = urlParams.get('email') || localStorage.getItem('signup_email') || '';
+
+    if (email) {
+        document.getElementById('userEmail').textContent = email;
+    }
+
+    // Resend confirmation email
+    document.getElementById('resendBtn').addEventListener('click', function() {
+        var btn = this;
+        var successEl = document.getElementById('resendSuccess');
+        var errorEl = document.getElementById('resendError');
+
+        successEl.textContent = '';
+        errorEl.textContent = '';
+
+        if (!email) {
+            errorEl.textContent = 'No email found. Please sign up again.';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        supabase.auth.resend({
+            type: 'signup',
+            email: email
+        }).then(function(result) {
+            btn.disabled = false;
+            btn.textContent = 'Resend Confirmation Email';
+
+            if (result.error) {
+                errorEl.textContent = result.error.message;
+            } else {
+                successEl.textContent = 'Confirmation email sent! Check your inbox.';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

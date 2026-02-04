@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Set your new Prio AI password.">
+    <title>Set New Password | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/assets/auth.css">
+</head>
+<body>
+    <main class="auth-page">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="/assets/logo_white.png" alt="Prio AI" class="auth-logo">
+                <h1>Set new password</h1>
+                <p>Enter your new password below</p>
+            </div>
+
+            <form id="newPasswordForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="password">New Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" required placeholder="Min. 8 characters" minlength="8">
+                        <button type="button" class="password-toggle" data-target="password">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password" minlength="8">
+                        <button type="button" class="password-toggle" data-target="confirmPassword">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-message error" id="passwordError"></div>
+                <div class="form-message success" id="passwordSuccess"></div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg mt-4" id="updateBtn">Update Password</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    // Theme
+    var savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Supabase
+    var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbG1pa2dvYWZkZmZlenJmcGdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzE2NTgsImV4cCI6MjA2MDQwNzY1OH0.UIyU0FJZS8JVpRYckfnUMG_z9qwEZJ4pdPLvLLN9fFM";
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Handle the recovery token from URL
+    supabase.auth.onAuthStateChange(function(event, session) {
+        if (event === 'PASSWORD_RECOVERY') {
+            console.log('Password recovery mode active');
+        }
+    });
+
+    // Password visibility toggle
+    document.querySelectorAll('.password-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var targetId = this.dataset.target;
+            var input = document.getElementById(targetId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+            } else {
+                input.type = 'password';
+                this.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            }
+        });
+    });
+
+    document.getElementById('newPasswordForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+        var errorEl = document.getElementById('passwordError');
+        var successEl = document.getElementById('passwordSuccess');
+        var btn = document.getElementById('updateBtn');
+
+        errorEl.textContent = '';
+        successEl.textContent = '';
+
+        if (password !== confirmPassword) {
+            errorEl.textContent = 'Passwords do not match';
+            return;
+        }
+
+        if (password.length < 8) {
+            errorEl.textContent = 'Password must be at least 8 characters';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Updating...';
+
+        try {
+            var result = await supabase.auth.updateUser({ password: password });
+            if (result.error) throw result.error;
+            successEl.textContent = 'Password updated successfully! Redirecting to login...';
+            btn.textContent = 'Password Updated';
+            setTimeout(function() {
+                window.location.href = '/login/';
+            }, 2000);
+        } catch (err) {
+            errorEl.textContent = err.message || 'Failed to update password. Please try again.';
+            btn.disabled = false;
+            btn.textContent = 'Update Password';
+        }
+    });
+    </script>
+</body>
+</html>
