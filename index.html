@@ -780,19 +780,19 @@
         .outcome-stat.booked{border-left:3px solid #22c55e}
         .outcome-stat.callback{border-left:3px solid #3B82F6}
         .outcome-stat.timeline{border-left:3px solid #f59e0b}
-        .outcome-stat.interested{border-left:3px solid #8b5cf6}
+        .outcome-stat.followup{border-left:3px solid #8b5cf6}
         .outcome-stat-value{font-size:1.5rem;font-weight:700}
         .outcome-stat.booked .outcome-stat-value{color:#22c55e}
         .outcome-stat.callback .outcome-stat-value{color:#3B82F6}
         .outcome-stat.timeline .outcome-stat-value{color:#f59e0b}
-        .outcome-stat.interested .outcome-stat-value{color:#8b5cf6}
+        .outcome-stat.followup .outcome-stat-value{color:#8b5cf6}
         .outcome-stat-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
         .outcome-stat-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
         .bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
         .bar-fill.booked{background:#22c55e}
         .bar-fill.callback{background:#3B82F6}
         .bar-fill.timeline{background:#f59e0b}
-        .bar-fill.interested{background:#8b5cf6}
+        .bar-fill.followup{background:#8b5cf6}
 
         /* Other Outcomes */
         .other-outcomes-list{display:flex;flex-direction:column;gap:8px}
@@ -1578,10 +1578,10 @@
                                         <div class="outcome-stat-label">Timeline</div>
                                         <div class="outcome-stat-bar"><div class="bar-fill timeline" id="timelineBar"></div></div>
                                     </div>
-                                    <div class="outcome-stat interested">
-                                        <div class="outcome-stat-value" id="analyticsInterested">0</div>
-                                        <div class="outcome-stat-label">Interested</div>
-                                        <div class="outcome-stat-bar"><div class="bar-fill interested" id="interestedBar"></div></div>
+                                    <div class="outcome-stat followup">
+                                        <div class="outcome-stat-value" id="analyticsFollowUp">0</div>
+                                        <div class="outcome-stat-label">Follow Up</div>
+                                        <div class="outcome-stat-bar"><div class="bar-fill followup" id="followupBar"></div></div>
                                     </div>
                                 </div>
                             </div>
@@ -1593,24 +1593,32 @@
                                 </div>
                                 <div class="other-outcomes-list">
                                     <div class="other-outcome-row">
-                                        <span class="outcome-name">Voicemail</span>
-                                        <span class="outcome-value" id="analyticsVoicemail">0</span>
+                                        <span class="outcome-name">Not Interested</span>
+                                        <span class="outcome-value" id="analyticsNotInterested">0</span>
+                                    </div>
+                                    <div class="other-outcome-row">
+                                        <span class="outcome-name">Inconclusive</span>
+                                        <span class="outcome-value" id="analyticsInconclusive">0</span>
                                     </div>
                                     <div class="other-outcome-row">
                                         <span class="outcome-name">No Answer</span>
                                         <span class="outcome-value" id="analyticsNoAnswer">0</span>
                                     </div>
                                     <div class="other-outcome-row">
-                                        <span class="outcome-name">Not Interested</span>
-                                        <span class="outcome-value" id="analyticsNotInterested">0</span>
+                                        <span class="outcome-name">Voicemail</span>
+                                        <span class="outcome-value" id="analyticsVoicemail">0</span>
                                     </div>
                                     <div class="other-outcome-row">
-                                        <span class="outcome-name">Do Not Call</span>
+                                        <span class="outcome-name">Max Attempts</span>
+                                        <span class="outcome-value" id="analyticsMaxAttempts">0</span>
+                                    </div>
+                                    <div class="other-outcome-row">
+                                        <span class="outcome-name">Wrong Person</span>
+                                        <span class="outcome-value" id="analyticsWrongPerson">0</span>
+                                    </div>
+                                    <div class="other-outcome-row">
+                                        <span class="outcome-name">DNC</span>
                                         <span class="outcome-value" id="analyticsDNC">0</span>
-                                    </div>
-                                    <div class="other-outcome-row">
-                                        <span class="outcome-name">Wrong Number</span>
-                                        <span class="outcome-value" id="analyticsWrongNumber">0</span>
                                     </div>
                                 </div>
                             </div>
@@ -3047,6 +3055,7 @@
     var AIRTABLE_BASE = 'applOjDjhH0RqLtBH';
     var AIRTABLE_CLIENTS_TABLE = 'tblMptC862PyL7Znw';
     var AIRTABLE_LEADS_TABLE = 'tblLpN4wceakfNFpq';
+    var AIRTABLE_CALLS_TABLE = 'tblvB5OpG0b5mVix3';
 
     // Airtable API helper - proxies through Pages Function (token handled server-side)
     async function fetchAirtable(path, options = {}) {
@@ -3066,6 +3075,36 @@
     
     var currentUserRecord = null;
     var allLeads = [];
+    var allCalls = [];
+    var callsLoaded = false;
+
+    // Load calls from Calls table for analytics
+    async function loadCallsData() {
+        if (!currentUserRecord) return;
+
+        try {
+            var clientId = currentUserRecord.id;
+            var filterFormula = '{Client}="' + clientId + '"';
+            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&fields[]=Timestamp&fields[]=Outcome';
+
+            allCalls = [];
+            var offset = null;
+
+            do {
+                var path = basePath + (offset ? '&offset=' + offset : '');
+                var data = await fetchAirtable(path);
+                if (data.records) {
+                    allCalls = allCalls.concat(data.records);
+                }
+                offset = data.offset;
+            } while (offset);
+
+            callsLoaded = true;
+            console.log('Loaded ' + allCalls.length + ' call records for analytics');
+        } catch (err) {
+            console.error('Failed to load calls:', err);
+        }
+    }
 
     // Update welcome date
     function updateWelcomeDate() {
@@ -7500,59 +7539,100 @@
     // Initialize date display
     updateAnalyticsDateDisplay();
 
-    function updateAnalyticsDisplay() {
-        var statusCounts = { booked: 0, callback: 0, interested: 0, timeline: 0, followUp: 0, notInterested: 0, voicemail: 0, noAnswer: 0, dnc: 0, wrongNumber: 0 };
+    async function updateAnalyticsDisplay() {
+        // Load calls data if not loaded yet
+        if (!callsLoaded && currentUserRecord) {
+            showAnalyticsLoading();
+            await loadCallsData();
+            hideAnalyticsLoading();
+        }
+
+        // Outcome counts based on Calls table Outcome field
+        var statusCounts = {
+            booked: 0,
+            callback: 0,
+            followUp: 0,
+            timeline: 0,
+            notInterested: 0,
+            inconclusive: 0,
+            noAnswer: 0,
+            voicemail: 0,
+            maxAttempts: 0,
+            wrongPerson: 0,
+            dnc: 0
+        };
         var totalCalls = 0;
         var conversations = 0;
         var qualified = 0;
-        var bookedLeads = [];
 
         var todayEST = getTodayEST();
         var selectedDateStr = toESTDateString(analyticsDate);
 
-        allLeads.forEach(function(l) {
-            var f = l.fields;
-            var status = (f['Status'] || f['Disposition'] || '').toLowerCase();
-            var lastCall = f['Last Call Timestamp'];
+        // Process calls data
+        allCalls.forEach(function(call) {
+            var f = call.fields;
+            var outcome = (f['Outcome'] || '').toLowerCase().trim();
+            var timestamp = f['Timestamp'];
 
             // Filter by period/date using EST timezone
             if (analyticsPeriod !== 'all') {
-                if (!lastCall) return; // Skip leads with no call timestamp for date-filtered views
+                if (!timestamp) return;
 
-                var callDateEST = toESTDateString(lastCall);
+                var callDateEST = toESTDateString(timestamp);
 
                 if (analyticsPeriod === 'daily') {
                     if (callDateEST !== selectedDateStr) return;
                 } else if (analyticsPeriod === 'weekly') {
                     var weekAgo = new Date(todayEST);
                     weekAgo.setDate(weekAgo.getDate() - 7);
-                    var callDate = new Date(lastCall);
+                    var callDate = new Date(timestamp);
                     if (callDate < weekAgo) return;
                 } else if (analyticsPeriod === 'monthly') {
                     var monthAgo = new Date(todayEST);
                     monthAgo.setDate(monthAgo.getDate() - 30);
-                    var callDate = new Date(lastCall);
+                    var callDate = new Date(timestamp);
                     if (callDate < monthAgo) return;
                 }
             }
 
             totalCalls++;
 
-            if (status === 'booked' || status === 'appointment booked') {
+            // Categorize by outcome
+            if (outcome === 'booked') {
                 statusCounts.booked++;
                 conversations++;
                 qualified++;
-                bookedLeads.push(l);
+            } else if (outcome === 'callback') {
+                statusCounts.callback++;
+                conversations++;
+                qualified++;
+            } else if (outcome === 'follow up') {
+                statusCounts.followUp++;
+                conversations++;
+                qualified++;
+            } else if (outcome === 'timeline') {
+                statusCounts.timeline++;
+                conversations++;
+                qualified++;
+            } else if (outcome === 'not interested') {
+                statusCounts.notInterested++;
+                conversations++;
+            } else if (outcome === 'inconclusive') {
+                statusCounts.inconclusive++;
+                conversations++;
+            } else if (outcome === 'no answer') {
+                statusCounts.noAnswer++;
+            } else if (outcome === 'voicemail') {
+                statusCounts.voicemail++;
+            } else if (outcome === 'max attempts') {
+                statusCounts.maxAttempts++;
+            } else if (outcome === 'wrong person') {
+                statusCounts.wrongPerson++;
+                conversations++;
+            } else if (outcome === 'dnc') {
+                statusCounts.dnc++;
+                conversations++;
             }
-            else if (status === 'callback' || status === 'callback requested') { statusCounts.callback++; conversations++; qualified++; }
-            else if (status === 'interested') { statusCounts.interested++; conversations++; qualified++; }
-            else if (status === 'timeline') { statusCounts.timeline++; conversations++; qualified++; }
-            else if (status === 'follow up' || status === 'followup') { statusCounts.followUp++; conversations++; }
-            else if (status === 'not interested' || status === 'notinterested') { statusCounts.notInterested++; conversations++; }
-            else if (status === 'voicemail') statusCounts.voicemail++;
-            else if (status === 'no answer' || status === 'noanswer') statusCounts.noAnswer++;
-            else if (status === 'dnc' || status === 'do not call') statusCounts.dnc++;
-            else if (status === 'wrong number' || status === 'wrongnumber') statusCounts.wrongNumber++;
         });
 
         // Update UI
@@ -7563,13 +7643,15 @@
         if (el('analyticsBooked')) el('analyticsBooked').textContent = statusCounts.booked;
         if (el('analyticsBookedStat')) el('analyticsBookedStat').textContent = statusCounts.booked;
         if (el('analyticsCallbackCount')) el('analyticsCallbackCount').textContent = statusCounts.callback;
-        if (el('analyticsInterested')) el('analyticsInterested').textContent = statusCounts.interested;
+        if (el('analyticsFollowUp')) el('analyticsFollowUp').textContent = statusCounts.followUp;
         if (el('analyticsTimelineCount')) el('analyticsTimelineCount').textContent = statusCounts.timeline;
-        if (el('analyticsVoicemail')) el('analyticsVoicemail').textContent = statusCounts.voicemail;
-        if (el('analyticsNoAnswer')) el('analyticsNoAnswer').textContent = statusCounts.noAnswer;
         if (el('analyticsNotInterested')) el('analyticsNotInterested').textContent = statusCounts.notInterested;
+        if (el('analyticsInconclusive')) el('analyticsInconclusive').textContent = statusCounts.inconclusive;
+        if (el('analyticsNoAnswer')) el('analyticsNoAnswer').textContent = statusCounts.noAnswer;
+        if (el('analyticsVoicemail')) el('analyticsVoicemail').textContent = statusCounts.voicemail;
+        if (el('analyticsMaxAttempts')) el('analyticsMaxAttempts').textContent = statusCounts.maxAttempts;
+        if (el('analyticsWrongPerson')) el('analyticsWrongPerson').textContent = statusCounts.wrongPerson;
         if (el('analyticsDNC')) el('analyticsDNC').textContent = statusCounts.dnc;
-        if (el('analyticsWrongNumber')) el('analyticsWrongNumber').textContent = statusCounts.wrongNumber;
 
         // Update conversion funnel
         if (el('funnelCalls')) el('funnelCalls').textContent = totalCalls;
@@ -7586,16 +7668,20 @@
         if (el('funnelBookedBar')) el('funnelBookedBar').style.width = bookedPct + '%';
 
         // Update outcome stat bars
-        var maxQualified = Math.max(statusCounts.booked, statusCounts.callback, statusCounts.timeline, statusCounts.interested, 1);
+        var maxQualified = Math.max(statusCounts.booked, statusCounts.callback, statusCounts.timeline, statusCounts.followUp, 1);
         if (el('bookedBar')) el('bookedBar').style.width = (statusCounts.booked / maxQualified * 100) + '%';
         if (el('callbackBar')) el('callbackBar').style.width = (statusCounts.callback / maxQualified * 100) + '%';
         if (el('timelineBar')) el('timelineBar').style.width = (statusCounts.timeline / maxQualified * 100) + '%';
-        if (el('interestedBar')) el('interestedBar').style.width = (statusCounts.interested / maxQualified * 100) + '%';
+        if (el('followupBar')) el('followupBar').style.width = (statusCounts.followUp / maxQualified * 100) + '%';
 
-        // Update booked count badge
+        // Update booked count badge - get from leads with booked meetings
+        var bookedLeads = allLeads.filter(function(l) {
+            var status = (l.fields['Status'] || l.fields['Disposition'] || '').toLowerCase();
+            return status === 'booked' || status === 'appointment booked';
+        });
         if (el('analyticsBookedCount')) el('analyticsBookedCount').textContent = bookedLeads.length + ' meeting' + (bookedLeads.length !== 1 ? 's' : '');
 
-        // Booked table
+        // Booked table - still uses leads for the meeting details
         var bookedTable = el('analyticsBookedTable');
         if (bookedTable) {
             if (bookedLeads.length === 0) {
@@ -7603,9 +7689,9 @@
             } else {
                 bookedTable.innerHTML = bookedLeads.map(function(lead) {
                     var f = lead.fields;
-                    var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+                    var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || f['Lead Name'] || 'Unknown';
                     var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
-                    var summaryRaw = f['Last Call Summary'] || '';
+                    var summaryRaw = f['Last Call Summary'] || f['Summary'] || '';
                     var summary = Array.isArray(summaryRaw) ? summaryRaw.join(' ') : String(summaryRaw || '');
                     var bookedTime = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
                     return '<tr onclick="openLeadModal(\'' + lead.id + '\')" style="cursor:pointer">' +
@@ -7660,19 +7746,18 @@
 
         try {
             // Build lead data
+            var agentName = currentUserRecord?.fields?.['Agent Name'] || 'our team';
+            var defaultContext = 'You reached out to ' + agentName + ' a while ago regarding your interest in buying or selling a property. Are you still in the market?';
+
             var leadData = {
                 firstName: firstName,
                 lastName: lastName,
                 phone: phone,
                 interest: interest,
                 email: email,
-                maxAttempts: maxAttempts
+                maxAttempts: maxAttempts,
+                context: context || defaultContext
             };
-
-            // Only include context if provided
-            if (context) {
-                leadData.context = context;
-            }
 
             // Send to n8n webhook
             var response = await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
@@ -7680,7 +7765,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email: currentUser?.email,
-                    agentName: currentUserRecord?.fields?.['Agent Name'] || '',
+                    agentName: agentName,
                     type: 'single',
                     leads: [leadData]
                 })

@@ -3,7 +3,7 @@
 
 // Configuration - these should match your Airtable setup
 const ALLOWED_BASE = 'applOjDjhH0RqLtBH';
-const ALLOWED_TABLES = ['tblMptC862PyL7Znw', 'tblLpN4wceakfNFpq'];
+const ALLOWED_TABLES = ['tblMptC862PyL7Znw', 'tblLpN4wceakfNFpq', 'tblvB5OpG0b5mVix3'];
 
 // CORS - restrict to your domains only
 const ALLOWED_ORIGINS = [
