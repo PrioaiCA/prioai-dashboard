@@ -3087,11 +3087,11 @@
         }
 
         try {
-            var clientId = currentUserRecord.id;
-            console.log('Loading calls for client ID: ' + clientId);
+            var clientName = currentUserRecord.fields['Agent Name'] || '';
+            console.log('Loading calls for client name: ' + clientName);
 
-            // Filter by Client lookup field (contains client record ID from Lead->Client)
-            var filterFormula = 'FIND("' + clientId + '", ARRAYJOIN({Client}))';
+            // Filter by Client lookup field (displays client name from Lead->Client->Agent Name)
+            var filterFormula = 'FIND("' + clientName + '", ARRAYJOIN({Client}))';
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&fields[]=Timestamp&fields[]=Outcome';
 
             allCalls = [];
