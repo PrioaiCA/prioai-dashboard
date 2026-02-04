@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Prio AI - Email confirmed successfully.">
+    <title>Email Confirmed | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/assets/auth.css">
+</head>
+<body>
+    <main class="auth-page">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h1>Email Confirmed!</h1>
+                <p>Your email has been verified successfully.<br>You're ready to complete your account setup.</p>
+            </div>
+
+            <a href="/onboarding/" class="btn btn-primary btn-block btn-lg">Continue to Setup</a>
+
+            <div class="auth-footer">
+                <p>Having trouble? <a href="mailto:info@prioai.ca">Contact support</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    // Theme
+    var savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Supabase
+    var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbG1pa2dvYWZkZmZlenJmcGdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzE2NTgsImV4cCI6MjA2MDQwNzY1OH0.UIyU0FJZS8JVpRYckfnUMG_z9qwEZJ4pdPLvLLN9fFM";
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Handle the email confirmation - Supabase passes tokens in URL hash
+    // This establishes the session so user stays logged in
+    supabase.auth.getSession().then(function(result) {
+        if (result.data.session) {
+            console.log('Session established:', result.data.session.user.email);
+        }
+    });
+
+    // Listen for auth state changes (handles the token exchange)
+    supabase.auth.onAuthStateChange(function(event, session) {
+        if (event === 'SIGNED_IN' && session) {
+            console.log('User signed in:', session.user.email);
+        }
+    });
+    </script>
+</body>
+</html>

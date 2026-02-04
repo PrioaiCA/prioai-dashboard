@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete your Prio AI setup.">
+    <title>Complete Your Setup | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/assets/auth.css">
+</head>
+<body>
+    <main class="auth-page">
+        <div class="auth-card wide">
+            <div class="auth-header">
+                <img src="/assets/logo_white.png" alt="Prio AI" class="auth-logo">
+                <h1>Complete Setup</h1>
+                <p>Tell us about yourself so we can get you started</p>
+            </div>
+
+            <form id="onboardingForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="agentName">Agent Name *</label>
+                    <input type="text" id="agentName" placeholder="Your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="brokerage">Organization Name</label>
+                    <input type="text" id="brokerage" placeholder="Your brokerage or company">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="calendarEmail">Google Calendar Email *</label>
+                        <input type="email" id="calendarEmail" placeholder="calendar@gmail.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone *</label>
+                    <input type="tel" id="phone" placeholder="+1 (555) 123-4567" required>
+                </div>
+                <div class="form-group">
+                    <label>Available Days *</label>
+                    <div class="day-selector" id="availableDays">
+                        <label><input type="checkbox" name="days" value="Monday"><span>Mon</span></label>
+                        <label><input type="checkbox" name="days" value="Tuesday"><span>Tue</span></label>
+                        <label><input type="checkbox" name="days" value="Wednesday"><span>Wed</span></label>
+                        <label><input type="checkbox" name="days" value="Thursday"><span>Thu</span></label>
+                        <label><input type="checkbox" name="days" value="Friday"><span>Fri</span></label>
+                        <label><input type="checkbox" name="days" value="Saturday"><span>Sat</span></label>
+                        <label><input type="checkbox" name="days" value="Sunday"><span>Sun</span></label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="timezone">Timezone</label>
+                        <select id="timezone">
+                            <option value="America/Toronto">America/Toronto (EST)</option>
+                            <option value="America/Vancouver">America/Vancouver (PST)</option>
+                            <option value="America/Edmonton">America/Edmonton (MST)</option>
+                            <option value="America/Winnipeg">America/Winnipeg (CST)</option>
+                            <option value="America/Halifax">America/Halifax (AST)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="startTime">Available Start *</label>
+                        <select id="startTime">
+                            <option value="8:00 AM">8:00 AM</option>
+                            <option value="9:00 AM" selected>9:00 AM</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="1:00 PM">1:00 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="3:00 PM">3:00 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                            <option value="5:00 PM">5:00 PM</option>
+                            <option value="6:00 PM">6:00 PM</option>
+                            <option value="7:00 PM">7:00 PM</option>
+                            <option value="8:00 PM">8:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="endTime">Available End *</label>
+                        <select id="endTime">
+                            <option value="9:00 AM">9:00 AM</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="1:00 PM">1:00 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="3:00 PM">3:00 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                            <option value="5:00 PM">5:00 PM</option>
+                            <option value="6:00 PM" selected>6:00 PM</option>
+                            <option value="7:00 PM">7:00 PM</option>
+                            <option value="8:00 PM">8:00 PM</option>
+                            <option value="9:00 PM">9:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group"></div>
+                </div>
+
+                <div class="form-message error" id="onboardingError"></div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg mt-6" id="onboardingBtn">Continue to Plan Selection</button>
+            </form>
+
+            <div class="auth-footer">
+                <p><a href="#" id="logoutBtn">Log out</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    // Theme
+    var savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Supabase
+    var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbG1pa2dvYWZkZmZlenJmcGdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzE2NTgsImV4cCI6MjA2MDQwNzY1OH0.UIyU0FJZS8JVpRYckfnUMG_z9qwEZJ4pdPLvLLN9fFM";
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    var currentUser = null;
+
+    function showError(msg) {
+        var el = document.getElementById('onboardingError');
+        el.textContent = msg;
+    }
+
+    function hideError() {
+        var el = document.getElementById('onboardingError');
+        el.textContent = '';
+    }
+
+    function setLoading(btn, loading) {
+        if (loading) {
+            btn.dataset.text = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Please wait...';
+        } else {
+            btn.disabled = false;
+            btn.textContent = btn.dataset.text || 'Submit';
+        }
+    }
+
+    // Check auth
+    supabase.auth.getSession().then(function(result) {
+        if (!result.data.session) {
+            window.location.href = '/login/';
+            return;
+        }
+        currentUser = result.data.session.user;
+
+        // Prefill form
+        var name = (currentUser.user_metadata && currentUser.user_metadata.full_name) || '';
+        var email = currentUser.email || '';
+        document.getElementById('agentName').value = name;
+        document.getElementById('email').value = email;
+        document.getElementById('calendarEmail').value = email;
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        supabase.auth.signOut().then(function() {
+            window.location.href = '/login/';
+        });
+    });
+
+    // Form submit
+    document.getElementById('onboardingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        hideError();
+
+        var days = [];
+        document.querySelectorAll('#availableDays input:checked').forEach(function(cb) {
+            days.push(cb.value);
+        });
+
+        if (days.length === 0) {
+            showError('Please select at least one available day');
+            return;
+        }
+
+        var btn = document.getElementById('onboardingBtn');
+        setLoading(btn, true);
+
+        var data = {
+            'Agent Name': document.getElementById('agentName').value,
+            'Organization Name': document.getElementById('brokerage').value,
+            'Email': document.getElementById('email').value,
+            'Google Calendar Email': document.getElementById('calendarEmail').value,
+            'Phone': document.getElementById('phone').value,
+            'Available Days': days,
+            'Timezone': document.getElementById('timezone').value,
+            'Available Start': document.getElementById('startTime').value,
+            'Available End': document.getElementById('endTime').value,
+            'Status': 'Unpaid',
+            'Start Date': new Date().toISOString().split('T')[0]
+        };
+
+        // Save to Airtable via secure proxy
+        fetch('/api/airtable?path=' + encodeURIComponent('applOjDjhH0RqLtBH/tblMptC862PyL7Znw'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fields: data })
+        }).then(function(response) {
+            if (!response.ok) {
+                return response.json().then(function(err) {
+                    throw new Error(err.error ? err.error.message : 'Airtable error');
+                });
+            }
+            return response.json();
+        }).then(function(result) {
+            setLoading(btn, false);
+            console.log('Airtable success:', result);
+            localStorage.setItem('onboarding_email', data['Email']);
+            // Redirect to pricing page on main website
+            window.location.href = 'https://prioai.ca/pricing/';
+        }).catch(function(err) {
+            setLoading(btn, false);
+            console.error('Airtable error:', err);
+            showError('Error saving your information: ' + err.message + '. Please try again or contact support.');
+        });
+    });
+    </script>
+</body>
+</html>

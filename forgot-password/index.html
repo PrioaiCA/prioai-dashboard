@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reset your Prio AI password.">
+    <title>Reset Password | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/assets/auth.css">
+</head>
+<body>
+    <main class="auth-page">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="/assets/logo_white.png" alt="Prio AI" class="auth-logo">
+                <h1>Reset password</h1>
+                <p>Enter your email and we'll send you a reset link</p>
+            </div>
+
+            <form id="resetForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+                </div>
+                <div class="form-message error" id="resetError"></div>
+                <div class="form-message success" id="resetSuccess"></div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg mt-4" id="resetBtn">Send Reset Link</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Remember your password? <a href="/login/">Log in</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    // Theme
+    var savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Supabase
+    var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbG1pa2dvYWZkZmZlenJmcGdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzE2NTgsImV4cCI6MjA2MDQwNzY1OH0.UIyU0FJZS8JVpRYckfnUMG_z9qwEZJ4pdPLvLLN9fFM";
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    document.getElementById('resetForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var email = document.getElementById('email').value;
+        var errorEl = document.getElementById('resetError');
+        var successEl = document.getElementById('resetSuccess');
+        var btn = document.getElementById('resetBtn');
+
+        errorEl.textContent = '';
+        successEl.textContent = '';
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        try {
+            var result = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/reset-password/'
+            });
+            if (result.error) throw result.error;
+            successEl.textContent = 'Check your email! We sent you a password reset link.';
+            btn.textContent = 'Email Sent';
+        } catch (err) {
+            errorEl.textContent = err.message || 'Failed to send reset email. Please try again.';
+            btn.disabled = false;
+            btn.textContent = 'Send Reset Link';
+        }
+    });
+    </script>
+</body>
+</html>
