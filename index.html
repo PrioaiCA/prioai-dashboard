@@ -4045,9 +4045,17 @@
                 updateSettingsProfile();
                 populateBilling();
             });
+        } else {
+            // Check for signup parameter from main website
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('signup') === 'true') {
+                openAuthModal('signup');
+                // Clean up URL
+                window.history.replaceState({}, '', window.location.pathname);
+            }
         }
     });
-    
+
     // Handle hash
     var hash = window.location.hash.slice(1);
     if (hash && document.getElementById('page-' + hash)) {
