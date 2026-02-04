@@ -719,44 +719,95 @@
         .page-loading p{margin-top:16px;color:rgba(255,255,255,0.5);font-size:0.875rem}
         @keyframes spin{to{transform:rotate(360deg)}}
         
-        /* Analytics Page */
-        .analytics-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:16px}
-        .analytics-header h2{font-size:1.5rem;font-weight:700;margin-bottom:4px}
-        .analytics-period-tabs{display:flex;gap:4px;background:#111;padding:4px;border-radius:8px}
-        .analytics-period-tab{background:none;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:0.875rem;color:rgba(255,255,255,0.6);transition:all 0.2s}
+        /* Analytics Page - Modern Design */
+        .analytics-header-modern{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:16px}
+        .analytics-title-section h2{font-size:1.75rem;font-weight:700;margin-bottom:2px}
+        .analytics-subtitle{color:rgba(255,255,255,0.5);font-size:0.875rem}
+        .analytics-date-nav{display:flex;align-items:center;gap:8px}
+        .date-nav-btn{background:#111;border:1px solid rgba(255,255,255,0.15);border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.7);transition:all 0.15s}
+        .date-nav-btn:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.25)}
+        .date-display{text-align:center;min-width:180px;padding:8px 16px;background:#111;border-radius:8px;cursor:pointer}
+        .date-display .date-day{display:block;font-weight:600;font-size:1rem}
+        .date-display .date-full{display:block;font-size:0.75rem;color:rgba(255,255,255,0.5)}
+        .date-nav-today{background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:rgb(52,211,153);padding:8px 16px;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer;transition:all 0.15s}
+        .date-nav-today:hover{background:rgba(52,211,153,0.25)}
+        .analytics-period-row{margin-bottom:24px}
+        .analytics-period-tabs{display:inline-flex;gap:4px;background:#111;padding:4px;border-radius:10px}
+        .analytics-period-tab{background:none;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:0.875rem;font-weight:500;color:rgba(255,255,255,0.6);transition:all 0.2s}
         .analytics-period-tab:hover{color:#fff}
         .analytics-period-tab.active{background:rgb(52,211,153);color:#000}
-        .analytics-date-picker{margin-bottom:24px}
-        .date-picker-input{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;color:#fff;font-size:0.9375rem}
-        .analytics-key-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
-        @media(max-width:768px){.analytics-key-metrics{grid-template-columns:1fr}}
-        .analytics-metric-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;text-align:center}
-        .analytics-metric-card.accent{background:rgba(52,211,153,0.1);border-color:rgb(52,211,153)}
-        .analytics-metric-card.success{background:rgba(34,197,94,0.1);border-color:#22c55e}
-        .metric-value{font-size:2.5rem;font-weight:700;margin-bottom:4px}
-        .analytics-metric-card.accent .metric-value{color:rgb(52,211,153)}
-        .analytics-metric-card.success .metric-value{color:#22c55e}
-        .metric-label{font-size:0.75rem;text-transform:uppercase;color:rgba(255,255,255,0.5)}
-        .analytics-section{margin-bottom:32px}
-        .analytics-section-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.5);margin-bottom:16px}
-        .analytics-breakdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-        @media(max-width:768px){.analytics-breakdown-grid{grid-template-columns:repeat(2,1fr)}}
-        .breakdown-card{border-radius:8px;padding:20px;text-align:center}
-        .breakdown-card.booked{background:#14532d}
-        .breakdown-card.callback{background:#172554}
-        .breakdown-card.interested{background:rgba(59,130,246,0.15)}
-        .breakdown-card.timeline{background:#451a03}
-        .breakdown-value{font-size:1.75rem;font-weight:700}
-        .breakdown-card.booked .breakdown-value,.breakdown-card.booked .breakdown-label{color:#22c55e}
-        .breakdown-card.callback .breakdown-value,.breakdown-card.callback .breakdown-label{color:#3B82F6}
-        .breakdown-card.interested .breakdown-value,.breakdown-card.interested .breakdown-label{color:#3B82F6}
-        .breakdown-card.timeline .breakdown-value,.breakdown-card.timeline .breakdown-label{color:#f59e0b}
-        .breakdown-label{font-size:0.75rem;margin-top:4px}
-        .analytics-outcomes-grid{display:flex;flex-wrap:wrap;gap:8px}
-        .outcome-pill{background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:8px 16px;font-size:0.875rem;color:rgba(255,255,255,0.7)}
-        .outcome-count{font-weight:600;margin-right:4px}
-        .analytics-table-container.booked-table{background:#14532d;border-color:#166534}
-        .analytics-table-container.booked-table th{background:#166534;color:#22c55e}
+        .date-picker-hidden{position:absolute;opacity:0;pointer-events:none}
+
+        /* Hero Stats */
+        .analytics-hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+        @media(max-width:1024px){.analytics-hero-stats{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:640px){.analytics-hero-stats{grid-template-columns:1fr}}
+        .hero-stat-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;display:flex;align-items:center;gap:16px;transition:all 0.2s}
+        .hero-stat-card:hover{border-color:rgba(255,255,255,0.2);transform:translateY(-2px)}
+        .hero-stat-card.primary{background:linear-gradient(135deg,rgba(52,211,153,0.15) 0%,rgba(52,211,153,0.05) 100%);border-color:rgba(52,211,153,0.3)}
+        .hero-stat-card.success{background:linear-gradient(135deg,rgba(34,197,94,0.15) 0%,rgba(34,197,94,0.05) 100%);border-color:rgba(34,197,94,0.3)}
+        .hero-stat-card.accent{background:linear-gradient(135deg,rgba(59,130,246,0.15) 0%,rgba(59,130,246,0.05) 100%);border-color:rgba(59,130,246,0.3)}
+        .hero-stat-icon{font-size:2rem;width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border-radius:12px}
+        .hero-stat-value{font-size:2rem;font-weight:700;line-height:1}
+        .hero-stat-card.primary .hero-stat-value{color:rgb(52,211,153)}
+        .hero-stat-card.success .hero-stat-value{color:#22c55e}
+        .hero-stat-card.accent .hero-stat-value{color:#3B82F6}
+        .hero-stat-label{font-size:0.8125rem;color:rgba(255,255,255,0.5);margin-top:4px}
+
+        /* Analytics Cards */
+        .analytics-card-section{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;margin-bottom:24px}
+        .analytics-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .analytics-card-header h3{font-size:1rem;font-weight:600}
+        .card-period{font-size:0.75rem;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);padding:4px 12px;border-radius:12px}
+
+        /* Conversion Funnel */
+        .conversion-funnel{display:flex;flex-direction:column;gap:12px}
+        .funnel-stage{display:flex;align-items:center;gap:16px}
+        .funnel-bar{background:rgba(255,255,255,0.1);height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;min-width:60px;transition:width 0.5s ease}
+        .funnel-bar.conversations{background:linear-gradient(90deg,rgba(52,211,153,0.3),rgba(52,211,153,0.1))}
+        .funnel-bar.qualified{background:linear-gradient(90deg,rgba(59,130,246,0.3),rgba(59,130,246,0.1))}
+        .funnel-bar.booked{background:linear-gradient(90deg,rgba(34,197,94,0.4),rgba(34,197,94,0.1))}
+        .funnel-value{font-weight:700;font-size:1rem}
+        .funnel-label{font-size:0.8125rem;color:rgba(255,255,255,0.6);min-width:100px}
+
+        /* Two Column Layout */
+        .analytics-two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+        @media(max-width:768px){.analytics-two-col{grid-template-columns:1fr}}
+
+        /* Outcome Stats */
+        .outcome-stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+        .outcome-stat{padding:16px;border-radius:12px;background:rgba(255,255,255,0.03)}
+        .outcome-stat.booked{border-left:3px solid #22c55e}
+        .outcome-stat.callback{border-left:3px solid #3B82F6}
+        .outcome-stat.timeline{border-left:3px solid #f59e0b}
+        .outcome-stat.interested{border-left:3px solid #8b5cf6}
+        .outcome-stat-value{font-size:1.5rem;font-weight:700}
+        .outcome-stat.booked .outcome-stat-value{color:#22c55e}
+        .outcome-stat.callback .outcome-stat-value{color:#3B82F6}
+        .outcome-stat.timeline .outcome-stat-value{color:#f59e0b}
+        .outcome-stat.interested .outcome-stat-value{color:#8b5cf6}
+        .outcome-stat-label{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px}
+        .outcome-stat-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+        .bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
+        .bar-fill.booked{background:#22c55e}
+        .bar-fill.callback{background:#3B82F6}
+        .bar-fill.timeline{background:#f59e0b}
+        .bar-fill.interested{background:#8b5cf6}
+
+        /* Other Outcomes */
+        .other-outcomes-list{display:flex;flex-direction:column;gap:8px}
+        .other-outcome-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px}
+        .outcome-name{font-size:0.875rem;color:rgba(255,255,255,0.7)}
+        .outcome-value{font-weight:600;font-size:0.9375rem}
+
+        /* Booked Table */
+        .booked-count{font-size:0.8125rem;color:rgb(52,211,153);background:rgba(52,211,153,0.1);padding:4px 12px;border-radius:12px}
+        .booked-table-container{overflow-x:auto;border-radius:12px;border:1px solid rgba(34,197,94,0.2)}
+        .analytics-booked-table{width:100%;border-collapse:collapse}
+        .analytics-booked-table th{background:rgba(34,197,94,0.15);color:#22c55e;padding:14px 16px;text-align:left;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+        .analytics-booked-table td{padding:14px 16px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.875rem}
+        .analytics-booked-table tr:hover td{background:rgba(255,255,255,0.02)}
+        .analytics-booked-table .empty-row td{text-align:center;color:rgba(255,255,255,0.4);padding:32px}
         
         /* Import Page */
         .import-header{margin-bottom:24px}
@@ -1403,89 +1454,184 @@
 
                     <!-- Page: Analytics -->
                     <div class="page hidden" id="page-analytics">
-                        <div class="analytics-header">
-                            <div>
-                                <h2>📊 Performance Summary</h2>
-                                <p style="color:rgba(255,255,255,0.5);">Track your AI calling performance</p>
+                        <!-- Modern Header with Date Navigation -->
+                        <div class="analytics-header-modern">
+                            <div class="analytics-title-section">
+                                <h2>Analytics</h2>
+                                <p class="analytics-subtitle">AI Calling Performance</p>
                             </div>
+                            <div class="analytics-date-nav">
+                                <button class="date-nav-btn" id="analyticsPrevDay" title="Previous">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                                </button>
+                                <div class="date-display" id="analyticsDateDisplay">
+                                    <span class="date-day">Today</span>
+                                    <span class="date-full">February 4, 2025</span>
+                                </div>
+                                <button class="date-nav-btn" id="analyticsNextDay" title="Next">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                                </button>
+                                <button class="date-nav-today" id="analyticsTodayBtn">Today</button>
+                            </div>
+                        </div>
+
+                        <!-- Period Selector Pills -->
+                        <div class="analytics-period-row">
                             <div class="analytics-period-tabs">
-                                <button class="analytics-period-tab active" data-period="daily">Daily</button>
-                                <button class="analytics-period-tab" data-period="weekly">Weekly</button>
-                                <button class="analytics-period-tab" data-period="monthly">Monthly</button>
+                                <button class="analytics-period-tab active" data-period="daily">Day</button>
+                                <button class="analytics-period-tab" data-period="weekly">Week</button>
+                                <button class="analytics-period-tab" data-period="monthly">Month</button>
                                 <button class="analytics-period-tab" data-period="all">All Time</button>
                             </div>
+                            <input type="date" id="analyticsDatePicker" class="date-picker-hidden">
                         </div>
-                        
-                        <!-- Date Picker -->
-                        <div class="analytics-date-picker" id="analyticsDateRow">
-                            <input type="date" id="analyticsDatePicker" class="date-picker-input">
-                        </div>
-                        
-                        <!-- Key Metrics -->
-                        <div class="analytics-key-metrics">
-                            <div class="analytics-metric-card accent">
-                                <div class="metric-value" id="analyticsTotalCalls">0</div>
-                                <div class="metric-label">Total Calls</div>
-                            </div>
-                            <div class="analytics-metric-card success">
-                                <div class="metric-value" id="analyticsConversations">0</div>
-                                <div class="metric-label">Conversations</div>
-                            </div>
-                            <div class="analytics-metric-card">
-                                <div class="metric-value" id="analyticsActivePipeline">0</div>
-                                <div class="metric-label">Active Pipeline</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Qualified Breakdown -->
-                        <div class="analytics-section">
-                            <h3 class="analytics-section-title">Qualified Breakdown</h3>
-                            <div class="analytics-breakdown-grid">
-                                <div class="breakdown-card booked">
-                                    <div class="breakdown-value" id="analyticsBooked">0</div>
-                                    <div class="breakdown-label">Booked</div>
+
+                        <!-- Hero Stats Row -->
+                        <div class="analytics-hero-stats">
+                            <div class="hero-stat-card primary">
+                                <div class="hero-stat-icon">📞</div>
+                                <div class="hero-stat-content">
+                                    <div class="hero-stat-value" id="analyticsTotalCalls">0</div>
+                                    <div class="hero-stat-label">Total Calls</div>
                                 </div>
-                                <div class="breakdown-card callback">
-                                    <div class="breakdown-value" id="analyticsCallbackCount">0</div>
-                                    <div class="breakdown-label">Callback</div>
+                            </div>
+                            <div class="hero-stat-card success">
+                                <div class="hero-stat-icon">💬</div>
+                                <div class="hero-stat-content">
+                                    <div class="hero-stat-value" id="analyticsConversations">0</div>
+                                    <div class="hero-stat-label">Conversations</div>
                                 </div>
-                                <div class="breakdown-card interested">
-                                    <div class="breakdown-value" id="analyticsInterested">0</div>
-                                    <div class="breakdown-label">Interested</div>
+                            </div>
+                            <div class="hero-stat-card accent">
+                                <div class="hero-stat-icon">📅</div>
+                                <div class="hero-stat-content">
+                                    <div class="hero-stat-value" id="analyticsBooked">0</div>
+                                    <div class="hero-stat-label">Meetings Booked</div>
                                 </div>
-                                <div class="breakdown-card timeline">
-                                    <div class="breakdown-value" id="analyticsTimelineCount">0</div>
-                                    <div class="breakdown-label">Timeline</div>
+                            </div>
+                            <div class="hero-stat-card">
+                                <div class="hero-stat-icon">🤖</div>
+                                <div class="hero-stat-content">
+                                    <div class="hero-stat-value" id="analyticsActivePipeline">0</div>
+                                    <div class="hero-stat-label">In AI Pipeline</div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Other Outcomes -->
-                        <div class="analytics-section">
-                            <h3 class="analytics-section-title">Other Outcomes</h3>
-                            <div class="analytics-outcomes-grid" id="analyticsOutcomes">
-                                <div class="outcome-pill"><span class="outcome-count" id="analyticsVoicemail">0</span> Voicemail</div>
-                                <div class="outcome-pill"><span class="outcome-count" id="analyticsNoAnswer">0</span> No Answer</div>
-                                <div class="outcome-pill"><span class="outcome-count" id="analyticsNotInterested">0</span> Not Interested</div>
-                                <div class="outcome-pill"><span class="outcome-count" id="analyticsDNC">0</span> DNC</div>
-                                <div class="outcome-pill"><span class="outcome-count" id="analyticsWrongNumber">0</span> Wrong Number</div>
+
+                        <!-- Conversion Funnel -->
+                        <div class="analytics-card-section">
+                            <div class="analytics-card-header">
+                                <h3>Conversion Funnel</h3>
+                                <span class="card-period" id="analyticsFunnelPeriod">Today</span>
+                            </div>
+                            <div class="conversion-funnel">
+                                <div class="funnel-stage">
+                                    <div class="funnel-bar" style="width:100%">
+                                        <span class="funnel-value" id="funnelCalls">0</span>
+                                    </div>
+                                    <span class="funnel-label">Calls Made</span>
+                                </div>
+                                <div class="funnel-stage">
+                                    <div class="funnel-bar conversations" id="funnelConvBar" style="width:0%">
+                                        <span class="funnel-value" id="funnelConversations">0</span>
+                                    </div>
+                                    <span class="funnel-label">Conversations</span>
+                                </div>
+                                <div class="funnel-stage">
+                                    <div class="funnel-bar qualified" id="funnelQualBar" style="width:0%">
+                                        <span class="funnel-value" id="funnelQualified">0</span>
+                                    </div>
+                                    <span class="funnel-label">Qualified</span>
+                                </div>
+                                <div class="funnel-stage">
+                                    <div class="funnel-bar booked" id="funnelBookedBar" style="width:0%">
+                                        <span class="funnel-value" id="funnelBooked">0</span>
+                                    </div>
+                                    <span class="funnel-label">Booked</span>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Booked Leads Table -->
-                        <div class="analytics-section" id="analyticsBookedSection">
-                            <h3 class="analytics-section-title" style="color:rgb(52,211,153)">📅 Booked Appointments</h3>
-                            <div class="table-container analytics-table-container booked-table">
-                                <table class="data-table">
+
+                        <!-- Two Column Layout -->
+                        <div class="analytics-two-col">
+                            <!-- Qualified Outcomes -->
+                            <div class="analytics-card-section">
+                                <div class="analytics-card-header">
+                                    <h3>Qualified Outcomes</h3>
+                                </div>
+                                <div class="outcome-stats-grid">
+                                    <div class="outcome-stat booked">
+                                        <div class="outcome-stat-value" id="analyticsBookedStat">0</div>
+                                        <div class="outcome-stat-label">Booked</div>
+                                        <div class="outcome-stat-bar"><div class="bar-fill booked" id="bookedBar"></div></div>
+                                    </div>
+                                    <div class="outcome-stat callback">
+                                        <div class="outcome-stat-value" id="analyticsCallbackCount">0</div>
+                                        <div class="outcome-stat-label">Callback</div>
+                                        <div class="outcome-stat-bar"><div class="bar-fill callback" id="callbackBar"></div></div>
+                                    </div>
+                                    <div class="outcome-stat timeline">
+                                        <div class="outcome-stat-value" id="analyticsTimelineCount">0</div>
+                                        <div class="outcome-stat-label">Timeline</div>
+                                        <div class="outcome-stat-bar"><div class="bar-fill timeline" id="timelineBar"></div></div>
+                                    </div>
+                                    <div class="outcome-stat interested">
+                                        <div class="outcome-stat-value" id="analyticsInterested">0</div>
+                                        <div class="outcome-stat-label">Interested</div>
+                                        <div class="outcome-stat-bar"><div class="bar-fill interested" id="interestedBar"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Other Outcomes -->
+                            <div class="analytics-card-section">
+                                <div class="analytics-card-header">
+                                    <h3>Other Outcomes</h3>
+                                </div>
+                                <div class="other-outcomes-list">
+                                    <div class="other-outcome-row">
+                                        <span class="outcome-name">Voicemail</span>
+                                        <span class="outcome-value" id="analyticsVoicemail">0</span>
+                                    </div>
+                                    <div class="other-outcome-row">
+                                        <span class="outcome-name">No Answer</span>
+                                        <span class="outcome-value" id="analyticsNoAnswer">0</span>
+                                    </div>
+                                    <div class="other-outcome-row">
+                                        <span class="outcome-name">Not Interested</span>
+                                        <span class="outcome-value" id="analyticsNotInterested">0</span>
+                                    </div>
+                                    <div class="other-outcome-row">
+                                        <span class="outcome-name">Do Not Call</span>
+                                        <span class="outcome-value" id="analyticsDNC">0</span>
+                                    </div>
+                                    <div class="other-outcome-row">
+                                        <span class="outcome-name">Wrong Number</span>
+                                        <span class="outcome-value" id="analyticsWrongNumber">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Booked Appointments Table -->
+                        <div class="analytics-card-section" id="analyticsBookedSection">
+                            <div class="analytics-card-header">
+                                <h3>📅 Booked Appointments</h3>
+                                <span class="booked-count" id="analyticsBookedCount">0 meetings</span>
+                            </div>
+                            <div class="booked-table-container">
+                                <table class="analytics-booked-table">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th>Lead</th>
                                             <th>Phone</th>
                                             <th>Summary</th>
                                             <th>Meeting Time</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="analyticsBookedTable"></tbody>
+                                    <tbody id="analyticsBookedTable">
+                                        <tr class="empty-row"><td colspan="4">No appointments booked</td></tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -3217,8 +3363,12 @@
         var today = new Date().toISOString().split('T')[0];
         var todayDate = new Date(today);
 
-        // Today's scheduled calls
+        // Today's scheduled calls (exclude AI pipeline leads)
         var todayPriorities = allLeads.filter(function(l) {
+            var status = l.fields['Status'] || l.fields['Disposition'] || '';
+            // Exclude AI pipeline leads (Timeline/Follow Up)
+            if (status === 'Timeline' || status === 'Follow Up') return false;
+
             var bookedTime = l.fields['Booked Time'] || '';
             var callbackDate = l.fields['Callback Date'] || l.fields['Follow Up Date'] || '';
             return (bookedTime && bookedTime.startsWith(today)) || (callbackDate && callbackDate.startsWith(today));
@@ -3229,7 +3379,12 @@
         });
 
         // Find missed meetings (scheduled in past but no call logged on that day)
+        // Exclude AI pipeline leads (Timeline/Follow Up) - they are handled by AI
         var missedMeetings = allLeads.filter(function(l) {
+            var status = l.fields['Status'] || l.fields['Disposition'] || '';
+            // Exclude AI pipeline leads - they shouldn't appear as missed meetings
+            if (status === 'Timeline' || status === 'Follow Up') return false;
+
             var bookedTime = l.fields['Booked Time'] || '';
             var callbackDate = l.fields['Callback Date'] || l.fields['Follow Up Date'] || '';
             var scheduledDate = bookedTime || callbackDate;
@@ -7155,34 +7310,92 @@
     // ===== ANALYTICS PAGE =====
     var analyticsPeriod = 'daily';
     var analyticsDate = new Date();
-    
+
+    // Update date display
+    function updateAnalyticsDateDisplay() {
+        var today = new Date();
+        var isToday = analyticsDate.toDateString() === today.toDateString();
+        var yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+        var isYesterday = analyticsDate.toDateString() === yesterday.toDateString();
+
+        var dayLabel = isToday ? 'Today' : isYesterday ? 'Yesterday' : analyticsDate.toLocaleDateString('en-US', { weekday: 'long' });
+        var fullDate = analyticsDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        var dateDisplay = document.getElementById('analyticsDateDisplay');
+        if (dateDisplay) {
+            dateDisplay.querySelector('.date-day').textContent = dayLabel;
+            dateDisplay.querySelector('.date-full').textContent = fullDate;
+        }
+
+        // Update period label
+        var periodLabel = analyticsPeriod === 'daily' ? dayLabel : analyticsPeriod === 'weekly' ? 'This Week' : analyticsPeriod === 'monthly' ? 'This Month' : 'All Time';
+        var funnelPeriod = document.getElementById('analyticsFunnelPeriod');
+        if (funnelPeriod) funnelPeriod.textContent = periodLabel;
+    }
+
+    // Date navigation
+    document.getElementById('analyticsPrevDay')?.addEventListener('click', function() {
+        analyticsDate.setDate(analyticsDate.getDate() - 1);
+        updateAnalyticsDateDisplay();
+        updateAnalyticsDisplay();
+    });
+
+    document.getElementById('analyticsNextDay')?.addEventListener('click', function() {
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        if (analyticsDate < tomorrow) {
+            analyticsDate.setDate(analyticsDate.getDate() + 1);
+            updateAnalyticsDateDisplay();
+            updateAnalyticsDisplay();
+        }
+    });
+
+    document.getElementById('analyticsTodayBtn')?.addEventListener('click', function() {
+        analyticsDate = new Date();
+        updateAnalyticsDateDisplay();
+        updateAnalyticsDisplay();
+    });
+
+    document.getElementById('analyticsDateDisplay')?.addEventListener('click', function() {
+        var picker = document.getElementById('analyticsDatePicker');
+        if (picker) {
+            picker.showPicker();
+        }
+    });
+
     // Period tab clicks
     document.querySelectorAll('.analytics-period-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
             document.querySelectorAll('.analytics-period-tab').forEach(function(t) { t.classList.remove('active'); });
             this.classList.add('active');
             analyticsPeriod = this.dataset.period;
+            updateAnalyticsDateDisplay();
             updateAnalyticsDisplay();
         });
     });
-    
+
     // Date picker change
     document.getElementById('analyticsDatePicker')?.addEventListener('change', function() {
         analyticsDate = new Date(this.value);
+        updateAnalyticsDateDisplay();
         updateAnalyticsDisplay();
     });
-    
+
+    // Initialize date display
+    updateAnalyticsDateDisplay();
+
     function updateAnalyticsDisplay() {
         var statusCounts = { booked: 0, callback: 0, interested: 0, timeline: 0, followUp: 0, notInterested: 0, voicemail: 0, noAnswer: 0, dnc: 0, wrongNumber: 0 };
         var totalCalls = 0;
         var conversations = 0;
+        var qualified = 0;
         var bookedLeads = [];
-        
+
         allLeads.forEach(function(l) {
             var f = l.fields;
             var status = (f['Status'] || f['Disposition'] || '').toLowerCase();
             var lastCall = f['Last Call Timestamp'];
-            
+
             // Filter by period/date
             if (analyticsPeriod !== 'all' && lastCall) {
                 var callDate = new Date(lastCall);
@@ -7198,31 +7411,33 @@
                     if (callDate < monthAgo) return;
                 }
             }
-            
+
             totalCalls++;
-            
+
             if (status === 'booked' || status === 'appointment booked') {
                 statusCounts.booked++;
                 conversations++;
+                qualified++;
                 bookedLeads.push(l);
             }
-            else if (status === 'callback' || status === 'callback requested') { statusCounts.callback++; conversations++; }
-            else if (status === 'interested') { statusCounts.interested++; conversations++; }
-            else if (status === 'timeline') { statusCounts.timeline++; conversations++; }
-            else if (status === 'follow up' || status === 'followup') { statusCounts.followUp++; }
-            else if (status === 'not interested' || status === 'notinterested') statusCounts.notInterested++;
+            else if (status === 'callback' || status === 'callback requested') { statusCounts.callback++; conversations++; qualified++; }
+            else if (status === 'interested') { statusCounts.interested++; conversations++; qualified++; }
+            else if (status === 'timeline') { statusCounts.timeline++; conversations++; qualified++; }
+            else if (status === 'follow up' || status === 'followup') { statusCounts.followUp++; conversations++; }
+            else if (status === 'not interested' || status === 'notinterested') { statusCounts.notInterested++; conversations++; }
             else if (status === 'voicemail') statusCounts.voicemail++;
             else if (status === 'no answer' || status === 'noanswer') statusCounts.noAnswer++;
             else if (status === 'dnc' || status === 'do not call') statusCounts.dnc++;
             else if (status === 'wrong number' || status === 'wrongnumber') statusCounts.wrongNumber++;
         });
-        
+
         // Update UI
         var el = function(id) { return document.getElementById(id); };
         if (el('analyticsTotalCalls')) el('analyticsTotalCalls').textContent = totalCalls;
         if (el('analyticsConversations')) el('analyticsConversations').textContent = conversations;
         if (el('analyticsActivePipeline')) el('analyticsActivePipeline').textContent = statusCounts.timeline + statusCounts.followUp;
         if (el('analyticsBooked')) el('analyticsBooked').textContent = statusCounts.booked;
+        if (el('analyticsBookedStat')) el('analyticsBookedStat').textContent = statusCounts.booked;
         if (el('analyticsCallbackCount')) el('analyticsCallbackCount').textContent = statusCounts.callback;
         if (el('analyticsInterested')) el('analyticsInterested').textContent = statusCounts.interested;
         if (el('analyticsTimelineCount')) el('analyticsTimelineCount').textContent = statusCounts.timeline;
@@ -7231,12 +7446,36 @@
         if (el('analyticsNotInterested')) el('analyticsNotInterested').textContent = statusCounts.notInterested;
         if (el('analyticsDNC')) el('analyticsDNC').textContent = statusCounts.dnc;
         if (el('analyticsWrongNumber')) el('analyticsWrongNumber').textContent = statusCounts.wrongNumber;
-        
+
+        // Update conversion funnel
+        if (el('funnelCalls')) el('funnelCalls').textContent = totalCalls;
+        if (el('funnelConversations')) el('funnelConversations').textContent = conversations;
+        if (el('funnelQualified')) el('funnelQualified').textContent = qualified;
+        if (el('funnelBooked')) el('funnelBooked').textContent = statusCounts.booked;
+
+        // Update funnel bar widths
+        var convPct = totalCalls > 0 ? Math.max(10, (conversations / totalCalls) * 100) : 0;
+        var qualPct = totalCalls > 0 ? Math.max(10, (qualified / totalCalls) * 100) : 0;
+        var bookedPct = totalCalls > 0 ? Math.max(10, (statusCounts.booked / totalCalls) * 100) : 0;
+        if (el('funnelConvBar')) el('funnelConvBar').style.width = convPct + '%';
+        if (el('funnelQualBar')) el('funnelQualBar').style.width = qualPct + '%';
+        if (el('funnelBookedBar')) el('funnelBookedBar').style.width = bookedPct + '%';
+
+        // Update outcome stat bars
+        var maxQualified = Math.max(statusCounts.booked, statusCounts.callback, statusCounts.timeline, statusCounts.interested, 1);
+        if (el('bookedBar')) el('bookedBar').style.width = (statusCounts.booked / maxQualified * 100) + '%';
+        if (el('callbackBar')) el('callbackBar').style.width = (statusCounts.callback / maxQualified * 100) + '%';
+        if (el('timelineBar')) el('timelineBar').style.width = (statusCounts.timeline / maxQualified * 100) + '%';
+        if (el('interestedBar')) el('interestedBar').style.width = (statusCounts.interested / maxQualified * 100) + '%';
+
+        // Update booked count badge
+        if (el('analyticsBookedCount')) el('analyticsBookedCount').textContent = bookedLeads.length + ' meeting' + (bookedLeads.length !== 1 ? 's' : '');
+
         // Booked table
         var bookedTable = el('analyticsBookedTable');
         if (bookedTable) {
             if (bookedLeads.length === 0) {
-                bookedTable.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:rgba(255,255,255,0.4)">No booked appointments</td></tr>';
+                bookedTable.innerHTML = '<tr class="empty-row"><td colspan="4">No appointments booked</td></tr>';
             } else {
                 bookedTable.innerHTML = bookedLeads.map(function(lead) {
                     var f = lead.fields;
@@ -7246,10 +7485,10 @@
                     var summary = Array.isArray(summaryRaw) ? summaryRaw.join(' ') : String(summaryRaw || '');
                     var bookedTime = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
                     return '<tr onclick="openLeadModal(\'' + lead.id + '\')" style="cursor:pointer">' +
-                        '<td>' + escapeHtml(name) + '</td>' +
-                        '<td style="font-family:monospace">' + escapeHtml(phone) + '</td>' +
-                        '<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(summary.substring(0,80)) + '</td>' +
-                        '<td style="color:#22c55e">' + bookedTime + '</td>' +
+                        '<td><strong>' + escapeHtml(name) + '</strong></td>' +
+                        '<td style="font-family:monospace;color:rgba(255,255,255,0.7)">' + escapeHtml(phone) + '</td>' +
+                        '<td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;color:rgba(255,255,255,0.6)">' + escapeHtml(summary.substring(0,80)) + '</td>' +
+                        '<td style="color:#22c55e;font-weight:500">' + bookedTime + '</td>' +
                     '</tr>';
                 }).join('');
             }
@@ -7312,17 +7551,22 @@
             }
 
             // Send to n8n webhook
-            await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
+            var response = await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email: currentUser?.email,
                     agentName: currentUserRecord?.fields?.['Agent Name'] || '',
+                    type: 'single',
                     leads: [leadData]
                 })
             });
 
-            if (statusEl) statusEl.innerHTML = '<p style="color:#22c55e">✓ Lead added successfully!</p>';
+            if (!response.ok) {
+                throw new Error('Server returned ' + response.status);
+            }
+
+            if (statusEl) statusEl.innerHTML = '<p style="color:#22c55e">✓ Lead added successfully! It will appear shortly.</p>';
 
             // Clear form
             document.getElementById('singleLeadFirstName').value = '';
