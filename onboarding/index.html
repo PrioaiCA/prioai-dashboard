@@ -17,6 +17,7 @@
         <div class="auth-card wide">
             <div class="auth-header">
                 <img src="/assets/logo_white.png" alt="Prio AI" class="auth-logo">
+                <div style="display:inline-flex;align-items:center;gap:6px;background:hsla(var(--brand-hue),60%,55%,0.15);color:hsl(var(--brand-hue),75%,55%);font-size:var(--text-xs);font-weight:600;padding:var(--space-1) var(--space-3);border-radius:999px;margin-bottom:var(--space-4);">Step 2 of 6</div>
                 <h1>Complete Setup</h1>
                 <p>Tell us about yourself so we can get you started</p>
             </div>
@@ -109,7 +110,7 @@
                 </div>
 
                 <div class="form-message error" id="onboardingError"></div>
-                <button type="submit" class="btn btn-primary btn-block btn-lg mt-6" id="onboardingBtn">Continue to Plan Selection</button>
+                <button type="submit" class="btn btn-primary btn-block btn-lg mt-6" id="onboardingBtn">Continue</button>
             </form>
 
             <div class="auth-footer">
@@ -226,8 +227,8 @@
             setLoading(btn, false);
             console.log('Airtable success:', result);
             localStorage.setItem('onboarding_email', data['Email']);
-            // Redirect to plan selection page
-            window.location.href = '/pricing/';
+            // Redirect to profile picture setup
+            window.location.href = '/setup-profile/';
         }).catch(function(err) {
             setLoading(btn, false);
             console.error('Airtable error:', err);
