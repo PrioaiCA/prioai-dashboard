@@ -1127,13 +1127,17 @@
                             <span class="nav-item-icon">📥</span>
                             <span>Import Leads</span>
                         </div>
-                        <div class="nav-item" data-page="feedback">
-                            <span class="nav-item-icon">💬</span>
-                            <span>Send Feedback</span>
+                        <div class="nav-item" data-page="analytics">
+                            <span class="nav-item-icon">📈</span>
+                            <span>Analytics</span>
                         </div>
                         <div class="nav-item" data-page="help">
                             <span class="nav-item-icon">❓</span>
                             <span>Help</span>
+                        </div>
+                        <div class="nav-item" data-page="feedback">
+                            <span class="nav-item-icon">📧</span>
+                            <span>Contact Us</span>
                         </div>
                     </div>
                 </div>
@@ -2349,22 +2353,25 @@
                         <div class="settings-card">
                             <h3 class="settings-title">📚 Help Center</h3>
                             <p class="text-muted" style="margin-bottom:20px;">Everything you need to know about using Prio AI.</p>
-                            
+
                             <!-- Search -->
                             <div class="help-search">
                                 <span class="help-search-icon">🔍</span>
                                 <input type="text" id="helpSearchInput" placeholder="Search for help topics...">
                             </div>
-                            
+
                             <!-- Quick Links -->
                             <div class="help-quick-links">
                                 <div class="help-quick-link" data-topic="getting-started">🚀 Getting Started</div>
                                 <div class="help-quick-link" data-topic="prio-leads">⭐ Prio Prospects</div>
+                                <div class="help-quick-link" data-topic="shared-leads">🔗 Shared Leads</div>
+                                <div class="help-quick-link" data-topic="overview">📊 Overview</div>
                                 <div class="help-quick-link" data-topic="ai-pipeline">🤖 AI Pipeline</div>
+                                <div class="help-quick-link" data-topic="unqualified">📁 Unqualified</div>
                                 <div class="help-quick-link" data-topic="importing">📥 Importing</div>
                             </div>
                         </div>
-                        
+
                         <!-- FAQ Categories -->
                         <div id="helpCategories">
                             <!-- Getting Started -->
@@ -2383,11 +2390,16 @@
                                         <div class="help-answer">
                                             <p>The sidebar on the left has all your main sections:</p>
                                             <ul>
-                                                <li><strong>Overview</strong> – Your daily snapshot and quick actions</li>
-                                                <li><strong>PRIO</strong> – Priority leads needing immediate attention</li>
-                                                <li><strong>Prospects</strong> – All your leads in one searchable table</li>
-                                                <li><strong>Pipeline</strong> – Leads being nurtured by AI</li>
-                                                <li><strong>Import</strong> – Add new leads</li>
+                                                <li><strong>Overview</strong> – Your daily snapshot with today's priorities and missed meetings</li>
+                                                <li><strong>Prio</strong> – Priority leads needing immediate attention</li>
+                                                <li><strong>Qualified</strong> – All your qualified leads in a searchable table</li>
+                                                <li><strong>Booked Today</strong> – Leads the AI booked or got callbacks for today</li>
+                                                <li><strong>Shared</strong> – Leads shared with you or that you've shared with others</li>
+                                                <li><strong>AI Follow Ups</strong> – Leads being nurtured by AI (Timeline &amp; Follow Up)</li>
+                                                <li><strong>Unqualified</strong> – Closed leads (Max Attempts, Wrong Person, DNC, Inconclusive)</li>
+                                                <li><strong>Search</strong> – Find any lead by name or phone</li>
+                                                <li><strong>Analytics</strong> – AI calling performance data and conversion funnels</li>
+                                                <li><strong>Import Leads</strong> – Add new leads individually or via CSV</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -2403,6 +2415,9 @@
                                                 <li><strong>Timeline</strong> – Has a future buying timeline</li>
                                                 <li><strong>Follow Up</strong> – AI is continuing to nurture</li>
                                                 <li><strong>Not Interested</strong> – Declined or not a fit</li>
+                                                <li><strong>Max Attempts</strong> – AI reached the maximum call attempts</li>
+                                                <li><strong>Wrong Person</strong> – Not the right contact</li>
+                                                <li><strong>Inconclusive</strong> – No clear outcome after calls</li>
                                                 <li><strong>DNC</strong> – Do Not Call requested</li>
                                             </ul>
                                         </div>
@@ -2418,7 +2433,50 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <!-- Overview & Today's Priorities -->
+                            <div class="help-category" data-category="overview">
+                                <div class="help-category-header">
+                                    <span class="help-category-icon">📊</span>
+                                    <span class="help-category-title">Overview &amp; Today's Priorities</span>
+                                    <span class="help-category-arrow">▼</span>
+                                </div>
+                                <div class="help-category-content">
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">What is Today's Priorities?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Today's Priorities shows all meetings and callbacks scheduled for today. Cards that have been handled (updated after the meeting time) are greyed out with a <strong>Done</strong> badge so you can focus on what's left.</p>
+                                        </div>
+                                    </div>
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">What are Missed Meetings?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Missed Meetings appear below your priorities. These are leads with a scheduled meeting in the past that was <strong>not</strong> updated after the meeting time. If you've already handled a meeting, updating the lead will remove it from the missed list.</p>
+                                        </div>
+                                    </div>
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">What do the pipeline numbers mean?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <ul>
+                                                <li><strong>Prio Prospects</strong> – Your priority-flagged leads</li>
+                                                <li><strong>Scheduled Prospects</strong> – Leads with upcoming callbacks or meetings</li>
+                                                <li><strong>Active Leads</strong> – Leads currently being called by AI</li>
+                                                <li><strong>AI Pipeline</strong> – Leads on Timeline or Follow Up being nurtured</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- PRIO Leads -->
                             <div class="help-category" data-category="prio-leads">
                                 <div class="help-category-header">
@@ -2442,12 +2500,75 @@
                                             <span class="help-toggle">+</span>
                                         </div>
                                         <div class="help-answer">
-                                            <p>Click on any lead to open the detail view, then click the yellow <strong>⭐ PRIO</strong> button at the top.</p>
+                                            <p>Click on any lead to open the detail view, then click the yellow <strong>⭐ PRIO</strong> button at the top. You can also click the Prio button directly on any lead card.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <!-- Shared Leads -->
+                            <div class="help-category" data-category="shared-leads">
+                                <div class="help-category-header">
+                                    <span class="help-category-icon">🔗</span>
+                                    <span class="help-category-title">Shared Leads</span>
+                                    <span class="help-category-arrow">▼</span>
+                                </div>
+                                <div class="help-category-content">
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">How do I share a lead?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Click the <strong>🔗 Share</strong> button on any lead card, then select the agent you want to share with. The lead will appear in their Shared Leads section. A notification is also sent when you share.</p>
+                                        </div>
+                                    </div>
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">How do I filter my shared leads?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Use the dropdown filter at the top of the Shared Leads page:</p>
+                                            <ul>
+                                                <li><strong>All Shared</strong> – Shows all shared leads</li>
+                                                <li><strong>Shared with Me</strong> – Leads others have shared with you</li>
+                                                <li><strong>Shared with [Name]</strong> – Leads you've shared with a specific person</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">How do I stop sharing a lead?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Open the lead detail view and click the shared status button. You'll see the option to <strong>Stop Sharing</strong>.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Booked Today -->
+                            <div class="help-category" data-category="booked-today">
+                                <div class="help-category-header">
+                                    <span class="help-category-icon">🎯</span>
+                                    <span class="help-category-title">Booked Today</span>
+                                    <span class="help-category-arrow">▼</span>
+                                </div>
+                                <div class="help-category-content">
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">What is Booked Today?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Booked Today shows leads that the AI called <strong>today</strong> and resulted in either a Booked meeting or a Callback request. Use the tabs at the top to filter by type. A <strong>B</strong> badge means Booked, and a <strong>C</strong> badge means Callback.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- AI Pipeline -->
                             <div class="help-category" data-category="ai-pipeline">
                                 <div class="help-category-header">
@@ -2462,7 +2583,7 @@
                                             <span class="help-toggle">+</span>
                                         </div>
                                         <div class="help-answer">
-                                            <p>The AI Pipeline shows leads being automatically nurtured by Sarah (our AI). These are leads with status "Timeline" or "Follow Up" who aren't ready to meet yet but are being kept warm.</p>
+                                            <p>The AI Pipeline (AI Follow Ups) shows leads being automatically nurtured by Sarah (our AI). These are leads with status "Timeline" or "Follow Up" who aren't ready to meet yet but are being kept warm.</p>
                                         </div>
                                     </div>
                                     <div class="help-item">
@@ -2471,12 +2592,70 @@
                                             <span class="help-toggle">+</span>
                                         </div>
                                         <div class="help-answer">
-                                            <p>Open the lead detail view and click <strong>🔄 Send Back to AI</strong>. Add notes first so the AI has context!</p>
+                                            <p>Open the lead detail view and click <strong>🤖 Send to AI</strong>. You can also click the Send to AI button directly on any lead card. Add notes first so the AI has context!</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <!-- Unqualified Leads -->
+                            <div class="help-category" data-category="unqualified">
+                                <div class="help-category-header">
+                                    <span class="help-category-icon">📁</span>
+                                    <span class="help-category-title">Unqualified Leads</span>
+                                    <span class="help-category-arrow">▼</span>
+                                </div>
+                                <div class="help-category-content">
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">What are Unqualified leads?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Unqualified leads are those that the AI has closed out. They fall into four categories: <strong>Max Attempts</strong>, <strong>Wrong Person</strong>, <strong>DNC</strong> (Do Not Call), and <strong>Inconclusive</strong>. Use the tabs to filter by category.</p>
+                                        </div>
+                                    </div>
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">Can I change the call date for unqualified leads?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Only <strong>Max Attempts</strong> and <strong>Inconclusive</strong> leads can have their call date changed. The Change Call Date button is disabled for Wrong Person and DNC leads since those should not be called again.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Analytics -->
+                            <div class="help-category" data-category="analytics">
+                                <div class="help-category-header">
+                                    <span class="help-category-icon">📈</span>
+                                    <span class="help-category-title">Analytics</span>
+                                    <span class="help-category-arrow">▼</span>
+                                </div>
+                                <div class="help-category-content">
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">How do I view my analytics?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>Go to <strong>Analytics</strong> under Tools. You can view data by Day, Week, Month, or All Time. Toggle between Calls Data and Leads Data using the buttons at the top. Use the date navigation arrows to browse different dates.</p>
+                                        </div>
+                                    </div>
+                                    <div class="help-item">
+                                        <div class="help-item-header">
+                                            <span class="help-question">What does the conversion funnel show?</span>
+                                            <span class="help-toggle">+</span>
+                                        </div>
+                                        <div class="help-answer">
+                                            <p>The funnel shows how many AI calls converted at each stage: Calls Made &rarr; Conversations &rarr; Qualified &rarr; Booked/Callback. You can toggle between raw numbers (#) and percentages (%) using the view toggle.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Importing -->
                             <div class="help-category" data-category="importing">
                                 <div class="help-category-header">
@@ -2491,7 +2670,7 @@
                                             <span class="help-toggle">+</span>
                                         </div>
                                         <div class="help-answer">
-                                            <p>Go to the <strong>Import</strong> section. You can add a single lead manually or upload a CSV file for bulk import.</p>
+                                            <p>Go to the <strong>Import Leads</strong> section. You can add a single lead manually or upload a CSV file for bulk import.</p>
                                         </div>
                                     </div>
                                     <div class="help-item">
@@ -2505,7 +2684,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Troubleshooting -->
                             <div class="help-category" data-category="troubleshooting">
                                 <div class="help-category-header">
@@ -2520,7 +2699,7 @@
                                             <span class="help-toggle">+</span>
                                         </div>
                                         <div class="help-answer">
-                                            <p>Check your filters! Make sure you're not filtering by a status that excludes them. Use the Search tab to find any lead by name or phone.</p>
+                                            <p>Check your filters! Make sure you're not filtering by a status that excludes them. Use the <strong>Search</strong> tab to find any lead by name or phone.</p>
                                         </div>
                                     </div>
                                     <div class="help-item">
@@ -2529,13 +2708,13 @@
                                             <span class="help-toggle">+</span>
                                         </div>
                                         <div class="help-answer">
-                                            <p>Email us at <a href="mailto:info@prioai.ca" style="color:rgb(52,211,153);">info@prioai.ca</a> – we typically respond within 24 hours.</p>
+                                            <p>Use the <strong>Contact Us</strong> page to send us a message. You can report bugs, request features, ask questions, or share any feedback.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Contact Support -->
                         <div class="settings-card" style="margin-top:24px;">
                             <div class="help-support">
@@ -2546,17 +2725,16 @@
                                 </div>
                             </div>
                             <div class="help-support-actions">
-                                <a href="mailto:info@prioai.ca?subject=Support Request" class="btn btn-primary">📧 Email Support</a>
-                                <button class="btn btn-secondary" onclick="switchPage('feedback')">💬 Send Feedback</button>
+                                <button class="btn btn-primary" onclick="switchPage('feedback')">📧 Contact Us</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Page: Feedback -->
+                    <!-- Page: Contact Us -->
                     <div class="page hidden" id="page-feedback">
                         <div class="settings-card">
-                            <h3 class="settings-title">💬 Send Feedback</h3>
-                            <p class="text-muted" style="margin-bottom:20px;">Help us improve Prio AI. Share your thoughts, report issues, or request features.</p>
+                            <h3 class="settings-title">📧 Contact Us</h3>
+                            <p class="text-muted" style="margin-bottom:20px;">Get in touch with the Prio AI team. Report issues, request features, or ask questions.</p>
 
                             <form id="feedbackForm" class="feedback-form">
                                 <div class="form-group">
@@ -3206,7 +3384,7 @@
             overview: 'Overview', prio: 'Prio', prospects: 'Qualified', pipeline: 'AI Follow Ups',
             unqualified: 'Unqualified', shared: 'Shared', analytics: 'Analytics',
             import: 'Import Leads', search: 'Search', settings: 'Settings', billing: 'Billing', help: 'Help',
-            'booked-today': 'Booked Today', 'open-leads': 'Open Leads'
+            feedback: 'Contact Us', 'booked-today': 'Booked Today', 'open-leads': 'Open Leads'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
         
