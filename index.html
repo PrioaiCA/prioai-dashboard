@@ -897,7 +897,12 @@
         .import-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
         .import-panel{display:none}
         .import-panel.active{display:block}
-        .import-form-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;max-width:600px}
+        .import-single-grid{display:grid;grid-template-columns:1fr 280px;gap:24px}
+        .import-single-form{background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:28px}
+        .import-single-tips{display:flex;flex-direction:column;gap:16px}
+        .import-section{margin-bottom:24px}
+        .import-section-label{font-size:0.75rem;font-weight:600;color:rgb(52,211,153);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(52,211,153,0.15)}
+        @media(max-width:768px){.import-single-grid{grid-template-columns:1fr}}
         .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
         @media(max-width:600px){.form-row{grid-template-columns:1fr}}
         .form-group{margin-bottom:16px}
@@ -1053,10 +1058,10 @@
         .unqualified-list.list-view{grid-template-columns:1fr}
         .unqualified-list .unqualified-summary-wide{flex:1 1 0;min-width:0;border-right:none}
         .unqualified-list .priority-card-lg{min-height:auto}
-        .unqualified-list .priority-card-lg-actions{display:flex;flex-direction:row;gap:0;padding:0;min-width:auto;border-left:none;flex-shrink:0}
-        .unqualified-list .action-btn{flex:0 0 auto;width:80px;height:100%;border-radius:0;border:none;border-left:1px solid rgba(255,255,255,0.08);flex-direction:column;gap:3px;padding:10px 4px;font-size:0.6875rem}
-        .unqualified-list .action-btn .action-icon{font-size:1.125rem}
-        .unqualified-list .action-btn .action-label{font-size:0.625rem}
+        .unqualified-list .priority-card-lg-actions{display:flex;flex-direction:row;gap:0;padding:0;min-width:auto;border-left:none;flex-shrink:0;align-items:stretch}
+        .unqualified-list .action-btn{flex:0 0 auto;width:110px;align-self:stretch;border-radius:0;border:none;border-left:1px solid rgba(255,255,255,0.08);flex-direction:column;gap:4px;padding:14px 8px;font-size:0.75rem}
+        .unqualified-list .action-btn .action-icon{font-size:1.25rem}
+        .unqualified-list .action-btn .action-label{font-size:0.6875rem;white-space:nowrap}
         .unqualified-list .action-btn:last-child{border-radius:0 12px 12px 0}
         .unqualified-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
         .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
@@ -2019,73 +2024,104 @@
 
                     <!-- Page: Import -->
                     <div class="page hidden" id="page-import">
-                        <div class="import-header">
-                            <h2>📥 Import Leads</h2>
-                            <p style="color:rgba(255,255,255,0.5);">Add new leads to your account</p>
-                        </div>
-                        
-                        <!-- Import Method Tabs -->
-                        <div class="import-tabs">
-                            <button class="import-tab active" data-import="single">➕ Single Lead</button>
-                            <button class="import-tab" data-import="bulk">📁 Bulk Upload</button>
-                        </div>
-                        
-                        <!-- Single Lead Form -->
-                        <div class="import-panel active" id="importSinglePanel">
-                            <div class="import-form-card">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>First Name <span class="required">*</span></label>
-                                        <input type="text" id="singleLeadFirstName" placeholder="John" class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Last Name</label>
-                                        <input type="text" id="singleLeadLastName" placeholder="Smith" class="form-input">
-                                    </div>
+                        <div class="contact-hero" style="margin-bottom:24px;">
+                            <div class="contact-hero-inner">
+                                <div class="contact-hero-text">
+                                    <h2>Import Leads</h2>
+                                    <p>Add new leads to your account — individually or in bulk via CSV.</p>
                                 </div>
-                                
-                                <div class="form-group">
-                                    <label>Phone Number <span class="required">*</span></label>
-                                    <input type="tel" id="singleLeadPhone" placeholder="(416) 555-1234" class="form-input">
-                                    <p class="form-hint">10 digits (e.g., 416-555-1234)</p>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Interest <span class="required">*</span></label>
-                                    <select id="singleLeadInterest" class="form-input">
-                                        <option value="">Select interest...</option>
-                                        <option value="Buy">Buying</option>
-                                        <option value="Sell">Selling</option>
-                                        <option value="Both">Both (Buying & Selling)</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <input type="email" id="singleLeadEmail" placeholder="john@example.com" class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Max Call Attempts</label>
-                                        <input type="number" id="singleLeadMaxAttempts" placeholder="5" min="1" max="10" value="5" class="form-input">
-                                        <p class="form-hint">1-10 attempts (default: 5)</p>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Context <span style="color:rgba(255,255,255,0.4);font-weight:400;">(optional)</span></label>
-                                    <textarea id="singleLeadContext" placeholder="Add any context for the AI to use when calling this lead..." class="form-input" rows="3"></textarea>
-                                    <p class="form-hint">If left empty, a default context will be used</p>
-                                </div>
-
-                                <div id="singleLeadStatus"></div>
-                                
-                                <button class="btn btn-primary btn-block" id="submitSingleLeadBtn">
-                                    ➕ Add Lead
-                                </button>
                             </div>
                         </div>
-                        
+
+                        <!-- Import Method Tabs -->
+                        <div class="import-tabs">
+                            <button class="import-tab active" data-import="single">Single Lead</button>
+                            <button class="import-tab" data-import="bulk">Bulk Upload</button>
+                        </div>
+
+                        <!-- Single Lead Form -->
+                        <div class="import-panel active" id="importSinglePanel">
+                            <div class="import-single-grid">
+                                <div class="import-single-form">
+                                    <div class="import-section">
+                                        <div class="import-section-label">Personal Info</div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>First Name <span class="required">*</span></label>
+                                                <input type="text" id="singleLeadFirstName" placeholder="John" class="form-input">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Last Name</label>
+                                                <input type="text" id="singleLeadLastName" placeholder="Smith" class="form-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>Phone Number <span class="required">*</span></label>
+                                                <input type="tel" id="singleLeadPhone" placeholder="(416) 555-1234" class="form-input">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input type="email" id="singleLeadEmail" placeholder="john@example.com" class="form-input">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="import-section">
+                                        <div class="import-section-label">Lead Details</div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>Interest <span class="required">*</span></label>
+                                                <select id="singleLeadInterest" class="form-input">
+                                                    <option value="">Select interest...</option>
+                                                    <option value="Buy">Buying</option>
+                                                    <option value="Sell">Selling</option>
+                                                    <option value="Both">Both (Buying & Selling)</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Max Call Attempts</label>
+                                                <input type="number" id="singleLeadMaxAttempts" placeholder="5" min="1" max="10" value="5" class="form-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Context <span style="color:rgba(255,255,255,0.4);font-weight:400;">(optional)</span></label>
+                                            <textarea id="singleLeadContext" placeholder="Add any context for the AI to use when calling this lead..." class="form-input" rows="3"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div id="singleLeadStatus"></div>
+
+                                    <button class="contact-submit-btn" id="submitSingleLeadBtn" style="margin-top:8px;">
+                                        Add Lead
+                                    </button>
+                                </div>
+                                <div class="import-single-tips">
+                                    <div class="contact-info-item">
+                                        <div class="contact-info-icon">📞</div>
+                                        <div>
+                                            <div class="contact-info-label">Phone Format</div>
+                                            <div class="contact-info-value">10 digits — any format works (416-555-1234, 4165551234, etc.)</div>
+                                        </div>
+                                    </div>
+                                    <div class="contact-info-item">
+                                        <div class="contact-info-icon">🔄</div>
+                                        <div>
+                                            <div class="contact-info-label">Max Attempts</div>
+                                            <div class="contact-info-value">1–10 call attempts before the AI stops. Default is 5.</div>
+                                        </div>
+                                    </div>
+                                    <div class="contact-info-item">
+                                        <div class="contact-info-icon">💡</div>
+                                        <div>
+                                            <div class="contact-info-label">Context Tip</div>
+                                            <div class="contact-info-value">Adding context helps Sarah personalize the call. Leave blank for default script.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Bulk Upload -->
                         <div class="import-panel" id="importBulkPanel">
                             <div class="template-download">
@@ -2095,14 +2131,14 @@
                                 </div>
                                 <button class="btn btn-secondary" id="downloadTemplateBtn">Download Template</button>
                             </div>
-                            
+
                             <div class="file-upload-zone" id="fileUploadZone">
                                 <input type="file" id="leadFileInput" accept=".csv,.xlsx,.xls">
                                 <div class="file-upload-icon">📁</div>
                                 <p><strong>Click to upload</strong> or drag and drop</p>
                                 <p class="file-upload-supported">CSV, XLSX, or XLS (max 10MB)</p>
                             </div>
-                            
+
                             <div id="uploadStatus"></div>
                         </div>
                     </div>
@@ -2803,13 +2839,6 @@
                                         <div class="contact-info-value">Within 24 hours</div>
                                     </div>
                                 </div>
-                                <div class="contact-info-item">
-                                    <div class="contact-info-icon">💡</div>
-                                    <div>
-                                        <div class="contact-info-label">Tip</div>
-                                        <div class="contact-info-value">Include screenshots for bug reports</div>
-                                    </div>
-                                </div>
                             </div>
                             <div class="contact-card-form">
                                 <form id="feedbackForm" class="contact-form">
@@ -2863,8 +2892,8 @@
                                         <li><span class="li-icon">✓</span><div><strong>AI-Ready</strong> — Each lead is formatted and ready for Sarah to start calling immediately</div></li>
                                         <li><span class="li-icon">✓</span><div><strong>Delivery in 48–72 Hours</strong> — Fast turnaround so your pipeline stays full</div></li>
                                     </ul>
-                                    <button class="leadgen-cta" onclick="switchPage('feedback');setTimeout(function(){document.querySelectorAll('.contact-chip input[value=other]').forEach(function(r){r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}))});document.getElementById('feedbackMessage').value='I\\'m interested in the Lead Gen service (20 leads / $300). Please reach out to discuss details.';document.getElementById('feedbackMessage').focus()},100)">Get Started</button>
-                                    <p class="leadgen-note">Click to pre-fill a message — our team will reach out to get you set up.</p>
+                                    <button class="leadgen-cta" disabled style="opacity:0.4;cursor:not-allowed;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);">Coming Soon</button>
+                                    <p class="leadgen-note">This service is launching soon — stay tuned.</p>
                                 </div>
                             </div>
                         </div>
