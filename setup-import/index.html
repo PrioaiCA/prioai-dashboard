@@ -439,21 +439,34 @@
         document.getElementById('csvStatus').innerHTML = '<span style="color:rgb(52,211,153)">Uploading your leads...</span>';
 
         try {
-            var formData = new FormData();
-            formData.append('file', selectedFile);
-            formData.append('email', currentUser?.email || '');
-            formData.append('agentName', agentName);
-            formData.append('type', 'csv');
+            var reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    var base64 = e.target.result.split(',')[1];
+                    var response = await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: currentUser?.email || '',
+                            agentName: agentName,
+                            fileName: selectedFile.name,
+                            fileType: selectedFile.type,
+                            fileData: base64
+                        })
+                    });
 
-            var response = await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
-                method: 'POST',
-                body: formData
-            });
+                    if (!response.ok) throw new Error('Server returned ' + response.status);
 
-            if (!response.ok) throw new Error('Server returned ' + response.status);
-
-            document.getElementById('csvStatus').innerHTML = '<span style="color:rgb(52,211,153)">Leads imported successfully!</span>';
-            setTimeout(function() { window.location.href = '/setup-calendar/'; }, 1200);
+                    document.getElementById('csvStatus').innerHTML = '<span style="color:rgb(52,211,153)">Leads imported successfully!</span>';
+                    setTimeout(function() { window.location.href = '/setup-calendar/'; }, 1200);
+                } catch (err) {
+                    console.error('CSV upload error:', err);
+                    document.getElementById('csvStatus').innerHTML = '<span style="color:#ef4444">Upload failed: ' + (err.message || 'Unknown error') + '</span>';
+                    btn.disabled = false;
+                    btn.textContent = 'Import & Continue';
+                }
+            };
+            reader.readAsDataURL(selectedFile);
         } catch (err) {
             console.error('CSV upload error:', err);
             document.getElementById('csvStatus').innerHTML = '<span style="color:#ef4444">Upload failed: ' + (err.message || 'Unknown error') + '</span>';
