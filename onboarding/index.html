@@ -41,9 +41,20 @@
                         <input type="email" id="calendarEmail" placeholder="calendar@gmail.com" required>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="phone">Phone *</label>
-                    <input type="tel" id="phone" placeholder="+1 (555) 123-4567" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone *</label>
+                        <input type="tel" id="phone" placeholder="+1 (555) 123-4567" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender">
+                            <option value="">Select...</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-message error" id="onboardingError"></div>
@@ -128,6 +139,7 @@
             'Email': document.getElementById('email').value,
             'Google Calendar Email': document.getElementById('calendarEmail').value,
             'Phone': document.getElementById('phone').value,
+            'Gender': document.getElementById('gender').value || '',
             'Available Days': ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
             'Timezone': 'America/Toronto',
             'Available Start': '8:00 AM',
