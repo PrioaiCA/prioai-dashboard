@@ -7981,7 +7981,8 @@
         
         // Populate modal
         document.getElementById('modalLeadName').textContent = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
-        document.getElementById('modalPhone').textContent = formatPhone(f['Phone #'] || f['Phone'] || '-');
+        var modalRawPhone = f['Phone #'] || f['Phone'] || '-';
+        document.getElementById('modalPhone').innerHTML = phoneLink(modalRawPhone, formatPhone(modalRawPhone));
         
         var status = f['Status'] || f['Disposition'] || '-';
         var statusEl = document.getElementById('modalStatus');
