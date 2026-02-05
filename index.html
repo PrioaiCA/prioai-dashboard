@@ -1010,12 +1010,12 @@
         .unqualified-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000;font-weight:600}
         .unqualified-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
         .unqualified-list.list-view{grid-template-columns:1fr}
+        .unqualified-list .unqualified-summary-wide{flex:1;border-right:1px solid rgba(255,255,255,0.08)}
         .unqualified-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-        .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:320px}
+        .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:240px}
         .unqualified-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .unqualified-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .unqualified-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
-        .unqualified-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
         .unqualified-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
 
         /* Analytics Data Source Toggle */
@@ -7053,13 +7053,9 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
-                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                '<div class="priority-card-lg-summary-col unqualified-summary-wide" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
-                '</div>' +
-                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
-                    '<div class="col-label">Notes</div>' +
-                    '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
@@ -7449,14 +7445,14 @@
 
             var timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
 
-            // Status badge
+            // Status badge - small B/C format
             var statusBadge = '';
             var statusLower = status.toLowerCase();
             var outcomeLower = outcome.toLowerCase();
             if (statusLower === 'booked' || outcomeLower === 'booked') {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(52,211,153,0.15);color:#34D399">Booked</span>';
+                statusBadge = '<span class="card-status-badge booked">B</span>';
             } else if (statusLower === 'callback' || outcomeLower === 'callback') {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(59,130,246,0.15);color:#3B82F6">Callback</span>';
+                statusBadge = '<span class="card-status-badge callback">C</span>';
             }
 
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
@@ -7469,8 +7465,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
-                            statusBadge +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Called at ' + callTimeDisplay + ' EST</div>' +
