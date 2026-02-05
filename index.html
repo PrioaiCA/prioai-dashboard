@@ -6,6 +6,13 @@
     <meta name="description" content="Prio AI Dashboard - Manage your leads and grow your business.">
     <title>Dashboard | Prio AI</title>
     <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Prio AI">
+    <link rel="apple-touch-icon" href="/assets/icon-192.png">
+    <meta name="format-detection" content="telephone=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
@@ -3311,6 +3318,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(function(reg) {
+            console.log('SW registered, scope:', reg.scope);
+        }).catch(function(err) {
+            console.log('SW registration failed:', err);
+        });
+    }
+
     // Supabase Setup
     var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
     var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
@@ -3732,6 +3748,8 @@
     var AIRTABLE_CLIENTS_TABLE = 'tblMptC862PyL7Znw';
     var AIRTABLE_LEADS_TABLE = 'tblLpN4wceakfNFpq';
     var AIRTABLE_CALLS_TABLE = 'tblvB5OpG0b5mVix3';
+    var AIRTABLE_ADMIN_SETTINGS_TABLE = 'tblGD3iwn1nU0gjtx';
+    var dynamicCallLimit = null;
 
     // Airtable API helper - proxies through Pages Function (token handled server-side)
     async function fetchAirtable(path, options = {}) {
@@ -3749,6 +3767,33 @@
         return response.json();
     }
     
+    // Fetch call limit from Admin Settings based on client's Monthly Plan
+    async function fetchCallLimitFromSettings(planName) {
+        try {
+            var planKey = 'starter_call_limit';
+            if (planName) {
+                var normalized = planName.toLowerCase().trim();
+                if (normalized === 'professional') planKey = 'professional_call_limit';
+                else if (normalized === 'growth') planKey = 'growth_call_limit';
+                else if (normalized === 'enterprise') planKey = 'enterprise_call_limit';
+                else planKey = 'starter_call_limit';
+            }
+            var filterFormula = encodeURIComponent('({Setting Key} = "' + planKey + '")');
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_ADMIN_SETTINGS_TABLE + '?filterByFormula=' + filterFormula + '&fields[]=Setting+Key&fields[]=Setting+Value';
+            var data = await fetchAirtable(path);
+            if (data.records && data.records.length > 0) {
+                var val = parseInt(data.records[0].fields['Setting Value']);
+                if (!isNaN(val) && val > 0) {
+                    dynamicCallLimit = val;
+                    return val;
+                }
+            }
+        } catch (err) {
+            console.error('Failed to fetch call limit from Admin Settings:', err);
+        }
+        return null;
+    }
+
     var currentUserRecord = null;
     var allLeads = [];
     var allCalls = [];
@@ -3848,6 +3893,15 @@
             
             if (data.records && data.records.length > 0) {
                 currentUserRecord = data.records[0];
+                // Fetch dynamic call limit from Admin Settings (non-blocking)
+                var clientPlan = currentUserRecord.fields['Monthly Plan'] || 'Starter';
+                fetchCallLimitFromSettings(clientPlan).then(function(limit) {
+                    if (limit !== null) {
+                        // Re-update dashboard and billing with the dynamic limit
+                        updateDashboard();
+                        populateBilling();
+                    }
+                });
                 loadLeadsData();
             } else {
                 document.getElementById('statProspects').textContent = '0';
@@ -4036,7 +4090,7 @@
                 document.getElementById('retellPhoneNumber').textContent = retellPhone;
             }
             var callsThisMonth = currentUserRecord.fields['Calls This Month'] || 0;
-            var callLimit = currentUserRecord.fields['Call Limit'] || (currentUserRecord.fields['Monthly Plan'] === 'Professional' ? 3000 : 1000);
+            var callLimit = dynamicCallLimit || currentUserRecord.fields['Call Limit'] || 1000;
             document.getElementById('usageCalls').textContent = callsThisMonth;
             document.getElementById('usageLimit').textContent = callLimit;
             
@@ -4180,6 +4234,14 @@
         return phone;
     }
 
+    // Build tel: link for click-to-call
+    function phoneLink(rawPhone, formattedPhone) {
+        if (!rawPhone || rawPhone === '-') return escapeHtml(formattedPhone);
+        var digits = rawPhone.replace(/\D/g, '');
+        if (digits.length === 10) digits = '1' + digits;
+        return '<a href="tel:+' + digits + '" style="color:inherit;text-decoration:none;" onclick="event.stopPropagation();">' + escapeHtml(formattedPhone) + '</a>';
+    }
+
     // Update today's priorities list with taller cards
     function updateTodayPriorities(priorities, missedMeetings) {
         var list = document.getElementById('todayPriorities');
@@ -4264,7 +4326,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -4435,7 +4497,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -4975,7 +5037,7 @@
         
         var plan = f['Monthly Plan'] || 'Starter';
         var rate = parseFloat(f['Monthly Rate']) || 0;
-        var callLimit = parseInt(f['Call Limit']) || (plan === 'Professional' ? 3000 : 1000);
+        var callLimit = dynamicCallLimit || parseInt(f['Call Limit']) || 1000;
         var callsUsed = parseInt(f['Calls This Month']) || 0;
         var status = f['Status'] || 'Active';
         
@@ -5064,7 +5126,9 @@
         // Populate modal
         var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
         document.getElementById('modalLeadName').textContent = name;
-        document.getElementById('modalPhone').textContent = f['Phone #'] || f['Phone'] || '-';
+        var modalRawPhone = f['Phone #'] || f['Phone'] || '-';
+        var modalFormattedPhone = formatPhoneNumber(modalRawPhone);
+        document.getElementById('modalPhone').innerHTML = phoneLink(modalRawPhone, modalFormattedPhone);
         
         var status = f['Status'] || f['Outcome'] || 'New';
         var statusEl = document.getElementById('modalStatus');
@@ -7030,7 +7094,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -7162,7 +7226,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -7365,7 +7429,7 @@
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                             statusBadge +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -7575,7 +7639,7 @@
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                             statusBadge +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -7781,7 +7845,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Called at ' + callTimeDisplay + ' EST</div>' +
                     '</div>' +
                 '</div>' +
@@ -8621,7 +8685,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -8851,7 +8915,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + ' <span class="shared-icon" title="Shared lead">🔗</span></div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -9875,7 +9939,8 @@
         document.getElementById('searchLeadDetail').style.display = 'block';
 
         document.getElementById('searchLeadName').textContent = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
-        document.getElementById('searchLeadPhoneDisplay').textContent = formatPhone(f['Phone #'] || f['Phone'] || '-');
+        var searchRawPhone = f['Phone #'] || f['Phone'] || '-';
+        document.getElementById('searchLeadPhoneDisplay').innerHTML = phoneLink(searchRawPhone, formatPhone(searchRawPhone));
 
         var status = f['Status'] || f['Disposition'] || '-';
         var statusBadge = document.getElementById('searchLeadStatusBadge');
