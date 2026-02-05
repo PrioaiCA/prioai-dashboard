@@ -597,14 +597,56 @@
         }
 
         /* Feedback Form */
-        .feedback-form .form-group{margin-bottom:20px}
-        .feedback-form .form-label{display:block;margin-bottom:8px;font-weight:500;color:rgba(255,255,255,0.9)}
-        .feedback-form .form-input{width:100%;padding:12px 16px;background:#111;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:0.9375rem;transition:border-color 0.15s}
-        .feedback-form .form-input:focus{outline:none;border-color:rgb(52,211,153)}
-        .feedback-form textarea.form-input{resize:vertical;min-height:120px}
-        .feedback-form select.form-input{cursor:pointer}
-        .feedback-success{text-align:center;padding:32px;background:rgba(52,211,153,0.1);border-radius:12px;margin-top:20px}
-        .feedback-success p{margin-top:12px;color:rgba(255,255,255,0.8)}
+        /* Contact Us Page */
+        .contact-hero{background:linear-gradient(135deg,rgba(52,211,153,0.12) 0%,rgba(59,130,246,0.08) 100%);border:1px solid rgba(52,211,153,0.15);border-radius:16px;padding:40px 32px;margin-bottom:24px}
+        .contact-hero-inner{max-width:500px}
+        .contact-hero-text h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+        .contact-hero-text p{color:rgba(255,255,255,0.6);font-size:0.9375rem;line-height:1.5}
+        .contact-grid{display:grid;grid-template-columns:280px 1fr;gap:24px}
+        .contact-card-info{display:flex;flex-direction:column;gap:16px}
+        .contact-info-item{background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start}
+        .contact-info-icon{font-size:1.25rem;flex-shrink:0;width:36px;height:36px;background:rgba(52,211,153,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center}
+        .contact-info-label{font-size:0.75rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+        .contact-info-value{font-size:0.875rem;color:rgba(255,255,255,0.85);font-weight:500}
+        a.contact-info-value{color:rgb(52,211,153);text-decoration:none}
+        a.contact-info-value:hover{text-decoration:underline}
+        .contact-card-form{background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:28px}
+        .contact-form-group{margin-bottom:24px}
+        .contact-form-label{display:block;font-size:0.875rem;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:10px}
+        .contact-category-chips{display:flex;flex-wrap:wrap;gap:8px}
+        .contact-chip{cursor:pointer}
+        .contact-chip input{display:none}
+        .contact-chip span{display:inline-block;padding:8px 16px;border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.8125rem;font-weight:500;color:rgba(255,255,255,0.6);background:transparent;transition:all 0.15s}
+        .contact-chip:hover span{border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.85)}
+        .contact-chip input:checked+span{background:rgba(52,211,153,0.15);border-color:rgb(52,211,153);color:rgb(52,211,153)}
+        .contact-textarea{width:100%;padding:14px 16px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:0.9375rem;font-family:inherit;resize:vertical;min-height:120px;transition:border-color 0.15s}
+        .contact-textarea:focus{outline:none;border-color:rgb(52,211,153)}
+        .contact-textarea::placeholder{color:rgba(255,255,255,0.3)}
+        .contact-submit-btn{width:100%;padding:14px;background:rgb(52,211,153);color:#000;font-size:0.9375rem;font-weight:600;border:none;border-radius:10px;cursor:pointer;transition:all 0.15s}
+        .contact-submit-btn:hover{background:rgb(74,222,170);transform:translateY(-1px)}
+        .contact-submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+        .contact-success{text-align:center;padding:32px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);border-radius:12px;margin-top:20px}
+        .contact-success p{margin-top:12px;color:rgba(255,255,255,0.7)}
+        @media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
+        /* Lead Gen Page */
+        .leadgen-hero{background:linear-gradient(135deg,rgba(52,211,153,0.15) 0%,rgba(139,92,246,0.1) 100%);border:1px solid rgba(52,211,153,0.15);border-radius:16px;padding:40px 32px;margin-bottom:24px;text-align:center}
+        .leadgen-hero h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+        .leadgen-hero p{color:rgba(255,255,255,0.6);font-size:0.9375rem;max-width:500px;margin:0 auto;line-height:1.5}
+        .leadgen-pricing{max-width:480px;margin:0 auto}
+        .leadgen-card{background:#111;border:1px solid rgba(52,211,153,0.2);border-radius:16px;overflow:hidden}
+        .leadgen-card-header{background:linear-gradient(135deg,rgba(52,211,153,0.12),rgba(52,211,153,0.04));padding:28px 28px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.06)}
+        .leadgen-card-header h3{font-size:1.125rem;font-weight:600;margin-bottom:12px;color:rgba(255,255,255,0.9)}
+        .leadgen-price{font-size:2.5rem;font-weight:700;color:rgb(52,211,153)}
+        .leadgen-price-sub{font-size:0.875rem;color:rgba(255,255,255,0.5);margin-top:4px}
+        .leadgen-card-body{padding:28px}
+        .leadgen-breakdown{list-style:none;padding:0;margin:0 0 24px}
+        .leadgen-breakdown li{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.875rem;color:rgba(255,255,255,0.75)}
+        .leadgen-breakdown li:last-child{border-bottom:none}
+        .leadgen-breakdown li .li-icon{color:rgb(52,211,153);font-size:1rem;flex-shrink:0;width:20px;text-align:center}
+        .leadgen-breakdown li strong{color:rgba(255,255,255,0.9)}
+        .leadgen-cta{width:100%;padding:14px;background:rgb(52,211,153);color:#000;font-size:0.9375rem;font-weight:600;border:none;border-radius:10px;cursor:pointer;transition:all 0.15s}
+        .leadgen-cta:hover{background:rgb(74,222,170);transform:translateY(-1px)}
+        .leadgen-note{text-align:center;margin-top:16px;font-size:0.8125rem;color:rgba(255,255,255,0.4)}
 
         /* Filters Bar */
         .search-box{position:relative;flex:0 0 auto;min-width:200px;max-width:300px}
@@ -1124,13 +1166,17 @@
                         <span class="nav-section-arrow">▼</span>
                     </div>
                     <div class="nav-section-items">
+                        <div class="nav-item" data-page="analytics">
+                            <span class="nav-item-icon">📈</span>
+                            <span>Analytics</span>
+                        </div>
                         <div class="nav-item" data-page="import">
                             <span class="nav-item-icon">📥</span>
                             <span>Import Leads</span>
                         </div>
-                        <div class="nav-item" data-page="analytics">
-                            <span class="nav-item-icon">📈</span>
-                            <span>Analytics</span>
+                        <div class="nav-item" data-page="leadgen">
+                            <span class="nav-item-icon">🚀</span>
+                            <span>Lead Gen</span>
                         </div>
                         <div class="nav-item" data-page="help">
                             <span class="nav-item-icon">❓</span>
@@ -2733,40 +2779,94 @@
 
                     <!-- Page: Contact Us -->
                     <div class="page hidden" id="page-feedback">
-                        <div class="settings-card">
-                            <h3 class="settings-title">📧 Contact Us</h3>
-                            <p class="text-muted" style="margin-bottom:20px;">Get in touch with the Prio AI team. Report issues, request features, or ask questions.</p>
-
-                            <form id="feedbackForm" class="feedback-form">
-                                <div class="form-group">
-                                    <label class="form-label">Category</label>
-                                    <select id="feedbackCategory" class="form-input" required>
-                                        <option value="">Select a category...</option>
-                                        <option value="bug">Bug Report</option>
-                                        <option value="feature">Feature Request</option>
-                                        <option value="improvement">Improvement Suggestion</option>
-                                        <option value="question">Question</option>
-                                        <option value="other">Other</option>
-                                    </select>
+                        <div class="contact-hero">
+                            <div class="contact-hero-inner">
+                                <div class="contact-hero-text">
+                                    <h2>Get in Touch</h2>
+                                    <p>Have a question, idea, or issue? We'd love to hear from you.</p>
                                 </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Your Feedback</label>
-                                    <textarea id="feedbackMessage" class="form-input" rows="6" placeholder="Tell us what's on your mind..." required></textarea>
+                            </div>
+                        </div>
+                        <div class="contact-grid">
+                            <div class="contact-card-info">
+                                <div class="contact-info-item">
+                                    <div class="contact-info-icon">📧</div>
+                                    <div>
+                                        <div class="contact-info-label">Email</div>
+                                        <a href="mailto:info@prioai.ca" class="contact-info-value">info@prioai.ca</a>
+                                    </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary" id="feedbackSubmitBtn" style="width:100%;">
-                                        <span id="feedbackBtnText">Send Feedback</span>
+                                <div class="contact-info-item">
+                                    <div class="contact-info-icon">⏱</div>
+                                    <div>
+                                        <div class="contact-info-label">Response Time</div>
+                                        <div class="contact-info-value">Within 24 hours</div>
+                                    </div>
+                                </div>
+                                <div class="contact-info-item">
+                                    <div class="contact-info-icon">💡</div>
+                                    <div>
+                                        <div class="contact-info-label">Tip</div>
+                                        <div class="contact-info-value">Include screenshots for bug reports</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="contact-card-form">
+                                <form id="feedbackForm" class="contact-form">
+                                    <div class="contact-form-group">
+                                        <label class="contact-form-label">What can we help with?</label>
+                                        <div class="contact-category-chips">
+                                            <label class="contact-chip"><input type="radio" name="feedbackCat" value="bug"><span>Bug Report</span></label>
+                                            <label class="contact-chip"><input type="radio" name="feedbackCat" value="feature"><span>Feature Request</span></label>
+                                            <label class="contact-chip"><input type="radio" name="feedbackCat" value="question"><span>Question</span></label>
+                                            <label class="contact-chip"><input type="radio" name="feedbackCat" value="improvement"><span>Improvement</span></label>
+                                            <label class="contact-chip"><input type="radio" name="feedbackCat" value="other"><span>Other</span></label>
+                                        </div>
+                                        <input type="hidden" id="feedbackCategory" required>
+                                    </div>
+                                    <div class="contact-form-group">
+                                        <label class="contact-form-label">Your Message</label>
+                                        <textarea id="feedbackMessage" class="contact-textarea" rows="5" placeholder="Describe your issue, idea, or question..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="contact-submit-btn" id="feedbackSubmitBtn">
+                                        <span id="feedbackBtnText">Send Message</span>
                                         <span id="feedbackBtnLoading" style="display:none;">Sending...</span>
                                     </button>
-                                </div>
+                                    <div id="feedbackSuccess" class="contact-success" style="display:none;">
+                                        <span style="font-size:2rem;">✅</span>
+                                        <p>Thank you! We'll get back to you shortly.</p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
-                                <div id="feedbackSuccess" class="feedback-success" style="display:none;">
-                                    <span style="font-size:2rem;">✅</span>
-                                    <p>Thank you for your feedback! We'll review it shortly.</p>
+                    <!-- Page: Lead Gen -->
+                    <div class="page hidden" id="page-leadgen">
+                        <div class="leadgen-hero">
+                            <h2>Lead Generation Service</h2>
+                            <p>Let Prio AI source high-quality leads for you. We handle the prospecting so you can focus on closing.</p>
+                        </div>
+                        <div class="leadgen-pricing">
+                            <div class="leadgen-card">
+                                <div class="leadgen-card-header">
+                                    <h3>Lead Gen Package</h3>
+                                    <div class="leadgen-price">$300</div>
+                                    <div class="leadgen-price-sub">20 qualified leads</div>
                                 </div>
-                            </form>
+                                <div class="leadgen-card-body">
+                                    <ul class="leadgen-breakdown">
+                                        <li><span class="li-icon">✓</span><div><strong>20 Verified Leads</strong> — Contact-verified prospects matched to your ideal customer profile</div></li>
+                                        <li><span class="li-icon">✓</span><div><strong>$15 per Lead</strong> — Transparent flat-rate pricing with no hidden fees</div></li>
+                                        <li><span class="li-icon">✓</span><div><strong>Targeted Sourcing</strong> — Leads are filtered by industry, location, and criteria you define</div></li>
+                                        <li><span class="li-icon">✓</span><div><strong>Direct Import</strong> — Leads are delivered straight into your Prio AI dashboard</div></li>
+                                        <li><span class="li-icon">✓</span><div><strong>AI-Ready</strong> — Each lead is formatted and ready for Sarah to start calling immediately</div></li>
+                                        <li><span class="li-icon">✓</span><div><strong>Delivery in 48–72 Hours</strong> — Fast turnaround so your pipeline stays full</div></li>
+                                    </ul>
+                                    <button class="leadgen-cta" onclick="switchPage('feedback');setTimeout(function(){document.querySelectorAll('.contact-chip input[value=other]').forEach(function(r){r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}))});document.getElementById('feedbackMessage').value='I\\'m interested in the Lead Gen service (20 leads / $300). Please reach out to discuss details.';document.getElementById('feedbackMessage').focus()},100)">Get Started</button>
+                                    <p class="leadgen-note">Click to pre-fill a message — our team will reach out to get you set up.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3385,7 +3485,7 @@
             overview: 'Overview', prio: 'Prio', prospects: 'Qualified', pipeline: 'AI Follow Ups',
             unqualified: 'Unqualified', shared: 'Shared', analytics: 'Analytics',
             import: 'Import Leads', search: 'Search', settings: 'Settings', billing: 'Billing', help: 'Help',
-            feedback: 'Contact Us', 'booked-today': 'Booked Today', 'open-leads': 'Open Leads'
+            feedback: 'Contact Us', leadgen: 'Lead Gen', 'booked-today': 'Booked Today', 'open-leads': 'Open Leads'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
         
@@ -10094,6 +10194,13 @@
         }, 30000);
     }
 
+    // Contact Us category chip listeners
+    document.querySelectorAll('.contact-chip input[name="feedbackCat"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            document.getElementById('feedbackCategory').value = this.value;
+        });
+    });
+
     // Feedback form submission
     document.getElementById('feedbackForm')?.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -10138,6 +10245,7 @@
                 setTimeout(function() {
                     document.getElementById('feedbackCategory').value = '';
                     document.getElementById('feedbackMessage').value = '';
+                    document.querySelectorAll('.contact-chip input[name="feedbackCat"]').forEach(function(r) { r.checked = false; });
                     document.getElementById('feedbackForm').style.display = 'block';
                     successDiv.style.display = 'none';
                 }, 3000);
