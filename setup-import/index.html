@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Leads | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/assets/auth.css">
+    <style>
+        .setup-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-6);
+            background: var(--bg-primary);
+        }
+        .setup-card {
+            width: 100%;
+            max-width: 600px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+        }
+        @media (min-width: 640px) {
+            .setup-card { padding: var(--space-10); }
+        }
+        .setup-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+        .setup-step {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: var(--accent-muted);
+            color: var(--accent);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            padding: var(--space-1) var(--space-3);
+            border-radius: 999px;
+            margin-bottom: var(--space-5);
+        }
+        .setup-header h1 {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+        }
+        .setup-header .subtitle {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+
+        /* Tab switcher */
+        .import-tabs {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 3px;
+            margin-bottom: var(--space-6);
+        }
+        .import-tab {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .import-tab:hover { color: var(--text-primary); }
+        .import-tab.active { background: var(--accent); color: #000; }
+
+        .import-panel { display: none; }
+        .import-panel.active { display: block; }
+
+        /* Template banner */
+        .template-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--accent-muted);
+            border: 1px solid rgba(52,211,153,0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin-bottom: var(--space-5);
+            flex-wrap: wrap;
+            gap: var(--space-3);
+        }
+        .template-banner-text {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        .template-banner-text span:first-child { font-size: 1.25rem; }
+        .template-banner-text div strong {
+            display: block;
+            font-size: var(--text-sm);
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .template-banner-text div span {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+        }
+        .btn-template {
+            padding: var(--space-2) var(--space-4);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            background: var(--accent);
+            color: #000;
+            border-radius: var(--radius-md);
+            white-space: nowrap;
+        }
+        .btn-template:hover { background: var(--accent-hover); }
+
+        /* File upload zone */
+        .file-zone {
+            border: 2px dashed var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-8) var(--space-5);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            margin-bottom: var(--space-4);
+        }
+        .file-zone:hover, .file-zone.dragover {
+            border-color: var(--accent);
+            background: var(--accent-muted);
+        }
+        .file-zone-icon { font-size: 2rem; margin-bottom: var(--space-3); }
+        .file-zone p { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1); }
+        .file-zone p strong { color: var(--text-primary); }
+        .file-zone .supported { font-size: var(--text-xs); color: var(--text-tertiary); }
+
+        /* Single lead form */
+        .form-section-label {
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--accent);
+            margin-bottom: var(--space-3);
+            padding-bottom: var(--space-2);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+        .form-section {
+            margin-bottom: var(--space-5);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-4);
+        }
+        @media (min-width: 480px) {
+            .form-row { grid-template-columns: 1fr 1fr; }
+        }
+        .form-group { margin-bottom: var(--space-4); }
+        .form-group label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+        .form-group label .req { color: #ef4444; }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: var(--text-tertiary); }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-muted);
+        }
+        .form-group select { cursor: pointer; }
+        .form-group select option { background: var(--bg-secondary); }
+
+        .upload-status {
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-4);
+            min-height: 20px;
+        }
+
+        /* Bottom actions */
+        .setup-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            margin-top: var(--space-6);
+        }
+        .btn-continue {
+            width: 100%;
+            padding: var(--space-3) var(--space-5);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            background: var(--accent);
+            color: #000;
+            transition: all var(--transition-fast);
+        }
+        .btn-continue:hover { background: var(--accent-hover); }
+        .btn-continue:disabled { opacity: .5; cursor: not-allowed; }
+        .btn-skip {
+            width: 100%;
+            padding: var(--space-3) var(--space-5);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            color: var(--text-tertiary);
+            transition: all var(--transition-fast);
+        }
+        .btn-skip:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+
+        .import-info {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin-bottom: var(--space-5);
+        }
+        .import-info p {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+        .import-info p:last-child { margin-bottom: 0; }
+        .import-info strong { color: var(--text-primary); }
+    </style>
+</head>
+<body>
+    <main class="setup-page">
+        <div class="setup-card">
+            <div class="setup-header">
+                <img src="/assets/logo_white.png" alt="Prio AI" class="auth-logo">
+                <div class="setup-step">Step 5 of 6</div>
+                <h1>Import your leads</h1>
+                <p class="subtitle">Add your existing leads so our AI can start calling right away. You can always import more later.</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="import-tabs">
+                <div class="import-tab active" data-tab="csv">Upload CSV</div>
+                <div class="import-tab" data-tab="single">Add Single Lead</div>
+            </div>
+
+            <!-- CSV Panel -->
+            <div class="import-panel active" id="csvPanel">
+                <div class="template-banner">
+                    <div class="template-banner-text">
+                        <span>📄</span>
+                        <div>
+                            <strong>Download Template First</strong>
+                            <span>CSV with: First Name, Last Name, Phone, Interest, Email</span>
+                        </div>
+                    </div>
+                    <button class="btn-template" id="downloadTemplateBtn">Download</button>
+                </div>
+
+                <div class="file-zone" id="fileZone">
+                    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display:none;">
+                    <div class="file-zone-icon">📁</div>
+                    <p><strong>Click to upload</strong> or drag and drop</p>
+                    <p class="supported">CSV, XLSX, or XLS — max 10 MB</p>
+                </div>
+
+                <div class="upload-status" id="csvStatus"></div>
+            </div>
+
+            <!-- Single Lead Panel -->
+            <div class="import-panel" id="singlePanel">
+                <div class="form-section">
+                    <div class="form-section-label">Personal Info</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name <span class="req">*</span></label>
+                            <input type="text" id="firstName" placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="lastName" placeholder="Smith">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Phone <span class="req">*</span></label>
+                            <input type="tel" id="phone" placeholder="(416) 555-1234">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="email" placeholder="john@example.com">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-label">Lead Details</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Interest <span class="req">*</span></label>
+                            <select id="interest">
+                                <option value="">Select interest...</option>
+                                <option value="Buy">Buy</option>
+                                <option value="Sell">Sell</option>
+                                <option value="Both">Both</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Max Call Attempts</label>
+                            <input type="number" id="maxAttempts" value="5" min="1" max="10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Context <span style="color:var(--text-tertiary); font-weight:400">(optional)</span></label>
+                        <textarea id="context" rows="3" placeholder="Add any context for the AI caller..."></textarea>
+                    </div>
+                </div>
+
+                <div class="upload-status" id="singleStatus"></div>
+            </div>
+
+            <div class="import-info">
+                <p><strong>Tip:</strong> You can always import more leads from the dashboard after setup.</p>
+            </div>
+
+            <div class="setup-actions">
+                <button class="btn-continue" id="importBtn">Import & Continue</button>
+                <button class="btn-skip" id="skipBtn">Skip for now</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    var savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbG1pa2dvYWZkZmZlenJmcGdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzE2NTgsImV4cCI6MjA2MDQwNzY1OH0.UIyU0FJZS8JVpRYckfnUMG_z9qwEZJ4pdPLvLLN9fFM";
+    var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    var currentUser = null;
+    var agentName = '';
+    var activeTab = 'csv';
+    var selectedFile = null;
+
+    sb.auth.getSession().then(function(res) {
+        if (!res.data.session) { window.location.href = '/login/'; return; }
+        currentUser = res.data.session.user;
+        agentName = currentUser.user_metadata?.full_name || 'our team';
+    });
+
+    // Tab switching
+    document.querySelectorAll('.import-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.import-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.import-panel').forEach(function(p) { p.classList.remove('active'); });
+            this.classList.add('active');
+            activeTab = this.dataset.tab;
+            document.getElementById(activeTab === 'csv' ? 'csvPanel' : 'singlePanel').classList.add('active');
+        });
+    });
+
+    // Download template
+    document.getElementById('downloadTemplateBtn').addEventListener('click', function() {
+        var csv = 'First Name,Last Name,Phone,Interest,Email\nJohn,Smith,4165551234,Buy,john@example.com\nJane,Doe,6475559876,Sell,';
+        var blob = new Blob([csv], { type: 'text/csv' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'prio-leads-template.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    // File upload zone
+    var fileZone = document.getElementById('fileZone');
+    var fileInput = document.getElementById('fileInput');
+    fileZone.addEventListener('click', function() { fileInput.click(); });
+    fileZone.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+    fileZone.addEventListener('dragleave', function() { this.classList.remove('dragover'); });
+    fileZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+        if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', function() {
+        if (this.files[0]) handleFile(this.files[0]);
+    });
+
+    function handleFile(file) {
+        if (file.size > 10 * 1024 * 1024) {
+            document.getElementById('csvStatus').innerHTML = '<span style="color:#ef4444">File too large (max 10 MB)</span>';
+            return;
+        }
+        selectedFile = file;
+        fileZone.innerHTML = '<div class="file-zone-icon">✅</div><p><strong>' + file.name + '</strong></p><p class="supported">' + (file.size / 1024).toFixed(1) + ' KB — Click to change</p>';
+        document.getElementById('csvStatus').innerHTML = '';
+    }
+
+    // Import button
+    document.getElementById('importBtn').addEventListener('click', async function() {
+        var btn = this;
+        if (activeTab === 'csv') {
+            await importCsv(btn);
+        } else {
+            await importSingle(btn);
+        }
+    });
+
+    async function importCsv(btn) {
+        if (!selectedFile) {
+            document.getElementById('csvStatus').innerHTML = '<span style="color:#ef4444">Please select a file first</span>';
+            return;
+        }
+        btn.disabled = true;
+        btn.textContent = 'Uploading...';
+        document.getElementById('csvStatus').innerHTML = '<span style="color:rgb(52,211,153)">Uploading your leads...</span>';
+
+        try {
+            var formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('email', currentUser?.email || '');
+            formData.append('agentName', agentName);
+            formData.append('type', 'csv');
+
+            var response = await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) throw new Error('Server returned ' + response.status);
+
+            document.getElementById('csvStatus').innerHTML = '<span style="color:rgb(52,211,153)">Leads imported successfully!</span>';
+            setTimeout(function() { window.location.href = '/setup-calendar/'; }, 1200);
+        } catch (err) {
+            console.error('CSV upload error:', err);
+            document.getElementById('csvStatus').innerHTML = '<span style="color:#ef4444">Upload failed: ' + (err.message || 'Unknown error') + '</span>';
+            btn.disabled = false;
+            btn.textContent = 'Import & Continue';
+        }
+    }
+
+    async function importSingle(btn) {
+        var firstName = document.getElementById('firstName').value.trim();
+        var lastName = document.getElementById('lastName').value.trim();
+        var phone = document.getElementById('phone').value.trim();
+        var interest = document.getElementById('interest').value;
+        var email = document.getElementById('email').value.trim();
+        var maxAttempts = parseInt(document.getElementById('maxAttempts').value, 10) || 5;
+        var context = document.getElementById('context').value.trim();
+        var statusEl = document.getElementById('singleStatus');
+
+        if (!firstName || !phone || !interest) {
+            statusEl.innerHTML = '<span style="color:#ef4444">Please fill in required fields (First Name, Phone, Interest)</span>';
+            return;
+        }
+
+        if (maxAttempts < 1) maxAttempts = 1;
+        if (maxAttempts > 10) maxAttempts = 10;
+
+        btn.disabled = true;
+        btn.textContent = 'Adding lead...';
+        statusEl.innerHTML = '<span style="color:rgb(52,211,153)">Adding lead...</span>';
+
+        try {
+            var defaultContext = 'You reached out to ' + agentName + ' a while ago regarding your interest in buying or selling a property. Are you still in the market?';
+            var response = await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: currentUser?.email,
+                    agentName: agentName,
+                    type: 'single',
+                    leads: [{
+                        firstName: firstName,
+                        lastName: lastName,
+                        phone: phone,
+                        interest: interest,
+                        email: email,
+                        maxAttempts: maxAttempts,
+                        context: context || defaultContext
+                    }]
+                })
+            });
+
+            if (!response.ok) throw new Error('Server returned ' + response.status);
+
+            statusEl.innerHTML = '<span style="color:rgb(52,211,153)">Lead added successfully!</span>';
+            setTimeout(function() { window.location.href = '/setup-calendar/'; }, 1200);
+        } catch (err) {
+            console.error('Single lead error:', err);
+            statusEl.innerHTML = '<span style="color:#ef4444">Failed: ' + (err.message || 'Unknown error') + '</span>';
+            btn.disabled = false;
+            btn.textContent = 'Import & Continue';
+        }
+    }
+
+    // Skip
+    document.getElementById('skipBtn').addEventListener('click', function() {
+        window.location.href = '/setup-calendar/';
+    });
+    </script>
+</body>
+</html>
