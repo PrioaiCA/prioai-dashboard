@@ -145,6 +145,7 @@
         .action-btn.action-reschedule.disabled,.action-btn.action-reschedule:disabled{opacity:0.35;cursor:not-allowed;pointer-events:none;background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.05)}
         .action-btn.action-prio:hover{background:rgba(245,158,11,0.2);border-color:#f59e0b}
         .action-btn.action-unprio:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
+        .action-btn.action-takeover:hover{background:rgba(59,130,246,0.2);border-color:#3B82F6}
         .priorities-cards:not(.list-view){display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
         .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
         .priorities-cards:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
@@ -1021,7 +1022,7 @@
         .unqualified-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .unqualified-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:40px}
         .unqualified-list:not(.list-view) .priority-card-lg-actions{flex-direction:row;border-left:none;border-top:1px solid rgba(255,255,255,0.08)}
-        .unqualified-list:not(.list-view) .action-btn{flex:1;width:auto;height:auto;border-left:none;border-right:1px solid rgba(255,255,255,0.08);border-radius:0;padding:10px 6px}
+        .unqualified-list:not(.list-view) .action-btn{flex:1;width:auto;height:auto;border-left:none;border-right:1px solid rgba(255,255,255,0.08);border-radius:0;padding:12px 6px}
         .unqualified-list:not(.list-view) .action-btn:last-child{border-right:none;border-radius:0 0 12px 0}
         .unqualified-list:not(.list-view) .action-btn:first-child{border-radius:0 0 0 12px}
 
@@ -7244,10 +7245,8 @@
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
                 '<div class="priority-card-lg-actions">' +
-                    '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-reschedule' + (canChangeCallDate ? '' : ' disabled') + '"' + (canChangeCallDate ? ' onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"' : ' disabled') + '><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
-                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
-                    '<button class="action-btn action-prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Prio</span></button>' +
+                    '<button class="action-btn action-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')"><span class="action-icon">👤</span><span class="action-label">Take Over</span></button>' +
                 '</div>' +
             '</div>';
         }).join('');
