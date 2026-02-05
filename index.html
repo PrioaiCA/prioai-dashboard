@@ -2133,10 +2133,12 @@
                         <div class="import-panel" id="importBulkPanel">
                             <div class="template-download">
                                 <div class="template-info">
-                                    <h4>📥 Download Template First</h4>
-                                    <p>CSV with: First Name, Last Name, Phone, Interest</p>
+                                    <h4>📥 Get the Template</h4>
+                                    <p>1. Click "Get Template" to make a copy of the Google Sheet</p>
+                                    <p>2. In Google Sheets, go to <strong>File → Download → Microsoft Excel (.xlsx)</strong></p>
+                                    <p>3. Upload the downloaded .xlsx file below</p>
                                 </div>
-                                <button class="btn btn-secondary" id="downloadTemplateBtn">Download Template</button>
+                                <a href="https://docs.google.com/spreadsheets/d/16VtdCtO9s93zHmpDQFIGVzmgN8-NokbCVE_rKyyI-hQ/copy" target="_blank" rel="noopener" class="btn btn-secondary" id="downloadTemplateBtn">Get Template</a>
                             </div>
 
                             <div class="file-upload-zone" id="fileUploadZone">
@@ -2769,7 +2771,7 @@
                                             <span class="help-toggle">+</span>
                                         </div>
                                         <div class="help-answer">
-                                            <p>Download our template from the Import page. Required columns: First Name, Phone. Optional: Last Name, Email.</p>
+                                            <p>Get the Google Sheet template from the Import page, then download it as an .xlsx file. Required columns: First Name, Phone. Optional: Last Name, Email.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -9871,16 +9873,7 @@
         }
     }
     
-    // Download template
-    document.getElementById('downloadTemplateBtn')?.addEventListener('click', function() {
-        var csv = 'First Name,Last Name,Phone,Interest,Email\nJohn,Smith,4165551234,Buy,john@example.com\nJane,Doe,6475559876,Sell,';
-        var blob = new Blob([csv], { type: 'text/csv' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'prio-leads-template.csv';
-        a.click();
-    });
+    // Template link opens Google Sheet copy page directly (no JS needed)
     
     // ===== SEARCH PAGE =====
     var searchedLead = null;
