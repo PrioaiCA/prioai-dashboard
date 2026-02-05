@@ -226,8 +226,8 @@
             setLoading(btn, false);
             console.log('Airtable success:', result);
             localStorage.setItem('onboarding_email', data['Email']);
-            // Redirect to pricing page on main website
-            window.location.href = 'https://prioai.ca/pricing/';
+            // Redirect to plan selection page
+            window.location.href = '/pricing/';
         }).catch(function(err) {
             setLoading(btn, false);
             console.error('Airtable error:', err);
