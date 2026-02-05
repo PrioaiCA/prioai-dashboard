@@ -6,6 +6,13 @@
     <meta name="description" content="Prio AI Dashboard - Manage your leads and grow your business.">
     <title>Dashboard | Prio AI</title>
     <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Prio AI">
+    <link rel="apple-touch-icon" href="/assets/icon-192.png">
+    <meta name="format-detection" content="telephone=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
@@ -3311,6 +3318,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(function(reg) {
+            console.log('SW registered, scope:', reg.scope);
+        }).catch(function(err) {
+            console.log('SW registration failed:', err);
+        });
+    }
+
     // Supabase Setup
     var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
     var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
@@ -4180,6 +4196,14 @@
         return phone;
     }
 
+    // Build tel: link for click-to-call
+    function phoneLink(rawPhone, formattedPhone) {
+        if (!rawPhone || rawPhone === '-') return escapeHtml(formattedPhone);
+        var digits = rawPhone.replace(/\D/g, '');
+        if (digits.length === 10) digits = '1' + digits;
+        return '<a href="tel:+' + digits + '" style="color:inherit;text-decoration:none;" onclick="event.stopPropagation();">' + escapeHtml(formattedPhone) + '</a>';
+    }
+
     // Update today's priorities list with taller cards
     function updateTodayPriorities(priorities, missedMeetings) {
         var list = document.getElementById('todayPriorities');
@@ -4264,7 +4288,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -4435,7 +4459,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -5064,7 +5088,9 @@
         // Populate modal
         var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
         document.getElementById('modalLeadName').textContent = name;
-        document.getElementById('modalPhone').textContent = f['Phone #'] || f['Phone'] || '-';
+        var modalRawPhone = f['Phone #'] || f['Phone'] || '-';
+        var modalFormattedPhone = formatPhoneNumber(modalRawPhone);
+        document.getElementById('modalPhone').innerHTML = phoneLink(modalRawPhone, modalFormattedPhone);
         
         var status = f['Status'] || f['Outcome'] || 'New';
         var statusEl = document.getElementById('modalStatus');
@@ -7030,7 +7056,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -7162,7 +7188,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -7365,7 +7391,7 @@
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                             statusBadge +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -7575,7 +7601,7 @@
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                             statusBadge +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -7781,7 +7807,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Called at ' + callTimeDisplay + ' EST</div>' +
                     '</div>' +
                 '</div>' +
@@ -8621,7 +8647,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -8851,7 +8877,7 @@
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + ' <span class="shared-icon" title="Shared lead">🔗</span></div>' +
                         '</div>' +
-                        '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -9875,7 +9901,8 @@
         document.getElementById('searchLeadDetail').style.display = 'block';
 
         document.getElementById('searchLeadName').textContent = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
-        document.getElementById('searchLeadPhoneDisplay').textContent = formatPhone(f['Phone #'] || f['Phone'] || '-');
+        var searchRawPhone = f['Phone #'] || f['Phone'] || '-';
+        document.getElementById('searchLeadPhoneDisplay').innerHTML = phoneLink(searchRawPhone, formatPhone(searchRawPhone));
 
         var status = f['Status'] || f['Disposition'] || '-';
         var statusBadge = document.getElementById('searchLeadStatusBadge');
