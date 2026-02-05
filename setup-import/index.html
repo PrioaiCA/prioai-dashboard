@@ -271,11 +271,18 @@
                     <div class="template-banner-text">
                         <span>📄</span>
                         <div>
-                            <strong>Download Template First</strong>
-                            <span>CSV with: First Name, Last Name, Phone, Interest, Email</span>
+                            <strong>Get the Lead Template</strong>
+                            <span>Columns: First Name, Last Name, Phone, Interest, Email</span>
                         </div>
                     </div>
-                    <button class="btn-template" id="downloadTemplateBtn">Download</button>
+                    <a href="https://docs.google.com/spreadsheets/d/16VtdCtO9s93zHmpDQFIGVzmgN8-NokbCVE_rKyyI-hQ/copy" target="_blank" rel="noopener" class="btn-template" id="copyTemplateBtn">Make a Copy</a>
+                </div>
+                <div class="import-info" style="margin-bottom:var(--space-5);">
+                    <p><strong>How to use the template:</strong></p>
+                    <p>1. Click "Make a Copy" to open the Google Sheets template.</p>
+                    <p>2. Fill in your leads in the spreadsheet.</p>
+                    <p>3. In Google Sheets, go to <strong>File &rarr; Download &rarr; Comma Separated Values (.csv)</strong>.</p>
+                    <p>4. Upload the downloaded CSV file below.</p>
                 </div>
 
                 <div class="file-zone" id="fileZone">
@@ -347,6 +354,7 @@
             <div class="setup-actions">
                 <button class="btn-continue" id="importBtn">Import & Continue</button>
                 <button class="btn-skip" id="skipBtn">Skip for now</button>
+                <button class="btn-skip" id="backBtn" style="color:var(--text-tertiary);">Back</button>
             </div>
         </div>
     </main>
@@ -380,18 +388,6 @@
             activeTab = this.dataset.tab;
             document.getElementById(activeTab === 'csv' ? 'csvPanel' : 'singlePanel').classList.add('active');
         });
-    });
-
-    // Download template
-    document.getElementById('downloadTemplateBtn').addEventListener('click', function() {
-        var csv = 'First Name,Last Name,Phone,Interest,Email\nJohn,Smith,4165551234,Buy,john@example.com\nJane,Doe,6475559876,Sell,';
-        var blob = new Blob([csv], { type: 'text/csv' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'prio-leads-template.csv';
-        a.click();
-        URL.revokeObjectURL(url);
     });
 
     // File upload zone
@@ -536,6 +532,11 @@
     document.getElementById('skipBtn').addEventListener('click', function() {
         localStorage.setItem('leads_imported', 'false');
         window.location.href = '/setup-calendar/';
+    });
+
+    // Back
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '/pricing/';
     });
     </script>
 </body>

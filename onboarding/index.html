@@ -28,8 +28,8 @@
                     <input type="text" id="agentName" placeholder="Your full name" required>
                 </div>
                 <div class="form-group">
-                    <label for="brokerage">Organization Name</label>
-                    <input type="text" id="brokerage" placeholder="Your brokerage or company">
+                    <label for="brokerage">Organization Name *</label>
+                    <input type="text" id="brokerage" placeholder="Your brokerage or company" required>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -59,6 +59,7 @@
 
                 <div class="form-message error" id="onboardingError"></div>
                 <button type="submit" class="btn btn-primary btn-block btn-lg mt-6" id="onboardingBtn">Continue</button>
+                <button type="button" class="btn btn-block" id="backBtn" style="margin-top:var(--space-3);background:transparent;color:var(--text-tertiary);font-weight:500;font-size:var(--text-sm);">Back</button>
             </form>
 
             <div class="auth-footer">
@@ -115,6 +116,11 @@
         document.getElementById('agentName').value = name;
         document.getElementById('email').value = email;
         document.getElementById('calendarEmail').value = email;
+    });
+
+    // Back
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '/signup/';
     });
 
     // Logout

@@ -107,6 +107,7 @@
                 Go to Dashboard
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
+            <button id="backBtn" style="width:100%;margin-top:var(--space-3);padding:var(--space-3) var(--space-5);font-size:var(--text-sm);font-weight:500;border-radius:var(--radius-md);color:var(--text-tertiary);background:transparent;transition:all var(--transition-fast);">Back</button>
         </div>
     </main>
 
@@ -121,6 +122,11 @@
 
     sb.auth.getSession().then(function(res) {
         if (!res.data.session) { window.location.href = '/login/'; return; }
+    });
+
+    // Back
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '/setup-calendar/';
     });
 
     // Show appropriate message based on whether leads were imported
