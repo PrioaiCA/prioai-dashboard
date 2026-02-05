@@ -1008,12 +1008,12 @@
         .unqualified-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000;font-weight:600}
         .unqualified-list{display:grid;grid-template-columns:1fr;gap:0.75rem;padding:0}
         .unqualified-list.list-view{grid-template-columns:1fr}
-        .unqualified-list .unqualified-summary-wide{flex:1;border-right:none}
+        .unqualified-list .unqualified-summary-wide{flex:1 1 0;min-width:0;border-right:none}
         .unqualified-list .priority-card-lg{min-height:auto}
-        .unqualified-list .priority-card-lg-actions{display:flex;flex-direction:row;gap:0;padding:0;min-width:auto;border-left:none}
-        .unqualified-list .action-btn{flex:0 0 auto;width:56px;height:100%;border-radius:0;border:none;border-left:1px solid rgba(255,255,255,0.08);flex-direction:column;gap:2px;padding:8px 4px;font-size:0.625rem}
-        .unqualified-list .action-btn .action-icon{font-size:1rem}
-        .unqualified-list .action-btn .action-label{font-size:0.5625rem}
+        .unqualified-list .priority-card-lg-actions{display:flex;flex-direction:row;gap:0;padding:0;min-width:auto;border-left:none;flex-shrink:0}
+        .unqualified-list .action-btn{flex:0 0 auto;width:80px;height:100%;border-radius:0;border:none;border-left:1px solid rgba(255,255,255,0.08);flex-direction:column;gap:3px;padding:10px 4px;font-size:0.6875rem}
+        .unqualified-list .action-btn .action-icon{font-size:1.125rem}
+        .unqualified-list .action-btn .action-label{font-size:0.625rem}
         .unqualified-list .action-btn:last-child{border-radius:0 12px 12px 0}
         .unqualified-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
         .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
