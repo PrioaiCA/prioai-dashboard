@@ -2175,17 +2175,20 @@
                             <div class="search-lead-card">
                                 <div class="search-lead-header">
                                     <div>
-                                        <h3 id="searchLeadName">-</h3>
+                                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                                            <h3 id="searchLeadName" style="margin:0;">-</h3>
+                                            <span id="searchLeadStatusBadge" class="status-badge">-</span>
+                                            <span id="searchLeadOutcomeBadge" class="status-badge" style="display:none;">-</span>
+                                        </div>
                                         <p id="searchLeadPhoneDisplay" style="color:rgba(255,255,255,0.6);font-family:monospace;">-</p>
                                     </div>
-                                    <span id="searchLeadStatusBadge" class="status-badge">-</span>
                                 </div>
 
                                 <!-- Action Buttons -->
                                 <div class="search-lead-actions">
                                     <button class="search-action-btn share" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
                                     <button class="search-action-btn takeover" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
-                                    <button class="search-action-btn dnc" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Do Not Call</button>
+                                    <button class="search-action-btn dnc" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Mark as Do Not Call</button>
                                 </div>
 
                                 <div class="search-lead-info-grid">
@@ -9958,6 +9961,16 @@
         var statusBadge = document.getElementById('searchLeadStatusBadge');
         statusBadge.textContent = status;
         statusBadge.className = 'status-badge ' + getStatusClass(status);
+
+        var lastOutcome = f['Last Outcome'] || '';
+        var outcomeBadge = document.getElementById('searchLeadOutcomeBadge');
+        if (lastOutcome) {
+            outcomeBadge.textContent = lastOutcome;
+            outcomeBadge.className = 'status-badge ' + getStatusClass(lastOutcome);
+            outcomeBadge.style.display = '';
+        } else {
+            outcomeBadge.style.display = 'none';
+        }
 
         document.getElementById('searchLeadEmail').textContent = f['Email'] || '-';
         document.getElementById('searchLeadCalls').textContent = f['Attempts'] || '0';
