@@ -84,7 +84,7 @@
         .filters-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;justify-content:space-between}
         .filter-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin-left:auto}
         .priorities-cards{display:grid;grid-template-columns:1fr;gap:1rem}
-        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden}
+        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden;position:relative}
         .priority-card-lg:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
         .priority-card-lg-left{flex:0 0 320px;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
         .priority-card-lg-time-col{flex:0 0 85px;background:rgba(52,211,153,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
@@ -125,6 +125,11 @@
         .priority-card-lg.missed-meeting .priority-card-lg-time-col{background:rgba(239,68,68,0.15)}
         .priority-card-lg.missed-meeting .priority-card-lg-time-col .time-value{color:#ef4444}
         .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
+        .priority-card-lg.meeting-done{opacity:0.5;border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02)}
+        .priority-card-lg.meeting-done:hover{opacity:0.7}
+        .priority-card-lg.meeting-done .priority-card-lg-time-col{background:rgba(34,197,94,0.15)}
+        .priority-card-lg.meeting-done .priority-card-lg-time-col .time-value{color:#22c55e}
+        .priority-card-lg.meeting-done::after{content:'Done';position:absolute;top:8px;right:8px;background:rgba(34,197,94,0.2);color:#22c55e;font-size:0.6875rem;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase}
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:6px;margin-right:8px;flex-shrink:0}
         .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
         .priority-card-lg-time-col{position:relative}
@@ -139,6 +144,7 @@
         .action-btn.action-ai:hover{background:rgba(52,211,153,0.2);border-color:rgb(52,211,153)}
         .action-btn.action-dnc:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
         .action-btn.action-reschedule:hover{background:rgba(245,158,11,0.2);border-color:#f59e0b}
+        .action-btn.action-reschedule.disabled,.action-btn.action-reschedule:disabled{opacity:0.35;cursor:not-allowed;pointer-events:none;background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.05)}
         .action-btn.action-prio:hover{background:rgba(245,158,11,0.2);border-color:#f59e0b}
         .action-btn.action-unprio:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
         .priorities-cards:not(.list-view){display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
@@ -1004,12 +1010,12 @@
         .unqualified-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000;font-weight:600}
         .unqualified-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
         .unqualified-list.list-view{grid-template-columns:1fr}
+        .unqualified-list .unqualified-summary-wide{flex:1;border-right:1px solid rgba(255,255,255,0.08)}
         .unqualified-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-        .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:320px}
+        .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:240px}
         .unqualified-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .unqualified-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .unqualified-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
-        .unqualified-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
         .unqualified-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
 
         /* Analytics Data Source Toggle */
@@ -1537,6 +1543,10 @@
                                     <span class="search-icon">🔍</span>
                                     <input type="text" id="sharedSearch" placeholder="Search by name or phone...">
                                 </div>
+                                <select id="sharedDirection" class="filter-select">
+                                    <option value="all">All Shared</option>
+                                    <option value="with-me">Shared with Me</option>
+                                </select>
                                 <select id="sharedStatus" class="filter-select">
                                     <option value="all">All Status</option>
                                     <option value="Booked">Booked</option>
@@ -3782,7 +3792,7 @@
             return timeA.localeCompare(timeB);
         });
 
-        // Find missed meetings (scheduled in past but no call logged on that day)
+        // Find missed meetings (scheduled in past but no update logged after the meeting time)
         // Exclude AI pipeline leads (Timeline/Follow Up) - they are handled by AI
         var missedMeetings = allLeads.filter(function(l) {
             var status = l.fields['Status'] || l.fields['Disposition'] || '';
@@ -3797,25 +3807,29 @@
 
             var scheduledDateOnly = scheduledDate.split('T')[0];
             var scheduledDateObj = new Date(scheduledDateOnly);
+            var scheduledDateTime = new Date(scheduledDate);
 
             // Only check past dates (not today)
             if (scheduledDateObj >= todayDate) return false;
 
-            // Check if a call was logged on or after the scheduled date
-            var lastCallTimestamp = l.fields['Last Call Timestamp'];
-            if (!lastCallTimestamp) return true; // No call logged = missed
-
-            // Handle both string dates and numeric timestamps
-            var lastCallDate;
-            if (typeof lastCallTimestamp === 'string') {
-                lastCallDate = new Date(lastCallTimestamp.split('T')[0]);
-            } else {
-                lastCallDate = new Date(lastCallTimestamp);
-                lastCallDate = new Date(lastCallDate.toISOString().split('T')[0]);
+            // Check if the lead was updated AFTER the meeting time
+            // If Updated At > meeting time, the meeting was handled (not missed)
+            var updatedAt = l.fields['Updated At'];
+            if (updatedAt) {
+                var updatedAtTime = new Date(updatedAt);
+                // If last update is after the scheduled meeting time, it's not missed
+                if (updatedAtTime > scheduledDateTime) return false;
             }
 
-            // If last call was before the scheduled date, it's missed
-            return lastCallDate < scheduledDateObj;
+            // Fallback: also check Last Call Timestamp
+            var lastCallTimestamp = l.fields['Last Call Timestamp'];
+            if (lastCallTimestamp) {
+                var lastCallTime = new Date(lastCallTimestamp);
+                if (lastCallTime > scheduledDateTime) return false;
+            }
+
+            // No update after meeting time = missed
+            return true;
         }).sort(function(a, b) {
             // Sort by scheduled date descending (most recent missed first)
             var timeA = a.fields['Booked Time'] || a.fields['Callback Date'] || '';
@@ -3882,6 +3896,17 @@
             // Get last note text
             var lastNoteText = notesArray.length > 0 ? notesArray[notesArray.length - 1].text : 'No notes yet';
 
+            // Check if the meeting is done (last updated time is after the meeting time)
+            var meetingDone = false;
+            var scheduledDateTime = bookedTime || callbackDate;
+            if (!isMissed && scheduledDateTime && lastUpdatedTimestamp) {
+                var meetingTime = new Date(scheduledDateTime);
+                var updatedTime = new Date(lastUpdatedTimestamp);
+                if (updatedTime > meetingTime) {
+                    meetingDone = true;
+                }
+            }
+
             var timeDisplay = '';
             var dateDisplay = '';
             var hasSchedule = false;
@@ -3901,7 +3926,7 @@
                 hasSchedule = true;
             }
 
-            var missedClass = isMissed ? ' missed-meeting' : '';
+            var cardClasses = isMissed ? ' missed-meeting' : (meetingDone ? ' meeting-done' : '');
             var timeCol;
             if (hasSchedule) {
                 timeCol = '<button class="btn-schedule-card" onclick="event.stopPropagation();quickSchedule(\'' + lead.id + '\')">Schedule</button>';
@@ -3913,7 +3938,7 @@
 
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
 
-            return '<div class="priority-card-lg' + missedClass + '" data-id="' + lead.id + '">' +
+            return '<div class="priority-card-lg' + cardClasses + '" data-id="' + lead.id + '">' +
                 '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="priority-card-lg-time-col">' +
                         prioIndicator +
@@ -5947,6 +5972,29 @@
             if (lead) {
                 lead.fields['Shared With'] = [selectedAgentId];
                 lead.fields['Shared With Email'] = [selectedAgentEmail]; // Update lookup locally for display
+
+                // Trigger webhook for lead shared
+                try {
+                    var leadName = ((lead.fields['First Name'] || '') + ' ' + (lead.fields['Last Name'] || '')).trim() || 'Unknown';
+                    var leadNumber = lead.fields['Phone #'] || lead.fields['Phone'] || '';
+                    var summary = lead.fields['Last Call Summary'] || lead.fields['Summary'] || '';
+                    var nextCallDate = lead.fields['Next Call Date'] || lead.fields['Booked Time'] || lead.fields['Callback Date'] || '';
+
+                    fetch('https://n8n.prioai.ca/webhook/lead-shared', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            leadName: leadName,
+                            leadNumber: leadNumber,
+                            summary: summary,
+                            nextCallDate: nextCallDate,
+                            sharedWith: selectedAgentEmail,
+                            sharedBy: currentUser?.email || ''
+                        })
+                    }).catch(function(e) { console.log('Webhook error:', e); });
+                } catch (webhookErr) {
+                    console.log('Webhook error:', webhookErr);
+                }
             }
 
             showToast('Prospect shared successfully!', 'success');
@@ -6951,6 +6999,10 @@
             var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
             var isPrio = f['Is Prio'] === true;
             var status = f['Status'] || f['Disposition'] || 'Unknown';
+            var lastOutcome = f['Last Outcome'] || '';
+            var lastOutcomeLower = lastOutcome.toLowerCase();
+            // Disable Change Call Date for Wrong Person and DNC outcomes (only Max Attempts and Inconclusive can change)
+            var canChangeCallDate = lastOutcomeLower !== 'wrong person' && lastOutcomeLower !== 'dnc';
 
             // Parse notes
             var notesArray = parseNotesJson(notesRaw);
@@ -7001,17 +7053,13 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
-                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                '<div class="priority-card-lg-summary-col unqualified-summary-wide" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
-                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
-                    '<div class="col-label">Notes</div>' +
-                    '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
-                '</div>' +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
-                    '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
+                    '<button class="action-btn action-reschedule' + (canChangeCallDate ? '' : ' disabled') + '"' + (canChangeCallDate ? ' onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"' : ' disabled') + '><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
                     '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
                     '<button class="action-btn action-prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Prio</span></button>' +
                 '</div>' +
@@ -7397,14 +7445,14 @@
 
             var timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
 
-            // Status badge
+            // Status badge - small B/C format
             var statusBadge = '';
             var statusLower = status.toLowerCase();
             var outcomeLower = outcome.toLowerCase();
             if (statusLower === 'booked' || outcomeLower === 'booked') {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(52,211,153,0.15);color:#34D399">Booked</span>';
+                statusBadge = '<span class="card-status-badge booked">B</span>';
             } else if (statusLower === 'callback' || outcomeLower === 'callback') {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(59,130,246,0.15);color:#3B82F6">Callback</span>';
+                statusBadge = '<span class="card-status-badge callback">C</span>';
             }
 
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
@@ -7417,8 +7465,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
-                            statusBadge +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Called at ' + callTimeDisplay + ' EST</div>' +
@@ -7920,6 +7967,7 @@
 
     // Shared leads filters
     document.getElementById('sharedSearch')?.addEventListener('input', debounce(updateSharedLeadsList, 300));
+    document.getElementById('sharedDirection')?.addEventListener('change', updateSharedLeadsList);
     document.getElementById('sharedStatus')?.addEventListener('change', updateSharedLeadsList);
     document.getElementById('sharedTimeframe')?.addEventListener('change', updateSharedLeadsList);
     document.getElementById('sharedSort')?.addEventListener('change', updateSharedLeadsList);
@@ -8284,11 +8332,51 @@
     // Update Shared Leads list
     function updateSharedLeadsList() {
         var sharedListEl = document.getElementById('sharedList');
+        var directionDropdown = document.getElementById('sharedDirection');
 
         var searchVal = (document.getElementById('sharedSearch')?.value || '').toLowerCase();
+        var directionFilter = directionDropdown?.value || 'all';
         var statusFilter = document.getElementById('sharedStatus')?.value || 'all';
         var timeframeFilter = document.getElementById('sharedTimeframe')?.value || 'all';
         var sortBy = document.getElementById('sharedSort')?.value || 'priority';
+
+        // First, collect all unique agents that I've shared leads with (for dynamic dropdown)
+        var sharedWithAgents = {};
+        allLeads.forEach(function(l) {
+            var f = l.fields;
+            // Only leads I own that I've shared with others (not leads shared with me)
+            if (!l.isShared && f['Shared With Email']) {
+                var emails = Array.isArray(f['Shared With Email']) ? f['Shared With Email'] : [f['Shared With Email']];
+                emails.forEach(function(email) {
+                    if (email && !sharedWithAgents[email]) {
+                        var agentName = getAgentNameByEmail(email);
+                        sharedWithAgents[email] = agentName;
+                    }
+                });
+            }
+        });
+
+        // Update dropdown options dynamically
+        if (directionDropdown) {
+            var currentValue = directionDropdown.value;
+            var optionsHtml = '<option value="all">All Shared</option>';
+            optionsHtml += '<option value="with-me">Shared with Me</option>';
+
+            // Add "Shared with [Name]" options for each agent
+            Object.keys(sharedWithAgents).sort(function(a, b) {
+                return sharedWithAgents[a].localeCompare(sharedWithAgents[b]);
+            }).forEach(function(email) {
+                var name = sharedWithAgents[email];
+                optionsHtml += '<option value="shared-to:' + email + '">Shared with ' + escapeHtml(name) + '</option>';
+            });
+
+            directionDropdown.innerHTML = optionsHtml;
+            // Restore previous value if it still exists
+            if (directionDropdown.querySelector('option[value="' + currentValue + '"]')) {
+                directionDropdown.value = currentValue;
+                directionFilter = currentValue;
+            }
+        }
 
         // Filter to only shared leads (Shared With or isShared)
         var sharedLeads = allLeads.filter(function(l) {
@@ -8298,6 +8386,23 @@
             var hasSharedWith = f['Shared With'] && f['Shared With'].length > 0;
             var hasSharedWithEmail = f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']);
             if (!l.isShared && !hasSharedWith && !hasSharedWithEmail) return false;
+
+            // Direction filter
+            if (directionFilter !== 'all') {
+                if (directionFilter === 'with-me') {
+                    // Only leads shared WITH me
+                    if (!l.isShared) return false;
+                } else if (directionFilter.startsWith('shared-to:')) {
+                    // Only leads I shared TO a specific agent
+                    var targetEmail = directionFilter.replace('shared-to:', '').toLowerCase();
+                    if (l.isShared) return false; // Exclude leads shared with me
+                    var sharedEmails = f['Shared With Email'];
+                    if (!sharedEmails) return false;
+                    var emailList = Array.isArray(sharedEmails) ? sharedEmails : [sharedEmails];
+                    var hasTarget = emailList.some(function(e) { return e && e.toLowerCase() === targetEmail; });
+                    if (!hasTarget) return false;
+                }
+            }
 
             // Search filter
             if (searchVal) {
