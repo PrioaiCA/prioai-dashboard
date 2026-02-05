@@ -3573,7 +3573,7 @@
     }
 
     document.getElementById('loginBtn').addEventListener('click', function() { openAuthModal('login'); });
-    document.getElementById('guestLoginBtn').addEventListener('click', function() { openAuthModal('signup'); });
+    document.getElementById('guestLoginBtn').addEventListener('click', function() { window.location.href = '/signup/'; });
     document.getElementById('guestSignInBtn').addEventListener('click', function() { openAuthModal('login'); });
     document.getElementById('authModalClose').addEventListener('click', closeAuthModal);
     authModal.addEventListener('click', function(e) { if (e.target === authModal) closeAuthModal(); });
