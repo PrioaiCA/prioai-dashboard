@@ -127,9 +127,7 @@
         .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
         .priority-card-lg.meeting-done{opacity:0.5;border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02)}
         .priority-card-lg.meeting-done:hover{opacity:0.7}
-        .priority-card-lg.meeting-done .priority-card-lg-time-col{background:rgba(34,197,94,0.15)}
-        .priority-card-lg.meeting-done .priority-card-lg-time-col .time-value{color:#22c55e}
-        .meeting-done-badge{background:rgba(34,197,94,0.2);color:#22c55e;font-size:0.6875rem;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;margin-left:auto;flex-shrink:0}
+        .meeting-done-badge{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);font-size:0.5625rem;font-weight:600;padding:2px 6px;border-radius:3px;text-transform:uppercase;position:absolute;top:4px;left:4px;z-index:1}
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:6px;margin-right:8px;flex-shrink:0}
         .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
         .priority-card-lg-time-col{position:relative}
@@ -1010,17 +1008,22 @@
         .unqualified-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000;font-weight:600}
         .unqualified-list{display:grid;grid-template-columns:1fr;gap:0.75rem;padding:0}
         .unqualified-list.list-view{grid-template-columns:1fr}
-        .unqualified-list .unqualified-summary-wide{flex:1;border-right:1px solid rgba(255,255,255,0.08)}
+        .unqualified-list .unqualified-summary-wide{flex:1;border-right:none}
         .unqualified-list .priority-card-lg{min-height:auto}
-        .unqualified-list .priority-card-lg-actions{grid-template-columns:1fr;gap:4px;padding:8px;min-width:110px}
-        .unqualified-list .action-btn{padding:6px 8px;flex-direction:row;gap:6px;font-size:0.6875rem}
+        .unqualified-list .priority-card-lg-actions{display:flex;flex-direction:row;gap:0;padding:0;min-width:auto;border-left:none}
+        .unqualified-list .action-btn{flex:0 0 auto;width:56px;height:100%;border-radius:0;border:none;border-left:1px solid rgba(255,255,255,0.08);flex-direction:column;gap:2px;padding:8px 4px;font-size:0.625rem}
+        .unqualified-list .action-btn .action-icon{font-size:1rem}
+        .unqualified-list .action-btn .action-label{font-size:0.5625rem}
+        .unqualified-list .action-btn:last-child{border-radius:0 12px 12px 0}
         .unqualified-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
         .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
         .unqualified-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .unqualified-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .unqualified-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:40px}
-        .unqualified-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
-        .unqualified-list:not(.list-view) .action-btn{flex-direction:column;padding:8px 6px}
+        .unqualified-list:not(.list-view) .priority-card-lg-actions{flex-direction:row;border-left:none;border-top:1px solid rgba(255,255,255,0.08)}
+        .unqualified-list:not(.list-view) .action-btn{flex:1;width:auto;height:auto;border-left:none;border-right:1px solid rgba(255,255,255,0.08);border-radius:0;padding:10px 6px}
+        .unqualified-list:not(.list-view) .action-btn:last-child{border-right:none;border-radius:0 0 12px 0}
+        .unqualified-list:not(.list-view) .action-btn:first-child{border-radius:0 0 0 12px}
 
         /* Analytics Data Source Toggle */
         .analytics-data-source-row{display:flex;justify-content:center;margin-bottom:1rem}
@@ -3945,13 +3948,13 @@
             return '<div class="priority-card-lg' + cardClasses + '" data-id="' + lead.id + '">' +
                 '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="priority-card-lg-time-col">' +
+                        (meetingDone ? '<span class="meeting-done-badge">Done</span>' : '') +
                         prioIndicator +
                         timeCol +
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
                             '<div class="priority-card-lg-name">' + escapeHtml(name) + '</div>' +
-                            (meetingDone ? '<span class="meeting-done-badge">Done</span>' : '') +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + escapeHtml(formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
