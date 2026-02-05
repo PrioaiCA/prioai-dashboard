@@ -3748,6 +3748,8 @@
     var AIRTABLE_CLIENTS_TABLE = 'tblMptC862PyL7Znw';
     var AIRTABLE_LEADS_TABLE = 'tblLpN4wceakfNFpq';
     var AIRTABLE_CALLS_TABLE = 'tblvB5OpG0b5mVix3';
+    var AIRTABLE_ADMIN_SETTINGS_TABLE = 'tblGD3iwn1nU0gjtx';
+    var dynamicCallLimit = null;
 
     // Airtable API helper - proxies through Pages Function (token handled server-side)
     async function fetchAirtable(path, options = {}) {
@@ -3765,6 +3767,33 @@
         return response.json();
     }
     
+    // Fetch call limit from Admin Settings based on client's Monthly Plan
+    async function fetchCallLimitFromSettings(planName) {
+        try {
+            var planKey = 'starter_call_limit';
+            if (planName) {
+                var normalized = planName.toLowerCase().trim();
+                if (normalized === 'professional') planKey = 'professional_call_limit';
+                else if (normalized === 'growth') planKey = 'growth_call_limit';
+                else if (normalized === 'enterprise') planKey = 'enterprise_call_limit';
+                else planKey = 'starter_call_limit';
+            }
+            var filterFormula = encodeURIComponent('({Setting Key} = "' + planKey + '")');
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_ADMIN_SETTINGS_TABLE + '?filterByFormula=' + filterFormula + '&fields[]=Setting+Key&fields[]=Setting+Value';
+            var data = await fetchAirtable(path);
+            if (data.records && data.records.length > 0) {
+                var val = parseInt(data.records[0].fields['Setting Value']);
+                if (!isNaN(val) && val > 0) {
+                    dynamicCallLimit = val;
+                    return val;
+                }
+            }
+        } catch (err) {
+            console.error('Failed to fetch call limit from Admin Settings:', err);
+        }
+        return null;
+    }
+
     var currentUserRecord = null;
     var allLeads = [];
     var allCalls = [];
@@ -3864,6 +3893,15 @@
             
             if (data.records && data.records.length > 0) {
                 currentUserRecord = data.records[0];
+                // Fetch dynamic call limit from Admin Settings (non-blocking)
+                var clientPlan = currentUserRecord.fields['Monthly Plan'] || 'Starter';
+                fetchCallLimitFromSettings(clientPlan).then(function(limit) {
+                    if (limit !== null) {
+                        // Re-update dashboard and billing with the dynamic limit
+                        updateDashboard();
+                        populateBilling();
+                    }
+                });
                 loadLeadsData();
             } else {
                 document.getElementById('statProspects').textContent = '0';
@@ -4052,7 +4090,7 @@
                 document.getElementById('retellPhoneNumber').textContent = retellPhone;
             }
             var callsThisMonth = currentUserRecord.fields['Calls This Month'] || 0;
-            var callLimit = currentUserRecord.fields['Call Limit'] || (currentUserRecord.fields['Monthly Plan'] === 'Professional' ? 3000 : 1000);
+            var callLimit = dynamicCallLimit || currentUserRecord.fields['Call Limit'] || 1000;
             document.getElementById('usageCalls').textContent = callsThisMonth;
             document.getElementById('usageLimit').textContent = callLimit;
             
@@ -4999,7 +5037,7 @@
         
         var plan = f['Monthly Plan'] || 'Starter';
         var rate = parseFloat(f['Monthly Rate']) || 0;
-        var callLimit = parseInt(f['Call Limit']) || (plan === 'Professional' ? 3000 : 1000);
+        var callLimit = dynamicCallLimit || parseInt(f['Call Limit']) || 1000;
         var callsUsed = parseInt(f['Calls This Month']) || 0;
         var status = f['Status'] || 'Active';
         

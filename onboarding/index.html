@@ -45,69 +45,6 @@
                     <label for="phone">Phone *</label>
                     <input type="tel" id="phone" placeholder="+1 (555) 123-4567" required>
                 </div>
-                <div class="form-group">
-                    <label>Available Days *</label>
-                    <div class="day-selector" id="availableDays">
-                        <label><input type="checkbox" name="days" value="Monday"><span>Mon</span></label>
-                        <label><input type="checkbox" name="days" value="Tuesday"><span>Tue</span></label>
-                        <label><input type="checkbox" name="days" value="Wednesday"><span>Wed</span></label>
-                        <label><input type="checkbox" name="days" value="Thursday"><span>Thu</span></label>
-                        <label><input type="checkbox" name="days" value="Friday"><span>Fri</span></label>
-                        <label><input type="checkbox" name="days" value="Saturday"><span>Sat</span></label>
-                        <label><input type="checkbox" name="days" value="Sunday"><span>Sun</span></label>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="timezone">Timezone</label>
-                        <select id="timezone">
-                            <option value="America/Toronto">America/Toronto (EST)</option>
-                            <option value="America/Vancouver">America/Vancouver (PST)</option>
-                            <option value="America/Edmonton">America/Edmonton (MST)</option>
-                            <option value="America/Winnipeg">America/Winnipeg (CST)</option>
-                            <option value="America/Halifax">America/Halifax (AST)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="startTime">Available Start *</label>
-                        <select id="startTime">
-                            <option value="8:00 AM">8:00 AM</option>
-                            <option value="9:00 AM" selected>9:00 AM</option>
-                            <option value="10:00 AM">10:00 AM</option>
-                            <option value="11:00 AM">11:00 AM</option>
-                            <option value="12:00 PM">12:00 PM</option>
-                            <option value="1:00 PM">1:00 PM</option>
-                            <option value="2:00 PM">2:00 PM</option>
-                            <option value="3:00 PM">3:00 PM</option>
-                            <option value="4:00 PM">4:00 PM</option>
-                            <option value="5:00 PM">5:00 PM</option>
-                            <option value="6:00 PM">6:00 PM</option>
-                            <option value="7:00 PM">7:00 PM</option>
-                            <option value="8:00 PM">8:00 PM</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="endTime">Available End *</label>
-                        <select id="endTime">
-                            <option value="9:00 AM">9:00 AM</option>
-                            <option value="10:00 AM">10:00 AM</option>
-                            <option value="11:00 AM">11:00 AM</option>
-                            <option value="12:00 PM">12:00 PM</option>
-                            <option value="1:00 PM">1:00 PM</option>
-                            <option value="2:00 PM">2:00 PM</option>
-                            <option value="3:00 PM">3:00 PM</option>
-                            <option value="4:00 PM">4:00 PM</option>
-                            <option value="5:00 PM">5:00 PM</option>
-                            <option value="6:00 PM" selected>6:00 PM</option>
-                            <option value="7:00 PM">7:00 PM</option>
-                            <option value="8:00 PM">8:00 PM</option>
-                            <option value="9:00 PM">9:00 PM</option>
-                        </select>
-                    </div>
-                    <div class="form-group"></div>
-                </div>
 
                 <div class="form-message error" id="onboardingError"></div>
                 <button type="submit" class="btn btn-primary btn-block btn-lg mt-6" id="onboardingBtn">Continue</button>
@@ -182,16 +119,6 @@
         e.preventDefault();
         hideError();
 
-        var days = [];
-        document.querySelectorAll('#availableDays input:checked').forEach(function(cb) {
-            days.push(cb.value);
-        });
-
-        if (days.length === 0) {
-            showError('Please select at least one available day');
-            return;
-        }
-
         var btn = document.getElementById('onboardingBtn');
         setLoading(btn, true);
 
@@ -201,10 +128,10 @@
             'Email': document.getElementById('email').value,
             'Google Calendar Email': document.getElementById('calendarEmail').value,
             'Phone': document.getElementById('phone').value,
-            'Available Days': days,
-            'Timezone': document.getElementById('timezone').value,
-            'Available Start': document.getElementById('startTime').value,
-            'Available End': document.getElementById('endTime').value,
+            'Available Days': ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+            'Timezone': 'America/Toronto',
+            'Available Start': '8:00 AM',
+            'Available End': '8:00 PM',
             'Status': 'Unpaid',
             'Start Date': new Date().toISOString().split('T')[0]
         };
