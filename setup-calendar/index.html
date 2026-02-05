@@ -300,6 +300,7 @@
                     Open Google Calendar Settings
                 </a>
                 <button class="btn-continue" id="continueBtn">I've shared my calendar — Continue</button>
+                <button class="btn-skip" id="backBtn" style="width:100%;padding:var(--space-3) var(--space-5);font-size:var(--text-sm);font-weight:500;border-radius:var(--radius-md);color:var(--text-tertiary);transition:all var(--transition-fast);">Back</button>
             </div>
         </div>
     </main>
@@ -330,6 +331,11 @@
     // Continue to completion page
     document.getElementById('continueBtn').addEventListener('click', function() {
         window.location.href = '/setup-complete/';
+    });
+
+    // Back
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '/setup-import/';
     });
     </script>
 </body>

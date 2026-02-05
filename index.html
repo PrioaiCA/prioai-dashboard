@@ -3717,8 +3717,9 @@
             document.getElementById('loginBtn').classList.add('hidden');
             document.getElementById('dashboardContent').classList.remove('hidden');
 
-            // Show sidebar for logged in users
+            // Show sidebar and header for logged in users
             document.getElementById('sidebar').style.display = '';
+            document.querySelector('.header').style.display = '';
 
             // Show loading animation for logged in users
             var overlay = document.getElementById('pageLoadingOverlay');
@@ -3735,10 +3736,27 @@
             document.getElementById('userName').textContent = 'Guest';
             document.getElementById('userEmail').textContent = 'Not signed in';
             document.getElementById('userAvatar').textContent = 'G';
-            document.getElementById('loginBtn').classList.remove('hidden');
+            document.getElementById('loginBtn').classList.add('hidden');
             document.getElementById('guestState').classList.remove('hidden');
-            // Hide sidebar for non-logged in users
+            // Hide sidebar and header for non-logged in users
             document.getElementById('sidebar').style.display = 'none';
+            document.querySelector('.header').style.display = 'none';
+            // Center the guest state as full-page
+            var mainEl = document.querySelector('.main-content');
+            if (mainEl) {
+                mainEl.style.marginLeft = '0';
+                mainEl.style.minHeight = '100vh';
+                mainEl.style.display = 'flex';
+                mainEl.style.alignItems = 'center';
+                mainEl.style.justifyContent = 'center';
+            }
+            var pageContent = document.querySelector('.page-content');
+            if (pageContent) {
+                pageContent.style.display = 'flex';
+                pageContent.style.alignItems = 'center';
+                pageContent.style.justifyContent = 'center';
+                pageContent.style.flex = '1';
+            }
             // Show app container for non-logged in users
             document.getElementById('appContainer').style.opacity = '1';
         }

@@ -266,6 +266,7 @@
                 <button class="btn-continue" id="continueBtn" style="display:none;">Continue</button>
                 <button class="btn-continue" id="uploadAndContinueBtn" style="display:none;">Upload & Continue</button>
                 <button class="btn-skip" id="skipBtn">Skip for now</button>
+                <button class="btn-skip" id="backBtn" style="color:var(--text-tertiary);">Back</button>
             </div>
         </div>
     </main>
@@ -449,6 +450,11 @@
     // Skip
     skipBtn.addEventListener('click', function() {
         window.location.href = '/pricing/';
+    });
+
+    // Back
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '/onboarding/';
     });
     </script>
 </body>
