@@ -458,6 +458,7 @@
                     if (!response.ok) throw new Error('Server returned ' + response.status);
 
                     document.getElementById('csvStatus').innerHTML = '<span style="color:rgb(52,211,153)">Leads imported successfully!</span>';
+                    localStorage.setItem('leads_imported', 'true');
                     setTimeout(function() { window.location.href = '/setup-calendar/'; }, 1200);
                 } catch (err) {
                     console.error('CSV upload error:', err);
@@ -521,6 +522,7 @@
             if (!response.ok) throw new Error('Server returned ' + response.status);
 
             statusEl.innerHTML = '<span style="color:rgb(52,211,153)">Lead added successfully!</span>';
+            localStorage.setItem('leads_imported', 'true');
             setTimeout(function() { window.location.href = '/setup-calendar/'; }, 1200);
         } catch (err) {
             console.error('Single lead error:', err);
@@ -532,6 +534,7 @@
 
     // Skip
     document.getElementById('skipBtn').addEventListener('click', function() {
+        localStorage.setItem('leads_imported', 'false');
         window.location.href = '/setup-calendar/';
     });
     </script>
