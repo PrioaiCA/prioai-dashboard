@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Complete | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/assets/auth.css">
+    <style>
+        .setup-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-6);
+            background: var(--bg-primary);
+        }
+        .setup-card {
+            width: 100%;
+            max-width: 580px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            text-align: center;
+        }
+        @media (min-width: 640px) {
+            .setup-card { padding: var(--space-10); }
+        }
+        .congrats-icon {
+            font-size: 3.5rem;
+            margin-bottom: var(--space-5);
+        }
+        .setup-card h1 {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+        }
+        .setup-card .subtitle {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-8);
+        }
+        .status-box {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            margin-bottom: var(--space-8);
+            text-align: left;
+        }
+        .status-box .status-icon {
+            font-size: 1.25rem;
+            margin-right: var(--space-2);
+        }
+        .status-box h3 {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+        }
+        .status-box p {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-left: calc(1.25rem + var(--space-2));
+        }
+        .btn-dashboard {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            width: 100%;
+            padding: var(--space-4) var(--space-5);
+            font-size: var(--text-base);
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            background: var(--accent);
+            color: #000;
+            transition: all var(--transition-fast);
+        }
+        .btn-dashboard:hover { background: var(--accent-hover); }
+        .btn-dashboard svg {
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <main class="setup-page">
+        <div class="setup-card">
+            <img src="/assets/logo_white.png" alt="Prio AI" class="auth-logo">
+            <div class="congrats-icon">🎉</div>
+            <h1>You're all set up!</h1>
+            <p class="subtitle">Congratulations — your Prio AI account is ready to go.</p>
+
+            <div class="status-box" id="statusBox"></div>
+
+            <a href="/" class="btn-dashboard">
+                Go to Dashboard
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    var savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+    var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
+    var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    sb.auth.getSession().then(function(res) {
+        if (!res.data.session) { window.location.href = '/login/'; return; }
+    });
+
+    // Show appropriate message based on whether leads were imported
+    var leadsImported = localStorage.getItem('leads_imported') === 'true';
+    var statusBox = document.getElementById('statusBox');
+
+    if (leadsImported) {
+        statusBox.innerHTML =
+            '<h3><span class="status-icon">✅</span> Leads uploaded</h3>' +
+            '<p>Your AI caller will begin reaching out to your leads at the next available calling hour. You can track progress from the dashboard.</p>';
+    } else {
+        statusBox.innerHTML =
+            '<h3><span class="status-icon">📋</span> No leads uploaded yet</h3>' +
+            '<p>To get your AI caller started, head to <strong>Tools → Import Leads</strong> in the dashboard and upload your leads. The AI will begin calling at the next available hour once they\'re imported.</p>';
+    }
+    </script>
+</body>
+</html>
