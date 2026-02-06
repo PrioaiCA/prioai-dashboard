@@ -6538,7 +6538,7 @@
     var scheduleLeadData = null;
     var scheduleSource = null;
     var selectedDate = null;
-    var calendarMonth = new Date();
+    var scheduleCalMonth = new Date();
     
     // Schedule button click
     document.getElementById('modalScheduleBtn').addEventListener('click', function() {
@@ -6557,7 +6557,7 @@
         // Create selectedDate consistently (same method as calendar click handler)
         var now = new Date();
         selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        calendarMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        scheduleCalMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
         renderCalendar();
         updateTimeDropdowns();
@@ -6652,8 +6652,8 @@
     document.getElementById('scheduleHour').addEventListener('change', updateMinuteDropdown);
     
     function renderCalendar() {
-        var year = calendarMonth.getFullYear();
-        var month = calendarMonth.getMonth();
+        var year = scheduleCalMonth.getFullYear();
+        var month = scheduleCalMonth.getMonth();
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         
@@ -6705,12 +6705,12 @@
     }
     
     document.getElementById('calendarPrev').addEventListener('click', function() {
-        calendarMonth.setMonth(calendarMonth.getMonth() - 1);
+        scheduleCalMonth.setMonth(scheduleCalMonth.getMonth() - 1);
         renderCalendar();
     });
-    
+
     document.getElementById('calendarNext').addEventListener('click', function() {
-        calendarMonth.setMonth(calendarMonth.getMonth() + 1);
+        scheduleCalMonth.setMonth(scheduleCalMonth.getMonth() + 1);
         renderCalendar();
     });
     
@@ -6861,7 +6861,7 @@
 
         // Pre-fill with existing booked time
         var existingTime = f['Booked Time'] ? new Date(f['Booked Time']) : new Date();
-        calendarMonth = new Date(existingTime.getFullYear(), existingTime.getMonth(), 1);
+        scheduleCalMonth = new Date(existingTime.getFullYear(), existingTime.getMonth(), 1);
         selectedDate = new Date(existingTime.getFullYear(), existingTime.getMonth(), existingTime.getDate());
 
         renderCalendar();
