@@ -1283,6 +1283,46 @@
                     </div>
                 </div>
 
+                <!-- Subscription Locked State -->
+                <div id="subscriptionLocked" class="hidden">
+                    <div style="max-width:900px;margin:0 auto;padding:var(--space-6);">
+                        <div style="text-align:center;margin-bottom:var(--space-8);">
+                            <div style="font-size:3rem;margin-bottom:var(--space-4);">🔒</div>
+                            <h2 style="font-size:1.75rem;font-weight:700;margin-bottom:var(--space-3);">Your subscription is inactive</h2>
+                            <p id="subscriptionLockedMsg" style="color:var(--text-secondary);font-size:var(--text-base);max-width:500px;margin:0 auto;">Choose a plan below to reactivate your dashboard and get your AI caller back to work.</p>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space-5);margin-bottom:var(--space-8);">
+                            <div class="card" style="text-align:center;padding:var(--space-6);">
+                                <h3 style="font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-2);">Starter</h3>
+                                <p style="color:var(--text-secondary);font-size:var(--text-sm);margin-bottom:var(--space-4);">For individual agents getting started.</p>
+                                <div style="font-size:2rem;font-weight:800;margin-bottom:var(--space-1);"><span style="font-size:var(--text-lg);vertical-align:super;color:var(--text-secondary);">$</span>199</div>
+                                <div style="font-size:var(--text-sm);color:var(--text-tertiary);margin-bottom:var(--space-4);">per month &middot; 1,000 calls</div>
+                                <a href="https://buy.stripe.com/8x23cwa2D8IT01adTM6Ri06" class="btn btn-secondary btn-block btn-lg sub-plan-btn">Get Started</a>
+                            </div>
+                            <div class="card" style="text-align:center;padding:var(--space-6);border-color:#f59e0b;">
+                                <div style="display:inline-block;background:#f59e0b;color:#000;font-size:var(--text-xs);font-weight:600;padding:2px 10px;border-radius:999px;margin-bottom:var(--space-3);">Founding Member</div>
+                                <h3 style="font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-2);">Professional</h3>
+                                <p style="color:var(--text-secondary);font-size:var(--text-sm);margin-bottom:var(--space-4);">For agents ready to scale.</p>
+                                <div style="font-size:2rem;font-weight:800;margin-bottom:var(--space-1);"><span style="font-size:var(--text-sm);color:var(--text-tertiary);text-decoration:line-through;">$399</span> <span style="font-size:var(--text-lg);vertical-align:super;color:var(--text-secondary);">$</span>299</div>
+                                <div style="font-size:var(--text-sm);color:var(--text-tertiary);margin-bottom:var(--space-4);">per month &middot; 3,000 calls</div>
+                                <a href="https://buy.stripe.com/8x200keiT1gr29ig1U6Ri09" class="btn btn-block btn-lg sub-plan-btn" style="background:#f59e0b;color:#000;border-color:#f59e0b;">Get Started</a>
+                            </div>
+                            <div class="card" style="text-align:center;padding:var(--space-6);border-color:var(--accent);">
+                                <div style="display:inline-block;background:var(--accent);color:#000;font-size:var(--text-xs);font-weight:600;padding:2px 10px;border-radius:999px;margin-bottom:var(--space-3);">Best Value</div>
+                                <h3 style="font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-2);">Growth</h3>
+                                <p style="color:var(--text-secondary);font-size:var(--text-sm);margin-bottom:var(--space-4);">Maximum call volume to scale faster.</p>
+                                <div style="font-size:2rem;font-weight:800;margin-bottom:var(--space-1);"><span style="font-size:var(--text-lg);vertical-align:super;color:var(--text-secondary);">$</span>599</div>
+                                <div style="font-size:var(--text-sm);color:var(--text-tertiary);margin-bottom:var(--space-4);">per month &middot; 6,000 calls</div>
+                                <a href="https://buy.stripe.com/5kQ28sgr10cn15e4jc6Ri08" class="btn btn-primary btn-block btn-lg sub-plan-btn">Get Started</a>
+                            </div>
+                        </div>
+                        <div style="text-align:center;">
+                            <p style="font-size:var(--text-sm);color:var(--text-tertiary);margin-bottom:var(--space-3);">All plans billed monthly. Cancel anytime.</p>
+                            <a href="#" id="subLockedLogout" style="font-size:var(--text-sm);color:var(--text-tertiary);">Log out</a>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Dashboard Content -->
                 <div id="dashboardContent" class="hidden">
                     <!-- Page: Overview -->
@@ -2175,17 +2215,20 @@
                             <div class="search-lead-card">
                                 <div class="search-lead-header">
                                     <div>
-                                        <h3 id="searchLeadName">-</h3>
+                                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                                            <h3 id="searchLeadName" style="margin:0;">-</h3>
+                                            <span id="searchLeadStatusBadge" class="status-badge">-</span>
+                                            <span id="searchLeadOutcomeBadge" class="status-badge" style="display:none;">-</span>
+                                        </div>
                                         <p id="searchLeadPhoneDisplay" style="color:rgba(255,255,255,0.6);font-family:monospace;">-</p>
                                     </div>
-                                    <span id="searchLeadStatusBadge" class="status-badge">-</span>
                                 </div>
 
                                 <!-- Action Buttons -->
                                 <div class="search-lead-actions">
                                     <button class="search-action-btn share" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
                                     <button class="search-action-btn takeover" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
-                                    <button class="search-action-btn dnc" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Do Not Call</button>
+                                    <button class="search-action-btn dnc" id="searchDNCBtn" onclick="dncFromSearch()">🚫 Mark as Do Not Call</button>
                                 </div>
 
                                 <div class="search-lead-info-grid">
@@ -3913,6 +3956,47 @@
             
             if (data.records && data.records.length > 0) {
                 currentUserRecord = data.records[0];
+
+                // Subscription gate: only allow Active status
+                var clientStatus = (currentUserRecord.fields['Status'] || '').toLowerCase();
+                if (clientStatus !== 'active') {
+                    // Hide dashboard, show subscription locked state
+                    document.getElementById('dashboardContent').classList.add('hidden');
+                    document.getElementById('sidebar').style.display = 'none';
+                    document.querySelector('.header').style.display = 'none';
+                    var lockedEl = document.getElementById('subscriptionLocked');
+                    lockedEl.classList.remove('hidden');
+                    // Center the locked state
+                    var mainEl = document.querySelector('.main-content');
+                    if (mainEl) {
+                        mainEl.style.marginLeft = '0';
+                        mainEl.style.display = 'flex';
+                        mainEl.style.alignItems = 'center';
+                        mainEl.style.justifyContent = 'center';
+                        mainEl.style.minHeight = '100vh';
+                    }
+                    // Prefill email in Stripe links
+                    var subEmail = currentUser.email || '';
+                    if (subEmail) {
+                        document.querySelectorAll('.sub-plan-btn').forEach(function(btn) {
+                            var href = btn.getAttribute('href');
+                            if (href && href.indexOf('buy.stripe.com') !== -1) {
+                                btn.setAttribute('href', href + '?prefilled_email=' + encodeURIComponent(subEmail));
+                            }
+                        });
+                    }
+                    // Logout handler
+                    var subLogout = document.getElementById('subLockedLogout');
+                    if (subLogout) {
+                        subLogout.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            supabase.auth.signOut().then(function() { window.location.href = '/login/'; });
+                        });
+                    }
+                    clearAllLoadingStates();
+                    return;
+                }
+
                 // Fetch dynamic call limit from Admin Settings (non-blocking)
                 var clientPlan = currentUserRecord.fields['Monthly Plan'] || 'Starter';
                 fetchCallLimitFromSettings(clientPlan).then(function(limit) {
@@ -6088,14 +6172,7 @@
         currentLeadId = leadId;
         var lead = allLeads.find(function(l) { return l.id === leadId; });
         if (lead) {
-            scheduleLeadId = leadId;
-            scheduleLeadData = lead.fields;
-            var name = ((lead.fields['First Name'] || '') + ' ' + (lead.fields['Last Name'] || '')).trim() || 'Lead';
-            document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + name;
-            calendarMonth = new Date();
-            selectedDate = null;
-            renderCalendar();
-            document.getElementById('scheduleModal').classList.add('active');
+            openScheduleModal(lead.id, lead.fields, 'unqualified');
         }
     }
 
@@ -6459,6 +6536,7 @@
     // === SCHEDULE BOOKING FUNCTIONALITY ===
     var scheduleLeadId = null;
     var scheduleLeadData = null;
+    var scheduleSource = null;
     var selectedDate = null;
     var calendarMonth = new Date();
     
@@ -6469,9 +6547,10 @@
         if (lead) openScheduleModal(lead.id, lead.fields);
     });
     
-    function openScheduleModal(leadId, leadData) {
+    function openScheduleModal(leadId, leadData, source) {
         scheduleLeadId = leadId;
         scheduleLeadData = leadData;
+        scheduleSource = source || null;
         var leadName = ((leadData['First Name'] || '') + ' ' + (leadData['Last Name'] || '')).trim() || 'Lead';
         document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + leadName;
 
@@ -6639,69 +6718,94 @@
         document.getElementById('scheduleModal').classList.remove('active');
         scheduleLeadId = null;
         scheduleLeadData = null;
+        scheduleSource = null;
     });
     
     document.getElementById('scheduleSaveBtn').addEventListener('click', async function() {
         if (!scheduleLeadId || !selectedDate) return;
-        
+
         var btn = this;
         btn.disabled = true;
         btn.textContent = 'Saving...';
-        
+
         try {
             var hour = parseInt(document.getElementById('scheduleHour').value);
             var minute = parseInt(document.getElementById('scheduleMinute').value);
-            
+
             var bookedDateTime = new Date(selectedDate);
             bookedDateTime.setHours(hour, minute, 0, 0);
-            
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
-                method: 'PATCH',
-                body: { fields: { 'Booked Time': bookedDateTime.toISOString(), 'Status': 'Booked' } }
-            });
-            
-            var lead = allLeads.find(function(l) { return l.id === scheduleLeadId; });
-            if (lead) {
-                lead.fields['Booked Time'] = bookedDateTime.toISOString();
-                lead.fields['Status'] = 'Booked';
-            }
 
-            // Sync to Google Calendar via n8n webhook
-            var leadName = ((scheduleLeadData['First Name'] || '') + ' ' + (scheduleLeadData['Last Name'] || '')).trim() || 'Lead';
-            var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
-            var email = scheduleLeadData['Email'] || '';
-            var calendarSyncSuccess = false;
-            try {
-                var calResponse = await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        leadId: scheduleLeadId,
-                        leadName: leadName,
-                        phone: phone,
-                        email: email,
-                        bookedTime: bookedDateTime.toISOString(),
-                        agentEmail: currentUser?.email || '',
-                        agentName: currentUser?.name || ''
-                    })
+            if (scheduleSource === 'unqualified') {
+                // From unqualified: set Follow Up status and Next Call Date
+                await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
+                    method: 'PATCH',
+                    body: { fields: { 'Next Call Date': bookedDateTime.toISOString(), 'Status': 'Follow Up' } }
                 });
-                calendarSyncSuccess = calResponse.ok;
-                if (!calResponse.ok) {
-                    console.error('Calendar sync failed:', calResponse.status, calResponse.statusText);
-                }
-            } catch (calErr) {
-                console.error('Calendar sync error:', calErr);
-            }
 
-            document.getElementById('scheduleModal').classList.remove('active');
-            if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
-            updatePrioList();
-            updateDashboard(); // Refresh today's priorities immediately
-            updateProspectsTable(); // Refresh prospects list
-            if (calendarSyncSuccess) {
-                showToast('Meeting scheduled and synced to calendar!', 'success');
+                var lead = allLeads.find(function(l) { return l.id === scheduleLeadId; });
+                if (lead) {
+                    lead.fields['Next Call Date'] = bookedDateTime.toISOString();
+                    lead.fields['Status'] = 'Follow Up';
+                }
+
+                document.getElementById('scheduleModal').classList.remove('active');
+                if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
+                updateUnqualifiedList();
+                updatePipelineList();
+                updatePrioList();
+                updateDashboard();
+                updateProspectsTable();
+                showToast('Lead moved to AI Follow Ups with next call scheduled!', 'success');
             } else {
-                showToast('Meeting scheduled! (Calendar sync failed - please add manually)', 'warning');
+                // Default: book meeting
+                await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
+                    method: 'PATCH',
+                    body: { fields: { 'Booked Time': bookedDateTime.toISOString(), 'Status': 'Booked' } }
+                });
+
+                var lead = allLeads.find(function(l) { return l.id === scheduleLeadId; });
+                if (lead) {
+                    lead.fields['Booked Time'] = bookedDateTime.toISOString();
+                    lead.fields['Status'] = 'Booked';
+                }
+
+                // Sync to Google Calendar via n8n webhook
+                var leadName = ((scheduleLeadData['First Name'] || '') + ' ' + (scheduleLeadData['Last Name'] || '')).trim() || 'Lead';
+                var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
+                var email = scheduleLeadData['Email'] || '';
+                var calendarSyncSuccess = false;
+                try {
+                    var calResponse = await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            leadId: scheduleLeadId,
+                            leadName: leadName,
+                            phone: phone,
+                            email: email,
+                            bookedTime: bookedDateTime.toISOString(),
+                            agentEmail: currentUser?.email || '',
+                            agentName: currentUser?.name || ''
+                        })
+                    });
+                    calendarSyncSuccess = calResponse.ok;
+                    if (!calResponse.ok) {
+                        console.error('Calendar sync failed:', calResponse.status, calResponse.statusText);
+                    }
+                } catch (calErr) {
+                    console.error('Calendar sync error:', calErr);
+                }
+
+                document.getElementById('scheduleModal').classList.remove('active');
+                if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
+                updatePrioList();
+                updateDashboard();
+                updateProspectsTable();
+                if (calendarSyncSuccess) {
+                    showToast('Meeting scheduled and synced to calendar!', 'success');
+                } else {
+                    showToast('Meeting scheduled! (Calendar sync failed - please add manually)', 'warning');
+                }
             }
         } catch (err) {
             showToast('Failed to schedule meeting', 'error');
@@ -9958,6 +10062,16 @@
         var statusBadge = document.getElementById('searchLeadStatusBadge');
         statusBadge.textContent = status;
         statusBadge.className = 'status-badge ' + getStatusClass(status);
+
+        var lastOutcome = f['Last Outcome'] || '';
+        var outcomeBadge = document.getElementById('searchLeadOutcomeBadge');
+        if (lastOutcome && lastOutcome.toLowerCase() !== status.toLowerCase()) {
+            outcomeBadge.textContent = lastOutcome;
+            outcomeBadge.className = 'status-badge ' + getStatusClass(lastOutcome);
+            outcomeBadge.style.display = '';
+        } else {
+            outcomeBadge.style.display = 'none';
+        }
 
         document.getElementById('searchLeadEmail').textContent = f['Email'] || '-';
         document.getElementById('searchLeadCalls').textContent = f['Attempts'] || '0';
