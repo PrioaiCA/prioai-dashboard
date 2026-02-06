@@ -6091,14 +6091,7 @@
         currentLeadId = leadId;
         var lead = allLeads.find(function(l) { return l.id === leadId; });
         if (lead) {
-            scheduleLeadId = leadId;
-            scheduleLeadData = lead.fields;
-            var name = ((lead.fields['First Name'] || '') + ' ' + (lead.fields['Last Name'] || '')).trim() || 'Lead';
-            document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + name;
-            calendarMonth = new Date();
-            selectedDate = null;
-            renderCalendar();
-            document.getElementById('scheduleModal').classList.add('active');
+            openScheduleModal(lead.id, lead.fields, 'unqualified');
         }
     }
 
@@ -6462,6 +6455,7 @@
     // === SCHEDULE BOOKING FUNCTIONALITY ===
     var scheduleLeadId = null;
     var scheduleLeadData = null;
+    var scheduleSource = null;
     var selectedDate = null;
     var calendarMonth = new Date();
     
@@ -6472,9 +6466,10 @@
         if (lead) openScheduleModal(lead.id, lead.fields);
     });
     
-    function openScheduleModal(leadId, leadData) {
+    function openScheduleModal(leadId, leadData, source) {
         scheduleLeadId = leadId;
         scheduleLeadData = leadData;
+        scheduleSource = source || null;
         var leadName = ((leadData['First Name'] || '') + ' ' + (leadData['Last Name'] || '')).trim() || 'Lead';
         document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + leadName;
 
@@ -6642,69 +6637,94 @@
         document.getElementById('scheduleModal').classList.remove('active');
         scheduleLeadId = null;
         scheduleLeadData = null;
+        scheduleSource = null;
     });
     
     document.getElementById('scheduleSaveBtn').addEventListener('click', async function() {
         if (!scheduleLeadId || !selectedDate) return;
-        
+
         var btn = this;
         btn.disabled = true;
         btn.textContent = 'Saving...';
-        
+
         try {
             var hour = parseInt(document.getElementById('scheduleHour').value);
             var minute = parseInt(document.getElementById('scheduleMinute').value);
-            
+
             var bookedDateTime = new Date(selectedDate);
             bookedDateTime.setHours(hour, minute, 0, 0);
-            
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
-                method: 'PATCH',
-                body: { fields: { 'Booked Time': bookedDateTime.toISOString(), 'Status': 'Booked' } }
-            });
-            
-            var lead = allLeads.find(function(l) { return l.id === scheduleLeadId; });
-            if (lead) {
-                lead.fields['Booked Time'] = bookedDateTime.toISOString();
-                lead.fields['Status'] = 'Booked';
-            }
 
-            // Sync to Google Calendar via n8n webhook
-            var leadName = ((scheduleLeadData['First Name'] || '') + ' ' + (scheduleLeadData['Last Name'] || '')).trim() || 'Lead';
-            var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
-            var email = scheduleLeadData['Email'] || '';
-            var calendarSyncSuccess = false;
-            try {
-                var calResponse = await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        leadId: scheduleLeadId,
-                        leadName: leadName,
-                        phone: phone,
-                        email: email,
-                        bookedTime: bookedDateTime.toISOString(),
-                        agentEmail: currentUser?.email || '',
-                        agentName: currentUser?.name || ''
-                    })
+            if (scheduleSource === 'unqualified') {
+                // From unqualified: set Follow Up status and Next Call Date
+                await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
+                    method: 'PATCH',
+                    body: { fields: { 'Next Call Date': bookedDateTime.toISOString(), 'Status': 'Follow Up' } }
                 });
-                calendarSyncSuccess = calResponse.ok;
-                if (!calResponse.ok) {
-                    console.error('Calendar sync failed:', calResponse.status, calResponse.statusText);
-                }
-            } catch (calErr) {
-                console.error('Calendar sync error:', calErr);
-            }
 
-            document.getElementById('scheduleModal').classList.remove('active');
-            if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
-            updatePrioList();
-            updateDashboard(); // Refresh today's priorities immediately
-            updateProspectsTable(); // Refresh prospects list
-            if (calendarSyncSuccess) {
-                showToast('Meeting scheduled and synced to calendar!', 'success');
+                var lead = allLeads.find(function(l) { return l.id === scheduleLeadId; });
+                if (lead) {
+                    lead.fields['Next Call Date'] = bookedDateTime.toISOString();
+                    lead.fields['Status'] = 'Follow Up';
+                }
+
+                document.getElementById('scheduleModal').classList.remove('active');
+                if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
+                updateUnqualifiedList();
+                updatePipelineList();
+                updatePrioList();
+                updateDashboard();
+                updateProspectsTable();
+                showToast('Lead moved to AI Follow Ups with next call scheduled!', 'success');
             } else {
-                showToast('Meeting scheduled! (Calendar sync failed - please add manually)', 'warning');
+                // Default: book meeting
+                await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
+                    method: 'PATCH',
+                    body: { fields: { 'Booked Time': bookedDateTime.toISOString(), 'Status': 'Booked' } }
+                });
+
+                var lead = allLeads.find(function(l) { return l.id === scheduleLeadId; });
+                if (lead) {
+                    lead.fields['Booked Time'] = bookedDateTime.toISOString();
+                    lead.fields['Status'] = 'Booked';
+                }
+
+                // Sync to Google Calendar via n8n webhook
+                var leadName = ((scheduleLeadData['First Name'] || '') + ' ' + (scheduleLeadData['Last Name'] || '')).trim() || 'Lead';
+                var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
+                var email = scheduleLeadData['Email'] || '';
+                var calendarSyncSuccess = false;
+                try {
+                    var calResponse = await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            leadId: scheduleLeadId,
+                            leadName: leadName,
+                            phone: phone,
+                            email: email,
+                            bookedTime: bookedDateTime.toISOString(),
+                            agentEmail: currentUser?.email || '',
+                            agentName: currentUser?.name || ''
+                        })
+                    });
+                    calendarSyncSuccess = calResponse.ok;
+                    if (!calResponse.ok) {
+                        console.error('Calendar sync failed:', calResponse.status, calResponse.statusText);
+                    }
+                } catch (calErr) {
+                    console.error('Calendar sync error:', calErr);
+                }
+
+                document.getElementById('scheduleModal').classList.remove('active');
+                if (currentLeadId === scheduleLeadId) openLeadModal(currentLeadId);
+                updatePrioList();
+                updateDashboard();
+                updateProspectsTable();
+                if (calendarSyncSuccess) {
+                    showToast('Meeting scheduled and synced to calendar!', 'success');
+                } else {
+                    showToast('Meeting scheduled! (Calendar sync failed - please add manually)', 'warning');
+                }
             }
         } catch (err) {
             showToast('Failed to schedule meeting', 'error');
