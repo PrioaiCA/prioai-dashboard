@@ -9984,7 +9984,7 @@
 
         var lastOutcome = f['Last Outcome'] || '';
         var outcomeBadge = document.getElementById('searchLeadOutcomeBadge');
-        if (lastOutcome) {
+        if (lastOutcome && lastOutcome.toLowerCase() !== status.toLowerCase()) {
             outcomeBadge.textContent = lastOutcome;
             outcomeBadge.className = 'status-badge ' + getStatusClass(lastOutcome);
             outcomeBadge.style.display = '';
