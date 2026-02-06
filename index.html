@@ -9386,7 +9386,7 @@
 
         if (analyticsPeriod === 'daily') {
             pickerMonth = new Date(analyticsDate);
-            renderCalendar();
+            renderAnalyticsPicker();
             document.getElementById('pickerCalendar').style.display = 'block';
         } else if (analyticsPeriod === 'weekly') {
             renderWeeklyDropdown();
@@ -9403,7 +9403,7 @@
         customPicker.classList.remove('show');
     }
 
-    function renderCalendar() {
+    function renderAnalyticsPicker() {
         var todayEST = getTodayEST();
         var year = pickerMonth.getFullYear();
         var month = pickerMonth.getMonth();
@@ -9561,7 +9561,7 @@
     // Calendar navigation
     document.getElementById('pickerPrevMonth')?.addEventListener('click', function() {
         pickerMonth.setMonth(pickerMonth.getMonth() - 1);
-        renderCalendar();
+        renderAnalyticsPicker();
     });
 
     document.getElementById('pickerNextMonth')?.addEventListener('click', function() {
@@ -9571,7 +9571,7 @@
         if (nextMonth.getFullYear() < todayEST.getFullYear() ||
             (nextMonth.getFullYear() === todayEST.getFullYear() && nextMonth.getMonth() <= todayEST.getMonth())) {
             pickerMonth = nextMonth;
-            renderCalendar();
+            renderAnalyticsPicker();
         }
     });
 
