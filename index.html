@@ -4265,7 +4265,7 @@
             return timeA.localeCompare(timeB);
         });
 
-        // Find missed meetings (scheduled in past but no update logged after the meeting time)
+        // Find missed meetings (scheduled in past but not yet handled)
         // Exclude AI pipeline leads (Timeline/Follow Up) - they are handled by AI
         var missedMeetings = allLeads.filter(function(l) {
             var status = l.fields['Status'] || l.fields['Disposition'] || '';
@@ -4280,28 +4280,12 @@
 
             var scheduledDateOnly = scheduledDate.split('T')[0];
             var scheduledDateObj = new Date(scheduledDateOnly);
-            var scheduledDateTime = new Date(scheduledDate);
 
             // Only check past dates (not today)
             if (scheduledDateObj >= todayDate) return false;
 
-            // Check if the lead was updated AFTER the meeting time
-            // If Updated At > meeting time, the meeting was handled (not missed)
-            var updatedAt = l.fields['Updated At'];
-            if (updatedAt) {
-                var updatedAtTime = new Date(updatedAt);
-                // If last update is after the scheduled meeting time, it's not missed
-                if (updatedAtTime > scheduledDateTime) return false;
-            }
-
-            // Fallback: also check Last Call Timestamp
-            var lastCallTimestamp = l.fields['Last Call Timestamp'];
-            if (lastCallTimestamp) {
-                var lastCallTime = new Date(lastCallTimestamp);
-                if (lastCallTime > scheduledDateTime) return false;
-            }
-
-            // No update after meeting time = missed
+            // If the lead still has a Booked/Callback status with a past date, it's missed
+            // Also treat any lead with a past scheduled date that hasn't been rescheduled as missed
             return true;
         }).sort(function(a, b) {
             // Sort by scheduled date descending (most recent missed first)
