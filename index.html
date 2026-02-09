@@ -4284,8 +4284,13 @@
             // Only check past dates (not today)
             if (scheduledDateObj >= todayDate) return false;
 
-            // If the lead still has a Booked/Callback status with a past date, it's missed
-            // Also treat any lead with a past scheduled date that hasn't been rescheduled as missed
+            // If the lead was updated AFTER the scheduled date, the meeting was handled
+            var updatedAt = l.fields['Updated At'];
+            if (updatedAt) {
+                var updatedDate = new Date(updatedAt);
+                if (updatedDate > scheduledDateObj) return false;
+            }
+
             return true;
         }).sort(function(a, b) {
             // Sort by scheduled date descending (most recent missed first)
