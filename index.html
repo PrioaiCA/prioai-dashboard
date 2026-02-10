@@ -368,8 +368,8 @@
         .send-ai-confirm:disabled{opacity:0.5;cursor:not-allowed}
         @media(max-width:600px){.polish-comparison{grid-template-columns:1fr}}
         .lead-modal-body{padding:24px;overflow-y:auto;flex:1}
-        .lead-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:4px 0}
-        .lead-info-item{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:none;border:none;border-radius:0}
+        .lead-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;padding:0}
+        .lead-info-item{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px}
         .lead-info-item label{display:block;font-size:0.75rem;font-weight:400;color:#707070;margin-bottom:0;white-space:nowrap}
         .lead-info-item .value{font-size:0.875rem;font-weight:600;color:#FFFFFF;text-align:right}
         .send-ai-calendar{margin-top:16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px}
@@ -510,7 +510,7 @@
         .calendar-day.other-month{opacity:0.3}
         .calendar-day.past{color:rgba(255,255,255,0.3);cursor:not-allowed}
         .calendar-day.empty{cursor:default}
-        @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr}.lead-info-item{padding:8px 16px}}
+        @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr;gap:8px}.lead-info-item{padding:10px 16px}}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -775,6 +775,46 @@
         .prospects-list:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prospects-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .prospects-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
+
+        /* Prospects list refinements */
+        /* (1) Row breathing room */
+        .prospects-list .priority-card-lg-time-col{padding:14px 12px}
+        .prospects-list .priority-card-lg-info{padding:14px 24px}
+        .prospects-list .priority-card-lg-summary-col{padding:14px 24px}
+        .prospects-list .priority-card-lg-notes-col{padding:14px 24px}
+        .prospects-list .priority-card-lg-status-col{padding:14px 16px}
+
+        /* (2) Compact action buttons - icon-only circles */
+        .prospects-list .priority-card-lg-actions{flex:0 0 auto;display:flex;flex-direction:row;align-items:center;gap:8px;padding:14px 16px;border-left:1px solid rgba(255,255,255,0.08)}
+        .prospects-list:not(.list-view) .priority-card-lg-actions{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;border-left:none;border-top:1px solid rgba(255,255,255,0.08);padding:12px 16px}
+        .action-btn-circle{width:28px;height:28px;border-radius:50%;border:1px solid #2a2a2a;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.8125rem;transition:all 200ms ease;color:#A0A0A0;position:relative;padding:0;flex-shrink:0}
+        .action-btn-circle:hover{border-color:rgb(52,211,153);color:#fff}
+        .action-btn-circle.action-share.shared{border-color:rgba(52,211,153,0.4);color:rgb(52,211,153)}
+        .action-btn-circle.action-share.shared:hover{border-color:rgb(52,211,153);color:rgb(52,211,153)}
+        .action-btn-circle .action-icon{font-size:0.75rem;line-height:1;display:flex;align-items:center;justify-content:center}
+        .action-btn-circle .action-tooltip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;font-size:0.6875rem;padding:4px 8px;border-radius:4px;white-space:nowrap;pointer-events:none;z-index:100;border:1px solid rgba(255,255,255,0.1)}
+        .action-btn-circle:hover .action-tooltip{display:block}
+        .action-overflow-wrap{position:relative;flex-shrink:0}
+        .action-overflow-btn{width:28px;height:28px;border-radius:50%;border:1px solid #2a2a2a;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#A0A0A0;transition:all 200ms ease;padding:0;letter-spacing:-1px;line-height:1}
+        .action-overflow-btn:hover{border-color:rgb(52,211,153);color:#fff}
+        .action-overflow-menu{display:none;position:absolute;bottom:calc(100% + 4px);right:0;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:4px;min-width:150px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+        .action-overflow-menu.open{display:block;animation:overflowFadeIn 150ms ease}
+        @keyframes overflowFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+        .action-overflow-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8125rem;color:#A0A0A0;background:none;border:none;width:100%;text-align:left;font-family:var(--font-body);transition:all 150ms ease}
+        .action-overflow-item:hover{background:rgba(255,255,255,0.08);color:#fff}
+        .action-overflow-item.overflow-dnc:hover{background:rgba(239,68,68,0.15);color:#ef4444}
+        .action-overflow-item.overflow-prio:hover{background:rgba(245,158,11,0.15);color:#f59e0b}
+
+        /* (3) Row hover state */
+        .prospects-list .priority-card-lg{transition:all 200ms ease;position:relative}
+        .prospects-list .priority-card-lg::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:rgb(52,211,153);border-radius:12px 0 0 12px;opacity:0;transition:opacity 200ms ease;z-index:1}
+        .prospects-list .priority-card-lg:hover{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.15);box-shadow:none}
+        .prospects-list .priority-card-lg:hover::before{opacity:1}
+        .prospects-list .priority-card-lg:hover .priority-card-lg-name{color:rgb(52,211,153);transition:color 200ms ease}
+
+        /* (4) Summary truncation - 2 lines max */
+        .prospects-list .priority-card-lg-summary-col .col-content{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
+        .prospects-list .priority-card-lg-notes-col .col-content{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
 
         /* Pipeline Styles */
         .pipeline-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -6402,6 +6442,24 @@
         btn.disabled = false;
     });
 
+    // Overflow menu toggle for prospects actions
+    function toggleProspectsOverflow(btn) {
+        var menu = btn.nextElementSibling;
+        var isOpen = menu.classList.contains('open');
+        closeAllOverflowMenus();
+        if (!isOpen) {
+            menu.classList.add('open');
+        }
+    }
+    function closeAllOverflowMenus() {
+        document.querySelectorAll('.action-overflow-menu.open').forEach(function(m) {
+            m.classList.remove('open');
+        });
+    }
+    document.addEventListener('click', function() {
+        closeAllOverflowMenus();
+    });
+
     // Quick action functions for priority cards
     async function quickShareLead(leadId) {
         currentLeadId = leadId;
@@ -7609,15 +7667,20 @@
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
                 '<div class="priority-card-lg-actions">' +
-                    '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
-                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
-                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
-                    '<button class="action-btn action-prio" onclick="event.stopPropagation();markAsPrio(\'' + lead.id + '\')"><span class="action-icon">⭐</span><span class="action-label">Prio</span></button>' +
+                    '<button class="action-btn-circle action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-tooltip">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
+                    '<button class="action-btn-circle action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-tooltip">Send to AI</span></button>' +
+                    '<div class="action-overflow-wrap">' +
+                        '<button class="action-overflow-btn" onclick="event.stopPropagation();toggleProspectsOverflow(this)">⋯</button>' +
+                        '<div class="action-overflow-menu">' +
+                            '<button class="action-overflow-item overflow-dnc" onclick="event.stopPropagation();closeAllOverflowMenus();quickMarkDNC(\'' + lead.id + '\')">🚫 Do Not Call</button>' +
+                            '<button class="action-overflow-item overflow-prio" onclick="event.stopPropagation();closeAllOverflowMenus();markAsPrio(\'' + lead.id + '\')">⭐ Prio</button>' +
+                        '</div>' +
+                    '</div>' +
                 '</div>' +
             '</div>';
         }).join('');
     }
-    
+
     // ===== PIPELINE TAB =====
     function updatePipelineList() {
         var pipelineList = document.getElementById('pipelineList');
