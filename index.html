@@ -125,7 +125,7 @@
         .filter-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin-left:auto}
         .priorities-cards{display:grid;grid-template-columns:1fr;gap:1rem}
         .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden;position:relative}
-        .priority-card-lg:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
+        .priority-card-lg:hover{border-color:rgb(52,211,153);box-shadow:0 4px 16px rgba(52,211,153,0.15)}
         .priority-card-lg-left{flex:1;min-width:0;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
         .priority-card-lg-time-col{flex:0 0 85px;background:rgba(52,211,153,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
         .priority-card-lg-time-col .time-value{font-size:1rem;font-weight:700;color:rgb(52,211,153);white-space:nowrap;min-width:70px;text-align:center}
@@ -216,7 +216,7 @@
         .prio-card-name .shared-icon{color:#3B82F6;font-size:0.875rem}
         .shared-badge{display:inline-flex;align-items:center;gap:3px;font-size:0.625rem;font-weight:600;color:#3B82F6;background:rgba(59,130,246,0.12);padding:2px 8px;border-radius:20px;white-space:nowrap;vertical-align:middle;margin-left:4px}
         .shared-icon-only{font-size:0.75rem;margin-left:4px;cursor:default;vertical-align:middle}
-        .priority-card-lg-status-col{flex:1;min-width:0;padding:14px 12px;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;justify-content:center;align-items:center}
+        .priority-card-lg-status-col{flex:none;padding:14px 12px;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;justify-content:center;align-items:center}
         .priority-card-lg-status-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:#707070;margin-bottom:8px;font-weight:400;text-align:center}
         .card-status-trigger{display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:0.75rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;white-space:nowrap;width:100%}
         .card-status-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
@@ -3074,13 +3074,15 @@
                             </div>
                             <select id="modalStatusSelect" style="display:none;">
                                 <option value="Booked">Meeting Booked</option>
-                                <option value="Sending Listings">Sending Listings</option>
-                                <option value="Scheduling Showings">Scheduling Showings</option>
                                 <option value="Retry">Retrying</option>
-                                <option value="Meeting in Person">Meeting in Person</option>
                                 <option value="Callback Rescheduled">Callback Rescheduled</option>
+                                <option value="Meeting in Person">Meeting in Person</option>
+                                <option value="Sending Listings">Sending Listings</option>
+                                <option value="Listings Sent">Listings Sent</option>
+                                <option value="Scheduling Showings">Scheduling Showings</option>
+                                <option value="Viewed Properties">Viewed Properties</option>
                                 <option value="Offer Placed">Offer Placed</option>
-                                <option value="Won">Won</option>
+                                <option value="Deal Closed">Deal Closed</option>
                             </select>
                         </div>
                     </div>
@@ -5618,14 +5620,16 @@
     
     // Status dropdown - custom UI
     var statusColors = {
-        'Booked': '#34D399', 'Sending Listings': '#14B8A6', 'Scheduling Showings': '#06B6D4',
-        'Retry': '#F59E0B', 'Meeting in Person': '#10B981', 'Callback Rescheduled': '#F97316',
-        'Offer Placed': '#8B5CF6', 'Won': '#22C55E'
+        'Booked': '#34D399', 'Retry': '#F59E0B', 'Callback Rescheduled': '#F97316',
+        'Meeting in Person': '#10B981', 'Sending Listings': '#14B8A6', 'Listings Sent': '#0EA5E9',
+        'Scheduling Showings': '#06B6D4', 'Viewed Properties': '#A78BFA',
+        'Offer Placed': '#8B5CF6', 'Deal Closed': '#22C55E'
     };
     var statusLabels = {
-        'Booked': 'Meeting Booked', 'Sending Listings': 'Sending Listings', 'Scheduling Showings': 'Scheduling Showings',
-        'Retry': 'Retrying', 'Meeting in Person': 'Meeting in Person', 'Callback Rescheduled': 'Callback Rescheduled',
-        'Offer Placed': 'Offer Placed', 'Won': 'Won'
+        'Booked': 'Meeting Booked', 'Retry': 'Retrying', 'Callback Rescheduled': 'Callback Rescheduled',
+        'Meeting in Person': 'Meeting in Person', 'Sending Listings': 'Sending Listings', 'Listings Sent': 'Listings Sent',
+        'Scheduling Showings': 'Scheduling Showings', 'Viewed Properties': 'Viewed Properties',
+        'Offer Placed': 'Offer Placed', 'Deal Closed': 'Deal Closed'
     };
 
     function getStatusColor(status) { return statusColors[status] || '#6B7280'; }
@@ -5719,10 +5723,10 @@
         var status = f['Status'] || f['Disposition'] || f['Outcome'] || 'New';
         var color = getStatusColor(status);
         var label = getStatusLabel(status);
-        return '<div class="priority-card-lg-status-col" onclick="event.stopPropagation()">' +
+        return '<div class="priority-card-lg-status-col" onclick="if(!event.target.closest(\'.card-status-trigger\')&&!event.target.closest(\'.card-status-menu\'))openLeadModal(\'' + lead.id + '\')">' +
             '<div class="col-label">Status</div>' +
             '<div style="position:relative;width:100%">' +
-                '<button type="button" class="card-status-trigger" onclick="toggleCardStatus(this,\'' + lead.id + '\')">' +
+                '<button type="button" class="card-status-trigger" onclick="event.stopPropagation();toggleCardStatus(this,\'' + lead.id + '\')">' +
                     '<span class="status-dot" style="background:' + color + '"></span>' +
                     '<span class="card-status-label">' + escapeHtml(label) + '</span>' +
                     '<span class="chevron">▼</span>' +
@@ -5733,10 +5737,11 @@
     }
 
     var allStatusOptions = [
-        {value:'Booked',label:'Meeting Booked'},{value:'Sending Listings',label:'Sending Listings'},
-        {value:'Scheduling Showings',label:'Scheduling Showings'},{value:'Retry',label:'Retrying'},
-        {value:'Meeting in Person',label:'Meeting in Person'},{value:'Callback Rescheduled',label:'Callback Rescheduled'},
-        {value:'Offer Placed',label:'Offer Placed'},{value:'Won',label:'Won'}
+        {value:'Booked',label:'Meeting Booked'},{value:'Retry',label:'Retrying'},
+        {value:'Callback Rescheduled',label:'Callback Rescheduled'},{value:'Meeting in Person',label:'Meeting in Person'},
+        {value:'Sending Listings',label:'Sending Listings'},{value:'Listings Sent',label:'Listings Sent'},
+        {value:'Scheduling Showings',label:'Scheduling Showings'},{value:'Viewed Properties',label:'Viewed Properties'},
+        {value:'Offer Placed',label:'Offer Placed'},{value:'Deal Closed',label:'Deal Closed'}
     ];
 
     function toggleCardStatus(triggerEl, leadId) {
