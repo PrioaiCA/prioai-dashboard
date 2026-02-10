@@ -1677,8 +1677,17 @@
                                 </div>
                                 <select id="prospectsStatus" class="filter-select">
                                     <option value="all">All Status</option>
-                                    <option value="Booked">Booked</option>
+                                    <option value="Booked">Meeting Booked</option>
                                     <option value="Callback">Callback</option>
+                                    <option value="Retry">Retrying</option>
+                                    <option value="Callback Rescheduled">Callback Rescheduled</option>
+                                    <option value="Meeting in Person">Meeting in Person</option>
+                                    <option value="Sending Listings">Sending Listings</option>
+                                    <option value="Listings Sent">Listings Sent</option>
+                                    <option value="Scheduling Showings">Scheduling Showings</option>
+                                    <option value="Viewed Properties">Viewed Properties</option>
+                                    <option value="Offer Placed">Offer Placed</option>
+                                    <option value="Deal Closed">Deal Closed</option>
                                 </select>
                                 <select id="prospectsOwnership" class="filter-select">
                                     <option value="all">All Leads</option>
@@ -1795,8 +1804,17 @@
                                 </select>
                                 <select id="sharedStatus" class="filter-select">
                                     <option value="all">All Status</option>
-                                    <option value="Booked">Booked</option>
+                                    <option value="Booked">Meeting Booked</option>
                                     <option value="Callback">Callback</option>
+                                    <option value="Retry">Retrying</option>
+                                    <option value="Callback Rescheduled">Callback Rescheduled</option>
+                                    <option value="Meeting in Person">Meeting in Person</option>
+                                    <option value="Sending Listings">Sending Listings</option>
+                                    <option value="Listings Sent">Listings Sent</option>
+                                    <option value="Scheduling Showings">Scheduling Showings</option>
+                                    <option value="Viewed Properties">Viewed Properties</option>
+                                    <option value="Offer Placed">Offer Placed</option>
+                                    <option value="Deal Closed">Deal Closed</option>
                                     <option value="Timeline">Timeline</option>
                                     <option value="Follow Up">Follow Up</option>
                                 </select>
@@ -7533,7 +7551,8 @@
             // Status filter
             if (statusFilter !== 'all') {
                 if (statusFilter === 'Booked' && !status.includes('Booked')) return false;
-                if (statusFilter === 'Callback' && !status.includes('Callback')) return false;
+                else if (statusFilter === 'Callback' && !status.includes('Callback')) return false;
+                else if (statusFilter !== 'Booked' && statusFilter !== 'Callback' && status !== statusFilter) return false;
             }
 
             // Search filter
@@ -9383,7 +9402,13 @@
             // Status filter
             if (statusFilter !== 'all') {
                 var status = f['Status'] || f['Disposition'] || '';
-                if (!status.includes(statusFilter)) return false;
+                if (statusFilter === 'Booked') {
+                    if (!status.includes('Booked')) return false;
+                } else if (statusFilter === 'Callback') {
+                    if (!status.includes('Callback')) return false;
+                } else {
+                    if (status !== statusFilter) return false;
+                }
             }
 
             // Timeframe filter
