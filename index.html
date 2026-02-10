@@ -123,13 +123,26 @@
         .prio-header-actions,.prospects-header-actions,.pipeline-header-actions{display:flex;align-items:center;gap:1rem}
         .filters-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;justify-content:space-between}
         .filter-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin-left:auto}
-        .priorities-cards{display:grid;grid-template-columns:1fr;gap:1rem}
-        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden;position:relative}
-        .priority-card-lg:hover{border-color:rgb(52,211,153);box-shadow:0 4px 16px rgba(52,211,153,0.15)}
+        .priorities-cards{display:grid;grid-template-columns:1fr;gap:0}
+        .priorities-cards > .priority-card-lg + .priority-card-lg{border-top:1px solid #1a1a1a}
+        .priorities-cards > .missed-meeting-separator{border-top:1px solid #1a1a1a}
+        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden;position:relative;border-left:3px solid #F59E0B;margin-bottom:0;border-radius:0 12px 12px 0}
+        .priority-card-lg:first-child{border-radius:0 12px 0 0}
+        .priority-card-lg:last-child{border-radius:0 0 12px 0}
+        .priority-card-lg:only-child{border-radius:0 12px 12px 0}
+        .priority-card-lg.meeting-done{border-left-color:#34D399}
+        .priority-card-lg.missed-meeting{border-left-color:#ef4444}
+        .priority-card-lg:hover{border-color:rgba(255,255,255,0.2);border-left-color:#F59E0B;background:#151515;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+        .priority-card-lg.meeting-done:hover{border-left-color:#34D399}
+        .priority-card-lg.missed-meeting:hover{border-left-color:#ef4444}
         .priority-card-lg-left{flex:none;min-width:0;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
-        .priority-card-lg-time-col{flex:0 0 85px;background:rgba(52,211,153,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
-        .priority-card-lg-time-col .time-value{font-size:1rem;font-weight:700;color:rgb(52,211,153);white-space:nowrap;min-width:70px;text-align:center}
-        .priority-card-lg-time-col .date-value{font-size:0.75rem;font-weight:500;color:rgb(52,211,153);opacity:0.8;margin-bottom:2px;text-align:center}
+        .priority-card-lg-time-col{flex:0 0 85px;background:rgba(245,158,11,0.06);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+        .meeting-done .priority-card-lg-time-col{background:rgba(52,211,153,0.06)}
+        .priority-card-lg-time-col .time-value{font-size:0.875rem;font-weight:700;color:#F59E0B;white-space:nowrap;min-width:60px;text-align:center;background:rgba(245,158,11,0.1);padding:4px 10px;border-radius:20px}
+        .meeting-done .priority-card-lg-time-col .time-value{background:rgba(52,211,153,0.1);color:rgb(52,211,153)}
+        .missed-meeting .priority-card-lg-time-col .time-value{background:rgba(239,68,68,0.1);color:#ef4444}
+        .priority-card-lg-time-col .date-value{font-size:0.75rem;font-weight:500;color:#F59E0B;opacity:0.8;margin-bottom:2px;text-align:center}
+        .meeting-done .priority-card-lg-time-col .date-value{color:rgb(52,211,153)}
         .btn-schedule-card{background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s}
         .btn-schedule-card:hover{background:rgb(52,211,153);color:#000}
         .btn-takeover{background:rgba(59,130,246,0.15);color:rgb(59,130,246);border:1px solid rgba(59,130,246,0.3);padding:10px 20px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:8px}
@@ -142,9 +155,9 @@
         .priority-card-lg-info{flex:0 0 280px;padding:14px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
         .priority-card-lg-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
         .priority-card-lg-name{font-family:var(--font-heading);font-size:1rem;font-weight:600;display:flex;align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-        .priority-card-lg-badge{font-size:0.6875rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase}
-        .priority-card-lg-badge.booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
-        .priority-card-lg-badge.callback{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .priority-card-lg-badge{font-size:0.6875rem;padding:3px 10px;border-radius:20px;font-weight:600;text-transform:uppercase}
+        .priority-card-lg-badge.booked{background:rgba(52,211,153,0.1);color:rgb(52,211,153)}
+        .priority-card-lg-badge.callback{background:rgba(245,158,11,0.1);color:#f59e0b}
         .priority-card-lg-phone{font-size:0.8125rem;font-weight:400;color:#707070;margin-bottom:4px;font-family:monospace}
         .priority-card-lg-lastcall{font-size:0.6875rem;font-weight:400;color:#707070;display:flex;align-items:center;gap:6px}
         .priority-card-lg-lastcall .lastcall-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
@@ -159,15 +172,15 @@
         .missed-meeting-separator::before,.missed-meeting-separator::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent)}
         .missed-meeting-separator span{font-size:0.8125rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:8px}
         .missed-meeting-separator .missed-count{background:#ef4444;color:#fff !important;font-size:0.75rem;padding:2px 8px;border-radius:10px;font-weight:700}
-        .missed-meeting-info{font-size:0.6875rem;font-weight:400;color:#707070;text-align:center;margin-bottom:16px;padding:8px 16px;background:rgba(239,68,68,0.08);border-radius:8px}
-        .priority-card-lg.missed-meeting{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05)}
-        .priority-card-lg.missed-meeting:hover{border-color:#ef4444}
+        .missed-meeting-info{font-size:0.6875rem;font-weight:400;color:#707070;text-align:center;margin-bottom:0;padding:8px 16px;background:rgba(239,68,68,0.08);border-radius:8px}
+        .priority-card-lg.missed-meeting{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05);border-left-color:#ef4444}
+        .priority-card-lg.missed-meeting:hover{border-color:#ef4444;border-left-color:#ef4444}
         .priority-card-lg.missed-meeting .priority-card-lg-time-col{background:rgba(239,68,68,0.15)}
         .priority-card-lg.missed-meeting .priority-card-lg-time-col .time-value{color:#ef4444}
         .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
-        .priority-card-lg.meeting-done{opacity:0.5;border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02)}
-        .priority-card-lg.meeting-done:hover{opacity:0.7}
-        .meeting-done-badge{background:rgba(255,255,255,0.12);color:#A0A0A0;font-size:0.5625rem;font-weight:600;padding:2px 6px;border-radius:3px;text-transform:uppercase;position:absolute;top:4px;left:4px;z-index:1}
+        .priority-card-lg.meeting-done{opacity:0.5;border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);border-left-color:#34D399}
+        .priority-card-lg.meeting-done:hover{opacity:0.7;border-left-color:#34D399}
+        .meeting-done-badge{background:rgba(52,211,153,0.1);color:#34D399;font-size:0.5625rem;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase;position:absolute;top:4px;left:4px;z-index:1}
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:6px;margin-right:8px;flex-shrink:0}
         .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
         .priority-card-lg-time-col{position:relative}
@@ -187,7 +200,8 @@
         .action-btn.action-unprio:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
         .action-btn.action-takeover:hover{background:rgba(59,130,246,0.2);border-color:#3B82F6}
         .priorities-cards:not(.list-view){display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
-        .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
+        .priorities-cards:not(.list-view) > .priority-card-lg + .priority-card-lg{border-top:1px solid rgba(255,255,255,0.1)}
+        .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px;border-radius:12px;border-left:3px solid #F59E0B}
         .priorities-cards:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priorities-cards:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .priorities-cards:not(.list-view) .priority-card-lg-info{flex:1}
@@ -520,23 +534,45 @@
         .dashboard-loading-spinner{width:24px;height:24px;border:2px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         .overview-card{position:relative;overflow:hidden}
         .stat-card{position:relative;overflow:hidden}
+        .today-number-item{position:relative;overflow:hidden}
         .header-stat-badge{position:relative;overflow:hidden}
         .dashboard-loading .overview-card .dashboard-loading-overlay,
         .dashboard-loading .stat-card .dashboard-loading-overlay,
+        .dashboard-loading .today-number-item .dashboard-loading-overlay,
         .dashboard-loading .header-stat-badge .dashboard-loading-overlay{display:flex}
         .overview-card .dashboard-loading-overlay,
         .stat-card .dashboard-loading-overlay,
+        .today-number-item .dashboard-loading-overlay,
         .header-stat-badge .dashboard-loading-overlay{display:none}
         .overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
         @media(min-width:768px){.overview-grid{grid-template-columns:repeat(4,1fr)}}
-        .overview-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.15s}
-        .overview-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
+        .overview-card{background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,transparent 100%);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.15s;border-bottom:2px solid rgba(255,255,255,0.1)}
+        .overview-card:hover{border-color:rgba(255,255,255,0.2);transform:translateY(-2px)}
+        .overview-card.card-green{border-bottom-color:#34D399}
+        .overview-card.card-green:hover{border-color:rgba(52,211,153,0.4);border-bottom-color:#34D399}
+        .overview-card.card-blue{border-bottom-color:#3B82F6}
+        .overview-card.card-blue:hover{border-color:rgba(59,130,246,0.4);border-bottom-color:#3B82F6}
+        .overview-card.card-orange{border-bottom-color:#F59E0B}
+        .overview-card.card-orange:hover{border-color:rgba(245,158,11,0.4);border-bottom-color:#F59E0B}
+        .overview-card.card-purple{border-bottom-color:#8B5CF6}
+        .overview-card.card-purple:hover{border-color:rgba(139,92,246,0.4);border-bottom-color:#8B5CF6}
         .overview-card.highlight{background:rgba(52,211,153,0.1);border-color:rgb(52,211,153)}
-        .overview-card-header{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem}
+        .overview-card-header{display:flex;align-items:center;gap:0.625rem;margin-bottom:0.75rem}
         .overview-card-header h4{font-family:var(--font-heading);font-size:0.875rem;font-weight:700;color:rgba(255,255,255,0.8)}
-        .overview-card-icon{font-size:1rem}
-        .overview-card-value{font-family:var(--font-heading);font-size:2rem;font-weight:700;margin-bottom:0.25rem}
-        .overview-card-desc{font-size:0.75rem;font-weight:400;color:#A0A0A0}
+        .overview-card-icon{font-size:0.875rem;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0}
+        .card-green .overview-card-icon{background:rgba(52,211,153,0.15)}
+        .card-blue .overview-card-icon{background:rgba(59,130,246,0.15)}
+        .card-orange .overview-card-icon{background:rgba(245,158,11,0.15)}
+        .card-purple .overview-card-icon{background:rgba(139,92,246,0.15)}
+        .overview-card-value{font-family:var(--font-heading);font-size:2.25rem;font-weight:700;margin-bottom:0.25rem;line-height:1}
+        .overview-card-desc{font-size:0.75rem;font-weight:500;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.04em}
+        .today-numbers-bar{display:flex;align-items:stretch;background:rgba(255,255,255,0.02);border:1px solid #1a1a1a;border-radius:16px;margin-bottom:2rem;overflow:hidden;position:relative}
+        .today-number-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem 0.75rem;gap:0.25rem;position:relative;overflow:hidden}
+        .today-number-icon{font-size:1.125rem;margin-bottom:0.125rem}
+        .today-number-value{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;line-height:1;color:#FFFFFF}
+        .today-number-label{font-size:0.6875rem;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.04em}
+        .today-numbers-divider{width:1px;background:#2a2a2a;align-self:stretch;flex-shrink:0}
+        .today-number-item .dashboard-loading-overlay{border-radius:0}
         .meetings-list{display:flex;flex-direction:column;gap:0.5rem}
         .meetings-empty{text-align:center;padding:2rem;color:#707070;background:#111;border-radius:12px}
         .welcome-meta{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
@@ -1481,7 +1517,7 @@
                         <!-- Row 1: Pipeline Overview -->
                         <div class="section-label">Pipeline Overview</div>
                         <div class="overview-grid">
-                            <div class="overview-card" onclick="switchPage('prio')">
+                            <div class="overview-card card-green" onclick="switchPage('prio')">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">⚡</span>
@@ -1490,7 +1526,7 @@
                                 <div class="overview-card-value" id="overviewPrio">0</div>
                                 <div class="overview-card-desc">Priority leads to focus on</div>
                             </div>
-                            <div class="overview-card" onclick="switchPage('prospects')">
+                            <div class="overview-card card-blue" onclick="switchPage('prospects')">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">📋</span>
@@ -1499,7 +1535,7 @@
                                 <div class="overview-card-value" id="overviewScheduled">0</div>
                                 <div class="overview-card-desc">Callbacks & meetings booked</div>
                             </div>
-                            <div class="overview-card" style="cursor:default">
+                            <div class="overview-card card-orange" style="cursor:default">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">📞</span>
@@ -1508,7 +1544,7 @@
                                 <div class="overview-card-value" id="overviewActive">0</div>
                                 <div class="overview-card-desc">Being called by AI</div>
                             </div>
-                            <div class="overview-card" onclick="switchPage('pipeline')">
+                            <div class="overview-card card-purple" onclick="switchPage('pipeline')">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">🤖</span>
@@ -1521,38 +1557,33 @@
 
                         <!-- Row 2: Today's Activity -->
                         <div class="section-label">Today's Numbers</div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
+                        <div class="today-numbers-bar">
+                            <div class="today-number-item">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
-                                <div class="stat-icon">📞</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statCallsToday">0</div>
-                                    <div class="stat-label">AI Calls</div>
-                                </div>
+                                <div class="today-number-icon">📞</div>
+                                <div class="today-number-value" id="statCallsToday">0</div>
+                                <div class="today-number-label">AI Calls</div>
                             </div>
-                            <div class="stat-card">
+                            <div class="today-numbers-divider"></div>
+                            <div class="today-number-item">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
-                                <div class="stat-icon">💬</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statConversationsToday">0</div>
-                                    <div class="stat-label">AI Qualified Conversations</div>
-                                </div>
+                                <div class="today-number-icon">💬</div>
+                                <div class="today-number-value" id="statConversationsToday">0</div>
+                                <div class="today-number-label">Conversations</div>
                             </div>
-                            <div class="stat-card">
+                            <div class="today-numbers-divider"></div>
+                            <div class="today-number-item">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
-                                <div class="stat-icon">📅</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statMeetingsToday">0</div>
-                                    <div class="stat-label">AI Meetings Scheduled</div>
-                                </div>
+                                <div class="today-number-icon">📅</div>
+                                <div class="today-number-value" id="statMeetingsToday">0</div>
+                                <div class="today-number-label">Meetings</div>
                             </div>
-                            <div class="stat-card">
+                            <div class="today-numbers-divider"></div>
+                            <div class="today-number-item">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
-                                <div class="stat-icon">🔄</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statFollowUpsToday">0</div>
-                                    <div class="stat-label">AI Follow Ups Scheduled</div>
-                                </div>
+                                <div class="today-number-icon">🔄</div>
+                                <div class="today-number-value" id="statFollowUpsToday">0</div>
+                                <div class="today-number-label">Follow Ups</div>
                             </div>
                         </div>
 
