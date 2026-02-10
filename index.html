@@ -180,6 +180,22 @@
         .prio-card-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prio-card-name{font-family:var(--font-heading);font-size:1.125rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
         .prio-card-name .shared-icon{color:#3B82F6;font-size:0.875rem}
+        .shared-badge{display:inline-flex;align-items:center;gap:3px;font-size:0.625rem;font-weight:600;color:#3B82F6;background:rgba(59,130,246,0.12);padding:2px 8px;border-radius:20px;white-space:nowrap;vertical-align:middle;margin-left:4px}
+        .custom-status-dropdown{position:relative;width:100%;max-width:200px}
+        .status-dropdown-trigger{display:flex;align-items:center;gap:8px;width:100%;padding:6px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.8125rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s ease}
+        .status-dropdown-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
+        .status-dropdown-trigger.open{border-color:rgba(52,211,153,0.5);background:rgba(255,255,255,0.06)}
+        .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+        .status-chevron{transition:transform 0.2s ease;opacity:0.5;margin-left:auto;flex-shrink:0}
+        .status-dropdown-trigger.open .status-chevron{transform:rotate(180deg)}
+        .status-dropdown-menu{display:none;position:absolute;top:calc(100% + 4px);left:0;width:100%;min-width:200px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:4px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);backdrop-filter:blur(20px);max-height:280px;overflow-y:auto}
+        .status-dropdown-menu.open{display:block;animation:statusDropIn 0.15s ease}
+        @keyframes statusDropIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+        .status-option{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8125rem;color:rgba(255,255,255,0.8);transition:all 0.15s ease;border:none;background:none;width:100%;text-align:left;font-family:var(--font-body)}
+        .status-option:hover{background:rgba(255,255,255,0.08);color:#fff}
+        .status-option.selected{background:rgba(52,211,153,0.12);color:#34D399}
+        .status-option .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+        .ai-status-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:4px;font-size:0.625rem;font-weight:700;cursor:default;flex-shrink:0;line-height:1}
         .prio-card-meta{display:flex;gap:16px;font-size:0.8125rem;color:rgba(255,255,255,0.6)}
         .prio-card-phone{font-family:monospace}
         .prio-card-lastcall{display:flex;align-items:center;gap:6px}
@@ -2995,7 +3011,15 @@
                     <div class="lead-info-item">
                         <label>📊 Status</label>
                         <div class="value">
-                            <select id="modalStatusSelect" style="background:#111;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:4px 8px;font-size:0.8125rem;cursor:pointer;width:100%;max-width:180px;">
+                            <div class="custom-status-dropdown" id="statusDropdownWrapper">
+                                <button type="button" class="status-dropdown-trigger" id="statusDropdownTrigger" onclick="toggleStatusDropdown()">
+                                    <span class="status-dot" id="statusDot"></span>
+                                    <span id="statusDropdownLabel">New Lead</span>
+                                    <svg class="status-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                                <div class="status-dropdown-menu" id="statusDropdownMenu"></div>
+                            </div>
+                            <select id="modalStatusSelect" style="display:none;">
                                 <option value="New">New Lead</option>
                                 <option value="Retry">Retrying</option>
                                 <option value="Booked">Meeting Booked</option>
@@ -3024,7 +3048,7 @@
                 </div>
 
                 <div class="lead-section">
-                    <h3 style="display:flex;align-items:center;gap:8px;">🤖 AI Summary <span id="modalAICallDate" style="font-size:0.7rem;font-weight:400;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:4px;white-space:nowrap;"></span></h3>
+                    <h3 style="display:flex;align-items:center;gap:8px;">🤖 AI Summary <span id="modalAICallDate" style="font-size:0.7rem;font-weight:400;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:4px;white-space:nowrap;"></span><span id="modalAIStatusBadge" style="display:none;"></span></h3>
                     <div class="lead-summary-content" id="modalSummary">No summary available</div>
                 </div>
 
@@ -4580,7 +4604,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -5227,6 +5251,7 @@
             }
             statusSelect.value = status;
         }
+        syncStatusDropdownDisplay(status);
 
         var lastUpdated = f['Updated At'];
         document.getElementById('modalLastCalled').textContent = lastUpdated ? formatTimeAgo(lastUpdated) : 'Never';
@@ -5249,6 +5274,28 @@
         var aiCallDateEl = document.getElementById('modalAICallDate');
         if (aiCallDateEl) {
             aiCallDateEl.textContent = lastAICall ? formatDateTime(lastAICall) : '';
+        }
+        // B/C badge for Booked or Callback
+        var aiBadgeEl = document.getElementById('modalAIStatusBadge');
+        if (aiBadgeEl) {
+            var leadStatus = (f['Status'] || f['Outcome'] || '').toLowerCase();
+            if (leadStatus.includes('booked')) {
+                aiBadgeEl.className = 'ai-status-badge';
+                aiBadgeEl.style.display = 'inline-flex';
+                aiBadgeEl.style.background = 'rgba(52,211,153,0.15)';
+                aiBadgeEl.style.color = '#34D399';
+                aiBadgeEl.textContent = 'B';
+                aiBadgeEl.title = 'Meeting Booked';
+            } else if (leadStatus.includes('callback')) {
+                aiBadgeEl.className = 'ai-status-badge';
+                aiBadgeEl.style.display = 'inline-flex';
+                aiBadgeEl.style.background = 'rgba(249,115,22,0.15)';
+                aiBadgeEl.style.color = '#F97316';
+                aiBadgeEl.textContent = 'C';
+                aiBadgeEl.title = 'Callback Requested';
+            } else {
+                aiBadgeEl.style.display = 'none';
+            }
         }
 
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || f['Summary'] || 'No summary available';
@@ -5522,10 +5569,72 @@
         }
     });
     
-    // Status dropdown change
-    document.getElementById('modalStatusSelect').addEventListener('change', async function() {
+    // Status dropdown - custom UI
+    var statusColors = {
+        'New': '#3B82F6', 'Retry': '#F59E0B', 'Booked': '#34D399', 'Callback': '#F97316',
+        'Follow Up': '#8B5CF6', 'Timeline': '#6366F1', 'Scheduling Showings': '#06B6D4',
+        'Sending Listings': '#14B8A6', 'Meeting in Person': '#10B981', 'Closed': '#EF4444', 'DNC': '#6B7280'
+    };
+    var statusLabels = {
+        'New': 'New Lead', 'Retry': 'Retrying', 'Booked': 'Meeting Booked', 'Callback': 'Callback Requested',
+        'Follow Up': 'Following Up', 'Timeline': 'On Timeline', 'Scheduling Showings': 'Scheduling Showings',
+        'Sending Listings': 'Sending Listings', 'Meeting in Person': 'Meeting in Person', 'Closed': 'Closed', 'DNC': 'Do Not Call'
+    };
+
+    function getStatusColor(status) { return statusColors[status] || '#6B7280'; }
+    function getStatusLabel(status) { return statusLabels[status] || status; }
+
+    function buildStatusDropdownMenu() {
+        var menu = document.getElementById('statusDropdownMenu');
+        if (!menu) return;
+        var select = document.getElementById('modalStatusSelect');
+        var currentVal = select ? select.value : '';
+        menu.innerHTML = '';
+        var options = select ? Array.from(select.options) : [];
+        options.forEach(function(opt) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'status-option' + (opt.value === currentVal ? ' selected' : '');
+            btn.innerHTML = '<span class="status-dot" style="background:' + getStatusColor(opt.value) + '"></span>' + escapeHtml(opt.textContent);
+            btn.onclick = function() { selectStatus(opt.value); };
+            menu.appendChild(btn);
+        });
+    }
+
+    function syncStatusDropdownDisplay(status) {
+        var dot = document.getElementById('statusDot');
+        var label = document.getElementById('statusDropdownLabel');
+        if (dot) dot.style.background = getStatusColor(status);
+        if (label) label.textContent = getStatusLabel(status);
+    }
+
+    function toggleStatusDropdown() {
+        var trigger = document.getElementById('statusDropdownTrigger');
+        var menu = document.getElementById('statusDropdownMenu');
+        if (!trigger || !menu) return;
+        var isOpen = menu.classList.contains('open');
+        if (isOpen) {
+            menu.classList.remove('open');
+            trigger.classList.remove('open');
+        } else {
+            buildStatusDropdownMenu();
+            menu.classList.add('open');
+            trigger.classList.add('open');
+        }
+    }
+    window.toggleStatusDropdown = toggleStatusDropdown;
+
+    async function selectStatus(val) {
+        var menu = document.getElementById('statusDropdownMenu');
+        var trigger = document.getElementById('statusDropdownTrigger');
+        if (menu) menu.classList.remove('open');
+        if (trigger) trigger.classList.remove('open');
+
+        var select = document.getElementById('modalStatusSelect');
+        if (select) select.value = val;
+        syncStatusDropdownDisplay(val);
+
         if (!currentLeadId) return;
-        var val = this.value;
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
@@ -5534,12 +5643,22 @@
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
             if (lead) lead.fields['Status'] = val;
             showToast('Status updated', 'success');
-            // Refresh lists to move lead to correct section
             updatePrioList();
             updateProspectsTable();
         } catch (err) {
             console.error('Error updating status:', err);
             showToast('Failed to update status', 'error');
+        }
+    }
+
+    // Close status dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        var wrapper = document.getElementById('statusDropdownWrapper');
+        if (wrapper && !wrapper.contains(e.target)) {
+            var menu = document.getElementById('statusDropdownMenu');
+            var trigger = document.getElementById('statusDropdownTrigger');
+            if (menu) menu.classList.remove('open');
+            if (trigger) trigger.classList.remove('open');
         }
     });
 
@@ -6265,6 +6384,26 @@
         if (agent) return agent.name;
         return email.split('@')[0];
     }
+
+    // Helper: generate shared badge HTML for lead cards
+    function getSharedBadgeHtml(lead) {
+        var f = lead.fields;
+        var sharedWithEmail = f['Shared With Email'];
+        if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
+        var isSharedToMe = lead.isShared;
+        var isShared = isSharedToMe || sharedWithEmail;
+        if (!isShared) return '';
+        var displayName = '';
+        if (isSharedToMe) {
+            var ownerEmail = f['Client Email'];
+            if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
+            displayName = getAgentNameByEmail(ownerEmail);
+        } else if (sharedWithEmail) {
+            displayName = getAgentNameByEmail(sharedWithEmail);
+        }
+        var label = isSharedToMe ? 'From ' + displayName : 'w/ ' + displayName;
+        return ' <span class="shared-badge" title="' + (isSharedToMe ? 'Shared by ' : 'Shared with ') + escapeHtml(displayName) + '">🔗 ' + escapeHtml(label) + '</span>';
+    }
     
     // Share button click
     document.getElementById('modalShareBtn').addEventListener('click', async function() {
@@ -6400,7 +6539,7 @@
             // Update card display - remove share icon
             var cardEl = document.querySelector('.prio-card[data-id="' + leadIdToUpdate + '"]');
             if (cardEl) {
-                var sharedIcon = cardEl.querySelector('.shared-icon');
+                var sharedIcon = cardEl.querySelector('.shared-badge') || cardEl.querySelector('.shared-icon');
                 if (sharedIcon) sharedIcon.remove();
                 var shareActionBtn = cardEl.querySelector('.action-share');
                 if (shareActionBtn) {
@@ -6412,7 +6551,7 @@
             // Update priority card
             var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadIdToUpdate + '"]');
             if (priorityCard) {
-                var prioSharedIcon = priorityCard.querySelector('.shared-icon');
+                var prioSharedIcon = priorityCard.querySelector('.shared-badge') || priorityCard.querySelector('.shared-icon');
                 if (prioSharedIcon) prioSharedIcon.remove();
                 // Update quick action share button to show Share
                 var shareActionBtn = priorityCard.querySelector('.action-share');
@@ -6503,8 +6642,8 @@
             var cardEl = document.querySelector('.prio-card[data-id="' + leadIdToUpdate + '"]');
             if (cardEl) {
                 var nameEl = cardEl.querySelector('.prio-card-name');
-                if (nameEl && !nameEl.querySelector('.shared-icon')) {
-                    nameEl.innerHTML = nameEl.innerHTML + ' <span class="shared-icon" title="Shared with ' + sharedWithName + '">🔗</span>';
+                if (nameEl && !nameEl.querySelector('.shared-badge')) {
+                    nameEl.innerHTML = nameEl.innerHTML + ' <span class="shared-badge" title="Shared with ' + escapeHtml(sharedWithName) + '">🔗 w/ ' + escapeHtml(sharedWithName) + '</span>';
                 }
                 // Update quick action share button on small card if present
                 var cardShareBtn = cardEl.querySelector('.action-share');
@@ -6518,8 +6657,8 @@
             var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadIdToUpdate + '"]');
             if (priorityCard) {
                 var prioNameEl = priorityCard.querySelector('.priority-card-lg-name');
-                if (prioNameEl && !prioNameEl.querySelector('.shared-icon')) {
-                    prioNameEl.innerHTML = prioNameEl.innerHTML + ' <span class="shared-icon" title="Shared with ' + sharedWithName + '">🔗</span>';
+                if (prioNameEl && !prioNameEl.querySelector('.shared-badge')) {
+                    prioNameEl.innerHTML = prioNameEl.innerHTML + ' <span class="shared-badge" title="Shared with ' + escapeHtml(sharedWithName) + '">🔗 w/ ' + escapeHtml(sharedWithName) + '</span>';
                 }
                 // Update quick action share button to show Shared
                 var shareActionBtn = priorityCard.querySelector('.action-share');
@@ -6880,36 +7019,23 @@
         scheduleLeadId = currentLeadId;
         scheduleLeadData = f;
 
-        // Pre-fill with existing booked time
-        var existingTime = f['Booked Time'] ? new Date(f['Booked Time']) : new Date();
-        scheduleCalMonth = new Date(existingTime.getFullYear(), existingTime.getMonth(), 1);
-        selectedDate = new Date(existingTime.getFullYear(), existingTime.getMonth(), existingTime.getDate());
-
-        renderCalendar();
-        updateTimeDropdowns(); // Populate dropdowns with proper disabled states
-
-        // Set hour and minute to existing booking values (if not past)
-        var hour = existingTime.getHours();
-        var minute = existingTime.getMinutes();
-        var hourSelect = document.getElementById('scheduleHour');
-        var minuteSelect = document.getElementById('scheduleMinute');
-
-        // Only set if the option exists and is not disabled
-        var hourOption = hourSelect.querySelector('option[value="' + hour + '"]');
-        if (hourOption && !hourOption.disabled) {
-            hourSelect.value = hour;
-            updateMinuteDropdown(); // Update minutes for selected hour
-            // Find closest minute option
-            var minuteOptions = [0, 15, 30, 45];
-            var closestMinute = minuteOptions.reduce(function(prev, curr) {
-                return Math.abs(curr - minute) < Math.abs(prev - minute) ? curr : prev;
-            });
-            var minOption = minuteSelect.querySelector('option[value="' + closestMinute + '"]');
-            if (minOption && !minOption.disabled) {
-                minuteSelect.value = closestMinute;
-            }
+        // Default to next valid date (today, or tomorrow if past 7pm EST) - same as openScheduleModal
+        var now = new Date();
+        var estNow = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        var estHour = estNow.getHours();
+        if (estHour >= 19) {
+            var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            selectedDate = tomorrow;
+            scheduleCalMonth = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), 1);
+        } else {
+            selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            scheduleCalMonth = new Date(now.getFullYear(), now.getMonth(), 1);
         }
 
+        renderCalendar();
+        updateTimeDropdowns();
+
+        document.getElementById('scheduleNote').value = '';
         document.getElementById('scheduleModal').classList.add('active');
     }
     window.editBookingFromModal = editBookingFromModal;
@@ -7237,7 +7363,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -7369,7 +7495,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedBadgeHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -7571,7 +7697,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedBadgeHtml(lead) + '</div>' +
                             statusBadge +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
@@ -7781,7 +7907,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedBadgeHtml(lead) + '</div>' +
                             statusBadge +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
@@ -7988,7 +8114,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Called at ' + callTimeDisplay + ' EST</div>' +
@@ -8142,6 +8268,7 @@
             }
             statusSelect.value = status;
         }
+        syncStatusDropdownDisplay(status);
 
         document.getElementById('modalLastCalled').textContent = formatDateTime(getMostRecentLastCalled(f));
 
@@ -8162,6 +8289,28 @@
         var aiCallDateEl = document.getElementById('modalAICallDate');
         if (aiCallDateEl) {
             aiCallDateEl.textContent = lastAICall ? formatDateTime(lastAICall) : '';
+        }
+        // B/C badge for Booked or Callback
+        var aiBadgeEl = document.getElementById('modalAIStatusBadge');
+        if (aiBadgeEl) {
+            var leadStatus = (f['Status'] || f['Disposition'] || '').toLowerCase();
+            if (leadStatus.includes('booked')) {
+                aiBadgeEl.className = 'ai-status-badge';
+                aiBadgeEl.style.display = 'inline-flex';
+                aiBadgeEl.style.background = 'rgba(52,211,153,0.15)';
+                aiBadgeEl.style.color = '#34D399';
+                aiBadgeEl.textContent = 'B';
+                aiBadgeEl.title = 'Meeting Booked';
+            } else if (leadStatus.includes('callback')) {
+                aiBadgeEl.className = 'ai-status-badge';
+                aiBadgeEl.style.display = 'inline-flex';
+                aiBadgeEl.style.background = 'rgba(249,115,22,0.15)';
+                aiBadgeEl.style.color = '#F97316';
+                aiBadgeEl.textContent = 'C';
+                aiBadgeEl.title = 'Callback Requested';
+            } else {
+                aiBadgeEl.style.display = 'none';
+            }
         }
 
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || 'No summary available';
@@ -8815,7 +8964,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + (isShared ? ' <span class="shared-icon" title="Shared lead">🔗</span>' : '') + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -9045,7 +9194,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + ' <span class="shared-icon" title="Shared lead">🔗</span></div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
