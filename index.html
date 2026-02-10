@@ -21,14 +21,14 @@
         /* Critical inline styles for immediate rendering */
         .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
         @media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
-        .stat-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;display:flex;align-items:center;gap:1rem}
+        .stat-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;display:flex;align-items:center;gap:1rem}
         .stat-card.accent{background:rgba(52,211,153,0.1);border-color:rgb(52,211,153)}
         .stat-icon{font-size:1.5rem}
         .stat-value{font-family:var(--font-heading);font-size:2rem;font-weight:700;line-height:1;color:#FFFFFF}
         .stat-label{font-size:0.75rem;font-weight:400;color:#A0A0A0;text-transform:uppercase}
-        .quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:2rem}
+        .quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem;margin-bottom:2rem}
         @media(min-width:768px){.quick-actions{grid-template-columns:repeat(4,1fr)}}
-        .quick-action{display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:24px;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;cursor:pointer}
+        .quick-action{display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.5rem;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;cursor:pointer}
         .quick-action:hover{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
         .quick-action-icon{font-size:1.5rem}
         .quick-action-text{font-size:0.8125rem;font-weight:600}
@@ -63,7 +63,7 @@
         .analytics-header h3{font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#FFFFFF}
         .analytics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
         @media(max-width:768px){.analytics-grid{grid-template-columns:1fr}}
-        .analytics-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px}
+        .analytics-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.5rem}
         .analytics-row{display:flex;justify-content:space-between;align-items:center;padding:0.625rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
         .analytics-row:last-child{border-bottom:none}
         .analytics-label{font-size:0.8125rem;font-weight:400;color:#A0A0A0}
@@ -213,7 +213,7 @@
         .prio-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;min-height:280px}
         .prio-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
-        .prio-card-header{padding:24px;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .prio-card-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prio-card-name{font-family:var(--font-heading);font-size:1rem;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px;color:#FFFFFF}
         .prio-card-name .shared-icon{color:#3B82F6;font-size:0.875rem}
         .shared-badge{display:inline-flex;align-items:center;gap:3px;font-size:0.625rem;font-weight:600;color:#3B82F6;background:rgba(59,130,246,0.12);padding:2px 8px;border-radius:20px;white-space:nowrap;vertical-align:middle;margin-left:4px}
@@ -231,7 +231,7 @@
         .card-status-menu .status-option:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1);color:#fff}
         .card-status-menu .status-option.selected{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.25);color:#34D399}
         .card-status-menu .status-option .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-        .custom-status-dropdown{position:relative;width:100%;max-width:200px;margin-left:auto}
+        .custom-status-dropdown{position:relative;width:100%;max-width:200px}
         .status-dropdown-trigger{display:flex;align-items:center;gap:8px;width:100%;padding:6px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.8125rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s ease}
         .status-dropdown-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
         .status-dropdown-trigger.open{border-color:rgba(52,211,153,0.5);background:rgba(255,255,255,0.06)}
@@ -368,14 +368,22 @@
         .send-ai-confirm:disabled{opacity:0.5;cursor:not-allowed}
         @media(max-width:600px){.polish-comparison{grid-template-columns:1fr}}
         .lead-modal-body{padding:24px;overflow-y:auto;flex:1}
-        .lead-info-grid{display:flex;flex-direction:column;gap:0;margin-bottom:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden}
-        .lead-info-item{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.06);background:none;border-radius:0}
-        .lead-info-item:last-child{border-bottom:none}
-        .lead-info-item label{display:block;font-size:0.8125rem;font-weight:400;color:#707070;margin-bottom:0;white-space:nowrap;min-width:120px;flex-shrink:0}
-        .lead-info-item .value{font-size:0.875rem;font-weight:500;color:#FFFFFF;text-align:right;flex:1;min-width:0}
+        .lead-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:4px 0}
+        .lead-info-item{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:none;border:none;border-radius:0}
+        .lead-info-item label{display:block;font-size:0.75rem;font-weight:400;color:#707070;margin-bottom:0;white-space:nowrap}
+        .lead-info-item .value{font-size:0.875rem;font-weight:600;color:#FFFFFF;text-align:right}
         .send-ai-calendar{margin-top:16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px}
-        .lead-section{margin-bottom:24px;padding:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
+        .lead-section{margin-bottom:20px;padding:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
         .lead-section h3{font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#FFFFFF}
+        .lead-section.collapsible-empty{padding:0;background:none;border:none;margin-bottom:12px}
+        .lead-section.collapsible-empty .collapsible-header{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;cursor:pointer;transition:all 0.15s;width:100%}
+        .lead-section.collapsible-empty .collapsible-header:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1)}
+        .lead-section.collapsible-empty .collapsible-header h3{margin-bottom:0;font-size:0.8125rem;font-weight:600}
+        .collapsible-chevron{transition:transform 0.2s;color:#707070;flex-shrink:0;margin-left:auto}
+        .lead-section.collapsible-empty.expanded .collapsible-chevron{transform:rotate(90deg)}
+        .collapsible-body{display:none;padding:12px 16px 16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-top:none;border-radius:0 0 10px 10px;margin-top:-1px}
+        .lead-section.collapsible-empty.expanded .collapsible-body{display:block}
+        .lead-section.collapsible-empty.expanded .collapsible-header{border-radius:10px 10px 0 0}
         .lead-summary-content{font-size:0.8125rem;font-weight:400;line-height:1.6;color:#A0A0A0;white-space:pre-wrap}
         .lead-notes-list{max-height:150px;overflow-y:auto;margin-bottom:12px}
         .lead-note-item{padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:6px;margin-bottom:8px;font-size:0.8125rem;position:relative}
@@ -421,23 +429,6 @@
         .btn-add-attachment:hover{opacity:0.9}
         .btn-add-attachment:disabled{opacity:0.5;cursor:not-allowed}
         .attachments-empty{color:#707070;font-size:0.8125rem;font-weight:400;padding:12px;text-align:center}
-
-        /* Collapsible empty sections */
-        .lead-section.collapsible-empty{padding:0;background:none;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px}
-        .collapsible-empty .collapsible-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;transition:background 0.15s;user-select:none}
-        .collapsible-empty .collapsible-header:hover{background:rgba(255,255,255,0.03)}
-        .collapsible-empty .collapsible-header .collapsible-title{font-size:0.875rem;font-weight:500;color:#707070;display:flex;align-items:center;gap:8px}
-        .collapsible-empty .collapsible-header .collapsible-title .section-emoji{font-size:0.875rem}
-        .collapsible-empty .collapsible-header .collapsible-title .section-count{color:#555;font-weight:400}
-        .collapsible-empty .collapsible-arrow{color:#555;font-size:0.875rem;transition:transform 0.2s ease;flex-shrink:0}
-        .collapsible-empty.expanded .collapsible-arrow{transform:rotate(180deg)}
-        .collapsible-empty .collapsible-body{display:none;padding:0 18px 18px 18px}
-        .collapsible-empty.expanded .collapsible-body{display:block}
-        .lead-section.collapsible-empty.has-items{padding:24px;background:rgba(255,255,255,0.02)}
-        .lead-section.collapsible-empty.has-items .collapsible-header{padding:0;margin-bottom:14px}
-        .lead-section.collapsible-empty.has-items .collapsible-header .collapsible-title{color:#FFFFFF;font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em}
-        .lead-section.collapsible-empty.has-items .collapsible-body{display:block;padding:0}
-        .lead-section.collapsible-empty.has-items .collapsible-arrow{display:none}
 
         /* Share Button */
         .btn-share{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
@@ -503,7 +494,7 @@
         .schedule-modal .btn-save:hover{opacity:0.9}
         
         /* Calendar Picker */
-        .calendar-picker{background:#111;border-radius:12px;padding:24px;border:1px solid rgba(255,255,255,0.1)}
+        .calendar-picker{background:#111;border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.1)}
         .calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
         .calendar-header button{background:none;border:none;color:#fff;cursor:pointer;padding:8px;border-radius:6px;font-size:1.25rem}
         .calendar-header button:hover{background:rgba(255,255,255,0.1)}
@@ -519,7 +510,7 @@
         .calendar-day.other-month{opacity:0.3}
         .calendar-day.past{color:rgba(255,255,255,0.3);cursor:not-allowed}
         .calendar-day.empty{cursor:default}
-        @media(max-width:640px){.lead-info-item{padding:10px 14px}.lead-info-item label{min-width:100px;font-size:0.75rem}}
+        @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr}.lead-info-item{padding:8px 16px}}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -1027,7 +1018,7 @@
         .search-lead-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px}
         .search-lead-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px}
         .search-lead-header h3{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;margin-bottom:4px}
-        .search-lead-info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;padding:24px;background:#0a0a0a;border-radius:8px}
+        .search-lead-info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;padding:16px;background:#0a0a0a;border-radius:8px}
         @media(max-width:768px){.search-lead-info-grid{grid-template-columns:repeat(2,1fr)}}
         .info-item .info-label{display:block;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:2px}
         .info-item .info-value{font-weight:500}
@@ -3143,42 +3134,10 @@
                     </div>
                 </div>
 
-                <div class="lead-section collapsible-empty" id="callAttemptsSection">
-                    <div class="collapsible-header" onclick="toggleCollapsibleSection('callAttemptsSection')">
-                        <span class="collapsible-title"><span class="section-emoji">📞</span> Call Attempts <span class="section-count">· <span id="modalAttemptsCount">0</span></span></span>
-                        <svg class="collapsible-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 5.25L7 8.75L10.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <div class="collapsible-body">
-                        <div class="lead-attempts-list" id="modalAttemptsList"></div>
-                        <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
-                    </div>
-                </div>
-
-                <div class="lead-section collapsible-empty" id="linksSection">
-                    <div class="collapsible-header" onclick="toggleCollapsibleSection('linksSection')">
-                        <span class="collapsible-title"><span class="section-emoji">🔗</span> Links <span class="section-count">· <span id="modalLinksCount">0</span></span></span>
-                        <svg class="collapsible-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 5.25L7 8.75L10.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <div class="collapsible-body">
-                        <div class="lead-attachments-list" id="modalLinksList"></div>
-                        <div class="add-attachment-form">
-                            <div class="add-attachment-row">
-                                <input type="text" id="linkTitleInput" placeholder="Link title (optional)">
-                                <input type="url" id="linkUrlInput" placeholder="https://...">
-                                <button class="btn-add-attachment" id="addLinkBtn">+ Add</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lead-section collapsible-empty" id="attachmentsSection">
-                    <div class="collapsible-header" onclick="toggleCollapsibleSection('attachmentsSection')">
-                        <span class="collapsible-title"><span class="section-emoji">📎</span> Attachments <span class="section-count">· <span id="modalAttachmentsCount">0</span></span></span>
-                        <svg class="collapsible-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 5.25L7 8.75L10.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <div class="collapsible-body">
-                        <div class="lead-attachments-list" id="modalAttachmentsList"></div>
-                    </div>
+                <div class="lead-section" id="callAttemptsSection">
+                    <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
+                    <div class="lead-attempts-list" id="modalAttemptsList"></div>
+                    <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
                 </div>
 
                 <div class="lead-section">
@@ -5460,34 +5419,17 @@
             attemptsArray = [];
         }
         var attemptsCount = Array.isArray(attemptsArray) ? attemptsArray.length : 0;
-        document.getElementById('modalAttemptsCount').textContent = attemptsCount;
-        var attemptsList = document.getElementById('modalAttemptsList');
+        updateCallAttemptsSection(attemptsCount);
         if (attemptsCount > 0) {
+            var countEl = document.getElementById('modalAttemptsCount');
+            if (countEl) countEl.textContent = attemptsCount;
+            var attemptsList = document.getElementById('modalAttemptsList');
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
                 var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
                 return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
-            attemptsList.innerHTML = attemptsHtml;
-        } else {
-            attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p>';
+            if (attemptsList) attemptsList.innerHTML = attemptsHtml;
         }
-        updateCollapsibleSection('callAttemptsSection', attemptsCount);
-
-        // Links
-        var links = [];
-        var linksRaw = f['Links'] || '[]';
-        try {
-            if (typeof linksRaw === 'string') links = JSON.parse(linksRaw);
-            else if (Array.isArray(linksRaw)) links = linksRaw;
-        } catch (e) { links = []; }
-        renderLinksList(links);
-        updateCollapsibleSection('linksSection', links.length);
-
-        // Attachments
-        var attachments = f['Attachments'] || [];
-        if (!Array.isArray(attachments)) attachments = [];
-        renderAttachmentsList(attachments);
-        updateCollapsibleSection('attachmentsSection', attachments.length);
 
         // Transcript with colored speakers
         var transcript = f['Transcript (from Calls)'];
@@ -5499,7 +5441,7 @@
         } else {
             transcriptEl.textContent = 'No transcript available';
         }
-
+        
         // PRIO button state and icon
         var prioBtn = document.getElementById('modalPrioBtn');
         var prioIcon = document.getElementById('modalPrioIcon');
@@ -5747,25 +5689,6 @@
         }
     }
     window.toggleStatusDropdown = toggleStatusDropdown;
-
-    function toggleCollapsibleSection(sectionId) {
-        var section = document.getElementById(sectionId);
-        if (!section) return;
-        section.classList.toggle('expanded');
-    }
-    window.toggleCollapsibleSection = toggleCollapsibleSection;
-
-    function updateCollapsibleSection(sectionId, count) {
-        var section = document.getElementById(sectionId);
-        if (!section) return;
-        if (count > 0) {
-            section.classList.add('has-items');
-            section.classList.add('expanded');
-        } else {
-            section.classList.remove('has-items');
-            section.classList.remove('expanded');
-        }
-    }
 
     async function selectStatus(val) {
         var menu = document.getElementById('statusDropdownMenu');
@@ -6107,10 +6030,9 @@
         btn.innerHTML = '✨ Polish & Save';
     });
 
-    // Log call attempt
-    document.getElementById('modalLogAttemptBtn').addEventListener('click', async function() {
+    // Log call attempt handler
+    async function handleLogAttempt(btn) {
         if (!currentLeadId) return;
-        var btn = this;
         btn.disabled = true;
         btn.textContent = 'Logging...';
 
@@ -6143,7 +6065,14 @@
         }
         btn.disabled = false;
         btn.textContent = '+ Log Call Attempt';
-    });
+    }
+
+    window.bindLogAttemptBtn = function(btn) {
+        btn.addEventListener('click', function() { handleLogAttempt(this); });
+    };
+
+    var initialLogBtn = document.getElementById('modalLogAttemptBtn');
+    if (initialLogBtn) window.bindLogAttemptBtn(initialLogBtn);
     
     // Unprio from table
     async function unprio(leadId) {
@@ -7307,6 +7236,44 @@
         document.getElementById('scheduleModal').classList.add('active');
     }
     window.editBookingFromModal = editBookingFromModal;
+
+    // Toggle collapsible section
+    function toggleCollapsibleSection(sectionId) {
+        var section = document.getElementById(sectionId);
+        if (section) section.classList.toggle('expanded');
+    }
+    window.toggleCollapsibleSection = toggleCollapsibleSection;
+
+    // Update call attempts section to be collapsible when empty
+    function updateCallAttemptsSection(attemptsCount) {
+        var section = document.getElementById('callAttemptsSection');
+        if (!section) return;
+        if (attemptsCount === 0) {
+            section.className = 'lead-section collapsible-empty';
+            section.innerHTML = '<div class="collapsible-header" onclick="toggleCollapsibleSection(\'callAttemptsSection\')">' +
+                '<h3>📞 Call Attempts <span class="attempts-count">0</span></h3>' +
+                '<svg class="collapsible-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                '</div>' +
+                '<div class="collapsible-body">' +
+                '<div class="lead-attempts-list" id="modalAttemptsList"><p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p></div>' +
+                '<button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>' +
+                '</div>';
+            // Re-bind the log attempt button
+            var btn = document.getElementById('modalLogAttemptBtn');
+            if (btn && window.bindLogAttemptBtn) window.bindLogAttemptBtn(btn);
+        } else {
+            section.className = 'lead-section';
+            // Ensure normal layout with h3, list, and button
+            var h3 = section.querySelector('h3');
+            if (!h3 || section.querySelector('.collapsible-header')) {
+                section.innerHTML = '<h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">' + attemptsCount + '</span></h3>' +
+                    '<div class="lead-attempts-list" id="modalAttemptsList"></div>' +
+                    '<button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>';
+                var btn = document.getElementById('modalLogAttemptBtn');
+                if (btn && window.bindLogAttemptBtn) window.bindLogAttemptBtn(btn);
+            }
+        }
+    }
 
     // Delete call attempt
     async function deleteCallAttempt(index) {
@@ -8583,34 +8550,17 @@
             attemptsArray = [];
         }
         var attemptsCount = Array.isArray(attemptsArray) ? attemptsArray.length : 0;
-        document.getElementById('modalAttemptsCount').textContent = attemptsCount;
-        var attemptsList = document.getElementById('modalAttemptsList');
+        updateCallAttemptsSection(attemptsCount);
         if (attemptsCount > 0) {
+            var countEl = document.getElementById('modalAttemptsCount');
+            if (countEl) countEl.textContent = attemptsCount;
+            var attemptsList = document.getElementById('modalAttemptsList');
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
                 var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
                 return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
-            attemptsList.innerHTML = attemptsHtml;
-        } else {
-            attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p>';
+            if (attemptsList) attemptsList.innerHTML = attemptsHtml;
         }
-        updateCollapsibleSection('callAttemptsSection', attemptsCount);
-
-        // Links
-        var links = [];
-        var linksRaw = f['Links'] || '[]';
-        try {
-            if (typeof linksRaw === 'string') links = JSON.parse(linksRaw);
-            else if (Array.isArray(linksRaw)) links = linksRaw;
-        } catch (e) { links = []; }
-        renderLinksList(links);
-        updateCollapsibleSection('linksSection', links.length);
-
-        // Attachments
-        var attachments = f['Attachments'] || [];
-        if (!Array.isArray(attachments)) attachments = [];
-        renderAttachmentsList(attachments);
-        updateCollapsibleSection('attachmentsSection', attachments.length);
 
         // Transcript with colored speakers
         var transcript = f['Transcript (from Calls)'];
