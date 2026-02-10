@@ -94,8 +94,8 @@
         .font-size-md .priority-card-lg-summary-col .col-label,.font-size-md .priority-card-lg-notes-col .col-label,.font-size-md .priority-card-lg-status-col .col-label{font-size:0.8125rem}
         .font-size-md .card-status-trigger{font-size:0.875rem}
         .font-size-md .card-status-menu .status-option{font-size:0.875rem}
-        .font-size-md .action-label{font-size:0.9375rem}
-        .font-size-md .action-icon{font-size:1.25rem}
+        .font-size-md .action-label{font-size:0.6875rem}
+        .font-size-md .action-icon{font-size:1rem}
         .font-size-md .priority-card-lg-badge{font-size:0.8125rem}
         .font-size-md .priority-card-lg-time-col .time-value{font-size:1.125rem}
         .font-size-md .priority-card-lg-time-col .date-value{font-size:0.875rem}
@@ -107,8 +107,8 @@
         .font-size-lg .priority-card-lg-summary-col .col-label,.font-size-lg .priority-card-lg-notes-col .col-label,.font-size-lg .priority-card-lg-status-col .col-label{font-size:0.9375rem}
         .font-size-lg .card-status-trigger{font-size:1rem}
         .font-size-lg .card-status-menu .status-option{font-size:1rem}
-        .font-size-lg .action-label{font-size:1.0625rem}
-        .font-size-lg .action-icon{font-size:1.375rem}
+        .font-size-lg .action-label{font-size:0.6875rem}
+        .font-size-lg .action-icon{font-size:1rem}
         .font-size-lg .priority-card-lg-badge{font-size:0.9375rem}
         .font-size-lg .priority-card-lg-time-col .time-value{font-size:1.25rem}
         .font-size-lg .priority-card-lg-time-col .date-value{font-size:1rem}
@@ -171,10 +171,10 @@
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:6px;margin-right:8px;flex-shrink:0}
         .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
         .priority-card-lg-time-col{position:relative}
-        .priority-card-lg-actions{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;border-left:1px solid rgba(255,255,255,0.08)}
-        .action-btn{padding:12px 8px;border:1px solid rgba(255,255,255,0.15);background:#111;border-radius:10px;cursor:pointer;font-size:0.8125rem;font-weight:600;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#A0A0A0}
-        .action-btn .action-icon{font-size:1.125rem}
-        .action-btn .action-label{font-size:0.8125rem;font-weight:600;white-space:nowrap}
+        .priority-card-lg-actions{flex:0 0 200px;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px;border-left:1px solid rgba(255,255,255,0.08)}
+        .action-btn{padding:8px 4px;border:1px solid rgba(255,255,255,0.15);background:#111;border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:600;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#A0A0A0}
+        .action-btn .action-icon{font-size:1rem}
+        .action-btn .action-label{font-size:0.6875rem;font-weight:600;white-space:nowrap}
         .action-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.3);color:#fff}
         .action-btn.action-share:hover{background:rgba(59,130,246,0.2);border-color:#3B82F6}
         .action-btn.action-share.shared{background:rgba(52,211,153,0.15);border-color:rgba(52,211,153,0.3);color:rgb(52,211,153)}
@@ -192,7 +192,7 @@
         .priorities-cards:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .priorities-cards:not(.list-view) .priority-card-lg-info{flex:1}
         .priorities-cards:not(.list-view) .priority-card-lg-summary-col,.priorities-cards:not(.list-view) .priority-card-lg-notes-col,.priorities-cards:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
-        .priorities-cards:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto}
+        .priorities-cards:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);flex:none;width:auto}
         .priorities-cards:not(.list-view) .missed-meeting-separator,.priorities-cards:not(.list-view) .missed-meeting-info{grid-column:1/-1}
         .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
         .section-header h3{font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#FFFFFF}
@@ -223,10 +223,14 @@
         .card-status-trigger{display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:0.75rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;white-space:nowrap;width:100%}
         .card-status-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
         .card-status-trigger .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-        .card-status-trigger .chevron{opacity:0.4;margin-left:auto;font-size:0.5rem}
-        .card-status-menu{display:none;position:fixed;width:180px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-height:240px;overflow-y:auto}
-        .card-status-menu.open{display:block;animation:statusDropIn 0.15s ease}
-        .card-status-menu .status-option{padding:6px 10px;font-size:0.75rem}
+        .card-status-menu{display:none;position:fixed;width:320px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px;z-index:99999;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+        .card-status-menu.open{display:block;animation:statusPopIn 0.15s ease}
+        @keyframes statusPopIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+        .card-status-menu .status-popup-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+        .card-status-menu .status-option{padding:7px 10px;font-size:0.75rem;border-radius:6px;display:flex;align-items:center;gap:6px;cursor:pointer;color:#A0A0A0;background:none;border:1px solid transparent;transition:all 0.12s;font-family:var(--font-body);text-align:left;width:100%;white-space:nowrap}
+        .card-status-menu .status-option:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1);color:#fff}
+        .card-status-menu .status-option.selected{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.25);color:#34D399}
+        .card-status-menu .status-option .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
         .custom-status-dropdown{position:relative;width:100%;max-width:200px}
         .status-dropdown-trigger{display:flex;align-items:center;gap:8px;width:100%;padding:6px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.8125rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s ease}
         .status-dropdown-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
@@ -5731,7 +5735,6 @@
                 '<button type="button" class="card-status-trigger" onclick="event.stopPropagation();toggleCardStatus(this,\'' + lead.id + '\')">' +
                     '<span class="status-dot" style="background:' + color + '"></span>' +
                     '<span class="card-status-label">' + escapeHtml(label) + '</span>' +
-                    '<span class="chevron">▼</span>' +
                 '</button>' +
                 '<div class="card-status-menu"></div>' +
             '</div>' +
@@ -5759,15 +5762,21 @@
         }
         var lead = allLeads.find(function(l) { return l.id === leadId; });
         var currentStatus = lead ? (lead.fields['Status'] || lead.fields['Disposition'] || 'New') : 'New';
-        menu.innerHTML = allStatusOptions.map(function(opt) {
+        menu.innerHTML = '<div class="status-popup-grid">' + allStatusOptions.map(function(opt) {
             return '<button type="button" class="status-option' + (opt.value === currentStatus ? ' selected' : '') + '" onclick="selectCardStatus(\'' + leadId + '\',\'' + opt.value + '\',this)">' +
                 '<span class="status-dot" style="background:' + getStatusColor(opt.value) + '"></span>' + escapeHtml(opt.label) +
             '</button>';
-        }).join('');
-        // Position menu using fixed positioning to escape overflow:hidden
+        }).join('') + '</div>';
+        // Position popup centered on trigger
         var rect = triggerEl.getBoundingClientRect();
-        menu.style.top = (rect.bottom + 2) + 'px';
-        menu.style.left = rect.left + 'px';
+        var popupW = 320;
+        var left = rect.left + (rect.width / 2) - (popupW / 2);
+        if (left < 8) left = 8;
+        if (left + popupW > window.innerWidth - 8) left = window.innerWidth - popupW - 8;
+        var top = rect.bottom + 6;
+        if (top + 200 > window.innerHeight) top = rect.top - 210;
+        menu.style.top = top + 'px';
+        menu.style.left = left + 'px';
         menu.classList.add('open');
     }
     window.toggleCardStatus = toggleCardStatus;
