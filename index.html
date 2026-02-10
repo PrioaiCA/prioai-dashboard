@@ -2994,7 +2994,21 @@
                     </div>
                     <div class="lead-info-item">
                         <label>📊 Status</label>
-                        <div class="value"><span id="modalStatus" class="status-badge">-</span></div>
+                        <div class="value">
+                            <select id="modalStatusSelect" style="background:#111;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:4px 8px;font-size:0.8125rem;cursor:pointer;width:100%;max-width:180px;">
+                                <option value="New">New Lead</option>
+                                <option value="Retry">Retrying</option>
+                                <option value="Booked">Meeting Booked</option>
+                                <option value="Callback">Callback Requested</option>
+                                <option value="Follow Up">Following Up</option>
+                                <option value="Timeline">On Timeline</option>
+                                <option value="Scheduling Showings">Scheduling Showings</option>
+                                <option value="Sending Listings">Sending Listings</option>
+                                <option value="Meeting in Person">Meeting in Person</option>
+                                <option value="Closed">Closed</option>
+                                <option value="DNC">Do Not Call</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="lead-info-item">
                         <label>📅 Last Updated</label>
@@ -3007,34 +3021,10 @@
                             <button class="btn-schedule" id="modalScheduleBtn" style="display:none;">📅 Schedule</button>
                         </div>
                     </div>
-                    <div class="lead-info-item">
-                        <label>🤖 Last AI Call</label>
-                        <div class="value" id="modalLastAICall">-</div>
-                    </div>
-                    <div class="lead-info-item">
-                        <label>🎯 Next Step</label>
-                        <div class="value">
-                            <select id="modalNextStep" style="background:#111;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:4px 8px;font-size:0.8125rem;cursor:pointer;width:100%;max-width:180px;">
-                                <option value="">— Select —</option>
-                                <option value="Retry">Retry</option>
-                                <option value="Book Showings">Book Showings</option>
-                                <option value="Send Listings">Send Listings</option>
-                                <option value="Meet in Person">Meet in Person</option>
-                                <option value="Send Contract">Send Contract</option>
-                                <option value="Follow Up Later">Follow Up Later</option>
-                                <option value="Needs Pre-Approval">Needs Pre-Approval</option>
-                                <option value="Closing">Closing</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="lead-info-item" id="modalSharedInfo" style="display:none;">
-                        <label id="modalSharedLabel">🔗 Shared With</label>
-                        <div class="value" id="modalSharedValue">-</div>
-                    </div>
                 </div>
 
                 <div class="lead-section">
-                    <h3>🤖 AI Summary</h3>
+                    <h3 style="display:flex;align-items:center;gap:8px;">🤖 AI Summary <span id="modalAICallDate" style="font-size:0.7rem;font-weight:400;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:4px;white-space:nowrap;"></span></h3>
                     <div class="lead-summary-content" id="modalSummary">No summary available</div>
                 </div>
 
@@ -3057,29 +3047,6 @@
                     <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
                     <div class="lead-attempts-list" id="modalAttemptsList"></div>
                     <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
-                </div>
-
-                <div class="lead-section">
-                    <h3>🔗 Links <span class="attempts-count" id="modalLinksCount">0</span></h3>
-                    <div class="lead-attachments-list" id="modalLinksList">
-                        <div class="attachments-empty">No links yet</div>
-                    </div>
-                    <div class="add-attachment-form">
-                        <div class="add-attachment-row">
-                            <input type="text" id="linkTitleInput" placeholder="Title (e.g., Listing on MLS)">
-                        </div>
-                        <div class="add-attachment-row">
-                            <input type="url" id="linkUrlInput" placeholder="URL (e.g., https://...)">
-                            <button class="btn-add-attachment" id="addLinkBtn">+ Add</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lead-section">
-                    <h3>📎 Attachments <span class="attempts-count" id="modalAttachmentsCount">0</span></h3>
-                    <div class="lead-attachments-list" id="modalAttachmentsList">
-                        <div class="attachments-empty">No attachments yet</div>
-                    </div>
                 </div>
 
                 <div class="lead-section">
@@ -5249,13 +5216,21 @@
         document.getElementById('modalPhone').innerHTML = phoneLink(modalRawPhone, modalFormattedPhone);
         
         var status = f['Status'] || f['Outcome'] || 'New';
-        var statusEl = document.getElementById('modalStatus');
-        statusEl.textContent = status;
-        statusEl.className = 'status-badge status-' + status.toLowerCase().replace(/\s+/g, '-');
-        
+        var statusSelect = document.getElementById('modalStatusSelect');
+        if (statusSelect) {
+            var hasOption = Array.from(statusSelect.options).some(function(opt) { return opt.value === status; });
+            if (!hasOption && status !== '-') {
+                var newOpt = document.createElement('option');
+                newOpt.value = status;
+                newOpt.textContent = status;
+                statusSelect.appendChild(newOpt);
+            }
+            statusSelect.value = status;
+        }
+
         var lastUpdated = f['Updated At'];
         document.getElementById('modalLastCalled').textContent = lastUpdated ? formatTimeAgo(lastUpdated) : 'Never';
-        
+
         // Booked Time with reschedule/delete buttons
         var bookedTime = f['Booked Time'];
         var bookedTimeContainer = document.getElementById('modalBookedTime');
@@ -5268,39 +5243,38 @@
             bookedTimeValue.textContent = '';
             scheduleBtn.style.display = 'inline-flex';
         }
-        
+
+        // Last AI Call Date - badge beside AI Summary heading
+        var lastAICall = f['Last Call Timestamp'];
+        var aiCallDateEl = document.getElementById('modalAICallDate');
+        if (aiCallDateEl) {
+            aiCallDateEl.textContent = lastAICall ? formatDateTime(lastAICall) : '';
+        }
+
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || f['Summary'] || 'No summary available';
-        
-        // Share button state and shared info display
+
+        // Share button state
         var shareBtn = document.getElementById('modalShareBtn');
         var sharedWithEmail = f['Shared With Email'];
         if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
         var isSharedToUser = lead.isShared;
-        var sharedInfoDiv = document.getElementById('modalSharedInfo');
-        var sharedLabel = document.getElementById('modalSharedLabel');
-        var sharedValue = document.getElementById('modalSharedValue');
 
         if (sharedWithEmail || isSharedToUser) {
-            shareBtn.classList.add('shared');
-            // Show shared info in modal
-            sharedInfoDiv.style.display = 'block';
+            if (shareBtn) shareBtn.classList.add('shared');
             if (isSharedToUser) {
-                sharedLabel.textContent = '🔗 Shared By';
                 var ownerEmail = f['Client Email'];
                 if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
                 var sharedByName = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
-                sharedValue.textContent = sharedByName;
-                shareBtn.innerHTML = '🔗 Shared by ' + sharedByName;
+                if (shareBtn) shareBtn.innerHTML = '🔗 Shared by ' + sharedByName;
             } else {
-                sharedLabel.textContent = '🔗 Shared With';
                 var sharedWithName = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
-                sharedValue.textContent = sharedWithName;
-                shareBtn.innerHTML = '🔗 Shared with ' + sharedWithName;
+                if (shareBtn) shareBtn.innerHTML = '🔗 Shared with ' + sharedWithName;
             }
         } else {
-            shareBtn.classList.remove('shared');
-            shareBtn.innerHTML = '🔗 Share';
-            sharedInfoDiv.style.display = 'none';
+            if (shareBtn) {
+                shareBtn.classList.remove('shared');
+                shareBtn.innerHTML = '🔗 Share';
+            }
         }
         
         // Notes with edit/delete - using JSON array format
@@ -5548,21 +5522,24 @@
         }
     });
     
-    // Next Step change
-    document.getElementById('modalNextStep').addEventListener('change', async function() {
+    // Status dropdown change
+    document.getElementById('modalStatusSelect').addEventListener('change', async function() {
         if (!currentLeadId) return;
         var val = this.value;
         try {
             await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
                 method: 'PATCH',
-                body: { fields: { 'Next Step': val } }
+                body: { fields: { 'Status': val } }
             });
             var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            if (lead) lead.fields['Next Step'] = val;
-            showToast('Next step updated', 'success');
+            if (lead) lead.fields['Status'] = val;
+            showToast('Status updated', 'success');
+            // Refresh lists to move lead to correct section
+            updatePrioList();
+            updateProspectsTable();
         } catch (err) {
-            console.error('Error updating next step:', err);
-            showToast('Failed to update next step', 'error');
+            console.error('Error updating status:', err);
+            showToast('Failed to update status', 'error');
         }
     });
 
@@ -6445,9 +6422,12 @@
                 }
             }
 
-            // Update modal shared info display
-            var sharedInfoDiv = document.getElementById('modalSharedInfo');
-            if (sharedInfoDiv) sharedInfoDiv.style.display = 'none';
+            // Update modal share button
+            var modalShareBtnUnshare = document.getElementById('modalShareBtn');
+            if (modalShareBtnUnshare) {
+                modalShareBtnUnshare.classList.remove('shared');
+                modalShareBtnUnshare.innerHTML = '🔗 Share';
+            }
         } catch (err) {
             showToast('Failed to stop sharing', 'error');
         }
@@ -6549,14 +6529,11 @@
                 }
             }
 
-            // Update modal shared info display
-            var sharedInfoDiv = document.getElementById('modalSharedInfo');
-            var sharedLabel = document.getElementById('modalSharedLabel');
-            var sharedValue = document.getElementById('modalSharedValue');
-            if (sharedInfoDiv) {
-                sharedInfoDiv.style.display = 'block';
-                sharedLabel.textContent = '🔗 Shared With';
-                sharedValue.textContent = getAgentNameByEmail(selectedAgentEmail) || selectedAgentEmail;
+            // Update modal share button display
+            var modalShareBtnEl = document.getElementById('modalShareBtn');
+            if (modalShareBtnEl) {
+                modalShareBtnEl.classList.add('shared');
+                modalShareBtnEl.innerHTML = '🔗 Shared with ' + (getAgentNameByEmail(selectedAgentEmail) || selectedAgentEmail);
             }
         } catch (err) {
             showToast('Failed to share prospect', 'error');
@@ -6586,10 +6563,19 @@
         var leadName = ((leadData['First Name'] || '') + ' ' + (leadData['Last Name'] || '')).trim() || 'Lead';
         document.getElementById('scheduleLeadName').textContent = 'Scheduling for: ' + leadName;
 
-        // Create selectedDate consistently (same method as calendar click handler)
+        // Create selectedDate - default to next day if past 7pm EST
         var now = new Date();
-        selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        scheduleCalMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        var estNow = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        var estHour = estNow.getHours();
+        if (estHour >= 19) {
+            // Past 7pm EST - default to tomorrow
+            var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            selectedDate = tomorrow;
+            scheduleCalMonth = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), 1);
+        } else {
+            selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            scheduleCalMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        }
 
         renderCalendar();
         updateTimeDropdowns();
@@ -8144,10 +8130,19 @@
         document.getElementById('modalPhone').innerHTML = phoneLink(modalRawPhone, formatPhone(modalRawPhone));
         
         var status = f['Status'] || f['Disposition'] || '-';
-        var statusEl = document.getElementById('modalStatus');
-        statusEl.textContent = status;
-        statusEl.className = 'status-badge ' + getStatusClass(status);
-        
+        var statusSelect = document.getElementById('modalStatusSelect');
+        if (statusSelect) {
+            // Check if current status exists as an option, if not add it
+            var hasOption = Array.from(statusSelect.options).some(function(opt) { return opt.value === status; });
+            if (!hasOption && status !== '-') {
+                var newOpt = document.createElement('option');
+                newOpt.value = status;
+                newOpt.textContent = status;
+                statusSelect.appendChild(newOpt);
+            }
+            statusSelect.value = status;
+        }
+
         document.getElementById('modalLastCalled').textContent = formatDateTime(getMostRecentLastCalled(f));
 
         // Booked Time with reschedule/delete buttons
@@ -8162,13 +8157,12 @@
             if (scheduleBtn) scheduleBtn.style.display = 'inline-flex';
         }
 
-        // Last AI Call Date
+        // Last AI Call Date - shown as badge beside AI Summary heading
         var lastAICall = f['Last Call Timestamp'];
-        document.getElementById('modalLastAICall').textContent = lastAICall ? formatDateTime(lastAICall) : '-';
-
-        // Next Step
-        var nextStepEl = document.getElementById('modalNextStep');
-        nextStepEl.value = f['Next Step'] || '';
+        var aiCallDateEl = document.getElementById('modalAICallDate');
+        if (aiCallDateEl) {
+            aiCallDateEl.textContent = lastAICall ? formatDateTime(lastAICall) : '';
+        }
 
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || 'No summary available';
         
@@ -8241,36 +8235,26 @@
             if (prioIcon) prioIcon.style.display = 'none';
         }
 
-        // Share button state and shared info display
+        // Share button state
         var shareBtn = document.getElementById('modalShareBtn');
         var sharedWithEmail = f['Shared With Email'];
         if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
         var isSharedToUser = lead.isShared;
-        var sharedInfoDiv = document.getElementById('modalSharedInfo');
-        var sharedLabel = document.getElementById('modalSharedLabel');
-        var sharedValue = document.getElementById('modalSharedValue');
 
         if (sharedWithEmail || isSharedToUser) {
-            if (sharedInfoDiv) {
-                sharedInfoDiv.style.display = 'block';
-                if (isSharedToUser) {
-                    sharedLabel.textContent = '🔗 Shared By';
-                    var ownerEmail = f['Client Email'];
-                    if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
-                    var sharedByName = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
-                    sharedValue.textContent = sharedByName;
-                    if (shareBtn) {
-                        shareBtn.classList.add('shared');
-                        shareBtn.innerHTML = '🔗 Shared by ' + sharedByName;
-                    }
-                } else {
-                    sharedLabel.textContent = '🔗 Shared With';
-                    var sharedWithName = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
-                    sharedValue.textContent = sharedWithName;
-                    if (shareBtn) {
-                        shareBtn.classList.add('shared');
-                        shareBtn.innerHTML = '🔗 Shared with ' + sharedWithName;
-                    }
+            if (isSharedToUser) {
+                var ownerEmail = f['Client Email'];
+                if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
+                var sharedByName = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
+                if (shareBtn) {
+                    shareBtn.classList.add('shared');
+                    shareBtn.innerHTML = '🔗 Shared by ' + sharedByName;
+                }
+            } else {
+                var sharedWithName = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
+                if (shareBtn) {
+                    shareBtn.classList.add('shared');
+                    shareBtn.innerHTML = '🔗 Shared with ' + sharedWithName;
                 }
             }
         } else {
@@ -8278,7 +8262,6 @@
                 shareBtn.classList.remove('shared');
                 shareBtn.innerHTML = '🔗 Share';
             }
-            if (sharedInfoDiv) sharedInfoDiv.style.display = 'none';
         }
 
         // Show/hide Send to AI vs Take Over based on lead status
@@ -8292,25 +8275,6 @@
             if (sendBackBtn) sendBackBtn.style.display = 'inline-block';
             if (takeOverBtn) takeOverBtn.style.display = 'none';
         }
-
-        // Links - stored as JSON in Links column
-        var linksRaw = f['Links'] || '[]';
-        var linksArray = [];
-        try {
-            if (typeof linksRaw === 'string') {
-                linksArray = JSON.parse(linksRaw);
-            } else if (Array.isArray(linksRaw)) {
-                linksArray = linksRaw;
-            }
-        } catch (e) {
-            linksArray = [];
-        }
-        renderLinksList(linksArray);
-
-        // Attachments - actual files from Airtable Attachments column
-        var attachmentsArray = f['Attachments'] || [];
-        if (!Array.isArray(attachmentsArray)) attachmentsArray = [];
-        renderAttachmentsList(attachmentsArray);
 
         // Show modal
         document.getElementById('leadModal').classList.add('active');
