@@ -310,13 +310,13 @@
         .modal-prio-icon{width:28px;height:28px;border-radius:6px}
         .lead-modal-title h2{font-family:var(--font-heading);font-size:1rem;font-weight:600;margin:0;color:#FFFFFF}
         .lead-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
-        .btn-prio-toggle{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
+        .btn-prio-toggle{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
         .btn-prio-toggle.active{background:#f59e0b;color:#000}
-        .btn-prio-toggle:hover{background:rgba(245,158,11,0.25)}
-        .btn-send-back{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
-        .btn-send-back:hover{background:rgba(52,211,153,0.25)}
-        .btn-dnc{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
-        .btn-dnc:hover{background:rgba(239,68,68,0.25)}
+        .btn-prio-toggle:hover{background:rgba(245,158,11,0.25);transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+        .btn-send-back{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
+        .btn-send-back:hover{background:rgba(52,211,153,0.25);transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+        .btn-dnc{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
+        .btn-dnc:hover{background:rgba(239,68,68,0.25);transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
         .notes-input-container{position:relative}
         .notes-action-row{display:flex;gap:10px;margin-top:12px;justify-content:center;align-items:center}
         .voice-input-btn{width:48px;height:48px;border-radius:12px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
@@ -324,10 +324,11 @@
         .voice-input-btn.recording{background:rgba(239,68,68,0.2);border-color:#ef4444;color:#ef4444;animation:pulse-recording 1.5s infinite}
         .voice-input-btn svg{width:22px;height:22px}
         @keyframes pulse-recording{0%,100%{opacity:1}50%{opacity:0.5}}
-        .polish-notes-btn{padding:12px 20px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border:none;color:white;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px}
-        .polish-notes-btn:hover{opacity:0.9;transform:translateY(-1px)}
-        .polish-notes-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-        .notes-action-row .btn{padding:12px 20px;font-size:0.9375rem;border-radius:12px}
+        .polish-notes-btn{padding:12px 24px;border-radius:20px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border:none;color:white;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 150ms ease;display:flex;align-items:center;gap:8px}
+        .polish-notes-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(139,92,246,0.3)}
+        .polish-notes-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+        .notes-action-row .btn{padding:12px 24px;font-size:0.9375rem;border-radius:20px;transition:all 150ms ease}
+        .notes-action-row .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(52,211,153,0.3)}
         .polish-preview-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1200;opacity:0;visibility:hidden;transition:all 0.2s}
         .polish-preview-modal.active{opacity:1;visibility:visible}
         .polish-preview-content{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
@@ -446,8 +447,8 @@
         .attachments-empty{color:#707070;font-size:0.8125rem;font-weight:400;padding:12px;text-align:center}
 
         /* Share Button */
-        .btn-share{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
-        .btn-share:hover{background:rgba(59,130,246,0.25)}
+        .btn-share{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease;display:inline-flex;align-items:center;gap:6px}
+        .btn-share:hover{background:rgba(59,130,246,0.25);transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
         .btn-share.shared{background:rgba(52,211,153,0.15);color:rgb(52,211,153);border-color:rgba(52,211,153,0.3)}
         
         /* Schedule Button */
@@ -461,8 +462,8 @@
         .btn-delete-booking:hover,.btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
         .btn-edit-booking{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
         .btn-edit-booking:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
-        .btn-reschedule{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);color:#3b82f6;cursor:pointer;font-size:0.75rem;font-weight:600;padding:4px 10px;border-radius:4px;transition:all 0.15s}
-        .btn-reschedule:hover{background:rgba(59,130,246,0.2);border-color:#3b82f6}
+        .btn-reschedule{background:none;border:none;color:#3b82f6;cursor:pointer;font-size:0.75rem;font-weight:600;padding:4px 10px;border-radius:4px;transition:all 150ms ease;text-decoration:none}
+        .btn-reschedule:hover{text-decoration:underline}
         .btn-edit-note{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
         .btn-edit-note:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
         
@@ -789,7 +790,7 @@
         .data-table .empty-state{text-align:center;padding:40px;color:rgba(255,255,255,0.4)}
         
         /* Status Badges */
-        .status-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:600}
+        .status-badge{display:inline-block;padding:4px 16px;border-radius:20px;font-size:0.6875rem;font-weight:600}
         .status-badge.booked,.status-badge.meeting-booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
         .status-badge.callback{background:rgba(59,130,246,0.15);color:#3B82F6}
         .status-badge.timeline{background:rgba(245,158,11,0.15);color:#f59e0b}
@@ -1243,6 +1244,18 @@
 
         /* Search Result Item with Next Call */
         .search-result-next-call{font-size:0.75rem;color:rgb(52,211,153);margin-top:2px}
+
+        /* Page Transitions */
+        @keyframes pageFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes cardStaggerIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .page:not(.hidden){animation:pageFadeIn 300ms ease both}
+        .page:not(.hidden) .overview-card,.page:not(.hidden) .priority-card-lg,.page:not(.hidden) .today-numbers-bar,.page:not(.hidden) .prio-card{animation:cardStaggerIn 300ms ease both}
+        .page:not(.hidden) .overview-card:nth-child(1),.page:not(.hidden) .priority-card-lg:nth-child(1),.page:not(.hidden) .today-number-item:nth-child(1){animation-delay:0ms}
+        .page:not(.hidden) .overview-card:nth-child(2),.page:not(.hidden) .priority-card-lg:nth-child(2),.page:not(.hidden) .today-number-item:nth-child(3){animation-delay:50ms}
+        .page:not(.hidden) .overview-card:nth-child(3),.page:not(.hidden) .priority-card-lg:nth-child(3),.page:not(.hidden) .today-number-item:nth-child(5){animation-delay:100ms}
+        .page:not(.hidden) .overview-card:nth-child(4),.page:not(.hidden) .priority-card-lg:nth-child(4),.page:not(.hidden) .today-number-item:nth-child(7){animation-delay:150ms}
+        .page:not(.hidden) .priority-card-lg:nth-child(5){animation-delay:200ms}
+        .page:not(.hidden) .priority-card-lg:nth-child(6){animation-delay:250ms}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 </head>
@@ -4305,6 +4318,23 @@
         }
     }
 
+    function animateValue(el, end) {
+        if (!el) return;
+        var val = parseInt(el.textContent) || 0;
+        if (val === end) { el.textContent = end; return; }
+        var start = 0;
+        var duration = 600;
+        var startTime = null;
+        function step(ts) {
+            if (!startTime) startTime = ts;
+            var progress = Math.min((ts - startTime) / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.round(eased * end);
+            if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+
     function updateDashboard() {
         updateStats();
         // Remove loading state from dashboard
@@ -4317,13 +4347,13 @@
     // Update stats
     function updateStats() {
         var totalProspects = allLeads.length;
-        document.getElementById('statProspects').textContent = totalProspects;
-        
-        var appointments = allLeads.filter(function(l) { 
+        animateValue(document.getElementById('statProspects'), totalProspects);
+
+        var appointments = allLeads.filter(function(l) {
             var status = l.fields['Status'] || l.fields['Disposition'] || '';
             return status === 'Booked' || status === 'Appointment Booked';
         }).length;
-        document.getElementById('statAppointments').textContent = appointments;
+        animateValue(document.getElementById('statAppointments'), appointments);
         
         // Today's date for filtering
         var today = new Date().toDateString();
@@ -4335,7 +4365,7 @@
             if (!lastCall) return false;
             return new Date(lastCall).toDateString() === today;
         }).length;
-        document.getElementById('statCallsToday').textContent = callsToday;
+        animateValue(document.getElementById('statCallsToday'), callsToday);
 
         // AI Qualified Conversations - Outcome = Booked, Timeline, Follow Up, Callback, or Not Interested
         var qualifiedOutcomes = ['booked', 'timeline', 'follow up', 'callback', 'not interested'];
@@ -4347,7 +4377,7 @@
             return qualifiedOutcomes.includes(outcome);
         }).length;
         var convEl = document.getElementById('statConversationsToday');
-        if (convEl) convEl.textContent = conversationsToday;
+        if (convEl) animateValue(convEl, conversationsToday);
 
         // AI Meetings Scheduled - Outcome = Booked or Callback
         var meetingOutcomes = ['booked', 'callback'];
@@ -4359,7 +4389,7 @@
             return meetingOutcomes.includes(outcome);
         }).length;
         var meetEl = document.getElementById('statMeetingsToday');
-        if (meetEl) meetEl.textContent = meetingsToday;
+        if (meetEl) animateValue(meetEl, meetingsToday);
 
         // AI Follow Ups Scheduled - Outcome = Timeline or Follow Up
         var followUpOutcomes = ['timeline', 'follow up'];
@@ -4371,7 +4401,7 @@
             return followUpOutcomes.includes(outcome);
         }).length;
         var fuEl = document.getElementById('statFollowUpsToday');
-        if (fuEl) fuEl.textContent = followUpsToday;
+        if (fuEl) animateValue(fuEl, followUpsToday);
         
         // Retell Phone & Usage from client record
         if (currentUserRecord && currentUserRecord.fields) {
@@ -4405,7 +4435,7 @@
         var prioLeads = allLeads.filter(function(l) {
             return l.fields['Is Prio'] === true;
         });
-        document.getElementById('overviewPrio').textContent = prioLeads.length;
+        animateValue(document.getElementById('overviewPrio'), prioLeads.length);
         
         // Scheduled leads (callback or meeting booked)
         var scheduledLeads = allLeads.filter(function(l) {
@@ -4414,21 +4444,21 @@
             var hasCallback = status === 'Callback' || status === 'Callback Requested';
             return hasBookedTime || hasCallback || status === 'Booked' || status === 'Appointment Booked';
         });
-        document.getElementById('overviewScheduled').textContent = scheduledLeads.length;
+        animateValue(document.getElementById('overviewScheduled'), scheduledLeads.length);
         
         // Active leads (currently being called by AI)
         var activeLeads = allLeads.filter(function(l) {
             var status = l.fields['Call Status'] || l.fields['Status'] || '';
             return status === 'Queued' || status === 'In Progress' || status === 'Retry' || status === 'Calling';
         });
-        document.getElementById('overviewActive').textContent = activeLeads.length;
+        animateValue(document.getElementById('overviewActive'), activeLeads.length);
         
         // AI Pipeline (Timeline & Follow Up - will be called back)
         var pipelineLeads = allLeads.filter(function(l) {
             var status = l.fields['Status'] || l.fields['Disposition'] || '';
             return status === 'Timeline' || status === 'Follow Up';
         });
-        document.getElementById('overviewPipeline').textContent = pipelineLeads.length;
+        animateValue(document.getElementById('overviewPipeline'), pipelineLeads.length);
         
         // Today's priorities (booked time or callback today) + missed meetings (past scheduled with no call logged)
         // Use EST timezone for accurate "today" calculation
