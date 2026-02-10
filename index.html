@@ -121,7 +121,7 @@
         .priority-card-lg-notes-col{flex:1;padding:14px 18px;display:flex;flex-direction:column}
         .priority-card-lg-notes-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:#707070;margin-bottom:8px;font-weight:400}
         .priority-card-lg-notes-col .col-content{font-size:0.8125rem;font-weight:400;line-height:1.5;color:#A0A0A0;flex:1;overflow:hidden}
-        @media(max-width:900px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-summary-col{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-notes-col{flex:none}}
+        @media(max-width:900px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-summary-col{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-notes-col{flex:none}.priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}}
         .missed-meeting-separator{display:flex;align-items:center;gap:16px;margin:24px 0 8px 0;padding:0 8px}
         .missed-meeting-separator::before,.missed-meeting-separator::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent)}
         .missed-meeting-separator span{font-size:0.8125rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:8px}
@@ -157,7 +157,7 @@
         .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
         .priorities-cards:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priorities-cards:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
-        .priorities-cards:not(.list-view) .priority-card-lg-summary-col,.priorities-cards:not(.list-view) .priority-card-lg-notes-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .priorities-cards:not(.list-view) .priority-card-lg-summary-col,.priorities-cards:not(.list-view) .priority-card-lg-notes-col,.priorities-cards:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priorities-cards:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto}
         .priorities-cards:not(.list-view) .missed-meeting-separator,.priorities-cards:not(.list-view) .missed-meeting-info{grid-column:1/-1}
         .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
@@ -174,6 +174,7 @@
         .prio-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .prio-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
         .prio-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .prio-list:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prio-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .prio-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;min-height:280px}
         .prio-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
@@ -181,6 +182,16 @@
         .prio-card-name{font-family:var(--font-heading);font-size:1rem;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px;color:#FFFFFF}
         .prio-card-name .shared-icon{color:#3B82F6;font-size:0.875rem}
         .shared-badge{display:inline-flex;align-items:center;gap:3px;font-size:0.625rem;font-weight:600;color:#3B82F6;background:rgba(59,130,246,0.12);padding:2px 8px;border-radius:20px;white-space:nowrap;vertical-align:middle;margin-left:4px}
+        .shared-icon-only{font-size:0.75rem;margin-left:4px;cursor:default;vertical-align:middle}
+        .priority-card-lg-status-col{flex:0 0 140px;padding:14px 12px;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;justify-content:center;align-items:center}
+        .priority-card-lg-status-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:#707070;margin-bottom:8px;font-weight:400;text-align:center}
+        .card-status-trigger{display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:0.75rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;white-space:nowrap;width:100%}
+        .card-status-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
+        .card-status-trigger .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+        .card-status-trigger .chevron{opacity:0.4;margin-left:auto;font-size:0.5rem}
+        .card-status-menu{display:none;position:absolute;top:calc(100% + 2px);left:0;width:160px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-height:240px;overflow-y:auto}
+        .card-status-menu.open{display:block;animation:statusDropIn 0.15s ease}
+        .card-status-menu .status-option{padding:6px 10px;font-size:0.75rem}
         .custom-status-dropdown{position:relative;width:100%;max-width:200px}
         .status-dropdown-trigger{display:flex;align-items:center;gap:8px;width:100%;padding:6px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.8125rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s ease}
         .status-dropdown-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
@@ -713,6 +724,7 @@
         .prospects-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .prospects-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
         .prospects-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .prospects-list:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prospects-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .prospects-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
 
@@ -747,6 +759,7 @@
         .shared-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .shared-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
         .shared-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .shared-list:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .shared-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .shared-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
 
@@ -4447,6 +4460,7 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -4586,13 +4600,8 @@
                 timeCol = '<span class="time-value">' + timeDisplay + '</span>';
             }
 
-            // Status badge
-            var statusBadge = '';
-            if (status.includes('Booked')) {
-                statusBadge = '<span class="card-status-badge booked">B</span>';
-            } else if (status.includes('Callback')) {
-                statusBadge = '<span class="card-status-badge callback">C</span>';
-            }
+            // Status for card dropdown
+            var cardStatus = status;
 
             var prioIndicator = '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">';
 
@@ -4604,7 +4613,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -4618,6 +4627,7 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -5660,7 +5670,94 @@
             if (menu) menu.classList.remove('open');
             if (trigger) trigger.classList.remove('open');
         }
+        // Close any open card status menus
+        document.querySelectorAll('.card-status-menu.open').forEach(function(m) {
+            if (!m.parentElement.contains(e.target)) m.classList.remove('open');
+        });
     });
+
+    // Build card status column HTML
+    function getCardStatusHtml(lead) {
+        var f = lead.fields;
+        var status = f['Status'] || f['Disposition'] || f['Outcome'] || 'New';
+        var color = getStatusColor(status);
+        var label = getStatusLabel(status);
+        return '<div class="priority-card-lg-status-col" onclick="event.stopPropagation()">' +
+            '<div class="col-label">Status</div>' +
+            '<div style="position:relative;width:100%">' +
+                '<button type="button" class="card-status-trigger" onclick="toggleCardStatus(this,\'' + lead.id + '\')">' +
+                    '<span class="status-dot" style="background:' + color + '"></span>' +
+                    '<span class="card-status-label">' + escapeHtml(label) + '</span>' +
+                    '<span class="chevron">▼</span>' +
+                '</button>' +
+                '<div class="card-status-menu"></div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    var allStatusOptions = [
+        {value:'New',label:'New Lead'},{value:'Retry',label:'Retrying'},{value:'Booked',label:'Meeting Booked'},
+        {value:'Callback',label:'Callback Requested'},{value:'Follow Up',label:'Following Up'},
+        {value:'Timeline',label:'On Timeline'},{value:'Scheduling Showings',label:'Scheduling Showings'},
+        {value:'Sending Listings',label:'Sending Listings'},{value:'Meeting in Person',label:'Meeting in Person'},
+        {value:'Closed',label:'Closed'},{value:'DNC',label:'Do Not Call'}
+    ];
+
+    function toggleCardStatus(triggerEl, leadId) {
+        var menu = triggerEl.parentElement.querySelector('.card-status-menu');
+        if (!menu) return;
+        // Close all other open menus
+        document.querySelectorAll('.card-status-menu.open').forEach(function(m) {
+            if (m !== menu) m.classList.remove('open');
+        });
+        if (menu.classList.contains('open')) {
+            menu.classList.remove('open');
+            return;
+        }
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        var currentStatus = lead ? (lead.fields['Status'] || lead.fields['Disposition'] || 'New') : 'New';
+        menu.innerHTML = allStatusOptions.map(function(opt) {
+            return '<button type="button" class="status-option' + (opt.value === currentStatus ? ' selected' : '') + '" onclick="selectCardStatus(\'' + leadId + '\',\'' + opt.value + '\',this)">' +
+                '<span class="status-dot" style="background:' + getStatusColor(opt.value) + '"></span>' + escapeHtml(opt.label) +
+            '</button>';
+        }).join('');
+        menu.classList.add('open');
+    }
+    window.toggleCardStatus = toggleCardStatus;
+
+    async function selectCardStatus(leadId, newStatus, btnEl) {
+        // Close menu
+        var menu = btnEl.closest('.card-status-menu');
+        if (menu) menu.classList.remove('open');
+        // Update trigger display
+        var wrapper = btnEl.closest('.priority-card-lg-status-col');
+        if (wrapper) {
+            var dot = wrapper.querySelector('.card-status-trigger .status-dot');
+            var label = wrapper.querySelector('.card-status-label');
+            if (dot) dot.style.background = getStatusColor(newStatus);
+            if (label) label.textContent = getStatusLabel(newStatus);
+        }
+        // Save to Airtable
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+                method: 'PATCH',
+                body: { fields: { 'Status': newStatus } }
+            });
+            var lead = allLeads.find(function(l) { return l.id === leadId; });
+            if (lead) lead.fields['Status'] = newStatus;
+            showToast('Status updated', 'success');
+            // If modal is open for this lead, sync the modal dropdown too
+            if (currentLeadId === leadId) {
+                var modalSelect = document.getElementById('modalStatusSelect');
+                if (modalSelect) modalSelect.value = newStatus;
+                syncStatusDropdownDisplay(newStatus);
+            }
+        } catch (err) {
+            console.error('Error updating status:', err);
+            showToast('Failed to update status', 'error');
+        }
+    }
+    window.selectCardStatus = selectCardStatus;
 
     // Save note
     document.getElementById('modalSaveNoteBtn').addEventListener('click', async function() {
@@ -6404,6 +6501,25 @@
         var label = isSharedToMe ? 'From ' + displayName : 'w/ ' + displayName;
         return ' <span class="shared-badge" title="' + (isSharedToMe ? 'Shared by ' : 'Shared with ') + escapeHtml(displayName) + '">🔗 ' + escapeHtml(label) + '</span>';
     }
+
+    // Card-only: just chain icon (no name)
+    function getSharedIconHtml(lead) {
+        var f = lead.fields;
+        var sharedWithEmail = f['Shared With Email'];
+        if (Array.isArray(sharedWithEmail)) sharedWithEmail = sharedWithEmail[0] || '';
+        var isSharedToMe = lead.isShared;
+        var isShared = isSharedToMe || sharedWithEmail;
+        if (!isShared) return '';
+        var displayName = '';
+        if (isSharedToMe) {
+            var ownerEmail = f['Client Email'];
+            if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
+            displayName = getAgentNameByEmail(ownerEmail);
+        } else if (sharedWithEmail) {
+            displayName = getAgentNameByEmail(sharedWithEmail);
+        }
+        return ' <span class="shared-icon-only" title="' + (isSharedToMe ? 'Shared by ' : 'Shared with ') + escapeHtml(displayName) + '">🔗</span>';
+    }
     
     // Share button click
     document.getElementById('modalShareBtn').addEventListener('click', async function() {
@@ -6539,7 +6655,7 @@
             // Update card display - remove share icon
             var cardEl = document.querySelector('.prio-card[data-id="' + leadIdToUpdate + '"]');
             if (cardEl) {
-                var sharedIcon = cardEl.querySelector('.shared-badge') || cardEl.querySelector('.shared-icon');
+                var sharedIcon = cardEl.querySelector('.shared-icon-only') || cardEl.querySelector('.shared-badge') || cardEl.querySelector('.shared-icon');
                 if (sharedIcon) sharedIcon.remove();
                 var shareActionBtn = cardEl.querySelector('.action-share');
                 if (shareActionBtn) {
@@ -6551,7 +6667,7 @@
             // Update priority card
             var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadIdToUpdate + '"]');
             if (priorityCard) {
-                var prioSharedIcon = priorityCard.querySelector('.shared-badge') || priorityCard.querySelector('.shared-icon');
+                var prioSharedIcon = priorityCard.querySelector('.shared-icon-only') || priorityCard.querySelector('.shared-badge') || priorityCard.querySelector('.shared-icon');
                 if (prioSharedIcon) prioSharedIcon.remove();
                 // Update quick action share button to show Share
                 var shareActionBtn = priorityCard.querySelector('.action-share');
@@ -6642,8 +6758,8 @@
             var cardEl = document.querySelector('.prio-card[data-id="' + leadIdToUpdate + '"]');
             if (cardEl) {
                 var nameEl = cardEl.querySelector('.prio-card-name');
-                if (nameEl && !nameEl.querySelector('.shared-badge')) {
-                    nameEl.innerHTML = nameEl.innerHTML + ' <span class="shared-badge" title="Shared with ' + escapeHtml(sharedWithName) + '">🔗 w/ ' + escapeHtml(sharedWithName) + '</span>';
+                if (nameEl && !nameEl.querySelector('.shared-icon-only')) {
+                    nameEl.innerHTML = nameEl.innerHTML + ' <span class="shared-icon-only" title="Shared with ' + escapeHtml(sharedWithName) + '">🔗</span>';
                 }
                 // Update quick action share button on small card if present
                 var cardShareBtn = cardEl.querySelector('.action-share');
@@ -6657,8 +6773,8 @@
             var priorityCard = document.querySelector('.priority-card-lg[data-id="' + leadIdToUpdate + '"]');
             if (priorityCard) {
                 var prioNameEl = priorityCard.querySelector('.priority-card-lg-name');
-                if (prioNameEl && !prioNameEl.querySelector('.shared-badge')) {
-                    prioNameEl.innerHTML = prioNameEl.innerHTML + ' <span class="shared-badge" title="Shared with ' + escapeHtml(sharedWithName) + '">🔗 w/ ' + escapeHtml(sharedWithName) + '</span>';
+                if (prioNameEl && !prioNameEl.querySelector('.shared-icon-only')) {
+                    prioNameEl.innerHTML = prioNameEl.innerHTML + ' <span class="shared-icon-only" title="Shared with ' + escapeHtml(sharedWithName) + '">🔗</span>';
                 }
                 // Update quick action share button to show Shared
                 var shareActionBtn = priorityCard.querySelector('.action-share');
@@ -7345,13 +7461,8 @@
                 timeCol = '<span class="time-value">' + timeDisplay + '</span>';
             }
 
-            // Status badge
-            var statusBadge = '';
-            if (status.includes('Booked')) {
-                statusBadge = '<span class="card-status-badge booked">B</span>';
-            } else if (status.includes('Callback')) {
-                statusBadge = '<span class="card-status-badge callback">C</span>';
-            }
+            // Status for card dropdown
+            var cardStatus = status;
 
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
 
@@ -7363,7 +7474,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -7377,6 +7488,7 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -7495,7 +7607,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedBadgeHtml(lead) + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -7505,6 +7617,7 @@
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions" style="display:flex;align-items:center;justify-content:center;padding:16px">' +
                     '<button class="btn-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')">👤 Take Over</button>' +
                 '</div>' +
@@ -7674,19 +7787,6 @@
 
             var timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
 
-            // Status badge
-            var statusBadge = '';
-            var statusLower = status.toLowerCase();
-            if (statusLower === 'callback') {
-                statusBadge = '<span class="priority-card-lg-badge callback" style="background:rgba(59,130,246,0.15);color:#3B82F6">' + escapeHtml(status) + '</span>';
-            } else if (statusLower === 'follow up') {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(139,92,246,0.15);color:#8B5CF6">' + escapeHtml(status) + '</span>';
-            } else if (statusLower === 'timeline') {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b">' + escapeHtml(status) + '</span>';
-            } else {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)">' + escapeHtml(status || 'Unknown') + '</span>';
-            }
-
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
 
             return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
@@ -7697,8 +7797,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedBadgeHtml(lead) + '</div>' +
-                            statusBadge +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -7708,6 +7807,7 @@
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-reschedule' + (canChangeCallDate ? '' : ' disabled') + '"' + (canChangeCallDate ? ' onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"' : ' disabled') + '><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
                     '<button class="action-btn action-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')"><span class="action-icon">👤</span><span class="action-label">Take Over</span></button>' +
@@ -7886,17 +7986,6 @@
 
             var timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
 
-            // Status badge
-            var statusBadge = '';
-            var statusLower = status.toLowerCase();
-            if (statusLower === 'new') {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(52,211,153,0.15);color:#34D399">New</span>';
-            } else if (statusLower === 'retry') {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(251,191,36,0.15);color:#FBbf24">Retry</span>';
-            } else {
-                statusBadge = '<span class="priority-card-lg-badge" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)">' + escapeHtml(status || 'Unknown') + '</span>';
-            }
-
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
 
             return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
@@ -7907,8 +7996,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedBadgeHtml(lead) + '</div>' +
-                            statusBadge +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -7922,6 +8010,7 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
@@ -8094,15 +8183,8 @@
 
             var timeCol = '<span class="date-value">' + dateDisplay + '</span><span class="time-value">' + timeDisplay + '</span>';
 
-            // Status badge - small B/C format
-            var statusBadge = '';
             var statusLower = status.toLowerCase();
             var outcomeLower = outcome.toLowerCase();
-            if (statusLower === 'booked' || outcomeLower === 'booked') {
-                statusBadge = '<span class="card-status-badge booked">B</span>';
-            } else if (statusLower === 'callback' || outcomeLower === 'callback') {
-                statusBadge = '<span class="card-status-badge callback">C</span>';
-            }
 
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
 
@@ -8114,7 +8196,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Called at ' + callTimeDisplay + ' EST</div>' +
@@ -8128,6 +8210,7 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Reschedule</span></button>' +
@@ -8947,13 +9030,6 @@
                 timeCol = '<span class="time-value">' + timeDisplay + '</span>';
             }
 
-            var statusBadge = '';
-            if (status.includes('Booked')) {
-                statusBadge = '<span class="card-status-badge booked">B</span>';
-            } else if (status.includes('Callback')) {
-                statusBadge = '<span class="card-status-badge callback">C</span>';
-            }
-
             var prioIndicator = '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">';
 
             return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
@@ -8964,7 +9040,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -8978,6 +9054,7 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -9177,13 +9254,6 @@
                 timeCol = '<span class="time-value">' + timeDisplay + '</span>';
             }
 
-            var statusBadge = '';
-            if (status.includes('Booked')) {
-                statusBadge = '<span class="card-status-badge booked">B</span>';
-            } else if (status.includes('Callback')) {
-                statusBadge = '<span class="card-status-badge callback">C</span>';
-            }
-
             var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '<span class="prio-icon-placeholder"></span>';
 
             return '<div class="priority-card-lg" data-id="' + lead.id + '">' +
@@ -9194,7 +9264,7 @@
                     '</div>' +
                     '<div class="priority-card-lg-info">' +
                         '<div class="priority-card-lg-top">' +
-                            '<div class="priority-card-lg-name">' + escapeHtml(name) + statusBadge + getSharedBadgeHtml(lead) + '</div>' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
                         '</div>' +
                         '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
@@ -9208,6 +9278,7 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share shared" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">✓</span><span class="action-label">Shared</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
