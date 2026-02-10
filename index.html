@@ -223,11 +223,12 @@
         .card-status-trigger{display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:0.75rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;white-space:nowrap;width:100%}
         .card-status-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
         .card-status-trigger .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-        .card-status-menu{display:none;position:fixed;width:320px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px;z-index:99999;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+        .card-status-menu{display:none;position:fixed;width:360px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px;z-index:99999;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
         .card-status-menu.open{display:block;animation:statusPopIn 0.15s ease}
         @keyframes statusPopIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
         .card-status-menu .status-popup-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-        .card-status-menu .status-option{padding:7px 10px;font-size:0.75rem;border-radius:6px;display:flex;align-items:center;gap:6px;cursor:pointer;color:#A0A0A0;background:none;border:1px solid transparent;transition:all 0.12s;font-family:var(--font-body);text-align:left;width:100%;white-space:nowrap}
+        .card-status-menu .status-option{padding:7px 10px;font-size:0.75rem;border-radius:6px;display:flex;align-items:center;gap:6px;cursor:pointer;color:#A0A0A0;background:none;border:1px solid transparent;transition:all 0.12s;font-family:var(--font-body);text-align:left;width:100%;min-width:0;white-space:nowrap;overflow:hidden}
+        .card-status-menu .status-option span:not(.status-dot){overflow:hidden;text-overflow:ellipsis}
         .card-status-menu .status-option:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1);color:#fff}
         .card-status-menu .status-option.selected{background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.25);color:#34D399}
         .card-status-menu .status-option .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
@@ -1604,6 +1605,19 @@
                                     <span class="search-icon">🔍</span>
                                     <input type="text" id="prioSearch" placeholder="Search by name or phone...">
                                 </div>
+                                <select id="prioStatus" class="filter-select">
+                                    <option value="all">All Status</option>
+                                    <option value="Booked">Meeting Booked</option>
+                                    <option value="Retry">Retrying</option>
+                                    <option value="Callback Rescheduled">Callback Rescheduled</option>
+                                    <option value="Meeting in Person">Meeting in Person</option>
+                                    <option value="Sending Listings">Sending Listings</option>
+                                    <option value="Listings Sent">Listings Sent</option>
+                                    <option value="Scheduling Showings">Scheduling Showings</option>
+                                    <option value="Viewed Properties">Viewed Properties</option>
+                                    <option value="Offer Placed">Offer Placed</option>
+                                    <option value="Deal Closed">Deal Closed</option>
+                                </select>
                                 <select id="prioOwnership" class="filter-select">
                                     <option value="all">All Leads</option>
                                     <option value="mine">My Prospects</option>
@@ -1663,8 +1677,17 @@
                                 </div>
                                 <select id="prospectsStatus" class="filter-select">
                                     <option value="all">All Status</option>
-                                    <option value="Booked">Booked</option>
+                                    <option value="Booked">Meeting Booked</option>
                                     <option value="Callback">Callback</option>
+                                    <option value="Retry">Retrying</option>
+                                    <option value="Callback Rescheduled">Callback Rescheduled</option>
+                                    <option value="Meeting in Person">Meeting in Person</option>
+                                    <option value="Sending Listings">Sending Listings</option>
+                                    <option value="Listings Sent">Listings Sent</option>
+                                    <option value="Scheduling Showings">Scheduling Showings</option>
+                                    <option value="Viewed Properties">Viewed Properties</option>
+                                    <option value="Offer Placed">Offer Placed</option>
+                                    <option value="Deal Closed">Deal Closed</option>
                                 </select>
                                 <select id="prospectsOwnership" class="filter-select">
                                     <option value="all">All Leads</option>
@@ -1781,8 +1804,17 @@
                                 </select>
                                 <select id="sharedStatus" class="filter-select">
                                     <option value="all">All Status</option>
-                                    <option value="Booked">Booked</option>
+                                    <option value="Booked">Meeting Booked</option>
                                     <option value="Callback">Callback</option>
+                                    <option value="Retry">Retrying</option>
+                                    <option value="Callback Rescheduled">Callback Rescheduled</option>
+                                    <option value="Meeting in Person">Meeting in Person</option>
+                                    <option value="Sending Listings">Sending Listings</option>
+                                    <option value="Listings Sent">Listings Sent</option>
+                                    <option value="Scheduling Showings">Scheduling Showings</option>
+                                    <option value="Viewed Properties">Viewed Properties</option>
+                                    <option value="Offer Placed">Offer Placed</option>
+                                    <option value="Deal Closed">Deal Closed</option>
                                     <option value="Timeline">Timeline</option>
                                     <option value="Follow Up">Follow Up</option>
                                 </select>
@@ -5813,12 +5845,12 @@
         var currentStatus = lead ? (lead.fields['Status'] || lead.fields['Disposition'] || 'New') : 'New';
         menu.innerHTML = '<div class="status-popup-grid">' + allStatusOptions.map(function(opt) {
             return '<button type="button" class="status-option' + (opt.value === currentStatus ? ' selected' : '') + '" onclick="selectCardStatus(\'' + leadId + '\',\'' + opt.value + '\',this)">' +
-                '<span class="status-dot" style="background:' + getStatusColor(opt.value) + '"></span>' + escapeHtml(opt.label) +
+                '<span class="status-dot" style="background:' + getStatusColor(opt.value) + '"></span><span>' + escapeHtml(opt.label) + '</span>' +
             '</button>';
         }).join('') + '</div>';
         // Position popup centered on trigger
         var rect = triggerEl.getBoundingClientRect();
-        var popupW = 320;
+        var popupW = 360;
         var left = rect.left + (rect.width / 2) - (popupW / 2);
         if (left < 8) left = 8;
         if (left + popupW > window.innerWidth - 8) left = window.innerWidth - popupW - 8;
@@ -7519,7 +7551,8 @@
             // Status filter
             if (statusFilter !== 'all') {
                 if (statusFilter === 'Booked' && !status.includes('Booked')) return false;
-                if (statusFilter === 'Callback' && !status.includes('Callback')) return false;
+                else if (statusFilter === 'Callback' && !status.includes('Callback')) return false;
+                else if (statusFilter !== 'Booked' && statusFilter !== 'Callback' && status !== statusFilter) return false;
             }
 
             // Search filter
@@ -8878,6 +8911,7 @@
     // ===== FILTER EVENT LISTENERS =====
     // Prio filters
     document.getElementById('prioSearch')?.addEventListener('input', debounce(updatePrioListFiltered, 300));
+    document.getElementById('prioStatus')?.addEventListener('change', updatePrioListFiltered);
     document.getElementById('prioOwnership')?.addEventListener('change', updatePrioListFiltered);
     document.getElementById('prioTimeframe')?.addEventListener('change', updatePrioListFiltered);
     document.getElementById('prioSort')?.addEventListener('change', updatePrioListFiltered);
@@ -9111,6 +9145,7 @@
         var prioList = document.getElementById('prioList');
 
         var searchVal = (document.getElementById('prioSearch')?.value || '').toLowerCase();
+        var statusFilter = document.getElementById('prioStatus')?.value || 'all';
         var ownershipFilter = document.getElementById('prioOwnership')?.value || 'all';
         var timeframeFilter = document.getElementById('prioTimeframe')?.value || 'all';
         var sortBy = document.getElementById('prioSort')?.value || 'priority';
@@ -9124,6 +9159,12 @@
                 var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
                 var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
                 if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
+            }
+
+            // Status filter
+            if (statusFilter !== 'all') {
+                var leadStatus = f['Status'] || f['Disposition'] || f['Outcome'] || '';
+                if (leadStatus !== statusFilter) return false;
             }
 
             // Ownership filter
@@ -9361,7 +9402,13 @@
             // Status filter
             if (statusFilter !== 'all') {
                 var status = f['Status'] || f['Disposition'] || '';
-                if (!status.includes(statusFilter)) return false;
+                if (statusFilter === 'Booked') {
+                    if (!status.includes('Booked')) return false;
+                } else if (statusFilter === 'Callback') {
+                    if (!status.includes('Callback')) return false;
+                } else {
+                    if (status !== statusFilter) return false;
+                }
             }
 
             // Timeframe filter
