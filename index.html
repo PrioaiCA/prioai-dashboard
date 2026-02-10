@@ -222,7 +222,7 @@
         .card-status-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
         .card-status-trigger .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
         .card-status-trigger .chevron{opacity:0.4;margin-left:auto;font-size:0.5rem}
-        .card-status-menu{display:none;position:absolute;top:calc(100% + 2px);left:0;width:160px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-height:240px;overflow-y:auto}
+        .card-status-menu{display:none;position:fixed;width:180px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-height:240px;overflow-y:auto}
         .card-status-menu.open{display:block;animation:statusDropIn 0.15s ease}
         .card-status-menu .status-option{padding:6px 10px;font-size:0.75rem}
         .custom-status-dropdown{position:relative;width:100%;max-width:200px}
@@ -3073,17 +3073,14 @@
                                 <div class="status-dropdown-menu" id="statusDropdownMenu"></div>
                             </div>
                             <select id="modalStatusSelect" style="display:none;">
-                                <option value="New">New Lead</option>
-                                <option value="Retry">Retrying</option>
                                 <option value="Booked">Meeting Booked</option>
-                                <option value="Callback">Callback Requested</option>
-                                <option value="Follow Up">Following Up</option>
-                                <option value="Timeline">On Timeline</option>
-                                <option value="Scheduling Showings">Scheduling Showings</option>
                                 <option value="Sending Listings">Sending Listings</option>
+                                <option value="Scheduling Showings">Scheduling Showings</option>
+                                <option value="Retry">Retrying</option>
                                 <option value="Meeting in Person">Meeting in Person</option>
-                                <option value="Closed">Closed</option>
-                                <option value="DNC">Do Not Call</option>
+                                <option value="Callback Rescheduled">Callback Rescheduled</option>
+                                <option value="Offer Placed">Offer Placed</option>
+                                <option value="Won">Won</option>
                             </select>
                         </div>
                     </div>
@@ -4492,6 +4489,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -4500,7 +4498,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -4659,6 +4656,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -4667,7 +4665,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -5621,14 +5618,14 @@
     
     // Status dropdown - custom UI
     var statusColors = {
-        'New': '#3B82F6', 'Retry': '#F59E0B', 'Booked': '#34D399', 'Callback': '#F97316',
-        'Follow Up': '#8B5CF6', 'Timeline': '#6366F1', 'Scheduling Showings': '#06B6D4',
-        'Sending Listings': '#14B8A6', 'Meeting in Person': '#10B981', 'Closed': '#EF4444', 'DNC': '#6B7280'
+        'Booked': '#34D399', 'Sending Listings': '#14B8A6', 'Scheduling Showings': '#06B6D4',
+        'Retry': '#F59E0B', 'Meeting in Person': '#10B981', 'Callback Rescheduled': '#F97316',
+        'Offer Placed': '#8B5CF6', 'Won': '#22C55E'
     };
     var statusLabels = {
-        'New': 'New Lead', 'Retry': 'Retrying', 'Booked': 'Meeting Booked', 'Callback': 'Callback Requested',
-        'Follow Up': 'Following Up', 'Timeline': 'On Timeline', 'Scheduling Showings': 'Scheduling Showings',
-        'Sending Listings': 'Sending Listings', 'Meeting in Person': 'Meeting in Person', 'Closed': 'Closed', 'DNC': 'Do Not Call'
+        'Booked': 'Meeting Booked', 'Sending Listings': 'Sending Listings', 'Scheduling Showings': 'Scheduling Showings',
+        'Retry': 'Retrying', 'Meeting in Person': 'Meeting in Person', 'Callback Rescheduled': 'Callback Rescheduled',
+        'Offer Placed': 'Offer Placed', 'Won': 'Won'
     };
 
     function getStatusColor(status) { return statusColors[status] || '#6B7280'; }
@@ -5736,11 +5733,10 @@
     }
 
     var allStatusOptions = [
-        {value:'New',label:'New Lead'},{value:'Retry',label:'Retrying'},{value:'Booked',label:'Meeting Booked'},
-        {value:'Callback',label:'Callback Requested'},{value:'Follow Up',label:'Following Up'},
-        {value:'Timeline',label:'On Timeline'},{value:'Scheduling Showings',label:'Scheduling Showings'},
-        {value:'Sending Listings',label:'Sending Listings'},{value:'Meeting in Person',label:'Meeting in Person'},
-        {value:'Closed',label:'Closed'},{value:'DNC',label:'Do Not Call'}
+        {value:'Booked',label:'Meeting Booked'},{value:'Sending Listings',label:'Sending Listings'},
+        {value:'Scheduling Showings',label:'Scheduling Showings'},{value:'Retry',label:'Retrying'},
+        {value:'Meeting in Person',label:'Meeting in Person'},{value:'Callback Rescheduled',label:'Callback Rescheduled'},
+        {value:'Offer Placed',label:'Offer Placed'},{value:'Won',label:'Won'}
     ];
 
     function toggleCardStatus(triggerEl, leadId) {
@@ -5761,9 +5757,23 @@
                 '<span class="status-dot" style="background:' + getStatusColor(opt.value) + '"></span>' + escapeHtml(opt.label) +
             '</button>';
         }).join('');
+        // Position menu using fixed positioning to escape overflow:hidden
+        var rect = triggerEl.getBoundingClientRect();
+        menu.style.top = (rect.bottom + 2) + 'px';
+        menu.style.left = rect.left + 'px';
         menu.classList.add('open');
     }
     window.toggleCardStatus = toggleCardStatus;
+
+    // Close card status menu when scrolling or clicking outside
+    document.addEventListener('scroll', function() {
+        document.querySelectorAll('.card-status-menu.open').forEach(function(m) { m.classList.remove('open'); });
+    }, true);
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.card-status-trigger') && !e.target.closest('.card-status-menu')) {
+            document.querySelectorAll('.card-status-menu.open').forEach(function(m) { m.classList.remove('open'); });
+        }
+    });
 
     async function selectCardStatus(leadId, newStatus, btnEl) {
         // Close menu
@@ -7520,6 +7530,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -7528,7 +7539,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -7653,11 +7663,11 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions" style="display:flex;align-items:center;justify-content:center;padding:16px">' +
                     '<button class="btn-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')">👤 Take Over</button>' +
                 '</div>' +
@@ -7843,11 +7853,11 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col unqualified-summary-wide" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-reschedule' + (canChangeCallDate ? '' : ' disabled') + '"' + (canChangeCallDate ? ' onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"' : ' disabled') + '><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
                     '<button class="action-btn action-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')"><span class="action-icon">👤</span><span class="action-label">Take Over</span></button>' +
@@ -8042,6 +8052,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -8050,7 +8061,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
@@ -8242,6 +8252,7 @@
                         '<div class="priority-card-lg-lastcall">Called at ' + callTimeDisplay + ' EST</div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -8250,7 +8261,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Reschedule</span></button>' +
@@ -9115,6 +9125,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -9123,7 +9134,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -9339,6 +9349,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -9347,7 +9358,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share shared" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">✓</span><span class="action-label">Shared</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
