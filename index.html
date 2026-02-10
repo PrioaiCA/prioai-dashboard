@@ -308,7 +308,7 @@
         .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)}
         .modal-name-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
         .modal-prio-icon{width:28px;height:28px;border-radius:8px}
-        .lead-modal-title h2{font-family:var(--font-heading);font-size:1rem;font-weight:600;margin:0;color:#FFFFFF}
+        .lead-modal-title h2{font-family:var(--font-heading);font-size:1.4rem;font-weight:600;margin:0;color:#FFFFFF}
         .lead-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
         .btn-prio-toggle{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
         .btn-prio-toggle.active{background:#f59e0b;color:#000}
@@ -4900,25 +4900,21 @@
         return div.innerHTML;
     }
 
-    // Format date in friendly format: February 1st, 1:08 PM
+    // Format date in friendly format: Feb 9, 7:00 PM
     function formatFriendlyDateTime(dateStr) {
         if (!dateStr) return 'Unknown time';
         var date = new Date(dateStr);
         if (isNaN(date.getTime())) return 'Unknown time';
 
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var day = date.getDate();
-        var suffix = 'th';
-        if (day === 1 || day === 21 || day === 31) suffix = 'st';
-        else if (day === 2 || day === 22) suffix = 'nd';
-        else if (day === 3 || day === 23) suffix = 'rd';
 
         var hours = date.getHours();
         var ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
         var minutes = date.getMinutes().toString().padStart(2, '0');
 
-        return months[date.getMonth()] + ' ' + day + suffix + ', ' + hours + ':' + minutes + ' ' + ampm;
+        return months[date.getMonth()] + ' ' + day + ', ' + hours + ':' + minutes + ' ' + ampm;
     }
 
     // Update card display when lead data changes
@@ -8588,18 +8584,17 @@
         });
     }
 
-    // Helper: Format date/time as friendly (February 1st, 11:00 AM)
+    // Helper: Format date/time as friendly (Feb 9, 7:00 PM)
     function formatFriendlyDateTime(dateVal) {
         if (!dateVal) return '-';
         var date = new Date(dateVal);
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var day = date.getDate();
-        var suffix = ['th', 'st', 'nd', 'rd'][(day % 100 > 10 && day % 100 < 14) ? 0 : (day % 10 < 4 ? day % 10 : 0)];
         var hours = date.getHours();
         var minutes = date.getMinutes().toString().padStart(2, '0');
         var ampm = hours >= 12 ? 'PM' : 'AM';
         var hour12 = hours % 12 || 12;
-        return months[date.getMonth()] + ' ' + day + suffix + ', ' + hour12 + ':' + minutes + ' ' + ampm;
+        return months[date.getMonth()] + ' ' + day + ', ' + hour12 + ':' + minutes + ' ' + ampm;
     }
     
     // Helper: Format phone
