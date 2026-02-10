@@ -123,13 +123,26 @@
         .prio-header-actions,.prospects-header-actions,.pipeline-header-actions{display:flex;align-items:center;gap:1rem}
         .filters-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;justify-content:space-between}
         .filter-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin-left:auto}
-        .priorities-cards{display:grid;grid-template-columns:1fr;gap:1rem}
-        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden;position:relative}
-        .priority-card-lg:hover{border-color:rgb(52,211,153);box-shadow:0 4px 16px rgba(52,211,153,0.15)}
+        .priorities-cards{display:grid;grid-template-columns:1fr;gap:0}
+        .priorities-cards > .priority-card-lg + .priority-card-lg{border-top:1px solid #1a1a1a}
+        .priorities-cards > .missed-meeting-separator{border-top:1px solid #1a1a1a}
+        .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden;position:relative;border-left:3px solid #F59E0B;margin-bottom:0;border-radius:0 12px 12px 0}
+        .priority-card-lg:first-child{border-radius:0 12px 0 0}
+        .priority-card-lg:last-child{border-radius:0 0 12px 0}
+        .priority-card-lg:only-child{border-radius:0 12px 12px 0}
+        .priority-card-lg.meeting-done{border-left-color:#34D399}
+        .priority-card-lg.missed-meeting{border-left-color:#ef4444}
+        .priority-card-lg:hover{border-color:rgba(255,255,255,0.2);border-left-color:#F59E0B;background:#151515;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+        .priority-card-lg.meeting-done:hover{border-left-color:#34D399}
+        .priority-card-lg.missed-meeting:hover{border-left-color:#ef4444}
         .priority-card-lg-left{flex:none;min-width:0;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
-        .priority-card-lg-time-col{flex:0 0 85px;background:rgba(52,211,153,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
-        .priority-card-lg-time-col .time-value{font-size:1rem;font-weight:700;color:rgb(52,211,153);white-space:nowrap;min-width:70px;text-align:center}
-        .priority-card-lg-time-col .date-value{font-size:0.75rem;font-weight:500;color:rgb(52,211,153);opacity:0.8;margin-bottom:2px;text-align:center}
+        .priority-card-lg-time-col{flex:0 0 85px;background:rgba(245,158,11,0.06);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+        .meeting-done .priority-card-lg-time-col{background:rgba(52,211,153,0.06)}
+        .priority-card-lg-time-col .time-value{font-size:0.875rem;font-weight:700;color:#F59E0B;white-space:nowrap;min-width:60px;text-align:center;background:rgba(245,158,11,0.1);padding:4px 10px;border-radius:20px}
+        .meeting-done .priority-card-lg-time-col .time-value{background:rgba(52,211,153,0.1);color:rgb(52,211,153)}
+        .missed-meeting .priority-card-lg-time-col .time-value{background:rgba(239,68,68,0.1);color:#ef4444}
+        .priority-card-lg-time-col .date-value{font-size:0.75rem;font-weight:500;color:#F59E0B;opacity:0.8;margin-bottom:2px;text-align:center}
+        .meeting-done .priority-card-lg-time-col .date-value{color:rgb(52,211,153)}
         .btn-schedule-card{background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s}
         .btn-schedule-card:hover{background:rgb(52,211,153);color:#000}
         .btn-takeover{background:rgba(59,130,246,0.15);color:rgb(59,130,246);border:1px solid rgba(59,130,246,0.3);padding:10px 20px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:8px}
@@ -142,9 +155,9 @@
         .priority-card-lg-info{flex:0 0 280px;padding:14px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
         .priority-card-lg-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
         .priority-card-lg-name{font-family:var(--font-heading);font-size:1rem;font-weight:600;display:flex;align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-        .priority-card-lg-badge{font-size:0.6875rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase}
-        .priority-card-lg-badge.booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
-        .priority-card-lg-badge.callback{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .priority-card-lg-badge{font-size:0.6875rem;padding:3px 10px;border-radius:20px;font-weight:600;text-transform:uppercase}
+        .priority-card-lg-badge.booked{background:rgba(52,211,153,0.1);color:rgb(52,211,153)}
+        .priority-card-lg-badge.callback{background:rgba(245,158,11,0.1);color:#f59e0b}
         .priority-card-lg-phone{font-size:0.8125rem;font-weight:400;color:#707070;margin-bottom:4px;font-family:monospace}
         .priority-card-lg-lastcall{font-size:0.6875rem;font-weight:400;color:#707070;display:flex;align-items:center;gap:6px}
         .priority-card-lg-lastcall .lastcall-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
@@ -159,15 +172,15 @@
         .missed-meeting-separator::before,.missed-meeting-separator::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent)}
         .missed-meeting-separator span{font-size:0.8125rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:8px}
         .missed-meeting-separator .missed-count{background:#ef4444;color:#fff !important;font-size:0.75rem;padding:2px 8px;border-radius:10px;font-weight:700}
-        .missed-meeting-info{font-size:0.6875rem;font-weight:400;color:#707070;text-align:center;margin-bottom:16px;padding:8px 16px;background:rgba(239,68,68,0.08);border-radius:8px}
-        .priority-card-lg.missed-meeting{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05)}
-        .priority-card-lg.missed-meeting:hover{border-color:#ef4444}
+        .missed-meeting-info{font-size:0.6875rem;font-weight:400;color:#707070;text-align:center;margin-bottom:0;padding:8px 16px;background:rgba(239,68,68,0.08);border-radius:8px}
+        .priority-card-lg.missed-meeting{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.05);border-left-color:#ef4444}
+        .priority-card-lg.missed-meeting:hover{border-color:#ef4444;border-left-color:#ef4444}
         .priority-card-lg.missed-meeting .priority-card-lg-time-col{background:rgba(239,68,68,0.15)}
         .priority-card-lg.missed-meeting .priority-card-lg-time-col .time-value{color:#ef4444}
         .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
-        .priority-card-lg.meeting-done{opacity:0.5;border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02)}
-        .priority-card-lg.meeting-done:hover{opacity:0.7}
-        .meeting-done-badge{background:rgba(255,255,255,0.12);color:#A0A0A0;font-size:0.5625rem;font-weight:600;padding:2px 6px;border-radius:3px;text-transform:uppercase;position:absolute;top:4px;left:4px;z-index:1}
+        .priority-card-lg.meeting-done{opacity:0.5;border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);border-left-color:#34D399}
+        .priority-card-lg.meeting-done:hover{opacity:0.7;border-left-color:#34D399}
+        .meeting-done-badge{background:rgba(52,211,153,0.1);color:#34D399;font-size:0.5625rem;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase;position:absolute;top:4px;left:4px;z-index:1}
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:6px;margin-right:8px;flex-shrink:0}
         .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
         .priority-card-lg-time-col{position:relative}
@@ -187,7 +200,8 @@
         .action-btn.action-unprio:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
         .action-btn.action-takeover:hover{background:rgba(59,130,246,0.2);border-color:#3B82F6}
         .priorities-cards:not(.list-view){display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
-        .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
+        .priorities-cards:not(.list-view) > .priority-card-lg + .priority-card-lg{border-top:1px solid rgba(255,255,255,0.1)}
+        .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px;border-radius:12px;border-left:3px solid #F59E0B}
         .priorities-cards:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priorities-cards:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .priorities-cards:not(.list-view) .priority-card-lg-info{flex:1}
@@ -296,13 +310,13 @@
         .modal-prio-icon{width:28px;height:28px;border-radius:6px}
         .lead-modal-title h2{font-family:var(--font-heading);font-size:1rem;font-weight:600;margin:0;color:#FFFFFF}
         .lead-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
-        .btn-prio-toggle{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
+        .btn-prio-toggle{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
         .btn-prio-toggle.active{background:#f59e0b;color:#000}
-        .btn-prio-toggle:hover{background:rgba(245,158,11,0.25)}
-        .btn-send-back{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
-        .btn-send-back:hover{background:rgba(52,211,153,0.25)}
-        .btn-dnc{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s}
-        .btn-dnc:hover{background:rgba(239,68,68,0.25)}
+        .btn-prio-toggle:hover{background:rgba(245,158,11,0.25);transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+        .btn-send-back{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
+        .btn-send-back:hover{background:rgba(52,211,153,0.25);transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+        .btn-dnc{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
+        .btn-dnc:hover{background:rgba(239,68,68,0.25);transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
         .notes-input-container{position:relative}
         .notes-action-row{display:flex;gap:10px;margin-top:12px;justify-content:center;align-items:center}
         .voice-input-btn{width:48px;height:48px;border-radius:12px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
@@ -310,10 +324,11 @@
         .voice-input-btn.recording{background:rgba(239,68,68,0.2);border-color:#ef4444;color:#ef4444;animation:pulse-recording 1.5s infinite}
         .voice-input-btn svg{width:22px;height:22px}
         @keyframes pulse-recording{0%,100%{opacity:1}50%{opacity:0.5}}
-        .polish-notes-btn{padding:12px 20px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border:none;color:white;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px}
-        .polish-notes-btn:hover{opacity:0.9;transform:translateY(-1px)}
-        .polish-notes-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-        .notes-action-row .btn{padding:12px 20px;font-size:0.9375rem;border-radius:12px}
+        .polish-notes-btn{padding:12px 24px;border-radius:20px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border:none;color:white;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 150ms ease;display:flex;align-items:center;gap:8px}
+        .polish-notes-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(139,92,246,0.3)}
+        .polish-notes-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+        .notes-action-row .btn{padding:12px 24px;font-size:0.9375rem;border-radius:20px;transition:all 150ms ease}
+        .notes-action-row .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(52,211,153,0.3)}
         .polish-preview-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1200;opacity:0;visibility:hidden;transition:all 0.2s}
         .polish-preview-modal.active{opacity:1;visibility:visible}
         .polish-preview-content{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
@@ -432,8 +447,8 @@
         .attachments-empty{color:#707070;font-size:0.8125rem;font-weight:400;padding:12px;text-align:center}
 
         /* Share Button */
-        .btn-share{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
-        .btn-share:hover{background:rgba(59,130,246,0.25)}
+        .btn-share{padding:10px 16px;font-size:0.875rem;font-weight:600;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease;display:inline-flex;align-items:center;gap:6px}
+        .btn-share:hover{background:rgba(59,130,246,0.25);transform:scale(1.02);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
         .btn-share.shared{background:rgba(52,211,153,0.15);color:rgb(52,211,153);border-color:rgba(52,211,153,0.3)}
         
         /* Schedule Button */
@@ -447,8 +462,8 @@
         .btn-delete-booking:hover,.btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
         .btn-edit-booking{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
         .btn-edit-booking:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
-        .btn-reschedule{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);color:#3b82f6;cursor:pointer;font-size:0.75rem;font-weight:600;padding:4px 10px;border-radius:4px;transition:all 0.15s}
-        .btn-reschedule:hover{background:rgba(59,130,246,0.2);border-color:#3b82f6}
+        .btn-reschedule{background:none;border:none;color:#3b82f6;cursor:pointer;font-size:0.75rem;font-weight:600;padding:4px 10px;border-radius:4px;transition:all 150ms ease;text-decoration:none}
+        .btn-reschedule:hover{text-decoration:underline}
         .btn-edit-note{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 0.15s}
         .btn-edit-note:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
         
@@ -520,23 +535,45 @@
         .dashboard-loading-spinner{width:24px;height:24px;border:2px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         .overview-card{position:relative;overflow:hidden}
         .stat-card{position:relative;overflow:hidden}
+        .today-number-item{position:relative;overflow:hidden}
         .header-stat-badge{position:relative;overflow:hidden}
         .dashboard-loading .overview-card .dashboard-loading-overlay,
         .dashboard-loading .stat-card .dashboard-loading-overlay,
+        .dashboard-loading .today-number-item .dashboard-loading-overlay,
         .dashboard-loading .header-stat-badge .dashboard-loading-overlay{display:flex}
         .overview-card .dashboard-loading-overlay,
         .stat-card .dashboard-loading-overlay,
+        .today-number-item .dashboard-loading-overlay,
         .header-stat-badge .dashboard-loading-overlay{display:none}
         .overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
         @media(min-width:768px){.overview-grid{grid-template-columns:repeat(4,1fr)}}
-        .overview-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.15s}
-        .overview-card:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
+        .overview-card{background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,transparent 100%);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.15s;border-bottom:2px solid rgba(255,255,255,0.1)}
+        .overview-card:hover{border-color:rgba(255,255,255,0.2);transform:translateY(-2px)}
+        .overview-card.card-green{border-bottom-color:#34D399}
+        .overview-card.card-green:hover{border-color:rgba(52,211,153,0.4);border-bottom-color:#34D399}
+        .overview-card.card-blue{border-bottom-color:#3B82F6}
+        .overview-card.card-blue:hover{border-color:rgba(59,130,246,0.4);border-bottom-color:#3B82F6}
+        .overview-card.card-orange{border-bottom-color:#F59E0B}
+        .overview-card.card-orange:hover{border-color:rgba(245,158,11,0.4);border-bottom-color:#F59E0B}
+        .overview-card.card-purple{border-bottom-color:#8B5CF6}
+        .overview-card.card-purple:hover{border-color:rgba(139,92,246,0.4);border-bottom-color:#8B5CF6}
         .overview-card.highlight{background:rgba(52,211,153,0.1);border-color:rgb(52,211,153)}
-        .overview-card-header{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem}
+        .overview-card-header{display:flex;align-items:center;gap:0.625rem;margin-bottom:0.75rem}
         .overview-card-header h4{font-family:var(--font-heading);font-size:0.875rem;font-weight:700;color:rgba(255,255,255,0.8)}
-        .overview-card-icon{font-size:1rem}
-        .overview-card-value{font-family:var(--font-heading);font-size:2rem;font-weight:700;margin-bottom:0.25rem}
-        .overview-card-desc{font-size:0.75rem;font-weight:400;color:#A0A0A0}
+        .overview-card-icon{font-size:0.875rem;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0}
+        .card-green .overview-card-icon{background:rgba(52,211,153,0.15)}
+        .card-blue .overview-card-icon{background:rgba(59,130,246,0.15)}
+        .card-orange .overview-card-icon{background:rgba(245,158,11,0.15)}
+        .card-purple .overview-card-icon{background:rgba(139,92,246,0.15)}
+        .overview-card-value{font-family:var(--font-heading);font-size:2.25rem;font-weight:700;margin-bottom:0.25rem;line-height:1}
+        .overview-card-desc{font-size:0.75rem;font-weight:500;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.04em}
+        .today-numbers-bar{display:flex;align-items:stretch;background:rgba(255,255,255,0.02);border:1px solid #1a1a1a;border-radius:16px;margin-bottom:2rem;overflow:hidden;position:relative}
+        .today-number-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem 0.75rem;gap:0.25rem;position:relative;overflow:hidden}
+        .today-number-icon{font-size:1.125rem;margin-bottom:0.125rem}
+        .today-number-value{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;line-height:1;color:#FFFFFF}
+        .today-number-label{font-size:0.6875rem;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.04em}
+        .today-numbers-divider{width:1px;background:#2a2a2a;align-self:stretch;flex-shrink:0}
+        .today-number-item .dashboard-loading-overlay{border-radius:0}
         .meetings-list{display:flex;flex-direction:column;gap:0.5rem}
         .meetings-empty{text-align:center;padding:2rem;color:#707070;background:#111;border-radius:12px}
         .welcome-meta{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
@@ -753,7 +790,7 @@
         .data-table .empty-state{text-align:center;padding:40px;color:rgba(255,255,255,0.4)}
         
         /* Status Badges */
-        .status-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:600}
+        .status-badge{display:inline-block;padding:4px 16px;border-radius:20px;font-size:0.6875rem;font-weight:600}
         .status-badge.booked,.status-badge.meeting-booked{background:rgba(52,211,153,0.15);color:rgb(52,211,153)}
         .status-badge.callback{background:rgba(59,130,246,0.15);color:#3B82F6}
         .status-badge.timeline{background:rgba(245,158,11,0.15);color:#f59e0b}
@@ -1207,6 +1244,18 @@
 
         /* Search Result Item with Next Call */
         .search-result-next-call{font-size:0.75rem;color:rgb(52,211,153);margin-top:2px}
+
+        /* Page Transitions */
+        @keyframes pageFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes cardStaggerIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .page:not(.hidden){animation:pageFadeIn 300ms ease both}
+        .page:not(.hidden) .overview-card,.page:not(.hidden) .priority-card-lg,.page:not(.hidden) .today-numbers-bar,.page:not(.hidden) .prio-card{animation:cardStaggerIn 300ms ease both}
+        .page:not(.hidden) .overview-card:nth-child(1),.page:not(.hidden) .priority-card-lg:nth-child(1),.page:not(.hidden) .today-number-item:nth-child(1){animation-delay:0ms}
+        .page:not(.hidden) .overview-card:nth-child(2),.page:not(.hidden) .priority-card-lg:nth-child(2),.page:not(.hidden) .today-number-item:nth-child(3){animation-delay:50ms}
+        .page:not(.hidden) .overview-card:nth-child(3),.page:not(.hidden) .priority-card-lg:nth-child(3),.page:not(.hidden) .today-number-item:nth-child(5){animation-delay:100ms}
+        .page:not(.hidden) .overview-card:nth-child(4),.page:not(.hidden) .priority-card-lg:nth-child(4),.page:not(.hidden) .today-number-item:nth-child(7){animation-delay:150ms}
+        .page:not(.hidden) .priority-card-lg:nth-child(5){animation-delay:200ms}
+        .page:not(.hidden) .priority-card-lg:nth-child(6){animation-delay:250ms}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 </head>
@@ -1481,7 +1530,7 @@
                         <!-- Row 1: Pipeline Overview -->
                         <div class="section-label">Pipeline Overview</div>
                         <div class="overview-grid">
-                            <div class="overview-card" onclick="switchPage('prio')">
+                            <div class="overview-card card-green" onclick="switchPage('prio')">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">⚡</span>
@@ -1490,7 +1539,7 @@
                                 <div class="overview-card-value" id="overviewPrio">0</div>
                                 <div class="overview-card-desc">Priority leads to focus on</div>
                             </div>
-                            <div class="overview-card" onclick="switchPage('prospects')">
+                            <div class="overview-card card-blue" onclick="switchPage('prospects')">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">📋</span>
@@ -1499,7 +1548,7 @@
                                 <div class="overview-card-value" id="overviewScheduled">0</div>
                                 <div class="overview-card-desc">Callbacks & meetings booked</div>
                             </div>
-                            <div class="overview-card" style="cursor:default">
+                            <div class="overview-card card-orange" style="cursor:default">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">📞</span>
@@ -1508,7 +1557,7 @@
                                 <div class="overview-card-value" id="overviewActive">0</div>
                                 <div class="overview-card-desc">Being called by AI</div>
                             </div>
-                            <div class="overview-card" onclick="switchPage('pipeline')">
+                            <div class="overview-card card-purple" onclick="switchPage('pipeline')">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
                                 <div class="overview-card-header">
                                     <span class="overview-card-icon">🤖</span>
@@ -1521,38 +1570,33 @@
 
                         <!-- Row 2: Today's Activity -->
                         <div class="section-label">Today's Numbers</div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
+                        <div class="today-numbers-bar">
+                            <div class="today-number-item">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
-                                <div class="stat-icon">📞</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statCallsToday">0</div>
-                                    <div class="stat-label">AI Calls</div>
-                                </div>
+                                <div class="today-number-icon">📞</div>
+                                <div class="today-number-value" id="statCallsToday">0</div>
+                                <div class="today-number-label">AI Calls</div>
                             </div>
-                            <div class="stat-card">
+                            <div class="today-numbers-divider"></div>
+                            <div class="today-number-item">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
-                                <div class="stat-icon">💬</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statConversationsToday">0</div>
-                                    <div class="stat-label">AI Qualified Conversations</div>
-                                </div>
+                                <div class="today-number-icon">💬</div>
+                                <div class="today-number-value" id="statConversationsToday">0</div>
+                                <div class="today-number-label">Conversations</div>
                             </div>
-                            <div class="stat-card">
+                            <div class="today-numbers-divider"></div>
+                            <div class="today-number-item">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
-                                <div class="stat-icon">📅</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statMeetingsToday">0</div>
-                                    <div class="stat-label">AI Meetings Scheduled</div>
-                                </div>
+                                <div class="today-number-icon">📅</div>
+                                <div class="today-number-value" id="statMeetingsToday">0</div>
+                                <div class="today-number-label">Meetings</div>
                             </div>
-                            <div class="stat-card">
+                            <div class="today-numbers-divider"></div>
+                            <div class="today-number-item">
                                 <div class="dashboard-loading-overlay"><div class="dashboard-loading-spinner"></div></div>
-                                <div class="stat-icon">🔄</div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="statFollowUpsToday">0</div>
-                                    <div class="stat-label">AI Follow Ups Scheduled</div>
-                                </div>
+                                <div class="today-number-icon">🔄</div>
+                                <div class="today-number-value" id="statFollowUpsToday">0</div>
+                                <div class="today-number-label">Follow Ups</div>
                             </div>
                         </div>
 
@@ -4274,6 +4318,23 @@
         }
     }
 
+    function animateValue(el, end) {
+        if (!el) return;
+        var val = parseInt(el.textContent) || 0;
+        if (val === end) { el.textContent = end; return; }
+        var start = 0;
+        var duration = 600;
+        var startTime = null;
+        function step(ts) {
+            if (!startTime) startTime = ts;
+            var progress = Math.min((ts - startTime) / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.round(eased * end);
+            if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+
     function updateDashboard() {
         updateStats();
         // Remove loading state from dashboard
@@ -4286,13 +4347,13 @@
     // Update stats
     function updateStats() {
         var totalProspects = allLeads.length;
-        document.getElementById('statProspects').textContent = totalProspects;
-        
-        var appointments = allLeads.filter(function(l) { 
+        animateValue(document.getElementById('statProspects'), totalProspects);
+
+        var appointments = allLeads.filter(function(l) {
             var status = l.fields['Status'] || l.fields['Disposition'] || '';
             return status === 'Booked' || status === 'Appointment Booked';
         }).length;
-        document.getElementById('statAppointments').textContent = appointments;
+        animateValue(document.getElementById('statAppointments'), appointments);
         
         // Today's date for filtering
         var today = new Date().toDateString();
@@ -4304,7 +4365,7 @@
             if (!lastCall) return false;
             return new Date(lastCall).toDateString() === today;
         }).length;
-        document.getElementById('statCallsToday').textContent = callsToday;
+        animateValue(document.getElementById('statCallsToday'), callsToday);
 
         // AI Qualified Conversations - Outcome = Booked, Timeline, Follow Up, Callback, or Not Interested
         var qualifiedOutcomes = ['booked', 'timeline', 'follow up', 'callback', 'not interested'];
@@ -4316,7 +4377,7 @@
             return qualifiedOutcomes.includes(outcome);
         }).length;
         var convEl = document.getElementById('statConversationsToday');
-        if (convEl) convEl.textContent = conversationsToday;
+        if (convEl) animateValue(convEl, conversationsToday);
 
         // AI Meetings Scheduled - Outcome = Booked or Callback
         var meetingOutcomes = ['booked', 'callback'];
@@ -4328,7 +4389,7 @@
             return meetingOutcomes.includes(outcome);
         }).length;
         var meetEl = document.getElementById('statMeetingsToday');
-        if (meetEl) meetEl.textContent = meetingsToday;
+        if (meetEl) animateValue(meetEl, meetingsToday);
 
         // AI Follow Ups Scheduled - Outcome = Timeline or Follow Up
         var followUpOutcomes = ['timeline', 'follow up'];
@@ -4340,7 +4401,7 @@
             return followUpOutcomes.includes(outcome);
         }).length;
         var fuEl = document.getElementById('statFollowUpsToday');
-        if (fuEl) fuEl.textContent = followUpsToday;
+        if (fuEl) animateValue(fuEl, followUpsToday);
         
         // Retell Phone & Usage from client record
         if (currentUserRecord && currentUserRecord.fields) {
@@ -4374,7 +4435,7 @@
         var prioLeads = allLeads.filter(function(l) {
             return l.fields['Is Prio'] === true;
         });
-        document.getElementById('overviewPrio').textContent = prioLeads.length;
+        animateValue(document.getElementById('overviewPrio'), prioLeads.length);
         
         // Scheduled leads (callback or meeting booked)
         var scheduledLeads = allLeads.filter(function(l) {
@@ -4383,21 +4444,21 @@
             var hasCallback = status === 'Callback' || status === 'Callback Requested';
             return hasBookedTime || hasCallback || status === 'Booked' || status === 'Appointment Booked';
         });
-        document.getElementById('overviewScheduled').textContent = scheduledLeads.length;
+        animateValue(document.getElementById('overviewScheduled'), scheduledLeads.length);
         
         // Active leads (currently being called by AI)
         var activeLeads = allLeads.filter(function(l) {
             var status = l.fields['Call Status'] || l.fields['Status'] || '';
             return status === 'Queued' || status === 'In Progress' || status === 'Retry' || status === 'Calling';
         });
-        document.getElementById('overviewActive').textContent = activeLeads.length;
+        animateValue(document.getElementById('overviewActive'), activeLeads.length);
         
         // AI Pipeline (Timeline & Follow Up - will be called back)
         var pipelineLeads = allLeads.filter(function(l) {
             var status = l.fields['Status'] || l.fields['Disposition'] || '';
             return status === 'Timeline' || status === 'Follow Up';
         });
-        document.getElementById('overviewPipeline').textContent = pipelineLeads.length;
+        animateValue(document.getElementById('overviewPipeline'), pipelineLeads.length);
         
         // Today's priorities (booked time or callback today) + missed meetings (past scheduled with no call logged)
         // Use EST timezone for accurate "today" calculation

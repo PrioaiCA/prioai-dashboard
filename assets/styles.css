@@ -195,15 +195,20 @@ img {
 }
 
 .nav-section {
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
+}
+
+.nav-section + .nav-section {
+    margin-top: 24px;
 }
 
 .nav-section-title {
-    font-size: var(--text-xs);
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
     color: var(--text-tertiary);
+    opacity: 0.3;
     padding: var(--space-2) var(--space-3);
     margin-bottom: var(--space-1);
 }
@@ -212,13 +217,14 @@ img {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-3);
+    padding: 12px var(--space-3);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     font-size: var(--text-sm);
     font-weight: 500;
-    transition: all var(--transition-fast);
+    transition: all 150ms ease;
     cursor: pointer;
+    border-left: 3px solid transparent;
 }
 
 .nav-item:hover {
@@ -227,8 +233,9 @@ img {
 }
 
 .nav-item.active {
-    background: var(--accent-muted);
+    background: rgba(52, 211, 153, 0.08);
     color: var(--accent);
+    border-left-color: var(--accent);
 }
 
 .nav-item-icon {
@@ -242,7 +249,7 @@ img {
 
 .sidebar-footer {
     padding: var(--space-4);
-    border-top: 1px solid var(--border-secondary);
+    border-top: 1px solid #1a1a1a;
 }
 
 .sidebar-footer-row {
@@ -483,10 +490,14 @@ img {
 .btn-primary {
     background: var(--accent);
     color: #000;
+    border-radius: 20px;
+    transition: all 150ms ease;
 }
 
 .btn-primary:hover {
     background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 211, 153, 0.25);
 }
 
 .btn-secondary {
