@@ -80,6 +80,39 @@
         .view-toggle-btn{width:32px;height:32px;border:1px solid rgba(255,255,255,0.15);background:#111;color:rgba(255,255,255,0.5);border-radius:6px;cursor:pointer;font-size:1rem;transition:all 0.15s}
         .view-toggle-btn:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8)}
         .view-toggle-btn.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
+        .font-size-toggle{height:32px;padding:0 10px;border:1px solid rgba(255,255,255,0.15);background:#111;color:rgba(255,255,255,0.5);border-radius:6px;cursor:pointer;font-size:0.6875rem;font-weight:600;transition:all 0.15s;display:flex;align-items:center;gap:4px;white-space:nowrap;margin-left:4px}
+        .font-size-toggle:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8)}
+        .font-size-toggle .size-label{font-weight:700}
+        .font-size-toggle.size-sm .size-label{font-size:0.625rem}
+        .font-size-toggle.size-md .size-label{font-size:0.75rem}
+        .font-size-toggle.size-lg .size-label{font-size:0.875rem}
+        .font-size-md .priority-card-lg-name{font-size:1.125rem}
+        .font-size-md .priority-card-lg-phone{font-size:0.9375rem}
+        .font-size-md .priority-card-lg-lastcall{font-size:0.8125rem}
+        .font-size-md .priority-card-lg-summary-col .col-content{font-size:0.9375rem}
+        .font-size-md .priority-card-lg-notes-col .col-content{font-size:0.9375rem}
+        .font-size-md .priority-card-lg-summary-col .col-label,.font-size-md .priority-card-lg-notes-col .col-label,.font-size-md .priority-card-lg-status-col .col-label{font-size:0.8125rem}
+        .font-size-md .card-status-trigger{font-size:0.875rem}
+        .font-size-md .card-status-menu .status-option{font-size:0.875rem}
+        .font-size-md .action-label{font-size:0.9375rem}
+        .font-size-md .action-icon{font-size:1.25rem}
+        .font-size-md .priority-card-lg-badge{font-size:0.8125rem}
+        .font-size-md .priority-card-lg-time-col .time-value{font-size:1.125rem}
+        .font-size-md .priority-card-lg-time-col .date-value{font-size:0.875rem}
+        .font-size-lg .priority-card-lg-name{font-size:1.3125rem}
+        .font-size-lg .priority-card-lg-phone{font-size:1.0625rem}
+        .font-size-lg .priority-card-lg-lastcall{font-size:0.9375rem}
+        .font-size-lg .priority-card-lg-summary-col .col-content{font-size:1.0625rem}
+        .font-size-lg .priority-card-lg-notes-col .col-content{font-size:1.0625rem}
+        .font-size-lg .priority-card-lg-summary-col .col-label,.font-size-lg .priority-card-lg-notes-col .col-label,.font-size-lg .priority-card-lg-status-col .col-label{font-size:0.9375rem}
+        .font-size-lg .card-status-trigger{font-size:1rem}
+        .font-size-lg .card-status-menu .status-option{font-size:1rem}
+        .font-size-lg .action-label{font-size:1.0625rem}
+        .font-size-lg .action-icon{font-size:1.375rem}
+        .font-size-lg .priority-card-lg-badge{font-size:0.9375rem}
+        .font-size-lg .priority-card-lg-time-col .time-value{font-size:1.25rem}
+        .font-size-lg .priority-card-lg-time-col .date-value{font-size:1rem}
+        .font-size-lg .priority-card-lg{min-height:120px}
         .header-count-badge{background:rgb(52,211,153);color:#000;font-size:0.875rem;font-weight:700;padding:2px 10px;border-radius:20px;margin-left:10px;vertical-align:middle}
         .filters-left{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
         .sort-controls{display:flex;align-items:center;gap:8px}
@@ -93,7 +126,7 @@
         .priorities-cards{display:grid;grid-template-columns:1fr;gap:1rem}
         .priority-card-lg{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:row;min-height:100px;overflow:hidden;position:relative}
         .priority-card-lg:hover{border-color:rgb(52,211,153);transform:translateY(-2px)}
-        .priority-card-lg-left{flex:0 0 380px;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
+        .priority-card-lg-left{flex:1;min-width:0;display:flex;flex-direction:row;border-right:1px solid rgba(255,255,255,0.08)}
         .priority-card-lg-time-col{flex:0 0 85px;background:rgba(52,211,153,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
         .priority-card-lg-time-col .time-value{font-size:1rem;font-weight:700;color:rgb(52,211,153);white-space:nowrap;min-width:70px;text-align:center}
         .priority-card-lg-time-col .date-value{font-size:0.75rem;font-weight:500;color:rgb(52,211,153);opacity:0.8;margin-bottom:2px;text-align:center}
@@ -115,10 +148,10 @@
         .priority-card-lg-phone{font-size:0.8125rem;font-weight:400;color:#707070;margin-bottom:4px;font-family:monospace}
         .priority-card-lg-lastcall{font-size:0.6875rem;font-weight:400;color:#707070;display:flex;align-items:center;gap:6px}
         .priority-card-lg-lastcall .lastcall-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-        .priority-card-lg-summary-col{flex:1;padding:14px 18px;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column}
+        .priority-card-lg-summary-col{flex:1;min-width:0;padding:14px 18px;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column}
         .priority-card-lg-summary-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:#707070;margin-bottom:8px;font-weight:400}
         .priority-card-lg-summary-col .col-content{font-size:0.8125rem;font-weight:400;line-height:1.6;color:#A0A0A0;flex:1;overflow:hidden}
-        .priority-card-lg-notes-col{flex:1;padding:14px 18px;display:flex;flex-direction:column}
+        .priority-card-lg-notes-col{flex:1;min-width:0;padding:14px 18px;display:flex;flex-direction:column}
         .priority-card-lg-notes-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:#707070;margin-bottom:8px;font-weight:400}
         .priority-card-lg-notes-col .col-content{font-size:0.8125rem;font-weight:400;line-height:1.5;color:#A0A0A0;flex:1;overflow:hidden}
         @media(max-width:900px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-summary-col{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-notes-col{flex:none}.priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}}
@@ -138,7 +171,7 @@
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:6px;margin-right:8px;flex-shrink:0}
         .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
         .priority-card-lg-time-col{position:relative}
-        .priority-card-lg-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;border-left:1px solid rgba(255,255,255,0.08);min-width:180px}
+        .priority-card-lg-actions{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;border-left:1px solid rgba(255,255,255,0.08)}
         .action-btn{padding:12px 8px;border:1px solid rgba(255,255,255,0.15);background:#111;border-radius:10px;cursor:pointer;font-size:0.8125rem;font-weight:600;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#A0A0A0}
         .action-btn .action-icon{font-size:1.125rem}
         .action-btn .action-label{font-size:0.8125rem;font-weight:600;white-space:nowrap}
@@ -183,13 +216,13 @@
         .prio-card-name .shared-icon{color:#3B82F6;font-size:0.875rem}
         .shared-badge{display:inline-flex;align-items:center;gap:3px;font-size:0.625rem;font-weight:600;color:#3B82F6;background:rgba(59,130,246,0.12);padding:2px 8px;border-radius:20px;white-space:nowrap;vertical-align:middle;margin-left:4px}
         .shared-icon-only{font-size:0.75rem;margin-left:4px;cursor:default;vertical-align:middle}
-        .priority-card-lg-status-col{flex:0 0 140px;padding:14px 12px;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;justify-content:center;align-items:center}
+        .priority-card-lg-status-col{flex:1;min-width:0;padding:14px 12px;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;justify-content:center;align-items:center}
         .priority-card-lg-status-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:#707070;margin-bottom:8px;font-weight:400;text-align:center}
         .card-status-trigger{display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:0.75rem;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;white-space:nowrap;width:100%}
         .card-status-trigger:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
         .card-status-trigger .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
         .card-status-trigger .chevron{opacity:0.4;margin-left:auto;font-size:0.5rem}
-        .card-status-menu{display:none;position:absolute;top:calc(100% + 2px);left:0;width:160px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-height:240px;overflow-y:auto}
+        .card-status-menu{display:none;position:fixed;width:180px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:3px;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-height:240px;overflow-y:auto}
         .card-status-menu.open{display:block;animation:statusDropIn 0.15s ease}
         .card-status-menu .status-option{padding:6px 10px;font-size:0.75rem}
         .custom-status-dropdown{position:relative;width:100%;max-width:200px}
@@ -1481,6 +1514,7 @@
                                 <div class="priorities-view-toggle">
                                     <button class="view-toggle-btn" id="viewGrid" onclick="setPrioritiesView('grid')" title="Grid view">▦</button>
                                     <button class="view-toggle-btn active" id="viewList" onclick="setPrioritiesView('list')" title="List view">☰</button>
+                                    <button class="font-size-toggle size-sm" onclick="cycleFontSize()" title="Change font size"><span class="size-icon">Aa</span> <span class="size-label">S</span></button>
                                 </div>
                             </div>
                             <div class="priorities-cards list-view" id="todayPriorities">
@@ -1503,6 +1537,7 @@
                                 <div class="view-toggle">
                                     <button class="view-toggle-btn active" id="prioViewList" onclick="setPrioView('list')" title="List view">☰</button>
                                     <button class="view-toggle-btn" id="prioViewGrid" onclick="setPrioView('grid')" title="Grid view">▦</button>
+                                    <button class="font-size-toggle size-sm" onclick="cycleFontSize()" title="Change font size"><span class="size-icon">Aa</span> <span class="size-label">S</span></button>
                                 </div>
                             </div>
                         </div>
@@ -1559,6 +1594,7 @@
                                 <div class="view-toggle">
                                     <button class="view-toggle-btn active" id="prospectsViewList" onclick="setProspectsView('list')" title="List view">☰</button>
                                     <button class="view-toggle-btn" id="prospectsViewGrid" onclick="setProspectsView('grid')" title="Grid view">▦</button>
+                                    <button class="font-size-toggle size-sm" onclick="cycleFontSize()" title="Change font size"><span class="size-icon">Aa</span> <span class="size-label">S</span></button>
                                 </div>
                             </div>
                         </div>
@@ -1619,6 +1655,7 @@
                                 <div class="view-toggle">
                                     <button class="view-toggle-btn active" id="pipelineViewList" onclick="setPipelineView('list')" title="List view">☰</button>
                                     <button class="view-toggle-btn" id="pipelineViewGrid" onclick="setPipelineView('grid')" title="Grid view">▦</button>
+                                    <button class="font-size-toggle size-sm" onclick="cycleFontSize()" title="Change font size"><span class="size-icon">Aa</span> <span class="size-label">S</span></button>
                                 </div>
                             </div>
                         </div>
@@ -1671,6 +1708,7 @@
                                 <div class="view-toggle">
                                     <button class="view-toggle-btn active" id="sharedViewList" onclick="setSharedView('list')" title="List view">☰</button>
                                     <button class="view-toggle-btn" id="sharedViewGrid" onclick="setSharedView('grid')" title="Grid view">▦</button>
+                                    <button class="font-size-toggle size-sm" onclick="cycleFontSize()" title="Change font size"><span class="size-icon">Aa</span> <span class="size-label">S</span></button>
                                 </div>
                             </div>
                         </div>
@@ -1731,6 +1769,7 @@
                                 <div class="view-toggle">
                                     <button class="view-toggle-btn active" id="bookedTodayViewList" onclick="setBookedTodayView('list')" title="List view">☰</button>
                                     <button class="view-toggle-btn" id="bookedTodayViewGrid" onclick="setBookedTodayView('grid')" title="Grid view">▦</button>
+                                    <button class="font-size-toggle size-sm" onclick="cycleFontSize()" title="Change font size"><span class="size-icon">Aa</span> <span class="size-label">S</span></button>
                                 </div>
                             </div>
                         </div>
@@ -1779,6 +1818,7 @@
                                 <div class="view-toggle">
                                     <button class="view-toggle-btn active" id="unqualifiedViewList" onclick="setUnqualifiedView('list')" title="List view">☰</button>
                                     <button class="view-toggle-btn" id="unqualifiedViewGrid" onclick="setUnqualifiedView('grid')" title="Grid view">▦</button>
+                                    <button class="font-size-toggle size-sm" onclick="cycleFontSize()" title="Change font size"><span class="size-icon">Aa</span> <span class="size-label">S</span></button>
                                 </div>
                             </div>
                         </div>
@@ -3033,17 +3073,14 @@
                                 <div class="status-dropdown-menu" id="statusDropdownMenu"></div>
                             </div>
                             <select id="modalStatusSelect" style="display:none;">
-                                <option value="New">New Lead</option>
-                                <option value="Retry">Retrying</option>
                                 <option value="Booked">Meeting Booked</option>
-                                <option value="Callback">Callback Requested</option>
-                                <option value="Follow Up">Following Up</option>
-                                <option value="Timeline">On Timeline</option>
-                                <option value="Scheduling Showings">Scheduling Showings</option>
                                 <option value="Sending Listings">Sending Listings</option>
+                                <option value="Scheduling Showings">Scheduling Showings</option>
+                                <option value="Retry">Retrying</option>
                                 <option value="Meeting in Person">Meeting in Person</option>
-                                <option value="Closed">Closed</option>
-                                <option value="DNC">Do Not Call</option>
+                                <option value="Callback Rescheduled">Callback Rescheduled</option>
+                                <option value="Offer Placed">Offer Placed</option>
+                                <option value="Won">Won</option>
                             </select>
                         </div>
                     </div>
@@ -4452,6 +4489,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -4460,7 +4498,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -4619,6 +4656,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -4627,7 +4665,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -5581,14 +5618,14 @@
     
     // Status dropdown - custom UI
     var statusColors = {
-        'New': '#3B82F6', 'Retry': '#F59E0B', 'Booked': '#34D399', 'Callback': '#F97316',
-        'Follow Up': '#8B5CF6', 'Timeline': '#6366F1', 'Scheduling Showings': '#06B6D4',
-        'Sending Listings': '#14B8A6', 'Meeting in Person': '#10B981', 'Closed': '#EF4444', 'DNC': '#6B7280'
+        'Booked': '#34D399', 'Sending Listings': '#14B8A6', 'Scheduling Showings': '#06B6D4',
+        'Retry': '#F59E0B', 'Meeting in Person': '#10B981', 'Callback Rescheduled': '#F97316',
+        'Offer Placed': '#8B5CF6', 'Won': '#22C55E'
     };
     var statusLabels = {
-        'New': 'New Lead', 'Retry': 'Retrying', 'Booked': 'Meeting Booked', 'Callback': 'Callback Requested',
-        'Follow Up': 'Following Up', 'Timeline': 'On Timeline', 'Scheduling Showings': 'Scheduling Showings',
-        'Sending Listings': 'Sending Listings', 'Meeting in Person': 'Meeting in Person', 'Closed': 'Closed', 'DNC': 'Do Not Call'
+        'Booked': 'Meeting Booked', 'Sending Listings': 'Sending Listings', 'Scheduling Showings': 'Scheduling Showings',
+        'Retry': 'Retrying', 'Meeting in Person': 'Meeting in Person', 'Callback Rescheduled': 'Callback Rescheduled',
+        'Offer Placed': 'Offer Placed', 'Won': 'Won'
     };
 
     function getStatusColor(status) { return statusColors[status] || '#6B7280'; }
@@ -5696,11 +5733,10 @@
     }
 
     var allStatusOptions = [
-        {value:'New',label:'New Lead'},{value:'Retry',label:'Retrying'},{value:'Booked',label:'Meeting Booked'},
-        {value:'Callback',label:'Callback Requested'},{value:'Follow Up',label:'Following Up'},
-        {value:'Timeline',label:'On Timeline'},{value:'Scheduling Showings',label:'Scheduling Showings'},
-        {value:'Sending Listings',label:'Sending Listings'},{value:'Meeting in Person',label:'Meeting in Person'},
-        {value:'Closed',label:'Closed'},{value:'DNC',label:'Do Not Call'}
+        {value:'Booked',label:'Meeting Booked'},{value:'Sending Listings',label:'Sending Listings'},
+        {value:'Scheduling Showings',label:'Scheduling Showings'},{value:'Retry',label:'Retrying'},
+        {value:'Meeting in Person',label:'Meeting in Person'},{value:'Callback Rescheduled',label:'Callback Rescheduled'},
+        {value:'Offer Placed',label:'Offer Placed'},{value:'Won',label:'Won'}
     ];
 
     function toggleCardStatus(triggerEl, leadId) {
@@ -5721,9 +5757,23 @@
                 '<span class="status-dot" style="background:' + getStatusColor(opt.value) + '"></span>' + escapeHtml(opt.label) +
             '</button>';
         }).join('');
+        // Position menu using fixed positioning to escape overflow:hidden
+        var rect = triggerEl.getBoundingClientRect();
+        menu.style.top = (rect.bottom + 2) + 'px';
+        menu.style.left = rect.left + 'px';
         menu.classList.add('open');
     }
     window.toggleCardStatus = toggleCardStatus;
+
+    // Close card status menu when scrolling or clicking outside
+    document.addEventListener('scroll', function() {
+        document.querySelectorAll('.card-status-menu.open').forEach(function(m) { m.classList.remove('open'); });
+    }, true);
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.card-status-trigger') && !e.target.closest('.card-status-menu')) {
+            document.querySelectorAll('.card-status-menu.open').forEach(function(m) { m.classList.remove('open'); });
+        }
+    });
 
     async function selectCardStatus(leadId, newStatus, btnEl) {
         // Close menu
@@ -7480,6 +7530,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -7488,7 +7539,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -7613,11 +7663,11 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions" style="display:flex;align-items:center;justify-content:center;padding:16px">' +
                     '<button class="btn-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')">👤 Take Over</button>' +
                 '</div>' +
@@ -7803,11 +7853,11 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col unqualified-summary-wide" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-reschedule' + (canChangeCallDate ? '' : ' disabled') + '"' + (canChangeCallDate ? ' onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"' : ' disabled') + '><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
                     '<button class="action-btn action-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')"><span class="action-icon">👤</span><span class="action-label">Take Over</span></button>' +
@@ -8002,6 +8052,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -8010,7 +8061,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
@@ -8202,6 +8252,7 @@
                         '<div class="priority-card-lg-lastcall">Called at ' + callTimeDisplay + ' EST</div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -8210,7 +8261,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Reschedule</span></button>' +
@@ -8779,6 +8829,35 @@
     }
     window.setSharedView = setSharedView;
 
+    // Font size toggle (S/M/L)
+    var fontSizes = ['sm', 'md', 'lg'];
+    var fontSizeLabels = { sm: 'S', md: 'M', lg: 'L' };
+    var currentFontSize = localStorage.getItem('prioFontSize') || 'sm';
+
+    function applyFontSize(size) {
+        currentFontSize = size;
+        localStorage.setItem('prioFontSize', size);
+        var main = document.querySelector('.main-content') || document.body;
+        main.classList.remove('font-size-sm', 'font-size-md', 'font-size-lg');
+        if (size !== 'sm') main.classList.add('font-size-' + size);
+        document.querySelectorAll('.font-size-toggle').forEach(function(btn) {
+            btn.classList.remove('size-sm', 'size-md', 'size-lg');
+            btn.classList.add('size-' + size);
+            var label = btn.querySelector('.size-label');
+            if (label) label.textContent = fontSizeLabels[size];
+        });
+    }
+
+    function cycleFontSize() {
+        var idx = fontSizes.indexOf(currentFontSize);
+        var next = fontSizes[(idx + 1) % fontSizes.length];
+        applyFontSize(next);
+    }
+    window.cycleFontSize = cycleFontSize;
+
+    // Apply saved font size on load
+    applyFontSize(currentFontSize);
+
     // Sort direction state
     var prioSortAsc = false;
     var prospectsSortAsc = false;
@@ -9046,6 +9125,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -9054,7 +9134,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
@@ -9270,6 +9349,7 @@
                         '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
                     '</div>' +
                 '</div>' +
+                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
                     '<div class="col-label">Summary</div>' +
                     '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary available</span>') + '</div>' +
@@ -9278,7 +9358,6 @@
                     '<div class="col-label">Notes</div>' +
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
-                getCardStatusHtml(lead) +
                 '<div class="priority-card-lg-actions">' +
                     '<button class="action-btn action-share shared" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">✓</span><span class="action-label">Shared</span></button>' +
                     '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
