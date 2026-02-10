@@ -28,7 +28,7 @@
         .stat-label{font-size:0.75rem;font-weight:400;color:#A0A0A0;text-transform:uppercase}
         .quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem;margin-bottom:2rem}
         @media(min-width:768px){.quick-actions{grid-template-columns:repeat(4,1fr)}}
-        .quick-action{display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.25rem;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;cursor:pointer}
+        .quick-action{display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.5rem;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;cursor:pointer}
         .quick-action:hover{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
         .quick-action-icon{font-size:1.5rem}
         .quick-action-text{font-size:0.8125rem;font-weight:600}
@@ -63,7 +63,7 @@
         .analytics-header h3{font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#FFFFFF}
         .analytics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
         @media(max-width:768px){.analytics-grid{grid-template-columns:1fr}}
-        .analytics-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1rem}
+        .analytics-card{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.5rem}
         .analytics-row{display:flex;justify-content:space-between;align-items:center;padding:0.625rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
         .analytics-row:last-child{border-bottom:none}
         .analytics-label{font-size:0.8125rem;font-weight:400;color:#A0A0A0}
@@ -368,13 +368,22 @@
         .send-ai-confirm:disabled{opacity:0.5;cursor:not-allowed}
         @media(max-width:600px){.polish-comparison{grid-template-columns:1fr}}
         .lead-modal-body{padding:24px;overflow-y:auto;flex:1}
-        .lead-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
-        .lead-info-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px}
-        .lead-info-item label{display:block;font-size:0.6875rem;font-weight:400;color:#707070;margin-bottom:8px}
-        .lead-info-item .value{font-size:1rem;font-weight:600;color:#FFFFFF}
+        .lead-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:4px 0}
+        .lead-info-item{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:none;border:none;border-radius:0}
+        .lead-info-item label{display:block;font-size:0.75rem;font-weight:400;color:#707070;margin-bottom:0;white-space:nowrap}
+        .lead-info-item .value{font-size:0.875rem;font-weight:600;color:#FFFFFF;text-align:right}
         .send-ai-calendar{margin-top:16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px}
-        .lead-section{margin-bottom:20px;padding:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
+        .lead-section{margin-bottom:20px;padding:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
         .lead-section h3{font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#FFFFFF}
+        .lead-section.collapsible-empty{padding:0;background:none;border:none;margin-bottom:12px}
+        .lead-section.collapsible-empty .collapsible-header{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;cursor:pointer;transition:all 0.15s;width:100%}
+        .lead-section.collapsible-empty .collapsible-header:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1)}
+        .lead-section.collapsible-empty .collapsible-header h3{margin-bottom:0;font-size:0.8125rem;font-weight:600}
+        .collapsible-chevron{transition:transform 0.2s;color:#707070;flex-shrink:0;margin-left:auto}
+        .lead-section.collapsible-empty.expanded .collapsible-chevron{transform:rotate(90deg)}
+        .collapsible-body{display:none;padding:12px 16px 16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-top:none;border-radius:0 0 10px 10px;margin-top:-1px}
+        .lead-section.collapsible-empty.expanded .collapsible-body{display:block}
+        .lead-section.collapsible-empty.expanded .collapsible-header{border-radius:10px 10px 0 0}
         .lead-summary-content{font-size:0.8125rem;font-weight:400;line-height:1.6;color:#A0A0A0;white-space:pre-wrap}
         .lead-notes-list{max-height:150px;overflow-y:auto;margin-bottom:12px}
         .lead-note-item{padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:6px;margin-bottom:8px;font-size:0.8125rem;position:relative}
@@ -501,7 +510,7 @@
         .calendar-day.other-month{opacity:0.3}
         .calendar-day.past{color:rgba(255,255,255,0.3);cursor:not-allowed}
         .calendar-day.empty{cursor:default}
-        @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr}}
+        @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr}.lead-info-item{padding:8px 16px}}
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -3125,7 +3134,7 @@
                     </div>
                 </div>
 
-                <div class="lead-section">
+                <div class="lead-section" id="callAttemptsSection">
                     <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
                     <div class="lead-attempts-list" id="modalAttemptsList"></div>
                     <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
@@ -5410,18 +5419,18 @@
             attemptsArray = [];
         }
         var attemptsCount = Array.isArray(attemptsArray) ? attemptsArray.length : 0;
-        document.getElementById('modalAttemptsCount').textContent = attemptsCount;
-        var attemptsList = document.getElementById('modalAttemptsList');
+        updateCallAttemptsSection(attemptsCount);
         if (attemptsCount > 0) {
+            var countEl = document.getElementById('modalAttemptsCount');
+            if (countEl) countEl.textContent = attemptsCount;
+            var attemptsList = document.getElementById('modalAttemptsList');
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
                 var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
                 return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
-            attemptsList.innerHTML = attemptsHtml;
-        } else {
-            attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p>';
+            if (attemptsList) attemptsList.innerHTML = attemptsHtml;
         }
-        
+
         // Transcript with colored speakers
         var transcript = f['Transcript (from Calls)'];
         var transcriptEl = document.getElementById('modalTranscript');
@@ -6021,10 +6030,9 @@
         btn.innerHTML = '✨ Polish & Save';
     });
 
-    // Log call attempt
-    document.getElementById('modalLogAttemptBtn').addEventListener('click', async function() {
+    // Log call attempt handler
+    async function handleLogAttempt(btn) {
         if (!currentLeadId) return;
-        var btn = this;
         btn.disabled = true;
         btn.textContent = 'Logging...';
 
@@ -6057,7 +6065,14 @@
         }
         btn.disabled = false;
         btn.textContent = '+ Log Call Attempt';
-    });
+    }
+
+    window.bindLogAttemptBtn = function(btn) {
+        btn.addEventListener('click', function() { handleLogAttempt(this); });
+    };
+
+    var initialLogBtn = document.getElementById('modalLogAttemptBtn');
+    if (initialLogBtn) window.bindLogAttemptBtn(initialLogBtn);
     
     // Unprio from table
     async function unprio(leadId) {
@@ -7221,6 +7236,44 @@
         document.getElementById('scheduleModal').classList.add('active');
     }
     window.editBookingFromModal = editBookingFromModal;
+
+    // Toggle collapsible section
+    function toggleCollapsibleSection(sectionId) {
+        var section = document.getElementById(sectionId);
+        if (section) section.classList.toggle('expanded');
+    }
+    window.toggleCollapsibleSection = toggleCollapsibleSection;
+
+    // Update call attempts section to be collapsible when empty
+    function updateCallAttemptsSection(attemptsCount) {
+        var section = document.getElementById('callAttemptsSection');
+        if (!section) return;
+        if (attemptsCount === 0) {
+            section.className = 'lead-section collapsible-empty';
+            section.innerHTML = '<div class="collapsible-header" onclick="toggleCollapsibleSection(\'callAttemptsSection\')">' +
+                '<h3>📞 Call Attempts <span class="attempts-count">0</span></h3>' +
+                '<svg class="collapsible-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                '</div>' +
+                '<div class="collapsible-body">' +
+                '<div class="lead-attempts-list" id="modalAttemptsList"><p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p></div>' +
+                '<button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>' +
+                '</div>';
+            // Re-bind the log attempt button
+            var btn = document.getElementById('modalLogAttemptBtn');
+            if (btn && window.bindLogAttemptBtn) window.bindLogAttemptBtn(btn);
+        } else {
+            section.className = 'lead-section';
+            // Ensure normal layout with h3, list, and button
+            var h3 = section.querySelector('h3');
+            if (!h3 || section.querySelector('.collapsible-header')) {
+                section.innerHTML = '<h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">' + attemptsCount + '</span></h3>' +
+                    '<div class="lead-attempts-list" id="modalAttemptsList"></div>' +
+                    '<button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>';
+                var btn = document.getElementById('modalLogAttemptBtn');
+                if (btn && window.bindLogAttemptBtn) window.bindLogAttemptBtn(btn);
+            }
+        }
+    }
 
     // Delete call attempt
     async function deleteCallAttempt(index) {
@@ -8497,16 +8550,16 @@
             attemptsArray = [];
         }
         var attemptsCount = Array.isArray(attemptsArray) ? attemptsArray.length : 0;
-        document.getElementById('modalAttemptsCount').textContent = attemptsCount;
-        var attemptsList = document.getElementById('modalAttemptsList');
+        updateCallAttemptsSection(attemptsCount);
         if (attemptsCount > 0) {
+            var countEl = document.getElementById('modalAttemptsCount');
+            if (countEl) countEl.textContent = attemptsCount;
+            var attemptsList = document.getElementById('modalAttemptsList');
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
                 var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
                 return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
-            attemptsList.innerHTML = attemptsHtml;
-        } else {
-            attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p>';
+            if (attemptsList) attemptsList.innerHTML = attemptsHtml;
         }
 
         // Transcript with colored speakers

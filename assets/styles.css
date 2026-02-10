@@ -857,7 +857,7 @@ tr:hover td {
     background: var(--bg-secondary);
     border: 1px solid var(--border-secondary);
     border-radius: var(--radius-lg);
-    padding: var(--space-5);
+    padding: var(--space-6);
     display: flex;
     align-items: center;
     gap: var(--space-4);
@@ -929,7 +929,7 @@ tr:hover td {
 .quick-actions {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3);
+    gap: var(--space-4);
     margin-bottom: var(--space-8);
 }
 
