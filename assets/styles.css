@@ -4,8 +4,8 @@
 
 /* CSS Variables */
 :root {
-    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
@@ -91,8 +91,8 @@ html {
 
 body {
     font-family: var(--font-body);
-    font-size: var(--text-base);
-    line-height: 1.6;
+    font-size: 0.875rem;
+    line-height: 1.5;
     color: var(--text-primary);
     background: var(--bg-primary);
     -webkit-font-smoothing: antialiased;
@@ -402,8 +402,9 @@ img {
 }
 
 .header-title {
+    font-family: var(--font-heading);
     font-size: var(--text-lg);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .header-right {
@@ -725,8 +726,9 @@ img {
 }
 
 .card-title {
+    font-family: var(--font-heading);
     font-size: var(--text-lg);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 /* ==========================================================================
@@ -896,8 +898,9 @@ tr:hover td {
 }
 
 .section-header h3 {
+    font-family: var(--font-heading);
     font-size: var(--text-lg);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .section-link {
@@ -1149,7 +1152,9 @@ tr:hover td {
 }
 
 .prio-name {
-    font-weight: 600;
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 700;
     margin-bottom: var(--space-1);
     white-space: nowrap;
     overflow: hidden;
