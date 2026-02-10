@@ -3007,6 +3007,26 @@
                             <button class="btn-schedule" id="modalScheduleBtn" style="display:none;">📅 Schedule</button>
                         </div>
                     </div>
+                    <div class="lead-info-item">
+                        <label>🤖 Last AI Call</label>
+                        <div class="value" id="modalLastAICall">-</div>
+                    </div>
+                    <div class="lead-info-item">
+                        <label>🎯 Next Step</label>
+                        <div class="value">
+                            <select id="modalNextStep" style="background:#111;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:4px 8px;font-size:0.8125rem;cursor:pointer;width:100%;max-width:180px;">
+                                <option value="">— Select —</option>
+                                <option value="Retry">Retry</option>
+                                <option value="Book Showings">Book Showings</option>
+                                <option value="Send Listings">Send Listings</option>
+                                <option value="Meet in Person">Meet in Person</option>
+                                <option value="Send Contract">Send Contract</option>
+                                <option value="Follow Up Later">Follow Up Later</option>
+                                <option value="Needs Pre-Approval">Needs Pre-Approval</option>
+                                <option value="Closing">Closing</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="lead-info-item" id="modalSharedInfo" style="display:none;">
                         <label id="modalSharedLabel">🔗 Shared With</label>
                         <div class="value" id="modalSharedValue">-</div>
@@ -3264,6 +3284,11 @@
                 </div>
             </div>
             
+            <div class="form-group">
+                <label>Note <span style="color:rgba(255,255,255,0.3);font-weight:400;">(optional — syncs to calendar)</span></label>
+                <textarea id="scheduleNote" placeholder="Add a note for this meeting..." style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#111;color:#fff;font-size:0.875rem;font-family:inherit;resize:vertical;min-height:60px;max-height:120px;"></textarea>
+            </div>
+
             <div class="schedule-modal-actions">
                 <button class="btn-cancel" id="scheduleCancelBtn">Cancel</button>
                 <button class="btn-save" id="scheduleSaveBtn">Save Booking</button>
@@ -5523,6 +5548,24 @@
         }
     });
     
+    // Next Step change
+    document.getElementById('modalNextStep').addEventListener('change', async function() {
+        if (!currentLeadId) return;
+        var val = this.value;
+        try {
+            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+                method: 'PATCH',
+                body: { fields: { 'Next Step': val } }
+            });
+            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+            if (lead) lead.fields['Next Step'] = val;
+            showToast('Next step updated', 'success');
+        } catch (err) {
+            console.error('Error updating next step:', err);
+            showToast('Failed to update next step', 'error');
+        }
+    });
+
     // Save note
     document.getElementById('modalSaveNoteBtn').addEventListener('click', async function() {
         if (!currentLeadId) return;
@@ -6550,6 +6593,7 @@
 
         renderCalendar();
         updateTimeDropdowns();
+        document.getElementById('scheduleNote').value = '';
         document.getElementById('scheduleModal').classList.add('active');
     }
 
@@ -6762,6 +6806,7 @@
                 var leadName = ((scheduleLeadData['First Name'] || '') + ' ' + (scheduleLeadData['Last Name'] || '')).trim() || 'Lead';
                 var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
                 var email = scheduleLeadData['Email'] || '';
+                var scheduleNoteText = (document.getElementById('scheduleNote').value || '').trim();
                 var calendarSyncSuccess = false;
                 try {
                     var calResponse = await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
@@ -6773,6 +6818,7 @@
                             phone: phone,
                             email: email,
                             bookedTime: bookedDateTime.toISOString(),
+                            note: scheduleNoteText,
                             agentEmail: currentUser?.email || '',
                             agentName: currentUser?.name || ''
                         })
@@ -8115,6 +8161,14 @@
             bookedTimeValue.textContent = '';
             if (scheduleBtn) scheduleBtn.style.display = 'inline-flex';
         }
+
+        // Last AI Call Date
+        var lastAICall = f['Last Call Timestamp'];
+        document.getElementById('modalLastAICall').textContent = lastAICall ? formatDateTime(lastAICall) : '-';
+
+        // Next Step
+        var nextStepEl = document.getElementById('modalNextStep');
+        nextStepEl.value = f['Next Step'] || '';
 
         document.getElementById('modalSummary').textContent = f['Last Call Summary'] || 'No summary available';
         
