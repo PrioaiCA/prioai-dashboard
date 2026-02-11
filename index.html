@@ -5860,20 +5860,12 @@
         syncStatusDropdownDisplay(val);
 
         if (!currentLeadId) return;
-        try {
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
-                method: 'PATCH',
-                body: { fields: { 'Status': val } }
-            });
-            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            if (lead) lead.fields['Status'] = val;
-            showToast('Status updated', 'success');
-            updatePrioList();
-            updateProspectsTable();
-        } catch (err) {
-            console.error('Error updating status:', err);
-            showToast('Failed to update status', 'error');
-        }
+        // Only update locally — status syncs to Airtable only from backend actions
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        if (lead) lead.fields['Status'] = val;
+        showToast('Status updated', 'success');
+        updatePrioList();
+        updateProspectsTable();
     }
 
     // Close status dropdown when clicking outside
@@ -5971,7 +5963,7 @@
         }
     });
 
-    async function selectCardStatus(leadId, newStatus, btnEl) {
+    function selectCardStatus(leadId, newStatus, btnEl) {
         // Close portal menu
         var portal = document.getElementById('cardStatusPortal');
         if (portal) {
@@ -5989,24 +5981,15 @@
             }
             portal._currentLead = null;
         }
-        // Save to Airtable
-        try {
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
-                method: 'PATCH',
-                body: { fields: { 'Status': newStatus } }
-            });
-            var lead = allLeads.find(function(l) { return l.id === leadId; });
-            if (lead) lead.fields['Status'] = newStatus;
-            showToast('Status updated', 'success');
-            // If modal is open for this lead, sync the modal dropdown too
-            if (currentLeadId === leadId) {
-                var modalSelect = document.getElementById('modalStatusSelect');
-                if (modalSelect) modalSelect.value = newStatus;
-                syncStatusDropdownDisplay(newStatus);
-            }
-        } catch (err) {
-            console.error('Error updating status:', err);
-            showToast('Failed to update status', 'error');
+        // Only update locally — status syncs to Airtable only from backend actions
+        var lead = allLeads.find(function(l) { return l.id === leadId; });
+        if (lead) lead.fields['Status'] = newStatus;
+        showToast('Status updated', 'success');
+        // If modal is open for this lead, sync the modal dropdown too
+        if (currentLeadId === leadId) {
+            var modalSelect = document.getElementById('modalStatusSelect');
+            if (modalSelect) modalSelect.value = newStatus;
+            syncStatusDropdownDisplay(newStatus);
         }
     }
     window.selectCardStatus = selectCardStatus;
