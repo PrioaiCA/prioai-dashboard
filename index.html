@@ -178,9 +178,15 @@
         .priority-card-lg.missed-meeting .priority-card-lg-time-col{background:rgba(239,68,68,0.15)}
         .priority-card-lg.missed-meeting .priority-card-lg-time-col .time-value{color:#ef4444}
         .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
-        .priority-card-lg.meeting-done{opacity:0.5;border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);border-left-color:#34D399}
-        .priority-card-lg.meeting-done:hover{opacity:0.7;border-left-color:#34D399}
-        .meeting-done-badge{background:rgba(52,211,153,0.1);color:#34D399;font-size:0.5625rem;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase;position:absolute;top:4px;right:4px;z-index:1}
+        .priority-card-lg.meeting-done{opacity:0.45;border-color:rgba(255,255,255,0.06);background:rgba(255,255,255,0.01);border-left-color:#34D399;filter:saturate(0.3) brightness(0.7)}
+        .priority-card-lg.meeting-done:hover{opacity:0.65;border-left-color:#34D399;filter:saturate(0.5) brightness(0.85)}
+        .meeting-done-badge{background:rgba(52,211,153,0.15);color:#34D399;font-size:0.5625rem;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase;position:absolute;top:4px;right:4px;z-index:1;filter:brightness(1.8) saturate(2)}
+        .priority-card-lg.meeting-done .priority-card-lg-name{color:rgba(255,255,255,0.45)}
+        .priority-card-lg.meeting-done .priority-card-lg-phone{color:rgba(255,255,255,0.25)}
+        .priority-card-lg.meeting-done .priority-card-lg-lastcall{color:rgba(255,255,255,0.25)}
+        .priority-card-lg.meeting-done .col-label{color:rgba(255,255,255,0.2)}
+        .priority-card-lg.meeting-done .col-content{color:rgba(255,255,255,0.3)}
+        .priority-card-lg.meeting-done .action-btn{opacity:0.4}
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:8px;margin-right:8px;flex-shrink:0}
         .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
         .priority-card-lg-time-col{position:relative}
