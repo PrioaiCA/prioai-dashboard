@@ -180,7 +180,7 @@
         .priority-card-lg.missed-meeting .missed-date{font-size:0.75rem;font-weight:500;opacity:0.8;margin-bottom:2px}
         .priority-card-lg.meeting-done{opacity:0.5;border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);border-left-color:#34D399}
         .priority-card-lg.meeting-done:hover{opacity:0.7;border-left-color:#34D399}
-        .meeting-done-badge{background:rgba(52,211,153,0.1);color:#34D399;font-size:0.5625rem;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase;position:absolute;top:4px;left:4px;z-index:1}
+        .meeting-done-badge{background:rgba(52,211,153,0.1);color:#34D399;font-size:0.5625rem;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase;position:absolute;top:4px;right:4px;z-index:1}
         .prio-indicator{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:white;font-size:0.75rem;font-weight:700;border-radius:8px;margin-right:8px;flex-shrink:0}
         .prio-icon{width:20px;height:20px;position:absolute;top:6px;left:6px;border-radius:4px}
         .priority-card-lg-time-col{position:relative}
@@ -847,8 +847,8 @@
         .prospects-list .priority-card-lg-status-col{padding:14px 16px}
 
         /* (2) Compact action buttons - icon-only circles */
-        .prospects-list .priority-card-lg-actions{flex:0 0 auto;display:flex;flex-direction:row;align-items:center;gap:8px;padding:14px 16px;border-left:1px solid rgba(255,255,255,0.08)}
-        .prospects-list:not(.list-view) .priority-card-lg-actions{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;border-left:none;border-top:1px solid rgba(255,255,255,0.08);padding:12px 16px}
+        .prospects-list .priority-card-lg-actions{flex:0 0 200px;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px;border-left:1px solid rgba(255,255,255,0.08)}
+        .prospects-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);flex:none;min-width:auto}
         .action-btn-circle{width:28px;height:28px;border-radius:50%;border:1px solid #2a2a2a;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.8125rem;transition:all 200ms ease;color:#A0A0A0;position:relative;padding:0;flex-shrink:0}
         .action-btn-circle:hover{border-color:rgb(52,211,153);color:#fff}
         .action-btn-circle.action-share.shared{border-color:rgba(52,211,153,0.4);color:rgb(52,211,153)}
@@ -7799,15 +7799,10 @@
                     '<div class="col-content">' + escapeHtml(lastNoteText) + '</div>' +
                 '</div>' +
                 '<div class="priority-card-lg-actions">' +
-                    '<button class="action-btn-circle action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-tooltip">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
-                    '<button class="action-btn-circle action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-tooltip">Send to AI</span></button>' +
-                    '<div class="action-overflow-wrap">' +
-                        '<button class="action-overflow-btn" onclick="event.stopPropagation();toggleProspectsOverflow(this)">⋯</button>' +
-                        '<div class="action-overflow-menu">' +
-                            '<button class="action-overflow-item overflow-dnc" onclick="event.stopPropagation();closeAllOverflowMenus();quickMarkDNC(\'' + lead.id + '\')">🚫 Do Not Call</button>' +
-                            '<button class="action-overflow-item overflow-prio" onclick="event.stopPropagation();closeAllOverflowMenus();markAsPrio(\'' + lead.id + '\')">⭐ Prio</button>' +
-                        '</div>' +
-                    '</div>' +
+                    '<button class="action-btn action-share' + (isShared ? ' shared' : '') + '" onclick="event.stopPropagation();quickShareLead(\'' + lead.id + '\')"><span class="action-icon">' + (isShared ? '✓' : '🔗') + '</span><span class="action-label">' + (isShared ? 'Shared' : 'Share') + '</span></button>' +
+                    '<button class="action-btn action-ai" onclick="event.stopPropagation();quickSendToAI(\'' + lead.id + '\')"><span class="action-icon">🤖</span><span class="action-label">Send to AI</span></button>' +
+                    '<button class="action-btn action-dnc" onclick="event.stopPropagation();quickMarkDNC(\'' + lead.id + '\')"><span class="action-icon">🚫</span><span class="action-label">Do Not Call</span></button>' +
+                    '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Reschedule</span></button>' +
                 '</div>' +
             '</div>';
         }).join('');
