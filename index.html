@@ -1290,6 +1290,95 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 </head>
 <body>
+    <!-- Error Fallback Page (self-contained, no external dependencies) -->
+    <div id="errorFallback" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#0a0a0a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;overflow-y:auto;">
+        <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
+            <div style="max-width:480px;width:100%;text-align:center;">
+                <!-- Inline PRIO AI Logo SVG -->
+                <div style="margin-bottom:40px;">
+                    <svg width="160" height="44" viewBox="0 0 160 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="40" height="40" rx="10" fill="#34D399" fill-opacity="0.15" stroke="#34D399" stroke-width="2"/>
+                        <path d="M15 14h10a4 4 0 0 1 0 8h-10v-8z" fill="#34D399"/>
+                        <path d="M15 22h4v8h-4v-8z" fill="#34D399"/>
+                        <text x="52" y="30" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="24" font-weight="800" fill="white">PRIO</text>
+                        <text x="112" y="30" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="24" font-weight="800" fill="#34D399">AI</text>
+                    </svg>
+                </div>
+                <!-- Status Icon -->
+                <div style="width:64px;height:64px;margin:0 auto 24px;background:rgba(52,211,153,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </div>
+                <!-- Message -->
+                <h1 style="font-size:1.5rem;font-weight:700;margin:0 0 12px;line-height:1.3;color:#fff;">We're experiencing a temporary issue</h1>
+                <p style="font-size:1rem;line-height:1.6;color:#a0a0a0;margin:0 0 32px;">Our AI calling system is still running and processing your leads. Dashboard access will be restored shortly.</p>
+                <!-- Try Again Button -->
+                <button onclick="window.location.reload()" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 32px;background:#34D399;color:#000;font-size:1rem;font-weight:600;border:none;border-radius:12px;cursor:pointer;transition:opacity 0.2s;width:100%;max-width:240px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    Try Again
+                </button>
+                <!-- Support Info -->
+                <div style="margin-top:40px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08);">
+                    <p style="font-size:0.875rem;color:#707070;margin:0;">Contact support: <a href="mailto:info@prioai.ca" style="color:#34D399;text-decoration:none;">info@prioai.ca</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // === Error Fallback System ===
+    // Self-contained error handling that works even if all JS bundles/APIs fail.
+    (function() {
+        var fallbackShown = false;
+        window.__appMounted = false;
+
+        function showErrorFallback() {
+            if (fallbackShown) return;
+            fallbackShown = true;
+            var el = document.getElementById('errorFallback');
+            if (el) {
+                el.style.display = 'block';
+                // Hide everything else
+                var overlay = document.getElementById('pageLoadingOverlay');
+                if (overlay) overlay.style.display = 'none';
+                var app = document.getElementById('appContainer');
+                if (app) app.style.display = 'none';
+            }
+        }
+        window.__showErrorFallback = showErrorFallback;
+
+        // Loading timeout: if the app hasn't mounted within 10 seconds, show fallback
+        window.__appLoadTimer = setTimeout(function() {
+            if (!window.__appMounted) {
+                console.error('App failed to mount within 10 seconds');
+                showErrorFallback();
+            }
+        }, 10000);
+
+        // Global error handler for uncaught JS errors
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('Uncaught error:', message, source, lineno, colno, error);
+            // Only show fallback for critical errors (not minor issues)
+            // Check if the app has already mounted — if it has, let normal error handling deal with it
+            if (!window.__appMounted) {
+                showErrorFallback();
+            }
+            return false;
+        };
+
+        // Global handler for unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            if (!window.__appMounted) {
+                showErrorFallback();
+            }
+        });
+    })();
+    </script>
+
     <!-- Full Page Loading Overlay -->
     <div id="pageLoadingOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity 0.5s ease;">
         <div class="page-loading-spinner"></div>
@@ -3604,7 +3693,16 @@
     // Supabase Setup
     var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
     var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
-    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    var supabase;
+    try {
+        if (!window.supabase || !window.supabase.createClient) {
+            throw new Error('Supabase SDK failed to load');
+        }
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } catch (e) {
+        console.error('Supabase initialization failed:', e);
+        window.__showErrorFallback();
+    }
 
     // State
     var currentUser = null;
@@ -3964,13 +4062,34 @@
     // Auth Check (returns promise)
     function checkAuth() {
         return (async function() {
+        if (!supabase) {
+            window.__showErrorFallback();
+            return;
+        }
         document.getElementById('loadingState').classList.remove('hidden');
         document.getElementById('guestState').classList.add('hidden');
         document.getElementById('dashboardContent').classList.add('hidden');
-        
-        var result = await supabase.auth.getSession();
+
+        var result;
+        try {
+            // Race getSession against a 10-second timeout
+            result = await Promise.race([
+                supabase.auth.getSession(),
+                new Promise(function(_, reject) {
+                    setTimeout(function() { reject(new Error('Supabase connection timed out')); }, 10000);
+                })
+            ]);
+        } catch (authErr) {
+            console.error('Auth check failed:', authErr);
+            window.__showErrorFallback();
+            return;
+        }
         currentUser = result.data.session?.user || null;
-        
+
+        // App successfully connected — cancel the loading timeout
+        window.__appMounted = true;
+        if (window.__appLoadTimer) clearTimeout(window.__appLoadTimer);
+
         document.getElementById('loadingState').classList.add('hidden');
         
         if (currentUser) {
@@ -5302,6 +5421,9 @@
                 window.history.replaceState({}, '', window.location.pathname);
             }
         }
+    }).catch(function(err) {
+        console.error('App initialization failed:', err);
+        window.__showErrorFallback();
     });
 
     // Handle hash
