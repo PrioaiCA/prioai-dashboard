@@ -2456,6 +2456,38 @@
                                         </div>
                                     </div>
 
+                                    <div class="import-section">
+                                        <div class="import-section-label">Schedule First Call <span style="color:rgba(255,255,255,0.4);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></div>
+                                        <div class="form-group" style="margin-bottom:12px;">
+                                            <label>Next Call Date</label>
+                                            <div style="position:relative;">
+                                                <button type="button" id="singleLeadCalToggle" class="form-input" style="text-align:left;cursor:pointer;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.5);">
+                                                    📅 Pick a date
+                                                </button>
+                                                <div class="send-ai-calendar" id="singleLeadCalendar" style="display:none;">
+                                                    <div class="calendar-header">
+                                                        <button type="button" id="singleLeadCalPrev">‹</button>
+                                                        <span class="calendar-month" id="singleLeadCalMonth"></span>
+                                                        <button type="button" id="singleLeadCalNext">›</button>
+                                                    </div>
+                                                    <div class="calendar-weekdays">
+                                                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                                    </div>
+                                                    <div class="calendar-days" id="singleLeadCalDays"></div>
+                                                </div>
+                                                <input type="hidden" id="singleLeadCallDate">
+                                            </div>
+                                        </div>
+                                        <div id="singleLeadTimeWrapper" style="display:none;">
+                                            <label style="display:block;font-size:0.75rem;font-weight:400;color:#707070;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Preferred Time of Day</label>
+                                            <div class="send-ai-time-pref" id="singleLeadTimePref">
+                                                <button type="button" class="time-pref-btn" data-time="Morning">🌅 Morning</button>
+                                                <button type="button" class="time-pref-btn active" data-time="Afternoon">☀️ Afternoon</button>
+                                                <button type="button" class="time-pref-btn" data-time="Evening">🌆 Evening</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div id="singleLeadStatus"></div>
 
                                     <button class="contact-submit-btn" id="submitSingleLeadBtn" style="margin-top:8px;">
@@ -10596,14 +10628,26 @@
             var defaultContext = 'You reached out to ' + agentName + ' a while ago regarding your interest in buying or selling a property. Are you still in the market?';
 
             var leadData = {
-                firstName: firstName,
-                lastName: lastName,
-                phone: phone,
+                'First Name': firstName,
+                'Last Name': lastName,
+                'Phone #': phone,
                 interest: interest,
                 email: email,
                 maxAttempts: maxAttempts,
                 context: context || defaultContext
             };
+
+            // Add optional Next Call Date
+            var selectedDate = document.getElementById('singleLeadCallDate')?.value;
+            if (selectedDate) {
+                var timeHour = 9; // Morning default
+                var selectedTime = singleLeadSelectedTime || 'Afternoon';
+                if (selectedTime === 'Afternoon') timeHour = 13;
+                else if (selectedTime === 'Evening') timeHour = 17;
+                var nextCallDt = new Date(selectedDate + 'T00:00:00');
+                nextCallDt.setHours(timeHour, 0, 0, 0);
+                leadData['Next Call Date'] = nextCallDt.toISOString();
+            }
 
             // Send to n8n webhook
             var response = await fetch('https://n8n.prioai.ca/webhook/lead-file-upload', {
@@ -10631,6 +10675,17 @@
             document.getElementById('singleLeadEmail').value = '';
             document.getElementById('singleLeadMaxAttempts').value = '5';
             document.getElementById('singleLeadContext').value = '';
+            document.getElementById('singleLeadCallDate').value = '';
+            singleLeadCalDate = new Date();
+            singleLeadSelectedDate = null;
+            singleLeadSelectedTime = 'Afternoon';
+            document.getElementById('singleLeadCalendar').style.display = 'none';
+            document.getElementById('singleLeadTimeWrapper').style.display = 'none';
+            var calToggle = document.getElementById('singleLeadCalToggle');
+            calToggle.innerHTML = '📅 Pick a date';
+            calToggle.style.color = 'rgba(255,255,255,0.5)';
+            document.querySelectorAll('#singleLeadTimePref .time-pref-btn').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelector('#singleLeadTimePref .time-pref-btn[data-time="Afternoon"]').classList.add('active');
         } catch (err) {
             if (statusEl) statusEl.innerHTML = '<p style="color:#ef4444">Failed to add lead: ' + err.message + '</p>';
         }
@@ -10638,7 +10693,84 @@
         btn.disabled = false;
         btn.textContent = '➕ Add Lead';
     });
-    
+
+    // Single Lead Calendar for Next Call Date
+    var singleLeadCalDate = new Date();
+    var singleLeadSelectedDate = null;
+    var singleLeadSelectedTime = 'Afternoon';
+
+    function renderSingleLeadCalendar() {
+        var year = singleLeadCalDate.getFullYear();
+        var month = singleLeadCalDate.getMonth();
+        var today = new Date();
+        today.setHours(0,0,0,0);
+        var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+        document.getElementById('singleLeadCalMonth').textContent = monthNames[month] + ' ' + year;
+        var firstDay = new Date(year, month, 1).getDay();
+        var daysInMonth = new Date(year, month + 1, 0).getDate();
+        var daysHtml = '';
+        for (var i = 0; i < firstDay; i++) {
+            daysHtml += '<span class="calendar-day empty"></span>';
+        }
+        for (var d = 1; d <= daysInMonth; d++) {
+            var dateObj = new Date(year, month, d);
+            dateObj.setHours(0,0,0,0);
+            var dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+            var isPast = dateObj.getTime() <= today.getTime();
+            var isSelected = singleLeadSelectedDate === dateStr;
+            var classes = 'calendar-day';
+            if (isPast) classes += ' past';
+            if (isSelected) classes += ' selected';
+            daysHtml += '<span class="' + classes + '" data-date="' + dateStr + '">' + d + '</span>';
+        }
+        document.getElementById('singleLeadCalDays').innerHTML = daysHtml;
+        document.querySelectorAll('#singleLeadCalDays .calendar-day:not(.empty):not(.past)').forEach(function(day) {
+            day.addEventListener('click', function() {
+                singleLeadSelectedDate = this.dataset.date;
+                document.getElementById('singleLeadCallDate').value = singleLeadSelectedDate;
+                renderSingleLeadCalendar();
+                // Update toggle button to show selected date
+                var parts = singleLeadSelectedDate.split('-');
+                var dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                var toggle = document.getElementById('singleLeadCalToggle');
+                toggle.innerHTML = '📅 ' + monthNames[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
+                toggle.style.color = '#fff';
+                // Show time preference
+                document.getElementById('singleLeadTimeWrapper').style.display = 'block';
+            });
+        });
+    }
+
+    document.getElementById('singleLeadCalToggle')?.addEventListener('click', function() {
+        var cal = document.getElementById('singleLeadCalendar');
+        if (cal.style.display === 'none') {
+            cal.style.display = 'block';
+            singleLeadCalDate = new Date();
+            renderSingleLeadCalendar();
+        } else {
+            cal.style.display = 'none';
+        }
+    });
+
+    document.getElementById('singleLeadCalPrev')?.addEventListener('click', function() {
+        singleLeadCalDate.setMonth(singleLeadCalDate.getMonth() - 1);
+        renderSingleLeadCalendar();
+    });
+    document.getElementById('singleLeadCalNext')?.addEventListener('click', function() {
+        singleLeadCalDate.setMonth(singleLeadCalDate.getMonth() + 1);
+        renderSingleLeadCalendar();
+    });
+
+    document.querySelectorAll('#singleLeadTimePref .time-pref-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#singleLeadTimePref .time-pref-btn').forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            singleLeadSelectedTime = this.dataset.time;
+        });
+    });
+
     // File upload
     var uploadZone = document.getElementById('fileUploadZone');
     var fileInput = document.getElementById('leadFileInput');
