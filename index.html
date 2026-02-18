@@ -11051,7 +11051,7 @@
             attemptsListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No manual call attempts logged</p>';
         }
 
-        // AI Call History - fetch directly from Calls table for this lead
+        // AI Call History - fetch call records directly from Calls table
         var aiCallsListEl = document.getElementById('searchLeadAICallsList');
         window.searchCallsData = [];
         aiCallsListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">Loading call history...</p>';
@@ -11060,20 +11060,31 @@
         // Fetch calls async so the rest of the UI renders immediately
         (async function() {
             try {
-                var leadId = lead.id;
-                var callsFilter = 'FIND("' + leadId + '", ARRAYJOIN({Lead}))';
-                var callsPath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE +
-                    '?filterByFormula=' + encodeURIComponent(callsFilter) +
-                    '&sort[0][field]=Timestamp&sort[0][direction]=desc&pageSize=100';
+                // Get linked call record IDs from the Lead's "Calls" linked field
+                var callIds = f['Calls'] || [];
+                if (!Array.isArray(callIds)) callIds = [callIds];
 
                 var callRecords = [];
-                var callOffset = null;
-                do {
-                    var fetchPath = callsPath + (callOffset ? '&offset=' + callOffset : '');
-                    var callData = await fetchAirtable(fetchPath);
-                    if (callData.records) callRecords = callRecords.concat(callData.records);
-                    callOffset = callData.offset;
-                } while (callOffset);
+
+                if (callIds.length > 0) {
+                    // Build RECORD_ID() filter to fetch all linked call records
+                    // Batch in groups of 20 to avoid formula length limits
+                    for (var batch = 0; batch < callIds.length; batch += 20) {
+                        var batchIds = callIds.slice(batch, batch + 20);
+                        var idFormulas = batchIds.map(function(id) { return 'RECORD_ID()="' + id + '"'; });
+                        var callsFilter = 'OR(' + idFormulas.join(',') + ')';
+                        var callsPath = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE +
+                            '?filterByFormula=' + encodeURIComponent(callsFilter) + '&pageSize=100';
+                        var callData = await fetchAirtable(callsPath);
+                        if (callData.records) callRecords = callRecords.concat(callData.records);
+                    }
+                    // Sort by Timestamp descending (newest first)
+                    callRecords.sort(function(a, b) {
+                        var ta = a.fields['Timestamp'] || '';
+                        var tb = b.fields['Timestamp'] || '';
+                        return ta > tb ? -1 : ta < tb ? 1 : 0;
+                    });
+                }
 
                 window.searchCallsData = [];
                 var aiCallsHtml = '';
@@ -11123,6 +11134,53 @@
 
                 document.getElementById('searchAICallsCount').textContent = callRecords.length;
 
+                // If no records from Calls table, fall back to Lead lookup fields
+                if (callRecords.length === 0) {
+                    var transcriptsRaw = f['Transcript (from Calls)'];
+                    var transcriptsArr = Array.isArray(transcriptsRaw) ? transcriptsRaw : (typeof transcriptsRaw === 'string' && transcriptsRaw ? [transcriptsRaw] : []);
+                    var tsRaw = f['Call Timestamps (from Calls)'];
+                    var tsArr = Array.isArray(tsRaw) ? tsRaw : (tsRaw ? [tsRaw] : []);
+                    var outRaw = f['Outcomes (from Calls)'];
+                    var outArr = Array.isArray(outRaw) ? outRaw : (outRaw ? [outRaw] : []);
+                    var durRaw = f['Duration (Seconds) (from Calls)'];
+                    var durArr = Array.isArray(durRaw) ? durRaw : (durRaw ? [durRaw] : []);
+                    var fallbackOutcome = f['Last Outcome'] || f['Disposition'] || f['Status'] || '';
+
+                    if (transcriptsArr.length > 0) {
+                        transcriptsArr.forEach(function(tr, i) {
+                            var cNum = transcriptsArr.length - i;
+                            var ts = tsArr[i] || (i === 0 ? f['Last Call Timestamp'] : null);
+                            var oc = outArr[i] || (i === 0 ? fallbackOutcome : 'Completed');
+                            var dur = durArr[i] || null;
+                            var ocClass = (oc || '').toLowerCase().replace(/\s+/g, '-');
+                            var tStr = ts ? formatFriendlyDateTime(ts) : '';
+                            var dStr = '';
+                            if (dur) { var s = parseInt(dur, 10); var m = Math.floor(s / 60); dStr = m > 0 ? m + 'm ' + (s % 60) + 's' : s + 's'; }
+
+                            window.searchCallsData.push({ callNum: cNum, timestamp: ts, outcome: oc, duration: dur, transcript: tr });
+
+                            aiCallsHtml += '<div class="search-ai-call-item">' +
+                                '<div class="search-ai-call-header">' +
+                                    '<span class="search-ai-call-title">AI Call #' + cNum + '</span>' +
+                                    '<span class="search-ai-call-outcome ' + ocClass + '">' + escapeHtml(oc || 'Completed') + '</span>' +
+                                '</div>' +
+                                '<div class="search-ai-call-meta">' + (tStr ? '<span>' + tStr + '</span>' : '') + (dStr ? '<span>' + dStr + '</span>' : '') + '</div>' +
+                                (tr ? '<div class="search-ai-call-preview">' + escapeHtml(tr.substring(0, 150)) + (tr.length > 150 ? '...' : '') + '</div>' : '') +
+                                '<div class="search-ai-call-footer"><button class="search-ai-view-btn" onclick="openCallDetailModal(' + i + ')">View Full Details →</button></div>' +
+                            '</div>';
+                        });
+                    } else if (f['Last Call Timestamp']) {
+                        var ocClass = fallbackOutcome.toLowerCase().replace(/\s+/g, '-');
+                        window.searchCallsData.push({ callNum: 1, timestamp: f['Last Call Timestamp'], outcome: fallbackOutcome, duration: null, transcript: null });
+                        aiCallsHtml += '<div class="search-ai-call-item">' +
+                            '<div class="search-ai-call-header"><span class="search-ai-call-title">Latest AI Call</span>' +
+                            '<span class="search-ai-call-outcome ' + ocClass + '">' + escapeHtml(fallbackOutcome || 'Unknown') + '</span></div>' +
+                            '<div class="search-ai-call-meta"><span>' + formatFriendlyDateTime(f['Last Call Timestamp']) + '</span></div></div>';
+                    }
+                }
+
+                document.getElementById('searchAICallsCount').textContent = window.searchCallsData.length;
+
                 if (aiCallsHtml) {
                     aiCallsListEl.innerHTML = aiCallsHtml;
                 } else {
@@ -11130,8 +11188,23 @@
                 }
             } catch (err) {
                 console.error('Failed to load call history:', err);
-                aiCallsListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">Failed to load call history</p>';
-                document.getElementById('searchAICallsCount').textContent = '0';
+                // On error, fall back to lookup fields from Lead record
+                window.searchCallsData = [];
+                var fallbackHtml = '';
+                var transcriptsRaw = f['Transcript (from Calls)'];
+                var transcriptsArr = Array.isArray(transcriptsRaw) ? transcriptsRaw : (typeof transcriptsRaw === 'string' && transcriptsRaw ? [transcriptsRaw] : []);
+                var fallbackOutcome = f['Last Outcome'] || f['Disposition'] || f['Status'] || '';
+                if (transcriptsArr.length > 0) {
+                    transcriptsArr.forEach(function(tr, i) {
+                        var cNum = transcriptsArr.length - i;
+                        window.searchCallsData.push({ callNum: cNum, timestamp: null, outcome: fallbackOutcome, duration: null, transcript: tr });
+                        fallbackHtml += '<div class="search-ai-call-item"><div class="search-ai-call-header"><span class="search-ai-call-title">AI Call #' + cNum + '</span></div>' +
+                            (tr ? '<div class="search-ai-call-preview">' + escapeHtml(tr.substring(0, 150)) + (tr.length > 150 ? '...' : '') + '</div>' : '') +
+                            '<div class="search-ai-call-footer"><button class="search-ai-view-btn" onclick="openCallDetailModal(' + i + ')">View Full Details →</button></div></div>';
+                    });
+                }
+                document.getElementById('searchAICallsCount').textContent = window.searchCallsData.length;
+                aiCallsListEl.innerHTML = fallbackHtml || '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No AI calls recorded</p>';
             }
         })();
 
