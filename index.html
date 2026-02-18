@@ -1177,8 +1177,6 @@
         .search-ai-call-footer{display:flex;justify-content:flex-end;margin-top:6px}
         .search-ai-view-btn{font-size:0.75rem;color:rgb(52,211,153);background:none;border:none;cursor:pointer;padding:2px 0;transition:opacity 150ms ease}
         .search-ai-view-btn:hover{opacity:0.8;text-decoration:underline}
-        .search-ai-total-attempts{margin-top:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.8125rem;color:rgba(255,255,255,0.5)}
-        .search-ai-untracked{margin-top:6px;padding:8px 12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);border-radius:8px;font-size:0.75rem;color:rgba(245,158,11,0.8)}
         .search-lead-content{background:rgba(255,255,255,0.02);padding:14px;border-radius:8px;font-size:0.875rem;line-height:1.6;white-space:pre-wrap;color:rgba(255,255,255,0.7)}
         .search-lead-content.transcript{max-height:300px;overflow-y:auto}
         .call-detail-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:10001;align-items:center;justify-content:center}
@@ -11015,18 +11013,15 @@
         var callDurations = Array.isArray(callDurationsRaw) ? callDurationsRaw : (callDurationsRaw ? [callDurationsRaw] : []);
         var lastCallTimestamp = f['Last Call Timestamp'];
         var lastOutcome = f['Last Outcome'] || f['Disposition'] || f['Status'] || '';
-        var totalAttempts = parseInt(f['Attempts'] || '0', 10);
 
         // Store calls data globally for modal
         window.searchCallsData = [];
 
         // Build AI call history
         var aiCallsHtml = '';
-        var trackedCalls = 0;
 
         // Show each call from transcripts array
         if (transcriptsArray.length > 0) {
-            trackedCalls = transcriptsArray.length;
             transcriptsArray.forEach(function(transcript, i) {
                 var callNum = transcriptsArray.length - i;
                 var timestamp = callTimestamps[i] || (i === 0 ? lastCallTimestamp : null);
@@ -11066,48 +11061,30 @@
                     '</div>' +
                 '</div>';
             });
-        } else if (lastCallTimestamp || totalAttempts > 0) {
+        } else if (lastCallTimestamp) {
             // Fallback: show last call info if no transcripts array
-            if (lastCallTimestamp) {
-                trackedCalls = 1;
-                var outcomeClass = lastOutcome.toLowerCase().replace(/\s+/g, '-');
+            var outcomeClass = lastOutcome.toLowerCase().replace(/\s+/g, '-');
 
-                window.searchCallsData.push({
-                    callNum: 1,
-                    timestamp: lastCallTimestamp,
-                    outcome: lastOutcome,
-                    duration: null,
-                    transcript: null
-                });
+            window.searchCallsData.push({
+                callNum: 1,
+                timestamp: lastCallTimestamp,
+                outcome: lastOutcome,
+                duration: null,
+                transcript: null
+            });
 
-                aiCallsHtml += '<div class="search-ai-call-item">' +
-                    '<div class="search-ai-call-header">' +
-                        '<span class="search-ai-call-title">Latest AI Call</span>' +
-                        '<span class="search-ai-call-outcome ' + outcomeClass + '">' + escapeHtml(lastOutcome || 'Unknown') + '</span>' +
-                    '</div>' +
-                    '<div class="search-ai-call-meta"><span>' + formatFriendlyDateTime(lastCallTimestamp) + '</span></div>' +
-                '</div>';
-            }
-        }
-
-        // Show total attempts count
-        if (totalAttempts > 0) {
-            aiCallsHtml += '<div class="search-ai-total-attempts">' +
-                '<strong>Total AI Attempts:</strong> ' + totalAttempts +
+            aiCallsHtml += '<div class="search-ai-call-item">' +
+                '<div class="search-ai-call-header">' +
+                    '<span class="search-ai-call-title">Latest AI Call</span>' +
+                    '<span class="search-ai-call-outcome ' + outcomeClass + '">' + escapeHtml(lastOutcome || 'Unknown') + '</span>' +
+                '</div>' +
+                '<div class="search-ai-call-meta"><span>' + formatFriendlyDateTime(lastCallTimestamp) + '</span></div>' +
             '</div>';
         }
 
-        // Show message if there are untracked calls
-        var untrackedCalls = totalAttempts - trackedCalls;
-        if (untrackedCalls > 0) {
-            aiCallsHtml += '<div class="search-ai-untracked">' +
-                '⚠️ ' + untrackedCalls + ' call' + (untrackedCalls > 1 ? 's were' : ' was') + ' not tracked. ' +
-                'Older leads may have limited call history.' +
-            '</div>';
-        }
-
-        // Update count badge
-        document.getElementById('searchAICallsCount').textContent = trackedCalls || totalAttempts;
+        // Update count badge - use actual displayed calls as source of truth
+        var displayedCalls = window.searchCallsData.length;
+        document.getElementById('searchAICallsCount').textContent = displayedCalls;
 
         if (aiCallsHtml) {
             aiCallsListEl.innerHTML = aiCallsHtml;
