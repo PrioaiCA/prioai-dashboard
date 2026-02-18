@@ -1177,6 +1177,8 @@
         .search-ai-call-footer{display:flex;justify-content:flex-end;margin-top:6px}
         .search-ai-view-btn{font-size:0.75rem;color:rgb(52,211,153);background:none;border:none;cursor:pointer;padding:2px 0;transition:opacity 150ms ease}
         .search-ai-view-btn:hover{opacity:0.8;text-decoration:underline}
+        .search-show-all-calls-btn{width:100%;padding:10px;margin-top:6px;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);border-radius:8px;color:rgba(255,255,255,0.5);font-size:0.8125rem;font-weight:500;cursor:pointer;transition:all 150ms ease}
+        .search-show-all-calls-btn:hover{background:rgba(255,255,255,0.07);border-color:rgba(52,211,153,0.3);color:rgb(52,211,153)}
         .search-lead-content{background:rgba(255,255,255,0.02);padding:14px;border-radius:8px;font-size:0.875rem;line-height:1.6;white-space:pre-wrap;color:rgba(255,255,255,0.7)}
         .search-lead-content.transcript{max-height:300px;overflow-y:auto}
         .call-detail-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:10001;align-items:center;justify-content:center}
@@ -11115,7 +11117,9 @@
                             transcript: transcript
                         });
 
-                        aiCallsHtml += '<div class="search-ai-call-item">' +
+                        // First call (latest) is always visible; rest are hidden
+                        var hidden = i > 0 ? ' style="display:none" data-older-call' : '';
+                        aiCallsHtml += '<div class="search-ai-call-item"' + hidden + '>' +
                             '<div class="search-ai-call-header">' +
                                 '<span class="search-ai-call-title">AI Call #' + callNum + '</span>' +
                                 '<span class="search-ai-call-outcome ' + outcomeClass + '">' + escapeHtml(outcome) + '</span>' +
@@ -11130,6 +11134,13 @@
                             '</div>' +
                         '</div>';
                     });
+
+                    // Add "Show all calls" button if more than 1
+                    if (callRecords.length > 1) {
+                        aiCallsHtml += '<button class="search-show-all-calls-btn" id="searchShowAllCallsBtn" onclick="toggleOlderCalls(this)">' +
+                            'Show ' + (callRecords.length - 1) + ' older call' + (callRecords.length - 1 > 1 ? 's' : '') +
+                        '</button>';
+                    }
                 }
 
                 document.getElementById('searchAICallsCount').textContent = callRecords.length;
@@ -11159,7 +11170,8 @@
 
                             window.searchCallsData.push({ callNum: cNum, timestamp: ts, outcome: oc, duration: dur, transcript: tr });
 
-                            aiCallsHtml += '<div class="search-ai-call-item">' +
+                            var hidden = i > 0 ? ' style="display:none" data-older-call' : '';
+                            aiCallsHtml += '<div class="search-ai-call-item"' + hidden + '>' +
                                 '<div class="search-ai-call-header">' +
                                     '<span class="search-ai-call-title">AI Call #' + cNum + '</span>' +
                                     '<span class="search-ai-call-outcome ' + ocClass + '">' + escapeHtml(oc || 'Completed') + '</span>' +
@@ -11169,6 +11181,10 @@
                                 '<div class="search-ai-call-footer"><button class="search-ai-view-btn" onclick="openCallDetailModal(' + i + ')">View Full Details →</button></div>' +
                             '</div>';
                         });
+                        if (transcriptsArr.length > 1) {
+                            aiCallsHtml += '<button class="search-show-all-calls-btn" id="searchShowAllCallsBtn" onclick="toggleOlderCalls(this)">' +
+                                'Show ' + (transcriptsArr.length - 1) + ' older call' + (transcriptsArr.length - 1 > 1 ? 's' : '') + '</button>';
+                        }
                     } else if (f['Last Call Timestamp']) {
                         var ocClass = fallbackOutcome.toLowerCase().replace(/\s+/g, '-');
                         window.searchCallsData.push({ callNum: 1, timestamp: f['Last Call Timestamp'], outcome: fallbackOutcome, duration: null, transcript: null });
@@ -11376,6 +11392,18 @@
         modal.classList.add('active');
     }
     window.openCallDetailModal = openCallDetailModal;
+
+    function toggleOlderCalls(btn) {
+        var container = document.getElementById('searchLeadAICallsList');
+        var olderCalls = container.querySelectorAll('[data-older-call]');
+        var showing = olderCalls[0] && olderCalls[0].style.display !== 'none';
+        olderCalls.forEach(function(el) { el.style.display = showing ? 'none' : ''; });
+        var count = olderCalls.length;
+        btn.textContent = showing
+            ? 'Show ' + count + ' older call' + (count > 1 ? 's' : '')
+            : 'Hide older calls';
+    }
+    window.toggleOlderCalls = toggleOlderCalls;
 
     function closeCallDetailModal() {
         document.getElementById('callDetailModal').classList.remove('active');
