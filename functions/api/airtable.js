@@ -160,6 +160,48 @@ export async function onRequest(context) {
             return jsonResponse({ error: 'Server configuration error' }, 500, corsOrigin);
         }
 
+        // Server-side pagination: aggregate all pages into single response
+        const paginateAll = url.searchParams.get('paginateAll') === 'true';
+
+        if (paginateAll && request.method === 'GET') {
+            const MAX_PAGES = 50;
+            let allRecords = [];
+            let offset = null;
+            let pageCount = 0;
+
+            do {
+                if (++pageCount > MAX_PAGES) break;
+
+                const fetchPath = offset
+                    ? `${path}&offset=${offset}`
+                    : path;
+                const airtableUrl = `https://api.airtable.com/v0/${fetchPath}`;
+
+                const airtableResponse = await fetch(airtableUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await airtableResponse.json();
+
+                if (!airtableResponse.ok) {
+                    console.error('Airtable error during pagination:', data);
+                    return jsonResponse(
+                        { error: 'Database request failed' },
+                        airtableResponse.status >= 500 ? 502 : airtableResponse.status,
+                        corsOrigin
+                    );
+                }
+
+                allRecords = allRecords.concat(data.records || []);
+                offset = data.offset || null;
+            } while (offset);
+
+            return jsonResponse({ records: allRecords }, 200, corsOrigin);
+        }
+
         // Build Airtable URL
         const airtableUrl = `https://api.airtable.com/v0/${path}`;
 

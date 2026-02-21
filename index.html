@@ -3751,7 +3751,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script>
     // Register Service Worker
     if ('serviceWorker' in navigator) {
@@ -4237,6 +4237,9 @@
     // Airtable API helper - proxies through Pages Function (token handled server-side)
     async function fetchAirtable(path, options = {}) {
         var proxyUrl = '/api/airtable?path=' + encodeURIComponent(path);
+        if (options.paginateAll) {
+            proxyUrl += '&paginateAll=true';
+        }
         var fetchOptions = {
             method: options.method || 'GET',
             headers: {
@@ -4426,7 +4429,6 @@
                         populateBilling();
                     }
                 });
-                loadLeadsData();
             } else {
                 document.getElementById('statProspects').textContent = '0';
                 document.getElementById('statAppointments').textContent = '0';
@@ -4466,62 +4468,59 @@
         if (typeof hidePageLoading === 'function') hidePageLoading();
     }
 
-    // Load leads data with optimizations
+    function yieldToMain() {
+        return new Promise(function(resolve) { setTimeout(resolve, 0); });
+    }
+
+    // Load leads data — single edge-paginated fetch with yielded renders
     async function loadLeadsData(isRefresh) {
-        if (!currentUserRecord) return;
+        if (!currentUser) return;
 
         try {
             var email = currentUser.email.toLowerCase();
-            // Include leads owned by user OR shared with user (use ARRAYJOIN for lookup fields)
             var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER(ARRAYJOIN({Shared With Email}))))';
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
 
-            // Use temp array to avoid flickering on refresh
+            var data = await fetchAirtable(basePath, { paginateAll: true });
+
             var tempLeads = [];
-            var offset = null;
-            var isFirstPage = true;
+            if (data.records) {
+                data.records.forEach(function(record) {
+                    var clientEmails = record.fields['Client Email'] || [];
+                    var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
+                    var sharedWithEmails = record.fields['Shared With Email'] || [];
+                    if (!Array.isArray(sharedWithEmails)) sharedWithEmails = [sharedWithEmails];
+                    var sharedWithEmailsLower = sharedWithEmails.map(function(e) { return (e || '').toLowerCase(); });
 
-            do {
-                var fetchPath = basePath + (offset ? '&offset=' + offset : '');
-                var data = await fetchAirtable(fetchPath);
+                    if (!clientEmailsLower.includes(email) && sharedWithEmailsLower.includes(email)) {
+                        record.isShared = true;
+                    }
+                });
+                tempLeads = data.records;
+            }
 
-                if (data.records) {
-                    // Mark leads that are shared WITH the user (not owned by them)
-                    data.records.forEach(function(record) {
-                        var clientEmails = record.fields['Client Email'] || [];
-                        var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
-                        // Shared With Email is a lookup field - can be array or string
-                        var sharedWithEmails = record.fields['Shared With Email'] || [];
-                        if (!Array.isArray(sharedWithEmails)) sharedWithEmails = [sharedWithEmails];
-                        var sharedWithEmailsLower = sharedWithEmails.map(function(e) { return (e || '').toLowerCase(); });
-
-                        // If user's email is not in Client Email but is in Shared With Email, mark as shared
-                        if (!clientEmailsLower.includes(email) && sharedWithEmailsLower.includes(email)) {
-                            record.isShared = true;
-                        }
-                    });
-                    tempLeads = tempLeads.concat(data.records);
-                }
-                offset = data.offset;
-
-                // On initial load, render after first page so user sees data fast
-                if (!isRefresh && isFirstPage && tempLeads.length > 0) {
-                    isFirstPage = false;
-                    allLeads = tempLeads.slice(); // Copy current data
-                    updateDashboard();
-                    updatePrioList();
-                }
-            } while (offset);
-
-            // Replace allLeads with complete new data
             allLeads = tempLeads;
-            updateDashboard();
-            updatePrioList();
-            updateBookedTodayList();
             cacheData();
-
-            // Mark data as successfully loaded
             window.dataLoadedSuccessfully = true;
+
+            // Yielded render chain — browser can paint between DOM updates
+            updateDashboard();
+            await yieldToMain();
+            updatePrioList();
+            await yieldToMain();
+            updateBookedTodayList();
+            await yieldToMain();
+            updateProspectsTable();
+            await yieldToMain();
+            updatePipelineList();
+            await yieldToMain();
+            updateSharedLeadsList();
+            await yieldToMain();
+            updateUnqualifiedList();
+            await yieldToMain();
+            updateOpenLeadsList();
+            await yieldToMain();
+            updateAnalyticsDisplay();
 
             // Handle pending deep link after data loads
             if (pendingLeadDeepLink && allLeads.length > 0) {
@@ -4536,19 +4535,23 @@
                     }
                 }, 100);
             }
+
+            // Data loaded successfully — hide loading overlay
+            hidePageLoading();
         } catch (err) {
             console.error('Failed to load leads:', err);
-            // Still clear loading state on error so user isn't stuck
             updateDashboard();
 
-            // Retry loading after a delay if not already retrying too much
             if (!window.loadRetryCount) window.loadRetryCount = 0;
             if (window.loadRetryCount < 3) {
                 window.loadRetryCount++;
                 console.log('Retrying data load, attempt ' + window.loadRetryCount);
                 setTimeout(function() {
                     loadLeadsData(isRefresh);
-                }, 2000 * window.loadRetryCount); // Exponential backoff: 2s, 4s, 6s
+                }, 2000 * window.loadRetryCount);
+            } else {
+                // All retries exhausted — hide loading overlay so user isn't stuck
+                hidePageLoading();
             }
         }
     }
@@ -5491,10 +5494,12 @@
     // Init
     checkAuth().then(function() {
         if (currentUser) {
+            // Fire both concurrently — leads fetch doesn't need currentUserRecord
             loadUserData().then(function() {
                 updateSettingsProfile();
                 populateBilling();
             });
+            loadLeadsData();
         } else {
             // Check for signup parameter from main website
             var urlParams = new URLSearchParams(window.location.search);
@@ -9877,49 +9882,21 @@
         }).join('');
     }
 
-    // Update all tabs when data loads
-    var originalLoadLeadsData = loadLeadsData;
-    loadLeadsData = async function() {
-        try {
-            await originalLoadLeadsData();
-            updateProspectsTable();
-            updatePipelineList();
-            updateSharedLeadsList();
-            updateUnqualifiedList();
-            updateOpenLeadsList();
-        } finally {
-            // Data has loaded (or failed) - hide loading overlay either way
-            dataLoaded = true;
-            hidePageLoading();
-        }
-    };
     
-    // Full page loading - hide when data is loaded (with minimum display time)
+    // Full page loading - hide when data is loaded
     var pageLoadingComplete = false;
-    var MIN_LOADING_TIME = 1500; // Minimum 1.5 seconds for smooth UX
 
     function hidePageLoading() {
         if (pageLoadingComplete) return;
-
-        var elapsed = Date.now() - (window.loadingStartTime || 0);
-        var remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
-
-        // Wait for minimum time, then fade out
+        pageLoadingComplete = true;
+        var overlay = document.getElementById('pageLoadingOverlay');
+        var appContainer = document.getElementById('appContainer');
+        if (overlay) overlay.classList.add('fade-out');
+        if (appContainer) appContainer.style.opacity = '1';
         setTimeout(function() {
-            if (pageLoadingComplete) return;
-            pageLoadingComplete = true;
-            var overlay = document.getElementById('pageLoadingOverlay');
-            var appContainer = document.getElementById('appContainer');
-            if (overlay) overlay.classList.add('fade-out');
-            if (appContainer) appContainer.style.opacity = '1';
-            setTimeout(function() {
-                if (overlay) overlay.style.display = 'none';
-            }, 500);
-        }, remaining);
+            if (overlay) overlay.style.display = 'none';
+        }, 500);
     }
-
-    // Mark data as loaded flag
-    var dataLoaded = false;
     
     // ===== ANALYTICS PAGE =====
     var analyticsPeriod = 'daily';
@@ -11415,21 +11392,7 @@
         if (e.target === this) closeCallDetailModal();
     });
 
-    // Update analytics when data loads
-    var originalLoadLeadsData2 = loadLeadsData;
-    loadLeadsData = async function() {
-        await originalLoadLeadsData2();
-        updateAnalyticsDisplay();
-    };
 
-    // One-time page refresh after 30 seconds (only on first visit per session)
-    var initialRefreshDone = sessionStorage.getItem('prio_initial_refresh');
-    if (!initialRefreshDone) {
-        sessionStorage.setItem('prio_initial_refresh', 'true');
-        setTimeout(function() {
-            window.location.reload();
-        }, 30000);
-    }
 
     // Contact Us category chip listeners
     document.querySelectorAll('.contact-chip input[name="feedbackCat"]').forEach(function(radio) {
