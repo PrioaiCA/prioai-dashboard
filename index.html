@@ -4489,7 +4489,7 @@
             var email = currentUser.email.toLowerCase();
             var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER(ARRAYJOIN({Shared With Email}))))';
 
-            // SORT PARAMETER REMOVED TO PREVENT CLOUDFLARE 10s TIMEOUT
+            // Base path without sorting to prevent Airtable calculation timeouts
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
 
             var tempLeads = [];
@@ -4521,10 +4521,10 @@
 
                 offset = data.offset || null;
 
-                // If NO cache exists (first time login), show progress to the user
+                // If NO cache exists (first time login ever), show progress text
                 if (!hasCachedData) {
                     var overlayText = document.querySelector('#pageLoadingOverlay div:last-child');
-                    if (overlayText) overlayText.textContent = 'Syncing leads... (' + tempLeads.length + ')';
+                    if (overlayText) overlayText.textContent = 'Fetching leads... (' + tempLeads.length + ')';
                 }
 
             } while (offset);
@@ -4558,7 +4558,7 @@
                 hidePageLoading();
             } else if (!isRefresh) {
                 // Returning user: update toast
-                showToast('\u2705 Up to date', 'success');
+                showToast('\u2705 Sync complete', 'success');
             }
 
             // Handle pending deep links
@@ -4584,7 +4584,9 @@
                 setTimeout(function() { loadLeadsData(isRefresh); }, 2000 * window.loadRetryCount);
             } else {
                 hidePageLoading();
-                showToast('Warning: Failed to sync latest data', 'error');
+                if (allLeads.length === 0) {
+                    showToast('Warning: Failed to load leads', 'error');
+                }
             }
         }
     }
