@@ -4481,61 +4481,91 @@
         return new Promise(function(resolve) { setTimeout(resolve, 0); });
     }
 
-    // Load leads data — SWR background sync (cache serves instant, fetch revalidates)
+    // Load leads data — resilient SWR background sync with per-page retry and progressive rendering
     async function loadLeadsData(isRefresh) {
         if (!currentUser) return;
+
+        var tempLeads = [];
 
         try {
             var email = currentUser.email.toLowerCase();
             var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER(ARRAYJOIN({Shared With Email}))))';
-
-            // Base path without sorting to prevent Airtable calculation timeouts
             var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
 
-            var tempLeads = [];
             var offset = null;
             var hasCachedData = allLeads.length > 0;
+            var pageCount = 0;
 
             if (hasCachedData && !isRefresh) {
                 showToast('\uD83D\uDD04 Syncing latest updates...', 'info');
             }
 
+            // Bulletproof Fetch Loop
             do {
                 var fetchPath = basePath + (offset ? '&offset=' + offset : '');
-                var data = await fetchAirtable(fetchPath);
+                var data = null;
+                var pageRetries = 0;
 
-                if (data.records) {
-                    data.records.forEach(function(record) {
-                        var clientEmails = record.fields['Client Email'] || [];
-                        var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
-                        var sharedWithEmails = record.fields['Shared With Email'] || [];
-                        if (!Array.isArray(sharedWithEmails)) sharedWithEmails = [sharedWithEmails];
-                        var sharedWithEmailsLower = sharedWithEmails.map(function(e) { return (e || '').toLowerCase(); });
-
-                        if (!clientEmailsLower.includes(email) && sharedWithEmailsLower.includes(email)) {
-                            record.isShared = true;
-                        }
-                    });
-                    tempLeads = tempLeads.concat(data.records);
+                // Resilient per-page retry logic
+                while (pageRetries < 3 && !data) {
+                    try {
+                        var proxyUrl = '/api/airtable?path=' + encodeURIComponent(fetchPath);
+                        var response = await fetch(proxyUrl, { headers: { 'Content-Type': 'application/json' } });
+                        if (!response.ok) throw new Error('API Error ' + response.status);
+                        data = await response.json();
+                    } catch (pageErr) {
+                        pageRetries++;
+                        console.warn('Page fetch failed, retrying...', pageErr);
+                        await new Promise(function(resolve) { setTimeout(resolve, 1000 * pageRetries); });
+                    }
                 }
 
-                offset = data.offset || null;
+                // If it completely fails after 3 retries, break the loop but keep the data we have
+                if (!data || !data.records) {
+                    console.error('Failed to fetch page after 3 retries. Stopping pagination.');
+                    break;
+                }
 
-                // If NO cache exists (first time login ever), show progress text
+                data.records.forEach(function(record) {
+                    var clientEmails = record.fields['Client Email'] || [];
+                    var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
+                    var sharedWithEmails = record.fields['Shared With Email'] || [];
+                    if (!Array.isArray(sharedWithEmails)) sharedWithEmails = [sharedWithEmails];
+                    var sharedWithEmailsLower = sharedWithEmails.map(function(e) { return (e || '').toLowerCase(); });
+
+                    if (!clientEmailsLower.includes(email) && sharedWithEmailsLower.includes(email)) {
+                        record.isShared = true;
+                    }
+                });
+                tempLeads = tempLeads.concat(data.records);
+                offset = data.offset || null;
+                pageCount++;
+
+                // Update loading text for new users
                 if (!hasCachedData) {
                     var overlayText = document.querySelector('#pageLoadingOverlay div:last-child');
                     if (overlayText) overlayText.textContent = 'Fetching leads... (' + tempLeads.length + ')';
                 }
 
+                // PROGRESSIVE RENDER: Update UI every 5 pages (500 leads) so user isn't stuck waiting
+                if (!hasCachedData && pageCount % 5 === 0) {
+                    allLeads = tempLeads.slice();
+                    updateDashboard(); // Clears skeletons early
+                    await yieldToMain();
+                    updatePrioList();
+                    await yieldToMain();
+                    if (pageCount === 5) hidePageLoading(); // Drop black overlay
+                }
+
             } while (offset);
 
-            // FINAL RENDER: All fresh data has arrived
+            // FINAL RENDER: All data arrived safely
             allLeads = tempLeads;
             cacheData();
             window.dataLoadedSuccessfully = true;
 
-            // Yield to main thread while updating UI
-            updateDashboard();
+            // Yield to main thread while updating UI to prevent freezing
+            updateDashboard(); // Final pass to ensure skeletons are gone
             await yieldToMain();
             updatePrioList();
             await yieldToMain();
@@ -4554,10 +4584,8 @@
             updateAnalyticsDisplay();
 
             if (!hasCachedData) {
-                // First time user: hide overlay now that all data is ready
                 hidePageLoading();
             } else if (!isRefresh) {
-                // Returning user: update toast
                 showToast('\u2705 Sync complete', 'success');
             }
 
@@ -4575,18 +4603,18 @@
             }
 
         } catch (err) {
-            console.error('Failed to load leads:', err);
-            updateDashboard(); // Clear skeleton states
+            console.error('Fatal sync error:', err);
+            // FALLBACK: If everything completely crashed, render whatever partial data we managed to grab
+            if (tempLeads && tempLeads.length > 0) {
+                allLeads = tempLeads;
+            }
+            updateDashboard(); // Force clear skeletons
+            hidePageLoading(); // Force drop black overlay
 
-            if (!window.loadRetryCount) window.loadRetryCount = 0;
-            if (window.loadRetryCount < 3) {
-                window.loadRetryCount++;
-                setTimeout(function() { loadLeadsData(isRefresh); }, 2000 * window.loadRetryCount);
+            if (allLeads.length === 0) {
+                showToast('Failed to load leads. Please refresh.', 'error');
             } else {
-                hidePageLoading();
-                if (allLeads.length === 0) {
-                    showToast('Warning: Failed to load leads', 'error');
-                }
+                showToast('Sync interrupted. Some data may be missing.', 'warning');
             }
         }
     }
