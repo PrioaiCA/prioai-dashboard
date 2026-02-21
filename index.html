@@ -15,7 +15,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/styles.css">
     <style>
         /* Critical inline styles for immediate rendering */
@@ -302,39 +302,389 @@
         .section-count{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;background:rgb(52,211,153);color:#000;border-radius:12px;font-size:0.75rem;font-weight:700;margin-left:8px}
         .prio-stat-value{font-family:var(--font-heading);font-size:2rem;font-weight:700;color:rgb(52,211,153)}
         
-        /* Lead Detail Modal */
-        .lead-modal{max-width:900px;width:95%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#0f0f0f 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 32px rgba(0,0,0,0.5);border-radius:16px}
-        .modal-nav-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 150ms ease;z-index:10}
-        .modal-nav-arrow:hover{background:rgba(52,211,153,0.2);border-color:rgb(52,211,153)}
+        /* ===== BLACK LIQUID GLASS MODAL ===== */
+
+        /* Keyframes */
+        @keyframes borderFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        @keyframes pulseGlow{0%,100%{box-shadow:0 0 6px rgba(0,230,118,0.5)}50%{box-shadow:0 0 14px rgba(0,230,118,0.8),0 0 30px rgba(0,230,118,0.2)}}
+        @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes modalIn{from{opacity:0;transform:scale(0.88) translateY(30px);filter:blur(20px)}to{opacity:1;transform:scale(1) translateY(0);filter:blur(0)}}
+        @keyframes causticShift{0%,100%{opacity:0.5}25%{opacity:0.7}50%{opacity:0.4}75%{opacity:0.65}}
+        @keyframes greenPulse{0%,100%{opacity:0.5}50%{opacity:0.8}}
+        @keyframes pulse-recording{0%,100%{opacity:1}50%{opacity:0.5}}
+
+        /* Nav arrows */
+        .modal-nav-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 250ms ease;z-index:10;backdrop-filter:blur(20px)}
+        .modal-nav-arrow:hover{background:rgba(0,230,118,0.15);border-color:rgba(0,230,118,0.3);box-shadow:0 0 20px rgba(0,230,118,0.1)}
         .modal-nav-arrow:disabled{opacity:0.3;cursor:not-allowed}
-        .modal-nav-arrow:disabled:hover{background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.2)}
+        .modal-nav-arrow:disabled:hover{background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.15);box-shadow:none}
         .modal-nav-prev{left:calc(50% - 520px)}
         .modal-nav-next{right:calc(50% - 520px)}
         @media(max-width:1100px){.modal-nav-arrow{display:none}}
-        .lead-modal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)}
-        .modal-name-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+
+        /* Outer animated border wrapper */
+        .glass-modal-border{
+            border-radius:28px;
+            padding:1px;
+            background:linear-gradient(160deg,rgba(0,230,118,0.35) 0%,rgba(0,230,118,0.05) 20%,rgba(255,255,255,0.04) 40%,rgba(0,0,0,0.5) 60%,rgba(0,230,118,0.08) 80%,rgba(0,230,118,0.3) 100%);
+            background-size:300% 300%;
+            animation:borderFlow 12s ease infinite;
+            max-width:680px;width:95%;max-height:90vh;
+            filter:drop-shadow(0 35px 70px rgba(0,0,0,0.7)) drop-shadow(0 0 100px rgba(0,230,118,0.04));
+        }
+
+        /* Main glass card */
+        .glass-modal-card{
+            position:relative;
+            background:linear-gradient(160deg,rgba(12,12,12,0.92) 0%,rgba(8,8,8,0.95) 30%,rgba(10,10,10,0.93) 60%,rgba(6,6,6,0.96) 100%);
+            backdrop-filter:blur(60px) saturate(1.2) brightness(0.85);
+            border-radius:27px;
+            overflow:hidden;
+            font-family:'DM Sans',sans-serif;
+        }
+        /* Top specular highlight */
+        .glass-modal-card::before{
+            content:'';position:absolute;top:0;left:8%;right:8%;height:1px;z-index:2;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15) 15%,rgba(255,255,255,0.35) 40%,rgba(0,230,118,0.2) 50%,rgba(255,255,255,0.35) 60%,rgba(255,255,255,0.15) 85%,transparent);
+            pointer-events:none;
+        }
+        /* Surface gradient */
+        .glass-modal-card::after{
+            content:'';position:absolute;top:0;left:0;right:0;height:45%;z-index:1;
+            background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,rgba(255,255,255,0.008) 50%,transparent 100%);
+            border-radius:27px 27px 0 0;pointer-events:none;
+        }
+
+        /* Mouse-follow refraction layer */
+        .glass-refraction{position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:27px;transition:all 0.6s cubic-bezier(0.25,0.1,0.25,1)}
+        /* Green caustic light layer */
+        .glass-caustic{position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:27px;mix-blend-mode:screen;animation:causticShift 8s ease-in-out infinite;transition:all 0.6s cubic-bezier(0.25,0.1,0.25,1)}
+        /* Bottom green ambient glow */
+        .glass-ambient-glow{position:absolute;bottom:0;left:15%;right:15%;height:40%;z-index:1;pointer-events:none;background:radial-gradient(ellipse at bottom,rgba(0,230,118,0.025) 0%,transparent 70%)}
+
+        /* Inner content */
+        .glass-modal-inner{
+            position:relative;z-index:3;
+            max-height:90vh;overflow-y:auto;
+            padding:32px 32px 28px;
+            scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.08) transparent;
+        }
+        .glass-modal-inner::-webkit-scrollbar{width:6px}
+        .glass-modal-inner::-webkit-scrollbar-track{background:transparent}
+        .glass-modal-inner::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+
+        /* 1. Header */
+        .glass-modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
+        .glass-header-left{display:flex;flex-direction:column;gap:10px}
         .modal-prio-icon{width:28px;height:28px;border-radius:8px}
-        .lead-modal-title h2{font-family:var(--font-heading);font-size:1.4rem;font-weight:600;margin:0;color:#FFFFFF}
-        .lead-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
-        .btn-prio-toggle{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
-        .btn-prio-toggle.active{background:#f59e0b;color:#000}
-        .btn-prio-toggle:hover{background:rgba(245,158,11,0.25);transform:scale(1.02);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
-        .btn-send-back{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
-        .btn-send-back:hover{background:rgba(52,211,153,0.25);transform:scale(1.02);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
-        .btn-dnc{padding:10px 16px;font-size:0.8125rem;font-weight:600;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease}
-        .btn-dnc:hover{background:rgba(239,68,68,0.25);transform:scale(1.02);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
-        .notes-input-container{position:relative}
-        .notes-action-row{display:flex;gap:10px;margin-top:12px;justify-content:center;align-items:center}
-        .voice-input-btn{width:48px;height:48px;border-radius:12px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 150ms ease}
-        .voice-input-btn:hover{background:rgba(52,211,153,0.15);border-color:rgb(52,211,153);color:rgb(52,211,153)}
-        .voice-input-btn.recording{background:rgba(239,68,68,0.2);border-color:#ef4444;color:#ef4444;animation:pulse-recording 1.5s infinite}
-        .voice-input-btn svg{width:22px;height:22px}
-        @keyframes pulse-recording{0%,100%{opacity:1}50%{opacity:0.5}}
-        .polish-notes-btn{padding:12px 24px;border-radius:20px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border:none;color:white;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 150ms ease;display:flex;align-items:center;gap:8px}
-        .polish-notes-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
-        .polish-notes-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
-        .notes-action-row .btn{padding:12px 24px;font-size:0.9375rem;border-radius:20px;transition:all 150ms ease}
-        .notes-action-row .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+        .glass-lead-name{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:600;color:#fff;margin:0;line-height:1.2}
+        .glass-status-badge{
+            display:inline-flex;align-items:center;gap:8px;
+            background:linear-gradient(150deg,rgba(0,230,118,0.12),rgba(0,0,0,0.3));
+            border:1px solid rgba(0,230,118,0.2);color:#00e676;
+            border-radius:100px;padding:5px 14px;font-size:12px;font-weight:500;
+            text-shadow:0 0 12px rgba(0,230,118,0.4);
+            box-shadow:inset 0 1px 0 rgba(0,230,118,0.1),0 0 20px rgba(0,230,118,0.08);
+            width:fit-content;
+        }
+        .glass-status-badge::before{
+            content:'';width:6px;height:6px;border-radius:50%;background:#00e676;flex-shrink:0;
+            animation:pulseGlow 2s ease-in-out infinite;
+        }
+        .glass-close-btn{
+            width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;
+            background:linear-gradient(150deg,rgba(255,255,255,0.06),rgba(0,0,0,0.3));
+            backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,0.07);
+            color:rgba(255,255,255,0.5);font-size:20px;
+            display:flex;align-items:center;justify-content:center;
+            transition:all 300ms ease;flex-shrink:0;margin-top:4px;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),0 2px 8px rgba(0,0,0,0.3);
+        }
+        .glass-close-btn:hover{
+            color:#fff;transform:rotate(90deg);
+            background:linear-gradient(150deg,rgba(255,255,255,0.1),rgba(0,0,0,0.3));
+            border-color:rgba(255,255,255,0.12);
+        }
+
+        /* 2. Action Pills */
+        .glass-action-pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+        .glass-pill{
+            position:relative;
+            background:linear-gradient(150deg,rgba(255,255,255,0.06) 0%,rgba(0,0,0,0.3) 100%);
+            backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,0.07);
+            border-radius:100px;padding:8px 18px;
+            color:rgba(255,255,255,0.55);font-size:13px;font-weight:500;
+            font-family:'DM Sans',sans-serif;
+            cursor:pointer;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),inset 0 -1px 0 rgba(0,0,0,0.3),0 2px 8px rgba(0,0,0,0.3);
+            transition:all 250ms ease;
+        }
+        .glass-pill::before{
+            content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+        }
+        .glass-pill:hover{
+            transform:translateY(-2px);
+            background:linear-gradient(150deg,rgba(255,255,255,0.09) 0%,rgba(0,0,0,0.25) 100%);
+            border-color:rgba(255,255,255,0.12);
+            color:rgba(255,255,255,0.75);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 4px 16px rgba(0,0,0,0.4);
+        }
+        /* PRIO pill */
+        .glass-pill-prio{
+            background:linear-gradient(150deg,rgba(0,230,118,0.12),rgba(0,0,0,0.35));
+            border-color:rgba(0,230,118,0.18);color:#00e676;
+            text-shadow:0 0 15px rgba(0,230,118,0.3);
+            box-shadow:inset 0 1px 0 rgba(0,230,118,0.1),0 0 25px rgba(0,230,118,0.05),0 2px 8px rgba(0,0,0,0.3);
+        }
+        .glass-pill-prio::before{background:linear-gradient(90deg,transparent,rgba(0,230,118,0.15),transparent)}
+        .glass-pill-prio:hover{
+            background:linear-gradient(150deg,rgba(0,230,118,0.18),rgba(0,0,0,0.3));
+            border-color:rgba(0,230,118,0.3);
+            box-shadow:inset 0 1px 0 rgba(0,230,118,0.15),0 0 30px rgba(0,230,118,0.1),0 4px 16px rgba(0,0,0,0.4);
+            transform:translateY(-2px);color:#00e676;
+        }
+        .glass-pill-prio.active{
+            background:linear-gradient(150deg,rgba(0,230,118,0.2),rgba(0,0,0,0.3));
+            border-color:rgba(0,230,118,0.35);
+            box-shadow:inset 0 1px 0 rgba(0,230,118,0.2),0 0 35px rgba(0,230,118,0.15),0 2px 8px rgba(0,0,0,0.3);
+        }
+        /* DNC pill */
+        .glass-pill-dnc{border-color:rgba(239,68,68,0.12);color:rgba(239,68,68,0.5)}
+        .glass-pill-dnc:hover{border-color:rgba(239,68,68,0.25);color:rgba(239,68,68,0.7);transform:translateY(-2px)}
+        /* Share shared state */
+        .glass-pill.shared{border-color:rgba(0,230,118,0.18);color:#00e676;text-shadow:0 0 10px rgba(0,230,118,0.2)}
+
+        /* 3. Info Grid */
+        .glass-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+        .glass-info-panel{
+            position:relative;
+            display:flex;flex-direction:column;gap:6px;padding:14px 18px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 50%,rgba(255,255,255,0.02) 100%);
+            backdrop-filter:blur(30px) brightness(0.9);
+            border:1px solid rgba(255,255,255,0.06);border-radius:16px;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.4),0 4px 12px rgba(0,0,0,0.4);
+        }
+        .glass-info-panel::before{
+            content:'';position:absolute;top:0;left:12%;right:12%;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
+        }
+        .glass-info-label{font-size:10px;font-weight:500;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1.5px}
+        .glass-info-value{font-size:14px;font-weight:500;color:rgba(255,255,255,0.85)}
+        .glass-info-value a{color:rgba(255,255,255,0.85);text-decoration:none}
+        .glass-info-value a:hover{color:#00e676}
+        .glass-btn-schedule{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:4px 10px;font-size:11px;font-weight:500;
+            background:linear-gradient(150deg,rgba(0,230,118,0.1),rgba(0,0,0,0.3));
+            border:1px solid rgba(0,230,118,0.15);border-radius:100px;
+            color:#00e676;cursor:pointer;transition:all 200ms ease;
+            font-family:'DM Sans',sans-serif;
+        }
+        .glass-btn-schedule:hover{background:linear-gradient(150deg,rgba(0,230,118,0.18),rgba(0,0,0,0.3));border-color:rgba(0,230,118,0.25)}
+
+        /* 4. Divider */
+        .glass-divider{height:1px;margin:0 0 24px;background:linear-gradient(90deg,transparent 3%,rgba(255,255,255,0.04) 20%,rgba(0,230,118,0.06) 50%,rgba(255,255,255,0.04) 80%,transparent 97%)}
+
+        /* 5 & 7. Tab Bars */
+        .glass-tab-bar{
+            display:inline-flex;
+            background:linear-gradient(150deg,rgba(255,255,255,0.03),rgba(0,0,0,0.3));
+            border-radius:100px;padding:3px;
+            border:1px solid rgba(255,255,255,0.05);
+            box-shadow:inset 0 2px 6px rgba(0,0,0,0.4);
+            margin-bottom:14px;
+        }
+        .glass-tab{
+            padding:7px 18px;border-radius:100px;border:1px solid transparent;
+            background:transparent;color:rgba(255,255,255,0.28);
+            font-size:13px;font-weight:500;cursor:pointer;
+            transition:all 200ms ease;font-family:'DM Sans',sans-serif;
+        }
+        .glass-tab:hover{color:rgba(255,255,255,0.5)}
+        .glass-tab.active{
+            background:linear-gradient(150deg,rgba(255,255,255,0.07),rgba(0,0,0,0.2));
+            color:rgba(255,255,255,0.85);
+            border:1px solid rgba(255,255,255,0.08);
+            box-shadow:0 2px 10px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        /* Tab content */
+        .glass-tab-content{animation:slideUp 0.3s ease}
+        .glass-section{margin-bottom:24px}
+        .glass-section:last-child{margin-bottom:0}
+
+        /* Inner panels */
+        .glass-inner-panel{
+            position:relative;padding:16px 18px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 50%,rgba(255,255,255,0.02) 100%);
+            backdrop-filter:blur(30px) brightness(0.9);
+            border:1px solid rgba(255,255,255,0.06);border-radius:16px;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.4),0 4px 12px rgba(0,0,0,0.4);
+        }
+        .glass-inner-panel::before{
+            content:'';position:absolute;top:0;left:12%;right:12%;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
+        }
+        .glass-ai-date{font-size:11px;font-weight:400;color:rgba(255,255,255,0.35);margin-bottom:8px;display:block}
+        .glass-summary-text{font-size:13px;font-weight:400;line-height:1.7;color:rgba(255,255,255,0.6);white-space:pre-wrap}
+        .glass-transcript-text{font-size:13px;font-weight:400;line-height:1.7;color:rgba(255,255,255,0.6);max-height:250px;overflow-y:auto;white-space:pre-wrap}
+        .glass-transcript-text .speaker-ai{color:#00e676;font-weight:600}
+        .glass-transcript-text .speaker-prospect{color:rgba(255,255,255,0.9);font-weight:600}
+        .glass-transcript-text .lead-transcript-line{padding-left:12px;margin-bottom:10px}
+
+        /* Notes list in glass modal */
+        #leadModal .lead-notes-list{max-height:150px;overflow-y:auto;margin-bottom:12px}
+        #leadModal .lead-note-item{
+            padding:10px 14px;margin-bottom:6px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.02),rgba(0,0,0,0.2));
+            border:1px solid rgba(255,255,255,0.04);border-radius:12px;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
+            font-size:13px;position:relative;
+        }
+        #leadModal .lead-note-item .note-content{color:rgba(255,255,255,0.7);margin-bottom:4px}
+        #leadModal .lead-note-item .note-date{font-size:11px;color:rgba(255,255,255,0.25)}
+        #leadModal .lead-note-item .note-actions{position:absolute;bottom:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity 150ms ease}
+        #leadModal .lead-note-item:hover .note-actions{opacity:1}
+
+        /* Notes input */
+        .glass-notes-input-container{position:relative}
+        .glass-textarea{
+            width:100%;min-height:80px;padding:14px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.025),rgba(0,0,0,0.4));
+            border:1px solid rgba(255,255,255,0.06);border-radius:14px;
+            color:rgba(255,255,255,0.75);font-size:14px;font-family:'DM Sans',sans-serif;
+            resize:vertical;
+            box-shadow:inset 0 2px 8px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.04);
+            transition:all 250ms ease;
+        }
+        .glass-textarea:focus{
+            outline:none;
+            border-color:rgba(0,230,118,0.25);
+            box-shadow:inset 0 2px 8px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.04),0 0 25px rgba(0,230,118,0.05);
+        }
+        .glass-textarea::placeholder{color:rgba(255,255,255,0.2)}
+        .glass-notes-actions{display:flex;gap:10px;margin-top:12px;align-items:center}
+
+        /* Buttons */
+        .glass-btn-primary{
+            position:relative;
+            padding:10px 22px;border-radius:100px;border:none;
+            background:linear-gradient(135deg,rgba(0,230,118,0.9),rgba(16,185,129,0.85));
+            color:#020a06;font-size:13px;font-weight:600;
+            font-family:'DM Sans',sans-serif;cursor:pointer;
+            box-shadow:0 4px 20px rgba(0,230,118,0.2),0 0 40px rgba(0,230,118,0.08),inset 0 1px 0 rgba(255,255,255,0.2);
+            transition:all 250ms ease;
+        }
+        .glass-btn-primary::before{
+            content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+        }
+        .glass-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,230,118,0.3),0 0 50px rgba(0,230,118,0.12),inset 0 1px 0 rgba(255,255,255,0.2)}
+        .glass-btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+        .glass-btn-dark{
+            position:relative;
+            padding:10px 18px;border-radius:100px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.05),rgba(0,0,0,0.3));
+            color:rgba(255,255,255,0.55);font-size:13px;font-weight:500;
+            font-family:'DM Sans',sans-serif;cursor:pointer;
+            border:1px solid rgba(255,255,255,0.06);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),inset 0 -1px 0 rgba(0,0,0,0.3),0 2px 8px rgba(0,0,0,0.3);
+            transition:all 250ms ease;display:flex;align-items:center;justify-content:center;
+        }
+        .glass-btn-dark:hover{
+            transform:translateY(-1px);
+            background:linear-gradient(150deg,rgba(255,255,255,0.08),rgba(0,0,0,0.25));
+            color:rgba(255,255,255,0.75);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 4px 12px rgba(0,0,0,0.4);
+        }
+        /* Voice input recording state override */
+        .glass-btn-dark.voice-input-btn{width:40px;height:40px;padding:0;border-radius:12px}
+        .glass-btn-dark.voice-input-btn svg{width:18px;height:18px}
+        .glass-btn-dark.recording{background:rgba(239,68,68,0.2);border-color:#ef4444;color:#ef4444;animation:pulse-recording 1.5s infinite}
+
+        /* Call attempts section */
+        .glass-attempts-list{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto;margin-bottom:12px}
+        #leadModal .lead-attempt-item{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:12px 16px;border-radius:12px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.02),rgba(0,0,0,0.2));
+            border:1px solid rgba(255,255,255,0.04);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
+            font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:0;
+        }
+        #leadModal .lead-attempt-item .attempt-result{color:#00e676;text-shadow:0 0 10px rgba(0,230,118,0.3)}
+        .glass-log-attempt-btn{
+            width:100%;padding:12px;border-radius:14px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.02),rgba(0,0,0,0.3));
+            border:1px dashed rgba(255,255,255,0.06);
+            color:rgba(255,255,255,0.22);font-size:13px;font-weight:500;
+            font-family:'DM Sans',sans-serif;cursor:pointer;
+            transition:all 250ms ease;
+        }
+        .glass-log-attempt-btn:hover{border-color:rgba(0,230,118,0.12);color:rgba(255,255,255,0.4)}
+
+        /* Lead Modal Overlay & Animation */
+        #leadModal{display:flex !important;justify-content:center;align-items:center;padding:24px;visibility:hidden;opacity:0;pointer-events:none;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:opacity 300ms ease,visibility 300ms ease,backdrop-filter 300ms ease,background 300ms ease}
+        #leadModal.active{visibility:visible;opacity:1;pointer-events:auto;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px)}
+        #leadModal .glass-modal-border{transform:scale(0.88) translateY(30px);opacity:0;filter:blur(20px);transition:transform 400ms cubic-bezier(0.16,1,0.3,1),opacity 400ms ease,filter 400ms ease}
+        #leadModal.active .glass-modal-border{transform:scale(1) translateY(0);opacity:1;filter:blur(0)}
+
+        /* Booking display helpers */
+        .booked-time-display{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .booked-time-value{font-weight:500;color:rgba(255,255,255,0.85)}
+        .btn-reschedule{background:none;border:none;color:rgba(0,230,118,0.6);cursor:pointer;font-size:11px;font-weight:500;padding:2px 6px;transition:all 150ms ease;font-family:'DM Sans',sans-serif}
+        .btn-reschedule:hover{color:#00e676}
+        .btn-delete-booking,.btn-delete-attempt,.btn-delete-note{background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
+        .btn-delete-booking:hover,.btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        .btn-edit-note{background:none;border:none;color:rgba(59,130,246,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
+        .btn-edit-note:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
+        .btn-edit-booking{background:none;border:none;color:rgba(59,130,246,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
+        .btn-edit-booking:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
+
+        /* Note edit input inside modal */
+        #leadModal .lead-note-item .note-edit-input{
+            width:100%;min-height:60px;padding:8px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.025),rgba(0,0,0,0.4));
+            border:1px solid rgba(0,230,118,0.3);border-radius:8px;
+            color:rgba(255,255,255,0.8);font-size:13px;resize:vertical;margin-bottom:8px;
+            font-family:'DM Sans',sans-serif;
+        }
+        #leadModal .lead-note-item .note-edit-actions{display:flex;gap:8px;justify-content:flex-end}
+        #leadModal .lead-note-item .note-edit-actions button{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+        #leadModal .lead-note-item .btn-note-save{background:#00e676;border:none;color:#020a06}
+        #leadModal .lead-note-item .btn-note-cancel{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}
+
+        /* Glass status menu dropdown */
+        .glass-status-menu{
+            display:none;position:absolute;z-index:10;margin-top:6px;
+            background:linear-gradient(160deg,rgba(12,12,12,0.96),rgba(6,6,6,0.98));
+            border:1px solid rgba(255,255,255,0.08);border-radius:14px;
+            padding:6px;min-width:180px;
+            box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.05);
+            backdrop-filter:blur(40px);
+        }
+        .glass-status-menu.open{display:block}
+        .glass-status-option{
+            display:flex;align-items:center;gap:8px;
+            width:100%;padding:8px 12px;border:none;border-radius:10px;
+            background:transparent;color:rgba(255,255,255,0.6);
+            font-size:13px;font-weight:400;font-family:'DM Sans',sans-serif;
+            cursor:pointer;transition:all 150ms ease;text-align:left;
+        }
+        .glass-status-option:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.9)}
+        .glass-status-option .status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+        /* Responsive */
+        @media(max-width:640px){
+            .glass-info-grid{grid-template-columns:1fr;gap:8px}
+            .glass-modal-inner{padding:24px 20px 20px}
+            .glass-lead-name{font-size:22px}
+            .glass-action-pills{gap:8px}
+            .glass-pill{padding:7px 14px;font-size:12px}
+        }
         .polish-preview-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1200;opacity:0;visibility:hidden;transition:all 150ms ease}
         .polish-preview-modal.active{opacity:1;visibility:visible}
         .polish-preview-content{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
@@ -391,12 +741,9 @@
         .send-ai-confirm:hover{background:rgb(45,190,135)}
         .send-ai-confirm:disabled{opacity:0.5;cursor:not-allowed}
         @media(max-width:600px){.polish-comparison{grid-template-columns:1fr}}
-        .lead-modal-body{padding:24px;overflow-y:auto;flex:1}
-        .lead-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;padding:0}
-        .lead-info-item{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px}
-        .lead-info-item label{display:block;font-size:0.75rem;font-weight:400;color:#707070;margin-bottom:0;white-space:nowrap}
-        .lead-info-item .value{font-size:0.875rem;font-weight:600;color:#FFFFFF;text-align:right}
+        /* Legacy lead modal body styles (overridden by glass modal) */
         .send-ai-calendar{margin-top:16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px}
+        /* Legacy lead-section styles kept for search modal compatibility */
         .lead-section{margin-bottom:20px;padding:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
         .lead-section h3{font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#FFFFFF}
         .lead-section.collapsible-empty{padding:0;background:none;border:none;margin-bottom:12px}
@@ -422,8 +769,7 @@
         .lead-note-item .btn-note-save{background:rgb(52,211,153);border:none;color:#000}
         .lead-note-item .btn-note-cancel{background:#333;border:1px solid rgba(255,255,255,0.2);color:#fff}
         .lead-note-date{font-size:0.6875rem;font-weight:400;color:#707070;margin-top:4px}
-        #modalNotesInput{width:100%;min-height:80px;padding:12px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:12px;color:#fff;font-size:0.875rem;resize:vertical;margin-bottom:8px;transition:border-color 150ms ease}
-#modalNotesInput:focus{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent)}
+        /* #modalNotesInput styles now handled by .glass-textarea */
         .lead-notes-actions{display:flex;justify-content:flex-end}
         .attempts-count{background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:500}
         .lead-attempts-list{max-height:120px;overflow-y:auto}
@@ -436,18 +782,19 @@
         /* Lead Modal Centered Animation */
         #leadModal{display:flex !important;justify-content:center;align-items:center;padding:24px;visibility:hidden;opacity:0;pointer-events:none;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:opacity 150ms ease,visibility 150ms ease,backdrop-filter 150ms ease,background 150ms ease}
         #leadModal.active{visibility:visible;opacity:1;pointer-events:auto;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px)}
-        #leadModal .lead-modal{max-height:90vh;height:auto;border-radius:16px;transform:scale(0.95);opacity:0;transition:transform 150ms ease,opacity 150ms ease}
-        #leadModal.active .lead-modal{transform:scale(1);opacity:1;transition:transform 150ms ease,opacity 150ms ease}
+        /* Old lead-modal animation removed - now handled by glass-modal-border */
         /* AI Summary Section */
+        /* AI Summary Section - glass modal overrides */
+        #leadModal #aiSummarySection{border-left:none;background:none}
         #aiSummarySection{border-left:3px solid #38BDF8;background:rgba(56,189,248,0.05)}
         #aiSummarySection .lead-summary-content{font-size:14px;font-weight:400;line-height:1.6;color:#B0B0B0}
         .ai-date-pill{font-size:11px !important;font-weight:400 !important;color:rgba(255,255,255,0.45) !important;background:rgba(255,255,255,0.06) !important;padding:2px 10px !important;border-radius:12px !important;display:inline-block}
         #aiSummarySection .ai-status-badge{font-size:11px !important;padding:2px 10px !important;border-radius:12px !important;width:auto !important;height:auto !important;opacity:0.75}
         /* Notes Timeline */
-        #modalNotesList:has(.lead-note-item){position:relative;padding-left:24px}
-        #modalNotesList:has(.lead-note-item)::before{content:'';position:absolute;left:7px;top:12px;bottom:12px;width:1px;background:#2a2a2a}
-        #modalNotesList .lead-note-item{position:relative;background:transparent;border-radius:0;padding:8px 12px;margin-bottom:0}
-        #modalNotesList .lead-note-item::before{content:'';position:absolute;left:-21px;top:10px;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2)}
+        /* Notes timeline - glass modal overrides old timeline styles */
+        #leadModal #modalNotesList:has(.lead-note-item){position:relative;padding-left:0}
+        #leadModal #modalNotesList:has(.lead-note-item)::before{display:none}
+        #leadModal #modalNotesList .lead-note-item::before{display:none}
         /* Transcript Speaker Colors */
         .lead-transcript{line-height:1.5}
         .lead-transcript .speaker-ai{color:#6EE7A0;font-weight:600}
@@ -556,7 +903,7 @@
         .calendar-day.other-month{opacity:0.3}
         .calendar-day.past{color:rgba(255,255,255,0.3);cursor:not-allowed}
         .calendar-day.empty{cursor:default}
-        @media(max-width:640px){.lead-info-grid{grid-template-columns:1fr;gap:8px}.lead-info-item{padding:10px 16px}}
+        /* old lead-info-grid responsive handled by glass-info-grid now */
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -3348,45 +3695,33 @@
 
     <!-- Lead Detail Modal -->
     <div class="modal-overlay" id="leadModal">
-        <button class="modal-nav-arrow modal-nav-prev" id="modalNavPrev" title="Previous lead">‹</button>
-        <button class="modal-nav-arrow modal-nav-next" id="modalNavNext" title="Next lead">›</button>
-        <div class="modal lead-modal">
-            <div class="lead-modal-header">
-                <div class="lead-modal-title">
-                    <div class="modal-name-row">
-                        <img src="/assets/favicon.png" class="modal-prio-icon" id="modalPrioIcon" style="display:none;">
-                        <h2 id="modalLeadName">Lead Name</h2>
-                    </div>
-                    <div class="lead-modal-actions">
-                        <button class="btn-share" id="modalShareBtn" title="Share with another agent">
-                            🔗 Share
-                        </button>
-                        <button class="btn-prio-toggle" id="modalPrioBtn" title="Toggle PRIO status">
-                            ⭐ PRIO
-                        </button>
-                        <button class="btn-send-back" id="modalSendBackBtn">
-                            🤖 Send to AI
-                        </button>
-                        <button class="btn-takeover-modal" id="modalTakeOverBtn" style="display:none;">
-                            👤 Take Over
-                        </button>
-                        <button class="btn-dnc" id="modalDNCBtn" title="Mark as Do Not Call">
-                            🚫 DNC
-                        </button>
-                    </div>
-                </div>
-                <button class="modal-close" id="leadModalClose">&times;</button>
-            </div>
-            <div class="lead-modal-body">
-                <div class="lead-info-grid">
-                    <div class="lead-info-item">
-                        <label>📞 Phone</label>
-                        <div class="value" id="modalPhone">-</div>
-                    </div>
-                    <div class="lead-info-item">
-                        <label>📊 Status</label>
-                        <div class="value">
-                            <div class="custom-status-dropdown" id="statusDropdownWrapper">
+        <button class="modal-nav-arrow modal-nav-prev" id="modalNavPrev" title="Previous lead">&#8249;</button>
+        <button class="modal-nav-arrow modal-nav-next" id="modalNavNext" title="Next lead">&#8250;</button>
+        <!-- Outer animated border wrapper -->
+        <div class="glass-modal-border">
+            <!-- Main glass card -->
+            <div class="glass-modal-card" id="glassModalCard">
+                <!-- Mouse-follow refraction layer -->
+                <div class="glass-refraction" id="glassRefraction"></div>
+                <!-- Green caustic light layer -->
+                <div class="glass-caustic" id="glassCaustic"></div>
+                <!-- Bottom green ambient glow -->
+                <div class="glass-ambient-glow"></div>
+
+                <!-- Inner content wrapper (above glass layers) -->
+                <div class="glass-modal-inner">
+                    <!-- 1. Header -->
+                    <div class="glass-modal-header">
+                        <div class="glass-header-left">
+                            <img src="/assets/favicon.png" class="modal-prio-icon" id="modalPrioIcon" style="display:none;">
+                            <h2 class="glass-lead-name" id="modalLeadName">Lead Name</h2>
+                            <div class="glass-status-badge" id="glassStatusBadge" onclick="toggleGlassStatusMenu(event)" style="cursor:pointer;">
+                                <span class="glass-status-text" id="glassStatusText">New Lead</span>
+                                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="opacity:0.5;margin-left:2px;"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <div class="glass-status-menu" id="glassStatusMenu"></div>
+                            <!-- Hidden status elements for compatibility -->
+                            <div class="custom-status-dropdown" id="statusDropdownWrapper" style="display:none;">
                                 <button type="button" class="status-dropdown-trigger" id="statusDropdownTrigger" onclick="toggleStatusDropdown()">
                                     <span class="status-dot" id="statusDot"></span>
                                     <span id="statusDropdownLabel">New Lead</span>
@@ -3407,49 +3742,94 @@
                                 <option value="Deal Closed">Deal Closed</option>
                             </select>
                         </div>
+                        <button class="glass-close-btn" id="leadModalClose">&times;</button>
                     </div>
-                    <div class="lead-info-item">
-                        <label>📅 Last Updated</label>
-                        <div class="value" id="modalLastCalled">-</div>
+
+                    <!-- 2. Action Pills Row -->
+                    <div class="glass-action-pills">
+                        <button class="glass-pill" id="modalShareBtn" title="Share with another agent">Share</button>
+                        <button class="glass-pill glass-pill-prio" id="modalPrioBtn" title="Toggle PRIO status">PRIO</button>
+                        <button class="glass-pill" id="modalSendBackBtn">Send to AI</button>
+                        <button class="glass-pill" id="modalTakeOverBtn" style="display:none;">Take Over</button>
+                        <button class="glass-pill glass-pill-dnc" id="modalDNCBtn" title="Mark as Do Not Call">DNC</button>
                     </div>
-                    <div class="lead-info-item">
-                        <label>⏰ Booked Time</label>
-                        <div class="value" id="modalBookedTime">
-                            <span id="modalBookedTimeValue">-</span>
-                            <button class="btn-schedule" id="modalScheduleBtn" style="display:none;">📅 Schedule</button>
+
+                    <!-- 3. Info Grid (2x2) -->
+                    <div class="glass-info-grid">
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">PHONE</span>
+                            <span class="glass-info-value" id="modalPhone">-</span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">BOOKED TIME</span>
+                            <span class="glass-info-value" id="modalBookedTime">
+                                <span id="modalBookedTimeValue">-</span>
+                                <button class="glass-btn-schedule" id="modalScheduleBtn" style="display:none;">Schedule</button>
+                            </span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">LAST UPDATED</span>
+                            <span class="glass-info-value" id="modalLastCalled">-</span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">CALL ATTEMPTS</span>
+                            <span class="glass-info-value" id="modalAttemptsDisplay">0</span>
                         </div>
                     </div>
-                </div>
 
-                <div class="lead-section" id="aiSummarySection">
-                    <h3 style="display:flex;align-items:center;gap:8px;">🤖 AI Summary <span id="modalAICallDate" class="ai-date-pill" style="white-space:nowrap;"></span><span id="modalAIStatusBadge" style="display:none;"></span></h3>
-                    <div class="lead-summary-content" id="modalSummary">No summary available</div>
-                </div>
+                    <!-- 4. Divider -->
+                    <div class="glass-divider"></div>
 
-                <div class="lead-section">
-                    <h3>📝 Your Notes</h3>
-                    <div class="lead-notes-list" id="modalNotesList"></div>
-                    <div class="notes-input-container">
-                        <textarea id="modalNotesInput" placeholder="Add a note about this lead..."></textarea>
-                        <div class="notes-action-row">
-                            <button id="voiceInputBtn" class="voice-input-btn" title="Voice to text">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-                            </button>
-                            <button id="polishNotesBtn" class="polish-notes-btn" title="Polish with AI">✨ Polish & Save</button>
-                            <button class="btn btn-primary" id="modalSaveNoteBtn">💾 Save</button>
+                    <!-- 5. Section 1: AI Summary / Transcript (pill toggle) -->
+                    <div class="glass-section">
+                        <div class="glass-tab-bar">
+                            <button class="glass-tab active" data-tab="summary" onclick="switchGlassTab(this, 'summary')">AI Summary</button>
+                            <button class="glass-tab" data-tab="transcript" onclick="switchGlassTab(this, 'transcript')">Transcript</button>
+                        </div>
+                        <div class="glass-tab-content" id="glassTabSummary">
+                            <div class="glass-inner-panel" id="aiSummarySection">
+                                <span id="modalAICallDate" class="glass-ai-date" style="white-space:nowrap;"></span>
+                                <span id="modalAIStatusBadge" style="display:none;"></span>
+                                <div class="glass-summary-text" id="modalSummary">No summary available</div>
+                            </div>
+                        </div>
+                        <div class="glass-tab-content" id="glassTabTranscript" style="display:none;">
+                            <div class="glass-inner-panel">
+                                <div class="glass-transcript-text" id="modalTranscript">No transcript available</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="lead-section" id="callAttemptsSection">
-                    <h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">0</span></h3>
-                    <div class="lead-attempts-list" id="modalAttemptsList"></div>
-                    <button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>
-                </div>
+                    <!-- 6. Divider -->
+                    <div class="glass-divider"></div>
 
-                <div class="lead-section">
-                    <h3>🎙️ Transcript</h3>
-                    <div class="lead-transcript" id="modalTranscript">No transcript available</div>
+                    <!-- 7. Section 2: Notes / Call Attempts (pill toggle) -->
+                    <div class="glass-section">
+                        <div class="glass-tab-bar">
+                            <button class="glass-tab active" data-tab="notes" onclick="switchGlassTab(this, 'notes')">Notes</button>
+                            <button class="glass-tab" data-tab="attempts" onclick="switchGlassTab(this, 'attempts')">Call Attempts</button>
+                        </div>
+                        <div class="glass-tab-content" id="glassTabNotes">
+                            <div class="lead-notes-list" id="modalNotesList"></div>
+                            <div class="glass-notes-input-container">
+                                <textarea id="modalNotesInput" class="glass-textarea" placeholder="Add a note about this lead..."></textarea>
+                                <div class="glass-notes-actions">
+                                    <button id="voiceInputBtn" class="glass-btn-dark voice-input-btn" title="Voice to text">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                                    </button>
+                                    <button id="polishNotesBtn" class="glass-btn-primary polish-notes-btn" title="Polish with AI">Polish & Save</button>
+                                    <button class="glass-btn-dark" id="modalSaveNoteBtn">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-tab-content" id="glassTabAttempts" style="display:none;">
+                            <div id="callAttemptsSection">
+                                <div class="glass-attempts-list" id="modalAttemptsList"></div>
+                                <span class="attempts-count" id="modalAttemptsCount" style="display:none;">0</span>
+                                <button class="glass-log-attempt-btn" id="modalLogAttemptBtn">+ Log Call Attempt</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -5786,6 +6166,12 @@
         }
         syncStatusDropdownDisplay(status);
 
+        // Update glass status badge
+        var glassStatusText = document.getElementById('glassStatusText');
+        if (glassStatusText) {
+            glassStatusText.textContent = getStatusLabel ? getStatusLabel(status) : status;
+        }
+
         var lastUpdated = f['Updated At'];
         document.getElementById('modalLastCalled').textContent = lastUpdated ? formatTimeAgo(lastUpdated) : 'Never';
 
@@ -5845,15 +6231,15 @@
                 var ownerEmail = f['Client Email'];
                 if (Array.isArray(ownerEmail)) ownerEmail = ownerEmail[0] || '';
                 var sharedByName = getAgentNameByEmail(ownerEmail) || ownerEmail || 'Unknown';
-                if (shareBtn) shareBtn.innerHTML = '🔗 Shared by ' + sharedByName;
+                if (shareBtn) shareBtn.textContent = 'Shared by ' + sharedByName;
             } else {
                 var sharedWithName = getAgentNameByEmail(sharedWithEmail) || sharedWithEmail || 'Unknown';
-                if (shareBtn) shareBtn.innerHTML = '🔗 Shared with ' + sharedWithName;
+                if (shareBtn) shareBtn.textContent = 'Shared with ' + sharedWithName;
             }
         } else {
             if (shareBtn) {
                 shareBtn.classList.remove('shared');
-                shareBtn.innerHTML = '🔗 Share';
+                shareBtn.textContent = 'Share';
             }
         }
         
@@ -5874,7 +6260,7 @@
             notesList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</p>';
         }
         document.getElementById('modalNotesInput').value = '';
-        
+
         // Attempts - parse JSON if available
         var attemptsRaw = f['Client Attempts'] || '[]';
         var attemptsArray = [];
@@ -5888,6 +6274,9 @@
             attemptsArray = [];
         }
         var attemptsCount = Array.isArray(attemptsArray) ? attemptsArray.length : 0;
+        // Update info grid display
+        var attemptsDisplayEl = document.getElementById('modalAttemptsDisplay');
+        if (attemptsDisplayEl) attemptsDisplayEl.textContent = attemptsCount;
         updateCallAttemptsSection(attemptsCount);
         if (attemptsCount > 0) {
             var countEl = document.getElementById('modalAttemptsCount');
@@ -5916,11 +6305,11 @@
         var prioIcon = document.getElementById('modalPrioIcon');
         if (f['Is Prio']) {
             prioBtn.classList.add('active');
-            prioBtn.textContent = '⭐ PRIO';
+            prioBtn.textContent = 'PRIO';
             prioIcon.style.display = 'block';
         } else {
             prioBtn.classList.remove('active');
-            prioBtn.textContent = '☆ Mark PRIO';
+            prioBtn.textContent = 'PRIO';
             prioIcon.style.display = 'none';
         }
 
@@ -5935,6 +6324,18 @@
             sendBackBtn.style.display = 'inline-block';
             takeOverBtn.style.display = 'none';
         }
+
+        // Reset glass tabs to default state
+        document.querySelectorAll('#leadModal .glass-section').forEach(function(section) {
+            var tabs = section.querySelectorAll('.glass-tab');
+            var contents = section.querySelectorAll('.glass-tab-content');
+            tabs.forEach(function(t, i) {
+                if (i === 0) t.classList.add('active'); else t.classList.remove('active');
+            });
+            contents.forEach(function(c, i) {
+                c.style.display = i === 0 ? 'block' : 'none';
+            });
+        });
 
         leadModal.classList.add('active');
 
@@ -5990,6 +6391,103 @@
             closeLeadModalWithCheck();
         }
     });
+
+    // === GLASS MODAL: Status menu ===
+    window.toggleGlassStatusMenu = function(e) {
+        e.stopPropagation();
+        var menu = document.getElementById('glassStatusMenu');
+        if (!menu) return;
+        var isOpen = menu.classList.contains('open');
+        if (isOpen) {
+            menu.classList.remove('open');
+            return;
+        }
+        // Build menu options
+        var options = [
+            {value:'Booked',label:'Meeting Booked'},{value:'Retry',label:'Retrying'},
+            {value:'Callback Rescheduled',label:'Callback Rescheduled'},{value:'Meeting in Person',label:'Meeting in Person'},
+            {value:'Sending Listings',label:'Sending Listings'},{value:'Listings Sent',label:'Listings Sent'},
+            {value:'Scheduling Showings',label:'Scheduling Showings'},{value:'Viewed Properties',label:'Viewed Properties'},
+            {value:'Offer Placed',label:'Offer Placed'},{value:'Deal Closed',label:'Deal Closed'}
+        ];
+        menu.innerHTML = options.map(function(opt) {
+            var color = typeof getStatusColor === 'function' ? getStatusColor(opt.value) : '#00e676';
+            return '<button class="glass-status-option" onclick="selectGlassStatus(\'' + opt.value + '\')">' +
+                '<span class="status-dot" style="background:' + color + '"></span>' +
+                opt.label + '</button>';
+        }).join('');
+        menu.classList.add('open');
+    };
+
+    window.selectGlassStatus = function(val) {
+        var menu = document.getElementById('glassStatusMenu');
+        if (menu) menu.classList.remove('open');
+        // Update glass badge text
+        var glassStatusText = document.getElementById('glassStatusText');
+        if (glassStatusText) {
+            glassStatusText.textContent = typeof getStatusLabel === 'function' ? getStatusLabel(val) : val;
+        }
+        // Delegate to existing selectStatus
+        if (typeof selectStatus === 'function') selectStatus(val);
+    };
+
+    // Close glass status menu on outside click
+    document.addEventListener('click', function(e) {
+        var menu = document.getElementById('glassStatusMenu');
+        var badge = document.getElementById('glassStatusBadge');
+        if (menu && menu.classList.contains('open') && badge && !badge.contains(e.target) && !menu.contains(e.target)) {
+            menu.classList.remove('open');
+        }
+    });
+
+    // === GLASS MODAL: Tab switching ===
+    window.switchGlassTab = function(btn, tabName) {
+        var section = btn.closest('.glass-section');
+        if (!section) return;
+        // Update active tab
+        section.querySelectorAll('.glass-tab').forEach(function(t) { t.classList.remove('active'); });
+        btn.classList.add('active');
+        // Show/hide content
+        section.querySelectorAll('.glass-tab-content').forEach(function(c) { c.style.display = 'none'; });
+        var targetId = 'glassTab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+        var target = document.getElementById(targetId);
+        if (target) {
+            target.style.display = 'block';
+            // Re-trigger slideUp animation
+            target.style.animation = 'none';
+            target.offsetHeight; // force reflow
+            target.style.animation = 'slideUp 0.3s ease';
+        }
+    };
+
+    // === GLASS MODAL: Mouse-follow refraction & caustic ===
+    (function() {
+        var card = document.getElementById('glassModalCard');
+        var refraction = document.getElementById('glassRefraction');
+        var caustic = document.getElementById('glassCaustic');
+        if (!card || !refraction || !caustic) return;
+
+        card.addEventListener('mousemove', function(e) {
+            var rect = card.getBoundingClientRect();
+            var x = ((e.clientX - rect.left) / rect.width) * 100;
+            var y = ((e.clientY - rect.top) / rect.height) * 100;
+
+            // White specular spot + green refraction offset
+            refraction.style.background =
+                'radial-gradient(circle 160px at ' + x + '% ' + y + '%, rgba(255,255,255,0.035) 0%, transparent 65%), ' +
+                'radial-gradient(circle 125px at ' + (x + 3) + '% ' + (y - 2) + '%, rgba(0,230,118,0.025) 0%, transparent 50%)';
+
+            // Green caustic light
+            caustic.style.background =
+                'radial-gradient(ellipse 180px 120px at ' + x + '% ' + y + '%, rgba(0,230,118,0.04) 0%, transparent 70%), ' +
+                'radial-gradient(ellipse 120px 180px at ' + (100 - x * 0.5) + '% ' + (y * 0.8) + '%, rgba(0,230,118,0.02) 0%, transparent 60%)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            refraction.style.background = 'none';
+            caustic.style.background = 'none';
+        });
+    })();
 
     // Modal navigation - get current list of visible leads
     function getCurrentLeadsList() {
@@ -7742,31 +8240,20 @@
     function updateCallAttemptsSection(attemptsCount) {
         var section = document.getElementById('callAttemptsSection');
         if (!section) return;
+        // Glass modal: always use flat layout inside tab
+        var attemptsList = section.querySelector('#modalAttemptsList') || section.querySelector('.glass-attempts-list');
         if (attemptsCount === 0) {
-            section.className = 'lead-section collapsible-empty';
-            section.innerHTML = '<div class="collapsible-header" onclick="toggleCollapsibleSection(\'callAttemptsSection\')">' +
-                '<h3>📞 Call Attempts <span class="attempts-count">0</span></h3>' +
-                '<svg class="collapsible-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-                '</div>' +
-                '<div class="collapsible-body">' +
-                '<div class="lead-attempts-list" id="modalAttemptsList"><p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No call attempts logged yet</p></div>' +
-                '<button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>' +
-                '</div>';
-            // Re-bind the log attempt button
-            var btn = document.getElementById('modalLogAttemptBtn');
-            if (btn && window.bindLogAttemptBtn) window.bindLogAttemptBtn(btn);
-        } else {
-            section.className = 'lead-section';
-            // Ensure normal layout with h3, list, and button
-            var h3 = section.querySelector('h3');
-            if (!h3 || section.querySelector('.collapsible-header')) {
-                section.innerHTML = '<h3>📞 Call Attempts <span class="attempts-count" id="modalAttemptsCount">' + attemptsCount + '</span></h3>' +
-                    '<div class="lead-attempts-list" id="modalAttemptsList"></div>' +
-                    '<button class="btn btn-secondary btn-sm" id="modalLogAttemptBtn" style="width:100%;margin-top:8px;">+ Log Call Attempt</button>';
-                var btn = document.getElementById('modalLogAttemptBtn');
-                if (btn && window.bindLogAttemptBtn) window.bindLogAttemptBtn(btn);
-            }
+            if (attemptsList) attemptsList.innerHTML = '<p style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:16px 0;">No call attempts logged yet</p>';
         }
+        // Update info grid display
+        var attemptsDisplayEl = document.getElementById('modalAttemptsDisplay');
+        if (attemptsDisplayEl) attemptsDisplayEl.textContent = attemptsCount;
+        // Update hidden count
+        var countEl = document.getElementById('modalAttemptsCount');
+        if (countEl) countEl.textContent = attemptsCount;
+        // Ensure log attempt button exists and is bound
+        var btn = document.getElementById('modalLogAttemptBtn');
+        if (btn && window.bindLogAttemptBtn) window.bindLogAttemptBtn(btn);
     }
 
     // Delete call attempt
@@ -8967,6 +9454,12 @@
             statusSelect.value = status;
         }
         syncStatusDropdownDisplay(status);
+
+        // Update glass status badge
+        var glassStatusText2 = document.getElementById('glassStatusText');
+        if (glassStatusText2) {
+            glassStatusText2.textContent = typeof getStatusLabel === 'function' ? getStatusLabel(status) : status;
+        }
 
         document.getElementById('modalLastCalled').textContent = formatDateTime(getMostRecentLastCalled(f));
 
