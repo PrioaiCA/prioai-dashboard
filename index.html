@@ -4235,11 +4235,9 @@
     var dynamicCallLimit = null;
 
     // Airtable API helper - proxies through Pages Function (token handled server-side)
-    async function fetchAirtable(path, options = {}) {
+    async function fetchAirtable(path, options) {
+        if (!options) options = {};
         var proxyUrl = '/api/airtable?path=' + encodeURIComponent(path);
-        if (options.paginateAll) {
-            proxyUrl += '&paginateAll=true';
-        }
         var fetchOptions = {
             method: options.method || 'GET',
             headers: {
@@ -4472,38 +4470,59 @@
         return new Promise(function(resolve) { setTimeout(resolve, 0); });
     }
 
-    // Load leads data — single edge-paginated fetch with yielded renders
+    // Load leads data — paginated fetch with professional background sync
     async function loadLeadsData(isRefresh) {
         if (!currentUser) return;
 
         try {
             var email = currentUser.email.toLowerCase();
             var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER(ARRAYJOIN({Shared With Email}))))';
-            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
-
-            var data = await fetchAirtable(basePath, { paginateAll: true });
+            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&sort[0][field]=Updated%20At&sort[0][direction]=desc';
 
             var tempLeads = [];
-            if (data.records) {
-                data.records.forEach(function(record) {
-                    var clientEmails = record.fields['Client Email'] || [];
-                    var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
-                    var sharedWithEmails = record.fields['Shared With Email'] || [];
-                    if (!Array.isArray(sharedWithEmails)) sharedWithEmails = [sharedWithEmails];
-                    var sharedWithEmailsLower = sharedWithEmails.map(function(e) { return (e || '').toLowerCase(); });
+            var offset = null;
+            var pageCount = 0;
 
-                    if (!clientEmailsLower.includes(email) && sharedWithEmailsLower.includes(email)) {
-                        record.isShared = true;
+            do {
+                var fetchPath = basePath + (offset ? '&offset=' + offset : '');
+                var data = await fetchAirtable(fetchPath);
+
+                if (data.records) {
+                    // Mark shared leads
+                    data.records.forEach(function(record) {
+                        var clientEmails = record.fields['Client Email'] || [];
+                        var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
+                        var sharedWithEmails = record.fields['Shared With Email'] || [];
+                        if (!Array.isArray(sharedWithEmails)) sharedWithEmails = [sharedWithEmails];
+                        var sharedWithEmailsLower = sharedWithEmails.map(function(e) { return (e || '').toLowerCase(); });
+
+                        if (!clientEmailsLower.includes(email) && sharedWithEmailsLower.includes(email)) {
+                            record.isShared = true;
+                        }
+                    });
+                    tempLeads = tempLeads.concat(data.records);
+                }
+                offset = data.offset;
+                pageCount++;
+
+                // After first page: show hot lists and drop main overlay
+                if (pageCount === 1 && tempLeads.length > 0 && !isRefresh) {
+                    allLeads = tempLeads.slice();
+                    updatePrioList();
+                    updateBookedTodayList();
+                    hidePageLoading();
+                    if (offset) {
+                        showToast('\uD83D\uDD04 Syncing historical data...', 'info');
                     }
-                });
-                tempLeads = data.records;
-            }
+                }
+            } while (offset);
 
+            // Full sync complete — update everything at once
             allLeads = tempLeads;
             cacheData();
             window.dataLoadedSuccessfully = true;
 
-            // Yielded render chain — browser can paint between DOM updates
+            // Stats and loading overlays update now (all data is in)
             updateDashboard();
             await yieldToMain();
             updatePrioList();
@@ -4522,6 +4541,13 @@
             await yieldToMain();
             updateAnalyticsDisplay();
 
+            if (pageCount > 1) {
+                showToast('\u2705 Data sync complete', 'success');
+            }
+
+            // Hide overlay if not already hidden (single-page or refresh case)
+            hidePageLoading();
+
             // Handle pending deep link after data loads
             if (pendingLeadDeepLink && allLeads.length > 0) {
                 var dl = pendingLeadDeepLink;
@@ -4535,12 +4561,8 @@
                     }
                 }, 100);
             }
-
-            // Data loaded successfully — hide loading overlay
-            hidePageLoading();
         } catch (err) {
             console.error('Failed to load leads:', err);
-            updateDashboard();
 
             if (!window.loadRetryCount) window.loadRetryCount = 0;
             if (window.loadRetryCount < 3) {
@@ -4550,7 +4572,9 @@
                     loadLeadsData(isRefresh);
                 }, 2000 * window.loadRetryCount);
             } else {
-                // All retries exhausted — hide loading overlay so user isn't stuck
+                // All retries exhausted — force clear loading states
+                window.dataLoadedSuccessfully = true;
+                updateDashboard();
                 hidePageLoading();
             }
         }
@@ -4574,8 +4598,10 @@
     }
 
     function updateDashboard() {
+        // Stats and loading overlays only update after full data sync
+        if (!window.dataLoadedSuccessfully) return;
         updateStats();
-        // Remove loading state from dashboard
+        // Remove loading state from dashboard (reveals stat numbers)
         var overviewPage = document.getElementById('page-overview');
         if (overviewPage) {
             overviewPage.classList.remove('dashboard-loading');
