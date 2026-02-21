@@ -4329,42 +4329,53 @@
     // Fetch all fields for now - field filtering can be added once field names are verified
     var LEAD_FIELDS = '';
     
-    // Try to load cached data first for instant display
+    // Persistent SWR cache — instant load for returning users, background sync for fresh data
     function loadCachedData() {
         try {
-            var cached = sessionStorage.getItem('prio_leads_' + currentUser.email);
+            var cached = localStorage.getItem('prio_leads_' + currentUser.email);
             if (cached) {
                 var data = JSON.parse(cached);
-                if (Date.now() - data.timestamp < 60000) { // Cache valid for 1 minute
-                    allLeads = data.leads;
+                allLeads = data.leads || [];
+                if (allLeads.length > 0) {
                     updateDashboard();
                     updatePrioList();
                     updateBookedTodayList();
+                    // Cache found: instantly hide main loading overlay
+                    if (typeof hidePageLoading === 'function') hidePageLoading();
                     return true;
                 }
             }
-        } catch (e) {}
+        } catch (e) {
+            console.error("Cache read error", e);
+        }
         return false;
     }
-    
+
     function cacheData() {
         try {
-            sessionStorage.setItem('prio_leads_' + currentUser.email, JSON.stringify({
+            localStorage.setItem('prio_leads_' + currentUser.email, JSON.stringify({
                 timestamp: Date.now(),
                 leads: allLeads
             }));
-        } catch (e) {}
+        } catch (e) {
+            console.error("Cache write error", e);
+            // If storage is full, clear it to prevent app breaking
+            localStorage.removeItem('prio_leads_' + currentUser.email);
+        }
     }
 
     // Load user data from Airtable
     async function loadUserData() {
         if (!currentUser) return;
         
-        // Show cached data immediately if available
+        // Show cached data immediately if available (SWR: serve stale, revalidate in background)
         var hasCached = loadCachedData();
-        
-        // Show loading state only if no cache
-        if (!hasCached) {
+
+        if (hasCached) {
+            // Cache hit — overlay already hidden by loadCachedData(), skip skeleton loaders
+            hidePageLoading();
+        } else {
+            // No cache — show loading placeholders
             document.getElementById('statProspects').textContent = '...';
             document.getElementById('statAppointments').textContent = '...';
             document.getElementById('statCallsToday').textContent = '...';
@@ -4470,25 +4481,30 @@
         return new Promise(function(resolve) { setTimeout(resolve, 0); });
     }
 
-    // Load leads data — paginated fetch with professional background sync
+    // Load leads data — SWR background sync (cache serves instant, fetch revalidates)
     async function loadLeadsData(isRefresh) {
         if (!currentUser) return;
 
         try {
             var email = currentUser.email.toLowerCase();
             var filterFormula = 'OR(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), FIND("' + email + '", LOWER(ARRAYJOIN({Shared With Email}))))';
-            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100&sort[0][field]=Updated%20At&sort[0][direction]=desc';
+
+            // SORT PARAMETER REMOVED TO PREVENT CLOUDFLARE 10s TIMEOUT
+            var basePath = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
 
             var tempLeads = [];
             var offset = null;
-            var pageCount = 0;
+            var hasCachedData = allLeads.length > 0;
+
+            if (hasCachedData && !isRefresh) {
+                showToast('\uD83D\uDD04 Syncing latest updates...', 'info');
+            }
 
             do {
                 var fetchPath = basePath + (offset ? '&offset=' + offset : '');
                 var data = await fetchAirtable(fetchPath);
 
                 if (data.records) {
-                    // Mark shared leads
                     data.records.forEach(function(record) {
                         var clientEmails = record.fields['Client Email'] || [];
                         var clientEmailsLower = (Array.isArray(clientEmails) ? clientEmails : [clientEmails]).map(function(e) { return (e || '').toLowerCase(); });
@@ -4502,27 +4518,23 @@
                     });
                     tempLeads = tempLeads.concat(data.records);
                 }
-                offset = data.offset;
-                pageCount++;
 
-                // After first page: show hot lists and drop main overlay
-                if (pageCount === 1 && tempLeads.length > 0 && !isRefresh) {
-                    allLeads = tempLeads.slice();
-                    updatePrioList();
-                    updateBookedTodayList();
-                    hidePageLoading();
-                    if (offset) {
-                        showToast('\uD83D\uDD04 Syncing historical data...', 'info');
-                    }
+                offset = data.offset || null;
+
+                // If NO cache exists (first time login), show progress to the user
+                if (!hasCachedData) {
+                    var overlayText = document.querySelector('#pageLoadingOverlay div:last-child');
+                    if (overlayText) overlayText.textContent = 'Syncing leads... (' + tempLeads.length + ')';
                 }
+
             } while (offset);
 
-            // Full sync complete — update everything at once
+            // FINAL RENDER: All fresh data has arrived
             allLeads = tempLeads;
             cacheData();
             window.dataLoadedSuccessfully = true;
 
-            // Stats and loading overlays update now (all data is in)
+            // Yield to main thread while updating UI
             updateDashboard();
             await yieldToMain();
             updatePrioList();
@@ -4541,41 +4553,38 @@
             await yieldToMain();
             updateAnalyticsDisplay();
 
-            if (pageCount > 1) {
-                showToast('\u2705 Data sync complete', 'success');
+            if (!hasCachedData) {
+                // First time user: hide overlay now that all data is ready
+                hidePageLoading();
+            } else if (!isRefresh) {
+                // Returning user: update toast
+                showToast('\u2705 Up to date', 'success');
             }
 
-            // Hide overlay if not already hidden (single-page or refresh case)
-            hidePageLoading();
-
-            // Handle pending deep link after data loads
+            // Handle pending deep links
             if (pendingLeadDeepLink && allLeads.length > 0) {
                 var dl = pendingLeadDeepLink;
                 pendingLeadDeepLink = null;
                 setTimeout(function() {
-                    if (dl.type === 'modal') {
-                        openLeadModal(dl.id);
-                    } else if (dl.type === 'search') {
+                    if (dl.type === 'modal') openLeadModal(dl.id);
+                    else if (dl.type === 'search') {
                         var lead = allLeads.find(function(l) { return l.id === dl.id; });
                         if (lead) showSearchLeadDetail(lead);
                     }
                 }, 100);
             }
+
         } catch (err) {
             console.error('Failed to load leads:', err);
+            updateDashboard(); // Clear skeleton states
 
             if (!window.loadRetryCount) window.loadRetryCount = 0;
             if (window.loadRetryCount < 3) {
                 window.loadRetryCount++;
-                console.log('Retrying data load, attempt ' + window.loadRetryCount);
-                setTimeout(function() {
-                    loadLeadsData(isRefresh);
-                }, 2000 * window.loadRetryCount);
+                setTimeout(function() { loadLeadsData(isRefresh); }, 2000 * window.loadRetryCount);
             } else {
-                // All retries exhausted — force clear loading states
-                window.dataLoadedSuccessfully = true;
-                updateDashboard();
                 hidePageLoading();
+                showToast('Warning: Failed to sync latest data', 'error');
             }
         }
     }
