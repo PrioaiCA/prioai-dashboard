@@ -818,11 +818,24 @@ img {
    ========================================================================== */
 
 .card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-secondary);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-1);
+    position: relative;
+    background: linear-gradient(150deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.3) 50%, rgba(255,255,255,0.02) 100%);
+    backdrop-filter: blur(30px) brightness(0.9);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.4);
     padding: var(--space-6);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 12%;
+    right: 12%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    pointer-events: none;
 }
 
 .card-header {
