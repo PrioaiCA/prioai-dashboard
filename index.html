@@ -638,6 +638,34 @@
         }
         .glass-log-attempt-btn:hover{border-color:rgba(0,230,118,0.12);color:rgba(255,255,255,0.4)}
 
+        /* Lead Intent Score */
+        .intent-score-panel{display:flex;flex-direction:column;gap:14px}
+        .intent-score-header{display:flex;align-items:center;justify-content:space-between}
+        .intent-score-title{font-size:0.6875rem;text-transform:uppercase;color:rgba(255,255,255,0.35);letter-spacing:1.5px;font-weight:500}
+        .intent-refresh-btn{
+            display:inline-flex;align-items:center;justify-content:center;
+            width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,0.08);
+            background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.3));
+            color:rgba(255,255,255,0.35);cursor:pointer;transition:all 200ms ease;
+        }
+        .intent-refresh-btn:hover{border-color:rgba(0,230,118,0.2);color:#00e676;transform:rotate(45deg)}
+        .intent-refresh-btn.spinning svg{animation:intentSpin 0.8s linear infinite}
+        @keyframes intentSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        .intent-fire-row{display:flex;align-items:center;gap:6px}
+        .intent-fire{font-size:1.75rem;line-height:1;transition:opacity 300ms ease,filter 300ms ease}
+        .intent-fire.dim{opacity:0.15;filter:grayscale(1)}
+        .intent-fire.lit{opacity:1;filter:none}
+        .intent-fire-row.loading .intent-fire{animation:intentPulse 1.2s ease-in-out infinite}
+        @keyframes intentPulse{0%,100%{opacity:0.15}50%{opacity:0.35}}
+        .intent-score-num{font-size:0.8125rem;font-weight:500;color:rgba(255,255,255,0.35);margin-left:8px}
+        .intent-label{font-size:0.8125rem;font-weight:600;letter-spacing:0.5px}
+        .intent-label.intent-hot{color:#ef4444}
+        .intent-label.intent-high{color:#f97316}
+        .intent-label.intent-moderate{color:#eab308}
+        .intent-label.intent-low{color:#6b7280}
+        .intent-label.intent-cold{color:#3b82f6}
+        .intent-label.intent-error{color:rgba(255,255,255,0.3)}
+
         /* Lead Modal Overlay & Animation */
         #leadModal{display:flex !important;justify-content:center;align-items:center;padding:24px;visibility:hidden;opacity:0;pointer-events:none;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:opacity 300ms ease,visibility 300ms ease,backdrop-filter 300ms ease,background 300ms ease}
         #leadModal.active{visibility:visible;opacity:1;pointer-events:auto;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px)}
@@ -645,12 +673,27 @@
         #leadModal.active .glass-modal-border{transform:scale(1) translateY(0);opacity:1;filter:blur(0)}
 
         /* Booking display helpers */
-        .booked-time-display{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .booked-time-display{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
         .booked-time-value{font-weight:500;color:rgba(255,255,255,0.85)}
-        .btn-reschedule{background:none;border:none;color:rgba(0,230,118,0.6);cursor:pointer;font-size:11px;font-weight:500;padding:2px 6px;transition:all 150ms ease;font-family:'DM Sans',sans-serif}
-        .btn-reschedule:hover{color:#00e676}
-        .btn-delete-booking,.btn-delete-attempt,.btn-delete-note{background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
-        .btn-delete-booking:hover,.btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        .btn-reschedule{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:4px 10px;font-size:11px;font-weight:500;
+            background:linear-gradient(150deg,rgba(0,230,118,0.1),rgba(0,0,0,0.3));
+            border:1px solid rgba(0,230,118,0.15);border-radius:100px;
+            color:#00e676;cursor:pointer;transition:all 200ms ease;
+            font-family:'DM Sans',sans-serif;
+        }
+        .btn-reschedule:hover{background:linear-gradient(150deg,rgba(0,230,118,0.18),rgba(0,0,0,0.3));border-color:rgba(0,230,118,0.25);transform:translateY(-1px)}
+        .btn-delete-booking{
+            display:inline-flex;align-items:center;justify-content:center;
+            width:24px;height:24px;padding:0;font-size:13px;font-weight:600;
+            background:linear-gradient(150deg,rgba(239,68,68,0.08),rgba(0,0,0,0.3));
+            border:1px solid rgba(239,68,68,0.15);border-radius:50%;
+            color:rgba(239,68,68,0.6);cursor:pointer;transition:all 200ms ease;
+        }
+        .btn-delete-booking:hover{border-color:rgba(239,68,68,0.3);color:#ef4444;background:linear-gradient(150deg,rgba(239,68,68,0.15),rgba(0,0,0,0.3));transform:translateY(-1px)}
+        .btn-delete-attempt,.btn-delete-note{background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
+        .btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
         .btn-edit-note{background:none;border:none;color:rgba(59,130,246,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
         .btn-edit-note:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
         .btn-edit-booking{background:none;border:none;color:rgba(59,130,246,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
@@ -847,15 +890,9 @@
         .btn-schedule{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease;display:inline-flex;align-items:center;gap:4px}
         .btn-schedule:hover{background:rgba(52,211,153,0.25)}
         
-        /* Booked Time Display */
-        .booked-time-display{display:flex;align-items:center;gap:8px}
-        .booked-time-value{font-weight:500}
-        .btn-delete-booking,.btn-delete-attempt,.btn-delete-note{background:none;border:none;color:rgba(239,68,68,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
-        .btn-delete-booking:hover,.btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        /* Booked Time Display - styles defined in glass modal section above */
         .btn-edit-booking{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
         .btn-edit-booking:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
-        .btn-reschedule{background:none;border:none;color:#3b82f6;cursor:pointer;font-size:0.75rem;font-weight:600;padding:4px 10px;border-radius:4px;transition:all 150ms ease;text-decoration:none}
-        .btn-reschedule:hover{text-decoration:underline}
         .btn-edit-note{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
         .btn-edit-note:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
         
@@ -3824,9 +3861,9 @@
                     <div class="glass-action-pills">
                         <button class="glass-pill" id="modalShareBtn" title="Share with another agent">Share</button>
                         <button class="glass-pill glass-pill-prio" id="modalPrioBtn" title="Toggle PRIO status">PRIO</button>
-                        <button class="glass-pill" id="modalSendBackBtn">Send to AI</button>
+                        <button class="glass-pill" id="modalSendBackBtn">🤖 Send to AI</button>
                         <button class="glass-pill" id="modalTakeOverBtn" style="display:none;">Take Over</button>
-                        <button class="glass-pill glass-pill-dnc" id="modalDNCBtn" title="Mark as Do Not Call">DNC</button>
+                        <button class="glass-pill glass-pill-dnc" id="modalDNCBtn" title="Mark as Do Not Call">⛔ DNC</button>
                     </div>
 
                     <!-- 3. Info Grid (2x2) -->
@@ -3859,7 +3896,7 @@
                     <div class="glass-section">
                         <div class="glass-tab-bar">
                             <button class="glass-tab active" data-tab="notes" onclick="switchGlassTab(this, 'notes')">My Notes</button>
-                            <button class="glass-tab" data-tab="attempts" onclick="switchGlassTab(this, 'attempts')">My Calls</button>
+                            <button class="glass-tab" data-tab="intent" onclick="switchGlassTab(this, 'intent')">Lead Intent</button>
                             <button class="glass-tab" data-tab="summary" onclick="switchGlassTab(this, 'summary')">AI Summary</button>
                             <button class="glass-tab" data-tab="transcript" onclick="switchGlassTab(this, 'transcript')">AI Transcript</button>
                         </div>
@@ -3876,11 +3913,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="glass-tab-content" id="glassTabAttempts" style="display:none;">
-                            <div id="callAttemptsSection">
-                                <div class="glass-attempts-list" id="modalAttemptsList"></div>
-                                <span class="attempts-count" id="modalAttemptsCount" style="display:none;">0</span>
-                                <button class="glass-log-attempt-btn" id="modalLogAttemptBtn">+ Log Call Attempt</button>
+                        <div class="glass-tab-content" id="glassTabIntent" style="display:none;">
+                            <div class="glass-inner-panel intent-score-panel">
+                                <div class="intent-score-header">
+                                    <span class="intent-score-title">Lead Intent Score</span>
+                                    <button class="intent-refresh-btn" id="intentRefreshBtn" onclick="refreshIntentScore()" title="Re-score this lead">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                                    </button>
+                                </div>
+                                <div class="intent-fire-row" id="intentFireRow">
+                                    <span class="intent-fire dim">🔥</span>
+                                    <span class="intent-fire dim">🔥</span>
+                                    <span class="intent-fire dim">🔥</span>
+                                    <span class="intent-fire dim">🔥</span>
+                                    <span class="intent-fire dim">🔥</span>
+                                    <span class="intent-score-num" id="intentScoreNum"></span>
+                                </div>
+                                <div class="intent-label" id="intentLabel">Analyzing lead...</div>
                             </div>
                         </div>
                         <div class="glass-tab-content" id="glassTabSummary" style="display:none;">
@@ -6194,7 +6243,134 @@
     // === LEAD DETAIL MODAL ===
     var currentLeadId = null;
     var leadModal = document.getElementById('leadModal');
-    
+
+    // --- Lead Intent Score ---
+    var intentScoreCache = {};
+    var INTENT_LABELS = {
+        5: { text: 'Hot', cls: 'intent-hot' },
+        4: { text: 'High Intent', cls: 'intent-high' },
+        3: { text: 'Moderate', cls: 'intent-moderate' },
+        2: { text: 'Low Intent', cls: 'intent-low' },
+        1: { text: 'Cold', cls: 'intent-cold' }
+    };
+
+    function displayIntentScore(score) {
+        var fireRow = document.getElementById('intentFireRow');
+        var scoreNum = document.getElementById('intentScoreNum');
+        var label = document.getElementById('intentLabel');
+        if (!fireRow) return;
+
+        fireRow.classList.remove('loading');
+
+        var fires = fireRow.querySelectorAll('.intent-fire');
+        fires.forEach(function(f, i) {
+            f.classList.remove('lit', 'dim');
+            f.classList.add(score && i < score ? 'lit' : 'dim');
+        });
+
+        if (score && INTENT_LABELS[score]) {
+            scoreNum.textContent = score + '/5';
+            label.textContent = INTENT_LABELS[score].text;
+            label.className = 'intent-label ' + INTENT_LABELS[score].cls;
+        } else {
+            scoreNum.textContent = '';
+            label.textContent = 'Unable to score';
+            label.className = 'intent-label intent-error';
+        }
+
+        var refreshBtn = document.getElementById('intentRefreshBtn');
+        if (refreshBtn) refreshBtn.classList.remove('spinning');
+    }
+
+    function showIntentLoading() {
+        var fireRow = document.getElementById('intentFireRow');
+        var scoreNum = document.getElementById('intentScoreNum');
+        var label = document.getElementById('intentLabel');
+        if (!fireRow) return;
+
+        var fires = fireRow.querySelectorAll('.intent-fire');
+        fires.forEach(function(f) { f.classList.remove('lit'); f.classList.add('dim'); });
+        fireRow.classList.add('loading');
+        scoreNum.textContent = '';
+        label.textContent = 'Analyzing lead...';
+        label.className = 'intent-label';
+    }
+
+    function fetchIntentScore(lead) {
+        if (!lead || !lead.id) return;
+        var leadId = lead.id;
+
+        // Check cache
+        if (intentScoreCache[leadId] !== undefined) {
+            displayIntentScore(intentScoreCache[leadId]);
+            return;
+        }
+
+        showIntentLoading();
+
+        var f = lead.fields || {};
+        var notesRaw = f['Client Notes'] || '';
+        var notesText = '';
+        try {
+            var parsed = JSON.parse(notesRaw);
+            if (Array.isArray(parsed)) {
+                notesText = parsed.map(function(n) { return (n.date ? n.date + ': ' : '') + (n.text || ''); }).join(' | ');
+            } else {
+                notesText = notesRaw;
+            }
+        } catch(e) {
+            notesText = notesRaw;
+        }
+
+        var body = {
+            status: f['Status'] || f['Outcome'] || '',
+            lastOutcome: f['Last Outcome'] || f['Disposition'] || '',
+            callSummary: f['Last Call Summary'] || f['Summary'] || '',
+            interest: f['Stated Interest'] || f['Interest'] || '',
+            context: f['Lead Context'] || f['Context'] || '',
+            attempts: f['Attempts'] || '0',
+            bookings: f['Bookings'] || '',
+            bookedTime: f['Booked Time'] || '',
+            clientNotes: notesText,
+            updatedAt: f['Updated At'] || ''
+        };
+
+        fetch('/api/intent-score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            var score = data.score;
+            if (score && score >= 1 && score <= 5) {
+                intentScoreCache[leadId] = score;
+                // Only update if this lead is still open
+                if (currentLeadId === leadId) displayIntentScore(score);
+            } else {
+                intentScoreCache[leadId] = null;
+                if (currentLeadId === leadId) displayIntentScore(null);
+            }
+        })
+        .catch(function() {
+            intentScoreCache[leadId] = null;
+            if (currentLeadId === leadId) displayIntentScore(null);
+        });
+    }
+
+    window.refreshIntentScore = function() {
+        if (!currentLeadId) return;
+        var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
+        if (!lead) return;
+
+        // Clear cache and re-fetch
+        delete intentScoreCache[currentLeadId];
+        var refreshBtn = document.getElementById('intentRefreshBtn');
+        if (refreshBtn) refreshBtn.classList.add('spinning');
+        showIntentLoading();
+        fetchIntentScore(lead);
+    };
+
     // Open modal when clicking PRIO card
     document.getElementById('prioList').addEventListener('click', function(e) {
         var card = e.target.closest('.prio-card');
@@ -6247,7 +6423,7 @@
         var bookedTimeValue = document.getElementById('modalBookedTimeValue');
         var scheduleBtn = document.getElementById('modalScheduleBtn');
         if (bookedTime) {
-            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-reschedule" onclick="editBookingFromModal()" title="Reschedule">Reschedule</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-reschedule" onclick="editBookingFromModal()" title="Reschedule">📅 Reschedule</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
             scheduleBtn.style.display = 'none';
         } else {
             bookedTimeValue.textContent = '';
@@ -6404,6 +6580,9 @@
         });
 
         leadModal.classList.add('active');
+
+        // Fetch intent score
+        fetchIntentScore(lead);
 
         // Update navigation arrows state
         updateNavArrows();
@@ -9534,7 +9713,7 @@
         var bookedTimeValue = document.getElementById('modalBookedTimeValue');
         var scheduleBtn = document.getElementById('modalScheduleBtn');
         if (bookedTime) {
-            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-reschedule" onclick="editBookingFromModal()" title="Reschedule">Reschedule</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-reschedule" onclick="editBookingFromModal()" title="Reschedule">📅 Reschedule</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
             if (scheduleBtn) scheduleBtn.style.display = 'none';
         } else {
             bookedTimeValue.textContent = '';
@@ -9684,6 +9863,9 @@
 
         // Show modal
         document.getElementById('leadModal').classList.add('active');
+
+        // Fetch intent score
+        fetchIntentScore(lead);
     }
 
     // Note: Modal close handlers are defined earlier with closeLeadModalWithCheck() for unsaved notes protection
