@@ -645,12 +645,27 @@
         #leadModal.active .glass-modal-border{transform:scale(1) translateY(0);opacity:1;filter:blur(0)}
 
         /* Booking display helpers */
-        .booked-time-display{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .booked-time-display{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
         .booked-time-value{font-weight:500;color:rgba(255,255,255,0.85)}
-        .btn-reschedule{background:none;border:none;color:rgba(0,230,118,0.6);cursor:pointer;font-size:11px;font-weight:500;padding:2px 6px;transition:all 150ms ease;font-family:'DM Sans',sans-serif}
-        .btn-reschedule:hover{color:#00e676}
-        .btn-delete-booking,.btn-delete-attempt,.btn-delete-note{background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
-        .btn-delete-booking:hover,.btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        .btn-reschedule{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:4px 10px;font-size:11px;font-weight:500;
+            background:linear-gradient(150deg,rgba(0,230,118,0.1),rgba(0,0,0,0.3));
+            border:1px solid rgba(0,230,118,0.15);border-radius:100px;
+            color:#00e676;cursor:pointer;transition:all 200ms ease;
+            font-family:'DM Sans',sans-serif;
+        }
+        .btn-reschedule:hover{background:linear-gradient(150deg,rgba(0,230,118,0.18),rgba(0,0,0,0.3));border-color:rgba(0,230,118,0.25);transform:translateY(-1px)}
+        .btn-delete-booking{
+            display:inline-flex;align-items:center;justify-content:center;
+            width:24px;height:24px;padding:0;font-size:13px;font-weight:600;
+            background:linear-gradient(150deg,rgba(239,68,68,0.08),rgba(0,0,0,0.3));
+            border:1px solid rgba(239,68,68,0.15);border-radius:50%;
+            color:rgba(239,68,68,0.6);cursor:pointer;transition:all 200ms ease;
+        }
+        .btn-delete-booking:hover{border-color:rgba(239,68,68,0.3);color:#ef4444;background:linear-gradient(150deg,rgba(239,68,68,0.15),rgba(0,0,0,0.3));transform:translateY(-1px)}
+        .btn-delete-attempt,.btn-delete-note{background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
+        .btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
         .btn-edit-note{background:none;border:none;color:rgba(59,130,246,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
         .btn-edit-note:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
         .btn-edit-booking{background:none;border:none;color:rgba(59,130,246,0.5);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
@@ -847,15 +862,9 @@
         .btn-schedule{padding:6px 12px;font-size:0.75rem;font-weight:600;background:rgba(52,211,153,0.15);color:rgb(52,211,153);border:1px solid rgba(52,211,153,0.3);border-radius:8px;cursor:pointer;transition:all 150ms ease;display:inline-flex;align-items:center;gap:4px}
         .btn-schedule:hover{background:rgba(52,211,153,0.25)}
         
-        /* Booked Time Display */
-        .booked-time-display{display:flex;align-items:center;gap:8px}
-        .booked-time-value{font-weight:500}
-        .btn-delete-booking,.btn-delete-attempt,.btn-delete-note{background:none;border:none;color:rgba(239,68,68,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
-        .btn-delete-booking:hover,.btn-delete-attempt:hover,.btn-delete-note:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
+        /* Booked Time Display - styles defined in glass modal section above */
         .btn-edit-booking{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
         .btn-edit-booking:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
-        .btn-reschedule{background:none;border:none;color:#3b82f6;cursor:pointer;font-size:0.75rem;font-weight:600;padding:4px 10px;border-radius:4px;transition:all 150ms ease;text-decoration:none}
-        .btn-reschedule:hover{text-decoration:underline}
         .btn-edit-note{background:none;border:none;color:rgba(59,130,246,0.7);cursor:pointer;font-size:0.875rem;padding:2px 6px;border-radius:4px;transition:all 150ms ease}
         .btn-edit-note:hover{color:#3b82f6;background:rgba(59,130,246,0.1)}
         
@@ -3824,9 +3833,9 @@
                     <div class="glass-action-pills">
                         <button class="glass-pill" id="modalShareBtn" title="Share with another agent">Share</button>
                         <button class="glass-pill glass-pill-prio" id="modalPrioBtn" title="Toggle PRIO status">PRIO</button>
-                        <button class="glass-pill" id="modalSendBackBtn">Send to AI</button>
+                        <button class="glass-pill" id="modalSendBackBtn">🤖 Send to AI</button>
                         <button class="glass-pill" id="modalTakeOverBtn" style="display:none;">Take Over</button>
-                        <button class="glass-pill glass-pill-dnc" id="modalDNCBtn" title="Mark as Do Not Call">DNC</button>
+                        <button class="glass-pill glass-pill-dnc" id="modalDNCBtn" title="Mark as Do Not Call">⛔ DNC</button>
                     </div>
 
                     <!-- 3. Info Grid (2x2) -->
@@ -6247,7 +6256,7 @@
         var bookedTimeValue = document.getElementById('modalBookedTimeValue');
         var scheduleBtn = document.getElementById('modalScheduleBtn');
         if (bookedTime) {
-            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-reschedule" onclick="editBookingFromModal()" title="Reschedule">Reschedule</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-reschedule" onclick="editBookingFromModal()" title="Reschedule">📅 Reschedule</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
             scheduleBtn.style.display = 'none';
         } else {
             bookedTimeValue.textContent = '';
@@ -9534,7 +9543,7 @@
         var bookedTimeValue = document.getElementById('modalBookedTimeValue');
         var scheduleBtn = document.getElementById('modalScheduleBtn');
         if (bookedTime) {
-            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-reschedule" onclick="editBookingFromModal()" title="Reschedule">Reschedule</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
+            bookedTimeValue.innerHTML = '<span class="booked-time-display"><span class="booked-time-value">' + formatFriendlyDateTime(bookedTime) + '</span><button class="btn-reschedule" onclick="editBookingFromModal()" title="Reschedule">📅 Reschedule</button><button class="btn-delete-booking" onclick="deleteBookingFromModal()" title="Remove booking">✕</button></span>';
             if (scheduleBtn) scheduleBtn.style.display = 'none';
         } else {
             bookedTimeValue.textContent = '';
