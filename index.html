@@ -765,8 +765,35 @@
         .polish-accept:hover{background:rgb(45,190,135)}
         .polish-reject{background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8)}
         .polish-reject:hover{border-color:rgba(255,255,255,0.3)}
-        .send-ai-modal-overlay,.confirm-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 150ms ease}
-        .send-ai-modal-overlay.active,.confirm-modal-overlay.active{opacity:1;visibility:visible}
+        .confirm-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 150ms ease}
+        .confirm-modal-overlay.active{opacity:1;visibility:visible}
+        /* Glass popup overlay (Send to AI + Schedule Meeting) */
+        .glass-popup-overlay{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;justify-content:center;align-items:center;padding:24px;z-index:1100;visibility:hidden;opacity:0;pointer-events:none;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:opacity 300ms ease,visibility 300ms ease,backdrop-filter 300ms ease,background 300ms ease}
+        .glass-popup-overlay.active{visibility:visible;opacity:1;pointer-events:auto;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px)}
+        .glass-popup-overlay .glass-modal-border{transform:scale(0.88) translateY(30px);opacity:0;filter:blur(20px);transition:transform 400ms cubic-bezier(0.16,1,0.3,1),opacity 400ms ease,filter 400ms ease;max-width:480px}
+        .glass-popup-overlay.active .glass-modal-border{transform:scale(1) translateY(0);opacity:1;filter:blur(0)}
+        .glass-popup-section{margin-bottom:20px}
+        .glass-popup-label{display:block;font-size:10px;font-weight:500;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+        .glass-popup-reasons{display:flex;flex-direction:column;gap:8px}
+        .glass-reason-btn{padding:12px 16px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.06);border-radius:12px;color:rgba(255,255,255,0.6);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;text-align:left;cursor:pointer;transition:all 200ms ease;display:flex;align-items:center;gap:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
+        .glass-reason-btn:hover{border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);background:linear-gradient(150deg,rgba(255,255,255,0.07),rgba(0,0,0,0.25))}
+        .glass-reason-btn.active{border-color:rgba(0,230,118,0.3);background:linear-gradient(150deg,rgba(0,230,118,0.1),rgba(0,0,0,0.3));color:#00e676;text-shadow:0 0 10px rgba(0,230,118,0.2)}
+        .glass-popup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+        .glass-timing-btn{padding:10px 14px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.06);border-radius:12px;color:rgba(255,255,255,0.6);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 200ms ease;box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
+        .glass-timing-btn:hover{border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);background:linear-gradient(150deg,rgba(255,255,255,0.07),rgba(0,0,0,0.25))}
+        .glass-timing-btn.active{border-color:rgba(0,230,118,0.3);background:linear-gradient(150deg,rgba(0,230,118,0.1),rgba(0,0,0,0.3));color:#00e676;text-shadow:0 0 10px rgba(0,230,118,0.2)}
+        .glass-timing-btn:nth-child(5){grid-column:span 2}
+        .glass-popup-actions{display:flex;gap:10px;margin-top:24px}
+        .glass-select{flex:1;padding:10px 14px;background:linear-gradient(150deg,rgba(255,255,255,0.025),rgba(0,0,0,0.4));border:1px solid rgba(255,255,255,0.06);border-radius:12px;color:rgba(255,255,255,0.75);font-size:14px;font-family:'DM Sans',sans-serif;box-shadow:inset 0 2px 8px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.04);transition:all 250ms ease;-webkit-appearance:none;appearance:none;cursor:pointer}
+        .glass-select:focus{outline:none;border-color:rgba(0,230,118,0.25);box-shadow:inset 0 2px 8px rgba(0,0,0,0.4),0 0 25px rgba(0,230,118,0.05)}
+        .glass-select option{background:#0a0a0a;color:#fff}
+        .glass-popup-overlay .calendar-header button{color:rgba(255,255,255,0.5);font-size:1.125rem}
+        .glass-popup-overlay .calendar-header button:hover{background:rgba(255,255,255,0.06)}
+        .glass-popup-overlay .calendar-month{color:rgba(255,255,255,0.7);font-size:0.875rem;font-weight:500}
+        .glass-popup-overlay .calendar-day{color:rgba(255,255,255,0.7)}
+        .glass-popup-overlay .calendar-day.selected{background:linear-gradient(135deg,rgba(0,230,118,0.9),rgba(16,185,129,0.85));color:#020a06;font-weight:600}
+        .glass-popup-overlay .calendar-day.today:not(.selected){border-color:rgba(0,230,118,0.5)}
+        .glass-popup-overlay .calendar-day:hover:not(.disabled):not(.selected){background:rgba(255,255,255,0.06)}
         .confirm-modal{background:linear-gradient(180deg,#111 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px;max-width:380px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.5)}
         .confirm-modal-icon{font-size:2.5rem;margin-bottom:16px}
         .confirm-modal h3{font-family:var(--font-heading);font-size:1.125rem;font-weight:700;margin-bottom:12px}
@@ -778,37 +805,9 @@
         .confirm-modal-confirm:hover{background:#dc2626}
         .confirm-modal-confirm.success{background:rgb(52,211,153)}
         .confirm-modal-confirm.success:hover{background:rgb(45,185,135)}
-        .send-ai-modal{background:linear-gradient(180deg,#111 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px;max-width:480px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.5)}
-        .send-ai-modal h3{font-family:var(--font-heading);font-size:1.25rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-        .send-ai-subtitle{color:#A0A0A0;font-size:0.8125rem;font-weight:400;margin-bottom:24px}
-        .send-ai-section{margin-bottom:24px}
-        .send-ai-label{display:block;font-size:0.75rem;font-weight:400;color:#707070;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
-        .send-ai-reasons{display:flex;flex-direction:column;gap:10px}
-        .reason-btn{padding:14px 18px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.9);font-size:0.9375rem;text-align:left;cursor:pointer;transition:all 150ms ease;display:flex;align-items:center;gap:10px}
-        .reason-btn:hover{border-color:rgba(255,255,255,0.25);background:#222}
-        .reason-btn.active{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
-        .send-ai-other-input{width:100%;margin-top:10px;padding:14px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;color:#fff;font-size:0.9375rem;resize:none;min-height:80px;transition:border-color 150ms ease}
-        .send-ai-other-input:focus{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent)}
-        .send-ai-timing{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-        .timing-btn{padding:12px 16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.9);font-size:0.875rem;cursor:pointer;transition:all 150ms ease}
-        .timing-btn:hover{border-color:rgba(255,255,255,0.25);background:#222}
-        .timing-btn.active{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
-        .timing-btn:nth-child(5){grid-column:span 2}
-        .send-ai-date-input{width:100%;margin-top:10px;padding:14px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;color:#fff;font-size:0.9375rem;transition:border-color 150ms ease}
-        .send-ai-date-input:focus{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent)}
-        .send-ai-time-pref{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-        .time-pref-btn{padding:12px 16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.9);font-size:0.875rem;cursor:pointer;transition:all 150ms ease}
-        .time-pref-btn:hover{border-color:rgba(255,255,255,0.25);background:#222}
-        .time-pref-btn.active{border-color:rgb(52,211,153);background:rgba(52,211,153,0.1)}
-        .send-ai-actions{display:flex;gap:12px;margin-top:28px}
-        .send-ai-cancel{flex:1;padding:14px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(255,255,255,0.8);font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 150ms ease}
-        .send-ai-cancel:hover{border-color:rgba(255,255,255,0.3)}
-        .send-ai-confirm{flex:1.5;padding:14px;background:rgb(52,211,153);border:none;border-radius:12px;color:#000;font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 150ms ease}
-        .send-ai-confirm:hover{background:rgb(45,190,135)}
-        .send-ai-confirm:disabled{opacity:0.5;cursor:not-allowed}
+        /* Legacy send-ai-modal styles removed – now using glass-popup-overlay */
         @media(max-width:600px){.polish-comparison{grid-template-columns:1fr}}
         /* Legacy lead modal body styles (overridden by glass modal) */
-        .send-ai-calendar{margin-top:16px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px}
         /* Legacy lead-section styles kept for search modal compatibility */
         .lead-section{margin-bottom:20px;padding:24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
         .lead-section h3{font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#FFFFFF}
@@ -934,17 +933,7 @@
         .share-info-name{font-size:0.9375rem;font-weight:500;color:#fff;padding:8px 12px;background:#111;border-radius:8px;margin-bottom:12px}
         
         /* Schedule Modal */
-        .schedule-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;visibility:hidden;transition:all 150ms ease}
-        .schedule-modal-overlay.active{opacity:1;visibility:visible}
-        .schedule-modal{background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:420px;width:90%;max-height:90vh;overflow-y:auto}
-        .schedule-modal h3{font-family:var(--font-heading);margin-bottom:8px;font-size:1.25rem;font-weight:700}
-        .schedule-modal .form-group{margin-bottom:16px}
-        .schedule-modal label{display:block;margin-bottom:8px;font-size:0.8125rem;color:#A0A0A0;font-weight:400}
-        .schedule-modal-actions{display:flex;gap:12px;margin-top:20px}
-        .schedule-modal-actions button{flex:1;padding:12px;border-radius:8px;font-weight:500;cursor:pointer;transition:all 150ms ease}
-        .schedule-modal .btn-cancel{background:#222;border:1px solid rgba(255,255,255,0.1);color:#fff}
-        .schedule-modal .btn-save{background:rgb(52,211,153);border:none;color:#000}
-        .schedule-modal .btn-save:hover{opacity:0.9}
+        /* Legacy schedule-modal styles removed – now using glass-popup-overlay */
         
         /* Calendar Picker */
         .calendar-picker{background:#111;border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.1)}
@@ -1321,6 +1310,17 @@
         /* (4) Summary truncation - 2 lines max */
         .prospects-list .priority-card-lg-summary-col .col-content{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
         .prospects-list .priority-card-lg-notes-col .col-content{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
+
+        /* Compact cards for Prio, Booked Today, and Overview (same truncation as Qualified) */
+        .priorities-cards .priority-card-lg,
+        .prio-list .priority-card-lg,
+        #bookedTodayList .priority-card-lg{min-height:auto}
+        .priorities-cards .priority-card-lg-summary-col .col-content,
+        .prio-list .priority-card-lg-summary-col .col-content,
+        #bookedTodayList .priority-card-lg-summary-col .col-content{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
+        .priorities-cards .priority-card-lg-notes-col .col-content,
+        .prio-list .priority-card-lg-notes-col .col-content,
+        #bookedTodayList .priority-card-lg-notes-col .col-content{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
 
         /* Pipeline Styles */
         .pipeline-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -4001,57 +4001,71 @@
     </div>
 
     <!-- Send to AI Modal -->
-    <div class="send-ai-modal-overlay" id="sendAIModal">
-        <div class="send-ai-modal">
-            <h3>🤖 Send Back to AI</h3>
-            <p class="send-ai-subtitle">Why are you sending this lead back?</p>
-
-            <div class="send-ai-section">
-                <label class="send-ai-label">REASON</label>
-                <div class="send-ai-reasons" id="sendAIReasons">
-                    <button class="reason-btn" data-reason="No longer interested">😐 No longer interested</button>
-                    <button class="reason-btn" data-reason="Did not pick up">📵 Did not pick up</button>
-                    <button class="reason-btn" data-reason="Stopped responding">💬 Stopped responding</button>
-                    <button class="reason-btn" data-reason="other">✏️ Other</button>
-                </div>
-                <textarea id="sendAIOtherReason" class="send-ai-other-input" placeholder="Enter your reason..." style="display:none;"></textarea>
-            </div>
-
-            <div class="send-ai-section">
-                <label class="send-ai-label">WHEN SHOULD AI CALL BACK?</label>
-                <div class="send-ai-timing" id="sendAITiming">
-                    <button class="timing-btn" data-months="3">3 months</button>
-                    <button class="timing-btn" data-months="6">6 months</button>
-                    <button class="timing-btn" data-months="9">9 months</button>
-                    <button class="timing-btn" data-months="12">12 months</button>
-                    <button class="timing-btn" data-months="custom">📅 Pick a date</button>
-                </div>
-                <div class="send-ai-calendar" id="sendAICalendar" style="display:none;">
-                    <div class="calendar-header">
-                        <button type="button" id="sendAICalPrev">‹</button>
-                        <span class="calendar-month" id="sendAICalMonth"></span>
-                        <button type="button" id="sendAICalNext">›</button>
+    <div class="glass-popup-overlay" id="sendAIModal">
+        <div class="glass-modal-border">
+            <div class="glass-modal-card">
+                <div class="glass-refraction"></div>
+                <div class="glass-caustic"></div>
+                <div class="glass-ambient-glow"></div>
+                <div class="glass-modal-inner" style="padding:28px 28px 24px;">
+                    <div class="glass-modal-header" style="margin-bottom:16px;">
+                        <div class="glass-header-left">
+                            <div class="glass-name-row">
+                                <h3 class="glass-lead-name" style="font-size:20px;">🤖 Send Back to AI</h3>
+                            </div>
+                            <p style="color:rgba(255,255,255,0.45);font-size:13px;margin:0;">Why are you sending this lead back?</p>
+                        </div>
+                        <button class="glass-close-btn" id="sendAICancelBtn">&times;</button>
                     </div>
-                    <div class="calendar-weekdays">
-                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+
+                    <div class="glass-popup-section">
+                        <label class="glass-popup-label">REASON</label>
+                        <div class="glass-popup-reasons" id="sendAIReasons">
+                            <button class="glass-reason-btn" data-reason="No longer interested">😐 No longer interested</button>
+                            <button class="glass-reason-btn" data-reason="Did not pick up">📵 Did not pick up</button>
+                            <button class="glass-reason-btn" data-reason="Stopped responding">💬 Stopped responding</button>
+                            <button class="glass-reason-btn" data-reason="other">✏️ Other</button>
+                        </div>
+                        <textarea id="sendAIOtherReason" class="glass-textarea" placeholder="Enter your reason..." style="display:none;min-height:70px;margin-top:10px;"></textarea>
                     </div>
-                    <div class="calendar-days" id="sendAICalDays"></div>
-                </div>
-                <input type="hidden" id="sendAICustomDate">
-            </div>
 
-            <div class="send-ai-section">
-                <label class="send-ai-label">PREFERRED TIME OF DAY</label>
-                <div class="send-ai-time-pref" id="sendAITimePref">
-                    <button class="time-pref-btn" data-time="Morning">🌅 Morning</button>
-                    <button class="time-pref-btn active" data-time="Afternoon">☀️ Afternoon</button>
-                    <button class="time-pref-btn" data-time="Evening">🌆 Evening</button>
-                </div>
-            </div>
+                    <div class="glass-popup-section">
+                        <label class="glass-popup-label">WHEN SHOULD AI CALL BACK?</label>
+                        <div class="glass-popup-grid" id="sendAITiming">
+                            <button class="glass-timing-btn" data-months="3">3 months</button>
+                            <button class="glass-timing-btn" data-months="6">6 months</button>
+                            <button class="glass-timing-btn" data-months="9">9 months</button>
+                            <button class="glass-timing-btn" data-months="12">12 months</button>
+                            <button class="glass-timing-btn" data-months="custom">📅 Pick a date</button>
+                        </div>
+                        <div class="glass-inner-panel" id="sendAICalendar" style="display:none;padding:14px;margin-top:10px;">
+                            <div class="calendar-header">
+                                <button type="button" id="sendAICalPrev">‹</button>
+                                <span class="calendar-month" id="sendAICalMonth"></span>
+                                <button type="button" id="sendAICalNext">›</button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                            </div>
+                            <div class="calendar-days" id="sendAICalDays"></div>
+                        </div>
+                        <input type="hidden" id="sendAICustomDate">
+                    </div>
 
-            <div class="send-ai-actions">
-                <button class="send-ai-cancel" id="sendAICancelBtn">Cancel</button>
-                <button class="send-ai-confirm" id="sendAIConfirmBtn">Send to AI</button>
+                    <div class="glass-popup-section">
+                        <label class="glass-popup-label">PREFERRED TIME OF DAY</label>
+                        <div class="glass-popup-grid" id="sendAITimePref">
+                            <button class="glass-timing-btn" data-time="Morning">🌅 Morning</button>
+                            <button class="glass-timing-btn active" data-time="Afternoon">☀️ Afternoon</button>
+                            <button class="glass-timing-btn" data-time="Evening">🌆 Evening</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-popup-actions">
+                        <button class="glass-btn-dark" id="sendAICancelBtn2" style="flex:1;">Cancel</button>
+                        <button class="glass-btn-primary" id="sendAIConfirmBtn" style="flex:1.5;">Send to AI</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -4100,65 +4114,79 @@
     </div>
 
     <!-- Schedule Booking Modal -->
-    <div class="schedule-modal-overlay" id="scheduleModal">
-        <div class="schedule-modal">
-            <h3>📅 Schedule Meeting</h3>
-            <p id="scheduleLeadName" style="color:rgba(255,255,255,0.6);margin-bottom:16px;font-size:0.875rem;"></p>
-            
-            <div class="form-group">
-                <label>Select Date</label>
-                <div class="calendar-picker" id="calendarPicker">
-                    <div class="calendar-header">
-                        <button id="calendarPrev">‹</button>
-                        <span class="calendar-month" id="calendarMonth"></span>
-                        <button id="calendarNext">›</button>
+    <div class="glass-popup-overlay" id="scheduleModal">
+        <div class="glass-modal-border">
+            <div class="glass-modal-card">
+                <div class="glass-refraction"></div>
+                <div class="glass-caustic"></div>
+                <div class="glass-ambient-glow"></div>
+                <div class="glass-modal-inner" style="padding:28px 28px 24px;">
+                    <div class="glass-modal-header" style="margin-bottom:16px;">
+                        <div class="glass-header-left">
+                            <div class="glass-name-row">
+                                <h3 class="glass-lead-name" style="font-size:20px;">📅 Schedule Meeting</h3>
+                            </div>
+                            <p id="scheduleLeadName" style="color:rgba(255,255,255,0.45);font-size:13px;margin:0;"></p>
+                        </div>
+                        <button class="glass-close-btn" id="scheduleCancelBtn">&times;</button>
                     </div>
-                    <div class="calendar-weekdays">
-                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
-                    </div>
-                    <div class="calendar-days" id="calendarDays"></div>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Select Time</label>
-                <div style="display:flex;gap:12px;align-items:center;">
-                    <select id="scheduleHour" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#111;color:#fff;font-size:1rem;">
-                        <option value="9">9 AM</option>
-                        <option value="10">10 AM</option>
-                        <option value="11">11 AM</option>
-                        <option value="12">12 PM</option>
-                        <option value="13">1 PM</option>
-                        <option value="14">2 PM</option>
-                        <option value="15">3 PM</option>
-                        <option value="16">4 PM</option>
-                        <option value="17">5 PM</option>
-                        <option value="18">6 PM</option>
-                        <option value="19">7 PM</option>
-                        <option value="20">8 PM</option>
-                    </select>
-                    <span style="color:rgba(255,255,255,0.5);">:</span>
-                    <select id="scheduleMinute" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#111;color:#fff;font-size:1rem;">
-                        <option value="0">00</option>
-                        <option value="15">15</option>
-                        <option value="30">30</option>
-                        <option value="45">45</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Note <span style="color:rgba(255,255,255,0.3);font-weight:400;">(optional — syncs to calendar)</span></label>
-                <textarea id="scheduleNote" placeholder="Add a note for this meeting..." style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#111;color:#fff;font-size:0.875rem;font-family:inherit;resize:vertical;min-height:60px;max-height:120px;"></textarea>
-            </div>
 
-            <div class="schedule-modal-actions">
-                <button class="btn-cancel" id="scheduleCancelBtn">Cancel</button>
-                <button class="btn-save" id="scheduleSaveBtn">Save Booking</button>
+                    <div class="glass-popup-section">
+                        <label class="glass-popup-label">SELECT DATE</label>
+                        <div class="glass-inner-panel" style="padding:14px;">
+                            <div class="calendar-header">
+                                <button id="calendarPrev">‹</button>
+                                <span class="calendar-month" id="calendarMonth"></span>
+                                <button id="calendarNext">›</button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                            </div>
+                            <div class="calendar-days" id="calendarDays"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-popup-section">
+                        <label class="glass-popup-label">SELECT TIME</label>
+                        <div style="display:flex;gap:12px;align-items:center;">
+                            <select id="scheduleHour" class="glass-select">
+                                <option value="9">9 AM</option>
+                                <option value="10">10 AM</option>
+                                <option value="11">11 AM</option>
+                                <option value="12">12 PM</option>
+                                <option value="13">1 PM</option>
+                                <option value="14">2 PM</option>
+                                <option value="15">3 PM</option>
+                                <option value="16">4 PM</option>
+                                <option value="17">5 PM</option>
+                                <option value="18">6 PM</option>
+                                <option value="19">7 PM</option>
+                                <option value="20">8 PM</option>
+                            </select>
+                            <span style="color:rgba(255,255,255,0.25);">:</span>
+                            <select id="scheduleMinute" class="glass-select">
+                                <option value="0">00</option>
+                                <option value="15">15</option>
+                                <option value="30">30</option>
+                                <option value="45">45</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="glass-popup-section">
+                        <label class="glass-popup-label">NOTE <span style="color:rgba(255,255,255,0.2);font-weight:400;text-transform:none;letter-spacing:0;">(optional — syncs to calendar)</span></label>
+                        <textarea id="scheduleNote" class="glass-textarea" placeholder="Add a note for this meeting..." style="min-height:60px;max-height:120px;"></textarea>
+                    </div>
+
+                    <div class="glass-popup-actions">
+                        <button class="glass-btn-dark" id="scheduleCancelBtn2" style="flex:1;">Cancel</button>
+                        <button class="glass-btn-primary" id="scheduleSaveBtn" style="flex:1.5;">Save Booking</button>
+                    </div>
+                    <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.25);margin-top:12px;">
+                        📅 Event will be automatically added to Google Calendar
+                    </p>
+                </div>
             </div>
-            <p style="text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:12px;">
-                📅 Event will be automatically added to Google Calendar
-            </p>
         </div>
     </div>
 
@@ -7346,10 +7374,10 @@
         sendAISelectedTime = 'Afternoon';
 
         // Reset modal state
-        document.querySelectorAll('#sendAIReasons .reason-btn').forEach(function(btn) { btn.classList.remove('active'); });
-        document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(btn) { btn.classList.remove('active'); });
-        document.querySelectorAll('#sendAITimePref .time-pref-btn').forEach(function(btn) { btn.classList.remove('active'); });
-        document.querySelector('#sendAITimePref .time-pref-btn[data-time="Afternoon"]').classList.add('active');
+        document.querySelectorAll('#sendAIReasons .glass-reason-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('#sendAITiming .glass-timing-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('#sendAITimePref .glass-timing-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelector('#sendAITimePref .glass-timing-btn[data-time="Afternoon"]').classList.add('active');
         document.getElementById('sendAIOtherReason').style.display = 'none';
         document.getElementById('sendAIOtherReason').value = '';
         document.getElementById('sendAICalendar').style.display = 'none';
@@ -7366,9 +7394,9 @@
     });
 
     // Reason buttons
-    document.querySelectorAll('#sendAIReasons .reason-btn').forEach(function(btn) {
+    document.querySelectorAll('#sendAIReasons .glass-reason-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('#sendAIReasons .reason-btn').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('#sendAIReasons .glass-reason-btn').forEach(function(b) { b.classList.remove('active'); });
             this.classList.add('active');
             sendAISelectedReason = this.dataset.reason;
 
@@ -7441,9 +7469,9 @@
         renderSendAICalendar();
     });
 
-    document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(btn) {
+    document.querySelectorAll('#sendAITiming .glass-timing-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('#sendAITiming .glass-timing-btn').forEach(function(b) { b.classList.remove('active'); });
             this.classList.add('active');
             sendAISelectedMonths = this.dataset.months;
 
@@ -7462,9 +7490,9 @@
     });
 
     // Time preference buttons
-    document.querySelectorAll('#sendAITimePref .time-pref-btn').forEach(function(btn) {
+    document.querySelectorAll('#sendAITimePref .glass-timing-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('#sendAITimePref .time-pref-btn').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('#sendAITimePref .glass-timing-btn').forEach(function(b) { b.classList.remove('active'); });
             this.classList.add('active');
             sendAISelectedTime = this.dataset.time;
         });
@@ -7479,8 +7507,11 @@
     document.getElementById('sendAIOtherReason').addEventListener('input', updateSendAIConfirmState);
     document.getElementById('sendAICustomDate').addEventListener('change', updateSendAIConfirmState);
 
-    // Cancel button
+    // Cancel buttons (close X + Cancel button)
     document.getElementById('sendAICancelBtn').addEventListener('click', function() {
+        document.getElementById('sendAIModal').classList.remove('active');
+    });
+    document.getElementById('sendAICancelBtn2').addEventListener('click', function() {
         document.getElementById('sendAIModal').classList.remove('active');
     });
 
@@ -7662,10 +7693,10 @@
         sendAISelectedTime = 'Afternoon';
 
         // Reset modal state
-        document.querySelectorAll('#sendAIReasons .reason-btn').forEach(function(btn) { btn.classList.remove('active'); });
-        document.querySelectorAll('#sendAITiming .timing-btn').forEach(function(btn) { btn.classList.remove('active'); });
-        document.querySelectorAll('#sendAITimePref .time-pref-btn').forEach(function(btn) { btn.classList.remove('active'); });
-        document.querySelector('#sendAITimePref .time-pref-btn[data-time="Afternoon"]').classList.add('active');
+        document.querySelectorAll('#sendAIReasons .glass-reason-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('#sendAITiming .glass-timing-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('#sendAITimePref .glass-timing-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelector('#sendAITimePref .glass-timing-btn[data-time="Afternoon"]').classList.add('active');
         document.getElementById('sendAIOtherReason').style.display = 'none';
         document.getElementById('sendAIOtherReason').value = '';
         document.getElementById('sendAICalendar').style.display = 'none';
@@ -8306,6 +8337,12 @@
     });
     
     document.getElementById('scheduleCancelBtn').addEventListener('click', function() {
+        document.getElementById('scheduleModal').classList.remove('active');
+        scheduleLeadId = null;
+        scheduleLeadData = null;
+        scheduleSource = null;
+    });
+    document.getElementById('scheduleCancelBtn2').addEventListener('click', function() {
         document.getElementById('scheduleModal').classList.remove('active');
         scheduleLeadId = null;
         scheduleLeadData = null;
