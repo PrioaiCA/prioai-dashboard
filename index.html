@@ -7569,6 +7569,7 @@
             updatePipelineList();
             updateUnqualifiedList();
             updateOpenLeadsList();
+            updateSharedLeadsList();
         } catch (err) {
             showToast('Failed: ' + err.message, 'error');
         }
@@ -10467,11 +10468,13 @@
         var timeframeFilter = document.getElementById('sharedTimeframe')?.value || 'all';
         var sortBy = document.getElementById('sharedSort')?.value || 'priority';
 
-        // First, collect all unique agents that I've shared leads with (for dynamic dropdown)
+        // First, collect all unique agents that I've shared qualified leads with (for dynamic dropdown)
         var sharedWithAgents = {};
         allLeads.forEach(function(l) {
             var f = l.fields;
-            // Only leads I own that I've shared with others (not leads shared with me)
+            var st = f['Status'] || f['Disposition'] || '';
+            // Only qualified leads I own that I've shared with others
+            if (st !== 'Booked' && st !== 'Appointment Booked' && st !== 'Callback' && st !== 'Callback Requested') return;
             if (!l.isShared && f['Shared With Email']) {
                 var emails = Array.isArray(f['Shared With Email']) ? f['Shared With Email'] : [f['Shared With Email']];
                 emails.forEach(function(email) {
@@ -10505,9 +10508,13 @@
             }
         }
 
-        // Filter to only shared leads (Shared With or isShared)
+        // Filter to only shared leads that are still qualified (Booked/Callback)
         var sharedLeads = allLeads.filter(function(l) {
             var f = l.fields;
+            var status = f['Status'] || f['Disposition'] || '';
+
+            // Must have a qualified status (Booked or Callback)
+            if (status !== 'Booked' && status !== 'Appointment Booked' && status !== 'Callback' && status !== 'Callback Requested') return false;
 
             // Must be a shared lead (either shared with me via isShared flag, or I shared it via Shared With field)
             var hasSharedWith = f['Shared With'] && f['Shared With'].length > 0;
