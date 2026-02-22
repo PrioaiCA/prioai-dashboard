@@ -172,6 +172,9 @@
         .priority-card-lg-notes-col{flex:1 1 0%;min-width:0;padding:14px 18px;display:flex;flex-direction:column}
         .priority-card-lg-notes-col .col-label{font-size:0.6875rem;text-transform:uppercase;color:#707070;margin-bottom:8px;font-weight:400}
         .priority-card-lg-notes-col .col-content{font-size:0.8125rem;font-weight:400;line-height:1.5;color:#A0A0A0;flex:1;overflow:hidden}
+        /* Grid view: truncate summary/notes to 3 lines */
+        :not(.list-view) > .priority-card-lg .priority-card-lg-summary-col .col-content,
+        :not(.list-view) > .priority-card-lg .priority-card-lg-notes-col .col-content{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
         @media(max-width:900px){.priority-card-lg{flex-direction:column}.priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-info{flex:1}.priority-card-lg-summary-col{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}.priority-card-lg-notes-col{flex:none}.priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}}
         .missed-meeting-separator{display:flex;align-items:center;gap:16px;margin:24px 0 8px 0;padding:0 8px}
         .missed-meeting-separator::before,.missed-meeting-separator::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#ef4444,transparent)}
@@ -212,16 +215,18 @@
         .action-btn.action-takeover:hover{background:rgba(59,130,246,0.2);border-color:#3B82F6}
         .priorities-cards:not(.list-view){display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
         .priorities-cards:not(.list-view) > .priority-card-lg + .priority-card-lg{border-top:1px solid rgba(255,255,255,0.1)}
-        .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px;border-radius:12px;border-left:3px solid #F59E0B}
+        .priorities-cards:not(.list-view) .priority-card-lg{flex-direction:column;height:380px;border-radius:12px;border-left:3px solid #F59E0B;overflow:hidden}
         .priorities-cards:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priorities-cards:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .priorities-cards:not(.list-view) .priority-card-lg-info{flex:1}
-        .priorities-cards:not(.list-view) .priority-card-lg-summary-col,.priorities-cards:not(.list-view) .priority-card-lg-notes-col,.priorities-cards:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+        .priorities-cards:not(.list-view) .priority-card-lg-summary-col,.priorities-cards:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
+        .priorities-cards:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .priorities-cards:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);flex:none;width:auto}
         .priorities-cards:not(.list-view) .missed-meeting-separator,.priorities-cards:not(.list-view) .missed-meeting-info{grid-column:1/-1}
         .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
         .section-header h3{font-family:var(--font-heading);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#FFFFFF}
         .prio-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+        .prio-header-text h1{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;color:#FFFFFF}
         .prio-filters{display:flex;gap:0.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
         .prio-filter{padding:0.5rem 1rem;font-size:0.8125rem;font-weight:600;color:rgba(255,255,255,0.45);background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 100%);border:1px solid rgba(255,255,255,0.06);border-radius:100px;cursor:pointer;transition:all 250ms ease;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
         .prio-filter:hover{color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.1)}
@@ -229,12 +234,12 @@
         .prio-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
         .prio-list.list-view{grid-template-columns:1fr}
         .prio-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-        .prio-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:320px}
+        .prio-list:not(.list-view) .priority-card-lg{flex-direction:column;height:380px;overflow:hidden}
         .prio-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prio-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
         .prio-list:not(.list-view) .priority-card-lg-info{flex:1}
-        .prio-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
-        .prio-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .prio-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
+        .prio-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
         .prio-list:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prio-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .prio-card{position:relative;background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 50%,rgba(255,255,255,0.02) 100%);backdrop-filter:blur(30px) brightness(0.9);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:0;cursor:pointer;transition:all 250ms ease;display:flex;flex-direction:column;min-height:280px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 4px 12px rgba(0,0,0,0.4)}
@@ -1137,7 +1142,7 @@
         .contact-hero{position:relative;background:linear-gradient(135deg,rgba(0,230,118,0.08) 0%,rgba(59,130,246,0.05) 50%,rgba(0,0,0,0.3) 100%);backdrop-filter:blur(30px) brightness(0.9);border:1px solid rgba(0,230,118,0.12);border-radius:16px;padding:40px 32px;margin-bottom:24px;box-shadow:inset 0 1px 0 rgba(0,230,118,0.08),0 4px 20px rgba(0,0,0,0.4)}
         .contact-hero::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,230,118,0.1),transparent);pointer-events:none}
         .contact-hero-inner{max-width:500px}
-        .contact-hero-text h2{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;margin-bottom:8px}
+        .contact-hero-text h1{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:8px}
         .contact-hero-text p{color:#A0A0A0;font-size:0.8125rem;font-weight:400;line-height:1.5}
         .contact-grid{display:grid;grid-template-columns:280px 1fr;gap:24px}
         .contact-card-info{display:flex;flex-direction:column;gap:16px}
@@ -1219,16 +1224,16 @@
         
         /* Prospects Header */
         .prospects-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
-        .prospects-header-text h2{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;color:#FFFFFF}
+        .prospects-header-text h1{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;color:#FFFFFF}
         .prospects-header-text p{color:#A0A0A0;font-size:0.8125rem;font-weight:400}
         .prospects-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
         .prospects-list.list-view{grid-template-columns:1fr}
         .prospects-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-        .prospects-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:320px}
+        .prospects-list:not(.list-view) .priority-card-lg{flex-direction:column;height:380px;overflow:hidden}
         .prospects-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prospects-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
-        .prospects-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
-        .prospects-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .prospects-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
+        .prospects-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
         .prospects-list:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .prospects-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .prospects-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
@@ -1275,7 +1280,7 @@
 
         /* Pipeline Styles */
         .pipeline-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
-        .pipeline-header-text h2{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;color:#FFFFFF}
+        .pipeline-header-text h1{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;color:#FFFFFF}
         .pipeline-header-text p{color:#A0A0A0;font-size:0.8125rem;font-weight:400}
         .pipeline-stats{display:flex;gap:1.5rem}
         .pipeline-stat{text-align:center}
@@ -1284,26 +1289,26 @@
         .pipeline-list{display:grid;grid-template-columns:1fr;gap:1rem}
         .pipeline-list.list-view{grid-template-columns:1fr}
         .pipeline-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-        .pipeline-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:280px}
+        .pipeline-list:not(.list-view) .priority-card-lg{flex-direction:column;height:380px;overflow:hidden}
         .pipeline-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .pipeline-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
-        .pipeline-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .pipeline-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
         .pipeline-list:not(.list-view) .priority-card-lg-actions{border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .pipeline-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.4);background:#111;border-radius:12px}
 
         /* Shared Leads styles */
         .shared-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
-        .shared-header-text h2{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;color:#FFFFFF}
+        .shared-header-text h1{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;color:#FFFFFF}
         .shared-header-text p{color:#A0A0A0;font-size:0.8125rem;font-weight:400}
         .shared-header-actions{display:flex;align-items:center;gap:1rem}
         .shared-list{display:grid;grid-template-columns:1fr;gap:1rem;padding:0}
         .shared-list.list-view{grid-template-columns:1fr}
         .shared-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-        .shared-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:320px}
+        .shared-list:not(.list-view) .priority-card-lg{flex-direction:column;height:380px;overflow:hidden}
         .shared-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .shared-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
-        .shared-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
-        .shared-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:60px}
+        .shared-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
+        .shared-list:not(.list-view) .priority-card-lg-notes-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
         .shared-list:not(.list-view) .priority-card-lg-status-col{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .shared-list:not(.list-view) .priority-card-lg-actions{grid-template-columns:repeat(4,1fr);border-left:none;border-top:1px solid rgba(255,255,255,0.08);min-width:auto;flex:none}
         .shared-empty{text-align:center;padding:40px;color:rgba(255,255,255,0.3);background:linear-gradient(150deg,rgba(255,255,255,0.03) 0%,rgba(0,0,0,0.25) 100%);border:1px solid rgba(255,255,255,0.05);border-radius:16px}
@@ -1349,7 +1354,7 @@
         
         /* Analytics Page - Modern Design */
         .analytics-header-modern{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:16px}
-        .analytics-title-section h2{font-family:var(--font-heading);font-size:1.75rem;font-weight:700;margin-bottom:2px}
+        .analytics-title-section h1{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:2px}
         .analytics-subtitle{color:rgba(255,255,255,0.5);font-size:0.875rem}
         .analytics-date-nav{display:flex;align-items:center;gap:8px}
         .date-nav-btn{background:linear-gradient(150deg,rgba(255,255,255,0.05),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.07);border-radius:12px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.5);transition:all 250ms ease;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
@@ -1510,7 +1515,7 @@
         
         /* Search Page */
         .search-header{margin-bottom:24px}
-        .search-header h2{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;margin-bottom:4px}
+        .search-header h1{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:4px}
         .search-box-large{display:flex;gap:12px;max-width:500px;margin-bottom:32px}
         .search-input-large{flex:1;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px 18px;color:#fff;font-size:1rem;transition:all 250ms ease;box-shadow:inset 0 2px 6px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.04)}
         .search-input-large:focus{outline:none;border-color:rgba(0,230,118,0.25);box-shadow:inset 0 2px 6px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.04),0 0 20px rgba(0,230,118,0.05)}
@@ -1672,7 +1677,7 @@
 
         /* Unqualified Leads Page */
         .unqualified-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
-        .unqualified-header-text h2{font-family:var(--font-heading);font-weight:700;margin-bottom:0.25rem}
+        .unqualified-header-text h1{font-family:var(--font-heading);font-size:1.5rem;font-weight:800;margin-bottom:0.25rem;color:#FFFFFF}
         .unqualified-header-text p{color:rgba(255,255,255,0.5);font-size:0.875rem}
         .unqualified-header-actions{display:flex;align-items:center;gap:1rem}
         .unqualified-tabs{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
@@ -1689,10 +1694,10 @@
         .unqualified-list .action-btn .action-label{font-size:0.6875rem;white-space:nowrap}
         .unqualified-list .action-btn:last-child{border-radius:0 12px 12px 0}
         .unqualified-list:not(.list-view){grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-        .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;min-height:200px}
+        .unqualified-list:not(.list-view) .priority-card-lg{flex-direction:column;height:380px;overflow:hidden}
         .unqualified-list:not(.list-view) .priority-card-lg-left{flex:none;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
         .unqualified-list:not(.list-view) .priority-card-lg-time-col{flex:0 0 60px}
-        .unqualified-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:40px}
+        .unqualified-list:not(.list-view) .priority-card-lg-summary-col{flex:1;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);min-height:0;overflow:hidden}
         .unqualified-list:not(.list-view) .priority-card-lg-actions{flex-direction:row;border-left:none;border-top:1px solid rgba(255,255,255,0.08)}
         .unqualified-list:not(.list-view) .action-btn{flex:1;width:auto;height:auto;border-left:none;border-right:1px solid rgba(255,255,255,0.08);border-radius:0;padding:12px 6px}
         .unqualified-list:not(.list-view) .action-btn:last-child{border-right:none;border-radius:0 0 12px 0}
@@ -1976,7 +1981,8 @@
                             <line x1="3" y1="18" x2="21" y2="18"></line>
                         </svg>
                     </button>
-                    <h1 class="header-title" id="pageTitle">Overview</h1>
+                    <!-- pageTitle kept hidden for JS compatibility -->
+                    <span class="header-title" id="pageTitle" style="display:none;">Overview</span>
                 </div>
                 <div class="header-right">
                     <button class="btn btn-primary btn-sm" id="loginBtn">Sign In</button>
@@ -2182,7 +2188,7 @@
                         <!-- Prio Header -->
                         <div class="prio-header">
                             <div class="prio-header-text">
-                                <h2>⚡ Prio Prospects <span class="header-count-badge" id="prioCount">0</span></h2>
+                                <h1>⚡ Prio Prospects <span class="header-count-badge" id="prioCount">0</span></h1>
                                 <p>Your priority leads ranked by engagement. Focus here first.</p>
                             </div>
                             <div class="prio-header-actions">
@@ -2252,7 +2258,7 @@
                         <!-- Prospects Header -->
                         <div class="prospects-header">
                             <div class="prospects-header-text">
-                                <h2>📋 Prospects <span class="header-count-badge" id="prospectsCount">0</span></h2>
+                                <h1>📋 Prospects <span class="header-count-badge" id="prospectsCount">0</span></h1>
                                 <p>Booked meetings and callback requests.</p>
                             </div>
                             <div class="prospects-header-actions">
@@ -2322,7 +2328,7 @@
                         <!-- Pipeline Header -->
                         <div class="pipeline-header">
                             <div class="pipeline-header-text">
-                                <h2>🤖 AI Follow Ups <span class="header-count-badge" id="pipelineCount">0</span></h2>
+                                <h1>🤖 AI Follow Ups <span class="header-count-badge" id="pipelineCount">0</span></h1>
                                 <p>Leads being followed up by AI. Timeline and scheduled follow-ups.</p>
                             </div>
                             <div class="pipeline-header-actions">
@@ -2375,7 +2381,7 @@
                         <!-- Shared Header -->
                         <div class="shared-header">
                             <div class="shared-header-text">
-                                <h2>🔗 Shared Leads <span class="header-count-badge" id="sharedCount">0</span></h2>
+                                <h1>🔗 Shared Leads <span class="header-count-badge" id="sharedCount">0</span></h1>
                                 <p>Leads that have been shared with you.</p>
                             </div>
                             <div class="shared-header-actions">
@@ -2445,7 +2451,7 @@
                         <!-- Booked Today Header -->
                         <div class="pipeline-header">
                             <div class="pipeline-header-text">
-                                <h2>🎯 Booked Today <span class="header-count-badge" id="bookedTodayCount">0</span></h2>
+                                <h1>🎯 Booked Today <span class="header-count-badge" id="bookedTodayCount">0</span></h1>
                                 <p>Prospects qualified and booked/callback by AI from today's conversations.</p>
                             </div>
                             <div class="pipeline-header-actions">
@@ -2494,7 +2500,7 @@
                         <!-- Unqualified Header -->
                         <div class="unqualified-header">
                             <div class="unqualified-header-text">
-                                <h2>📁 Unqualified Leads <span class="header-count-badge" id="unqualifiedCount">0</span></h2>
+                                <h1>📁 Unqualified Leads <span class="header-count-badge" id="unqualifiedCount">0</span></h1>
                                 <p>Leads that are not yet booked or in an active pipeline.</p>
                             </div>
                             <div class="unqualified-header-actions">
@@ -2559,7 +2565,7 @@
                         <!-- Open Leads Header -->
                         <div class="unqualified-header">
                             <div class="unqualified-header-text">
-                                <h2>📂 Open Leads <span class="header-count-badge" id="openLeadsCount">0</span></h2>
+                                <h1>📂 Open Leads <span class="header-count-badge" id="openLeadsCount">0</span></h1>
                                 <p>Leads with Status = New or Retry that are ready to be called.</p>
                             </div>
                             <div class="unqualified-header-actions">
@@ -2621,7 +2627,7 @@
                         <!-- Modern Header with Date Navigation -->
                         <div class="analytics-header-modern">
                             <div class="analytics-title-section">
-                                <h2>Analytics</h2>
+                                <h1>📊 Analytics</h1>
                                 <p class="analytics-subtitle">AI Calling Performance</p>
                             </div>
                             <div class="analytics-date-nav" style="position:relative">
@@ -2826,7 +2832,7 @@
                         <div class="contact-hero" style="margin-bottom:24px;">
                             <div class="contact-hero-inner">
                                 <div class="contact-hero-text">
-                                    <h2>Import Leads</h2>
+                                    <h1>📥 Import Leads</h1>
                                     <p>Add new leads to your account — individually or in bulk via CSV.</p>
                                 </div>
                             </div>
@@ -2979,7 +2985,7 @@
                     <!-- Page: Search -->
                     <div class="page hidden" id="page-search">
                         <div class="search-header">
-                            <h2>🔍 Search Lead</h2>
+                            <h1>🔍 Search Lead</h1>
                             <p style="color:rgba(255,255,255,0.5);">Search by name or last 4 digits of phone number</p>
                         </div>
                         
