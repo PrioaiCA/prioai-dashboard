@@ -381,8 +381,9 @@
 
         /* 1. Header */
         .glass-modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
-        .glass-header-left{display:flex;flex-direction:column;gap:10px}
-        .modal-prio-icon{width:28px;height:28px;border-radius:8px}
+        .glass-header-left{display:flex;flex-direction:column;gap:10px;flex:1;min-width:0}
+        .glass-name-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .modal-prio-icon{width:24px;height:24px;border-radius:6px;flex-shrink:0}
         .glass-lead-name{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:600;color:#fff;margin:0;line-height:1.2}
         .glass-status-badge{
             display:inline-flex;align-items:center;gap:8px;
@@ -690,6 +691,9 @@
             .glass-lead-name{font-size:22px}
             .glass-action-pills{gap:8px}
             .glass-pill{padding:7px 14px;font-size:12px}
+            .glass-tab-bar{flex-wrap:wrap}
+            .glass-tab{padding:6px 14px;font-size:12px}
+            .glass-name-row{gap:8px}
         }
         .polish-preview-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1200;opacity:0;visibility:hidden;transition:all 150ms ease}
         .polish-preview-modal.active{opacity:1;visibility:visible}
@@ -3776,11 +3780,13 @@
                     <!-- 1. Header -->
                     <div class="glass-modal-header">
                         <div class="glass-header-left">
-                            <img src="/assets/favicon.png" class="modal-prio-icon" id="modalPrioIcon" style="display:none;">
-                            <h2 class="glass-lead-name" id="modalLeadName">Lead Name</h2>
-                            <div class="glass-status-badge" id="glassStatusBadge" onclick="toggleGlassStatusMenu(event)" style="cursor:pointer;">
-                                <span class="glass-status-text" id="glassStatusText">New Lead</span>
-                                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="opacity:0.5;margin-left:2px;"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <div class="glass-name-row">
+                                <img src="/assets/favicon.png" class="modal-prio-icon" id="modalPrioIcon" style="display:none;">
+                                <h2 class="glass-lead-name" id="modalLeadName">Lead Name</h2>
+                                <div class="glass-status-badge" id="glassStatusBadge" onclick="toggleGlassStatusMenu(event)" style="cursor:pointer;">
+                                    <span class="glass-status-text" id="glassStatusText">New Lead</span>
+                                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="opacity:0.5;margin-left:2px;"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </div>
                             </div>
                             <div class="glass-status-menu" id="glassStatusMenu"></div>
                             <!-- Hidden status elements for compatibility -->
@@ -3843,34 +3849,13 @@
                     <!-- 4. Divider -->
                     <div class="glass-divider"></div>
 
-                    <!-- 5. Section 1: AI Summary / Transcript (pill toggle) -->
+                    <!-- 5. Unified tab section: My Notes, My Calls, AI Summary, AI Transcript -->
                     <div class="glass-section">
                         <div class="glass-tab-bar">
-                            <button class="glass-tab active" data-tab="summary" onclick="switchGlassTab(this, 'summary')">AI Summary</button>
-                            <button class="glass-tab" data-tab="transcript" onclick="switchGlassTab(this, 'transcript')">Transcript</button>
-                        </div>
-                        <div class="glass-tab-content" id="glassTabSummary">
-                            <div class="glass-inner-panel" id="aiSummarySection">
-                                <span id="modalAICallDate" class="glass-ai-date" style="white-space:nowrap;"></span>
-                                <span id="modalAIStatusBadge" style="display:none;"></span>
-                                <div class="glass-summary-text" id="modalSummary">No summary available</div>
-                            </div>
-                        </div>
-                        <div class="glass-tab-content" id="glassTabTranscript" style="display:none;">
-                            <div class="glass-inner-panel">
-                                <div class="glass-transcript-text" id="modalTranscript">No transcript available</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 6. Divider -->
-                    <div class="glass-divider"></div>
-
-                    <!-- 7. Section 2: Notes / Call Attempts (pill toggle) -->
-                    <div class="glass-section">
-                        <div class="glass-tab-bar">
-                            <button class="glass-tab active" data-tab="notes" onclick="switchGlassTab(this, 'notes')">Notes</button>
-                            <button class="glass-tab" data-tab="attempts" onclick="switchGlassTab(this, 'attempts')">Call Attempts</button>
+                            <button class="glass-tab active" data-tab="notes" onclick="switchGlassTab(this, 'notes')">My Notes</button>
+                            <button class="glass-tab" data-tab="attempts" onclick="switchGlassTab(this, 'attempts')">My Calls</button>
+                            <button class="glass-tab" data-tab="summary" onclick="switchGlassTab(this, 'summary')">AI Summary</button>
+                            <button class="glass-tab" data-tab="transcript" onclick="switchGlassTab(this, 'transcript')">AI Transcript</button>
                         </div>
                         <div class="glass-tab-content" id="glassTabNotes">
                             <div class="lead-notes-list" id="modalNotesList"></div>
@@ -3890,6 +3875,18 @@
                                 <div class="glass-attempts-list" id="modalAttemptsList"></div>
                                 <span class="attempts-count" id="modalAttemptsCount" style="display:none;">0</span>
                                 <button class="glass-log-attempt-btn" id="modalLogAttemptBtn">+ Log Call Attempt</button>
+                            </div>
+                        </div>
+                        <div class="glass-tab-content" id="glassTabSummary" style="display:none;">
+                            <div class="glass-inner-panel" id="aiSummarySection">
+                                <span id="modalAICallDate" class="glass-ai-date" style="white-space:nowrap;"></span>
+                                <span id="modalAIStatusBadge" style="display:none;"></span>
+                                <div class="glass-summary-text" id="modalSummary">No summary available</div>
+                            </div>
+                        </div>
+                        <div class="glass-tab-content" id="glassTabTranscript" style="display:none;">
+                            <div class="glass-inner-panel">
+                                <div class="glass-transcript-text" id="modalTranscript">No transcript available</div>
                             </div>
                         </div>
                     </div>
