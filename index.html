@@ -977,21 +977,46 @@
         .meeting-details{font-size:0.8125rem;font-weight:400;color:#A0A0A0}
         .prio-empty{text-align:center;padding:3rem;color:#707070}
         
-        /* Profile Menu */
-        .profile-menu{position:absolute;bottom:100%;left:0;right:0;background:#151515;border:1px solid rgba(255,255,255,0.1);border-radius:12px;margin:0 0.5rem 0.5rem;padding:0.5rem;opacity:0;visibility:hidden;transform:translateY(10px);transition:all 150ms ease}
+        /* ===== LIQUID GLASS PROFILE MENU ===== */
+        .profile-menu{
+            position:absolute;bottom:100%;left:0;right:0;
+            background:linear-gradient(160deg,rgba(12,12,12,0.96),rgba(6,6,6,0.98));
+            backdrop-filter:blur(40px) saturate(1.2);
+            border:1px solid rgba(255,255,255,0.07);
+            border-radius:16px;margin:0 0.5rem 0.5rem;padding:6px;
+            opacity:0;visibility:hidden;transform:translateY(10px);
+            transition:all 250ms cubic-bezier(0.16,1,0.3,1);
+            box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.05)
+        }
+        .profile-menu::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);pointer-events:none}
         .profile-menu.active{opacity:1;visibility:visible;transform:translateY(0)}
-        .profile-menu-item{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;border-radius:8px;cursor:pointer;font-size:0.875rem;color:rgba(255,255,255,0.8);transition:all 150ms ease}
-        .profile-menu-item:hover{background:rgba(255,255,255,0.05)}
-        .profile-menu-item.logout{color:#ef4444}
-        .profile-menu-item.logout:hover{background:rgba(239,68,68,0.1)}
-        .profile-menu-divider{height:1px;background:rgba(255,255,255,0.1);margin:0.5rem 0}
-        
-        /* Notifications Popup */
-        .notifications-popup{position:absolute;bottom:100%;left:0;width:280px;background:#151515;border:1px solid rgba(255,255,255,0.1);border-radius:12px;margin-bottom:0.5rem;opacity:0;visibility:hidden;transform:translateY(10px);transition:all 150ms ease;z-index:1000}
+        .profile-menu-item{
+            display:flex;align-items:center;gap:0.75rem;padding:10px 14px;
+            border-radius:12px;cursor:pointer;font-size:13px;font-weight:500;
+            color:rgba(255,255,255,0.6);transition:all 200ms ease;
+            font-family:'DM Sans',sans-serif
+        }
+        .profile-menu-item:hover{background:linear-gradient(150deg,rgba(255,255,255,0.06),rgba(0,0,0,0.2));color:rgba(255,255,255,0.85)}
+        .profile-menu-item.logout{color:rgba(239,68,68,0.6)}
+        .profile-menu-item.logout:hover{background:linear-gradient(150deg,rgba(239,68,68,0.08),rgba(0,0,0,0.2));color:#ef4444}
+        .profile-menu-divider{height:1px;background:linear-gradient(90deg,transparent 5%,rgba(255,255,255,0.05) 20%,rgba(0,230,118,0.04) 50%,rgba(255,255,255,0.05) 80%,transparent 95%);margin:4px 0}
+
+        /* ===== LIQUID GLASS NOTIFICATIONS POPUP ===== */
+        .notifications-popup{
+            position:absolute;bottom:100%;left:0;width:280px;
+            background:linear-gradient(160deg,rgba(12,12,12,0.96),rgba(6,6,6,0.98));
+            backdrop-filter:blur(40px) saturate(1.2);
+            border:1px solid rgba(255,255,255,0.07);
+            border-radius:16px;margin-bottom:0.5rem;padding:0;
+            opacity:0;visibility:hidden;transform:translateY(10px);
+            transition:all 250ms cubic-bezier(0.16,1,0.3,1);z-index:1000;
+            box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.05);overflow:hidden
+        }
+        .notifications-popup::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);pointer-events:none;z-index:1}
         .notifications-popup.active{opacity:1;visibility:visible;transform:translateY(0)}
-        .notifications-header{padding:1rem;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:600;font-size:0.875rem}
-        .notifications-empty{padding:2rem;text-align:center;color:#707070;font-size:0.8125rem;font-weight:400}
-        
+        .notifications-header{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.05);font-weight:500;font-size:13px;color:rgba(255,255,255,0.7)}
+        .notifications-empty{padding:2rem;text-align:center;color:rgba(255,255,255,0.2);font-size:13px;font-weight:400}
+
         .sidebar-footer{position:relative}
         
         /* Settings Page */
@@ -1544,16 +1569,29 @@
         .call-detail-section h4{font-family:var(--font-heading);font-size:0.875rem;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px}
         .call-detail-transcript{background:#0a0a0a;padding:16px;border-radius:8px;font-size:0.875rem;line-height:1.6;max-height:300px;overflow-y:auto;white-space:pre-wrap}
 
-        /* Collapsible Sidebar */
-        .sidebar-collapse-btn{display:none;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);cursor:pointer;align-items:center;justify-content:center;transition:all 150ms ease;font-size:1rem;flex-shrink:0}
-        .sidebar-collapse-btn:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)}
+        /* ===== LIQUID GLASS COLLAPSIBLE SIDEBAR ===== */
+        .sidebar-collapse-btn{
+            display:none;width:28px;height:28px;border-radius:10px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.06),rgba(0,0,0,0.3));
+            backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,0.07);
+            color:rgba(255,255,255,0.4);cursor:pointer;
+            align-items:center;justify-content:center;
+            transition:all 250ms ease;font-size:1rem;flex-shrink:0;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),0 2px 8px rgba(0,0,0,0.3)
+        }
+        .sidebar-collapse-btn:hover{
+            background:linear-gradient(150deg,rgba(255,255,255,0.1),rgba(0,0,0,0.25));
+            color:rgba(255,255,255,0.8);border-color:rgba(255,255,255,0.12);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 4px 12px rgba(0,0,0,0.4)
+        }
         @media(min-width:1024px){.sidebar-collapse-btn{display:flex}}
         .sidebar.collapsed{width:64px;min-width:64px}
         .sidebar.collapsed .sidebar-logo{display:none !important}
-        .sidebar.collapsed .sidebar-logo-mini{display:block !important;width:32px;height:32px;border-radius:8px;margin:0 auto}
+        .sidebar.collapsed .sidebar-logo-mini{display:block !important;width:32px;height:32px;border-radius:10px;margin:0 auto}
         .sidebar.collapsed .nav-item span:not(.nav-item-icon){display:none}
         .sidebar.collapsed .nav-section-title{display:none}
-        .sidebar.collapsed .nav-item{justify-content:center;padding:10px 8px}
+        .sidebar.collapsed .nav-item{justify-content:center;padding:10px 8px;border-radius:12px}
         .sidebar.collapsed .nav-item-icon{width:32px;height:32px;font-size:20px;display:flex;align-items:center;justify-content:center}
         .sidebar.collapsed .user-info{display:none}
         .sidebar.collapsed .user-avatar{width:32px;height:32px;min-width:32px;min-height:32px;font-size:14px;flex-shrink:0}
@@ -1562,15 +1600,21 @@
         .sidebar.collapsed .profile-menu{left:64px;bottom:50px;width:180px}
         .sidebar.collapsed .notifications-popup{left:64px}
         .sidebar.collapsed .sidebar-header{justify-content:center;padding:12px 10px;position:relative}
-        .sidebar.collapsed .sidebar-collapse-btn{position:absolute;right:-12px;top:50%;transform:translateY(-50%);z-index:10;width:24px;height:24px;border-radius:50%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);font-size:0.75rem}
+        .sidebar.collapsed .sidebar-collapse-btn{
+            position:absolute;right:-12px;top:50%;transform:translateY(-50%);z-index:10;
+            width:24px;height:24px;border-radius:50%;
+            background:linear-gradient(150deg,rgba(12,12,12,0.95),rgba(6,6,6,0.98));
+            border:1px solid rgba(255,255,255,0.1);font-size:0.75rem;
+            box-shadow:0 2px 10px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.06)
+        }
         .sidebar.collapsed .sidebar-footer-row{justify-content:center}
         .app-container.sidebar-collapsed .main-content{margin-left:64px}
         @media(max-width:1023px){.app-container.sidebar-collapsed .main-content{margin-left:0}}
 
         /* Collapsible Nav Sections */
-        .nav-section-collapsible .nav-section-toggle{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding-right:8px}
-        .nav-section-collapsible .nav-section-toggle:hover{color:rgba(255,255,255,0.9)}
-        .nav-section-arrow{font-size:0.625rem;transition:transform 0.2s ease;color:rgba(255,255,255,0.4)}
+        .nav-section-collapsible .nav-section-toggle{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding-right:8px;transition:color 200ms ease}
+        .nav-section-collapsible .nav-section-toggle:hover{color:rgba(255,255,255,0.5)}
+        .nav-section-arrow{font-size:0.625rem;transition:transform 0.25s ease;color:rgba(255,255,255,0.2)}
         .nav-section-collapsible.collapsed .nav-section-arrow{transform:rotate(-90deg)}
         .nav-section-items{overflow:hidden;transition:max-height 0.25s ease-out;max-height:500px}
         .nav-section-collapsible.collapsed .nav-section-items{max-height:0}
@@ -1578,8 +1622,8 @@
         .sidebar.collapsed .nav-section-collapsible.collapsed .nav-section-items{max-height:500px}
 
         /* Sidebar Resize Handle */
-        .sidebar-resize-handle{position:absolute;top:0;right:-4px;width:8px;height:100%;cursor:ew-resize;z-index:100;background:transparent}
-        .sidebar-resize-handle:hover,.sidebar-resize-handle.active{background:rgba(52,211,153,0.3)}
+        .sidebar-resize-handle{position:absolute;top:0;right:-4px;width:8px;height:100%;cursor:ew-resize;z-index:100;background:transparent;transition:background 200ms ease}
+        .sidebar-resize-handle:hover,.sidebar-resize-handle.active{background:linear-gradient(180deg,transparent,rgba(0,230,118,0.2) 30%,rgba(0,230,118,0.3) 50%,rgba(0,230,118,0.2) 70%,transparent)}
         .sidebar.collapsed .sidebar-resize-handle{display:none}
 
         /* Image Crop Modal */
