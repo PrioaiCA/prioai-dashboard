@@ -8402,6 +8402,19 @@
                 var phone = scheduleLeadData['Phone #'] || scheduleLeadData['Phone'] || '';
                 var email = scheduleLeadData['Email'] || '';
                 var scheduleNoteText = (document.getElementById('scheduleNote').value || '').trim();
+
+                // Extract AI Summary and latest client note for calendar event
+                var aiSummary = scheduleLeadData['Last Call Summary'] || scheduleLeadData['Summary'] || '';
+                var clientNotesRaw = scheduleLeadData['Client Notes'] || scheduleLeadData['Notes'] || '';
+                var clientNotesArray = parseNotesJson(clientNotesRaw);
+                var latestClientNote = '';
+                if (clientNotesArray.length > 0) {
+                    var lastNote = clientNotesArray[clientNotesArray.length - 1];
+                    var noteDate = lastNote.date ? formatNoteDate(lastNote.date) : '';
+                    latestClientNote = lastNote.text || '';
+                    if (noteDate) latestClientNote = noteDate + ' — ' + latestClientNote;
+                }
+
                 var calendarSyncSuccess = false;
                 try {
                     var calResponse = await fetch('https://n8n.prioai.ca/webhook/calendar-sync', {
@@ -8414,6 +8427,8 @@
                             email: email,
                             bookedTime: bookedDateTime.toISOString(),
                             note: scheduleNoteText,
+                            aiSummary: aiSummary,
+                            latestClientNote: latestClientNote,
                             agentEmail: currentUser?.email || '',
                             agentName: currentUser?.name || ''
                         })
