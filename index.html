@@ -547,7 +547,11 @@
         .glass-transcript-text .lead-transcript-line{padding-left:12px;margin-bottom:10px}
 
         /* Notes list in glass modal */
-        #leadModal .lead-notes-list{max-height:150px;overflow-y:auto;margin-bottom:12px}
+        #leadModal .lead-notes-list{margin-bottom:12px;overflow:hidden}
+        #leadModal .lead-notes-list.collapsed .lead-note-item:nth-child(n+3){display:none}
+        #leadModal .lead-notes-list .show-all-notes-btn{display:none;width:100%;padding:8px;margin-top:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:rgba(255,255,255,0.5);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 150ms ease}
+        #leadModal .lead-notes-list .show-all-notes-btn:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8)}
+        #leadModal .lead-notes-list.collapsed .show-all-notes-btn{display:block}
         #leadModal .lead-note-item{
             padding:10px 14px;margin-bottom:6px;
             background:linear-gradient(150deg,rgba(255,255,255,0.02),rgba(0,0,0,0.2));
@@ -722,7 +726,7 @@
 
         /* Glass status menu dropdown */
         .glass-status-menu{
-            display:none;position:absolute;z-index:10;margin-top:6px;
+            display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:10;
             background:linear-gradient(160deg,rgba(12,12,12,0.96),rgba(6,6,6,0.98));
             border:1px solid rgba(255,255,255,0.08);border-radius:14px;
             padding:6px;min-width:180px;
@@ -821,7 +825,7 @@
         .lead-section.collapsible-empty.expanded .collapsible-body{display:block}
         .lead-section.collapsible-empty.expanded .collapsible-header{border-radius:12px 10px 0 0}
         .lead-summary-content{font-size:0.8125rem;font-weight:400;line-height:1.6;color:#A0A0A0;white-space:pre-wrap}
-        .lead-notes-list{max-height:150px;overflow-y:auto;margin-bottom:12px}
+        .lead-notes-list{margin-bottom:12px}
         .lead-note-item{padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;font-size:0.8125rem;position:relative}
         .lead-note-item:last-child{margin-bottom:0}
         .lead-note-item .note-content{margin-bottom:4px}
@@ -1233,7 +1237,8 @@
         .search-box .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.5}
         .filter-select{padding:10px 16px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.06);border-radius:100px;color:#fff;font-size:0.875rem;min-width:140px;cursor:pointer;transition:all 250ms ease;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
         .filter-select:focus{outline:none;border-color:rgba(0,230,118,0.25);box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),0 0 20px rgba(0,230,118,0.05)}
-        
+        .filter-select option{background:#1a1a2e;color:#fff}
+
         /* Data Table */
         .table-container{background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 50%,rgba(255,255,255,0.02) 100%);backdrop-filter:blur(30px) brightness(0.9);border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 4px 12px rgba(0,0,0,0.4)}
         .data-table{width:100%;border-collapse:collapse}
@@ -3817,12 +3822,14 @@
                             <div class="glass-name-row">
                                 <img src="/assets/favicon.png" class="modal-prio-icon" id="modalPrioIcon" style="display:none;">
                                 <h2 class="glass-lead-name" id="modalLeadName">Lead Name</h2>
-                                <div class="glass-status-badge" id="glassStatusBadge" onclick="toggleGlassStatusMenu(event)" style="cursor:pointer;">
-                                    <span class="glass-status-text" id="glassStatusText">New Lead</span>
-                                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="opacity:0.5;margin-left:2px;"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <div class="glass-status-wrapper" style="position:relative;">
+                                    <div class="glass-status-badge" id="glassStatusBadge" onclick="toggleGlassStatusMenu(event)" style="cursor:pointer;">
+                                        <span class="glass-status-text" id="glassStatusText">New Lead</span>
+                                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="opacity:0.5;margin-left:2px;"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </div>
+                                    <div class="glass-status-menu" id="glassStatusMenu"></div>
                                 </div>
                             </div>
-                            <div class="glass-status-menu" id="glassStatusMenu"></div>
                             <!-- Hidden status elements for compatibility -->
                             <div class="custom-status-dropdown" id="statusDropdownWrapper" style="display:none;">
                                 <button type="button" class="status-dropdown-trigger" id="statusDropdownTrigger" onclick="toggleStatusDropdown()">
@@ -3909,7 +3916,6 @@
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
                                     </button>
                                     <button id="polishNotesBtn" class="glass-btn-primary polish-notes-btn" title="Polish with AI">Polish & Save</button>
-                                    <button class="glass-btn-dark" id="modalSaveNoteBtn">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -6504,7 +6510,9 @@
         var notesList = document.getElementById('modalNotesList');
         var notesArr = parseNotesJson(notesRaw);
         if (notesArr.length > 0) {
-            notesList.innerHTML = notesArr.map(function(note, idx) {
+            var reversed = notesArr.slice().map(function(note, idx) { return {note: note, origIdx: idx}; }).reverse();
+            notesList.innerHTML = reversed.map(function(item) {
+                var note = item.note; var idx = item.origIdx;
                 var dateStr = note.date ? formatNoteDate(note.date) : '';
                 return '<div class="lead-note-item" data-note-index="' + idx + '">' +
                     '<div class="note-content">' + escapeHtml(note.text) + '</div>' +
@@ -6512,7 +6520,14 @@
                     '<div class="note-actions"><button class="btn-edit-note" onclick="editNote(' + idx + ')" title="Edit">✏️</button><button class="btn-delete-note" onclick="deleteNote(' + idx + ')" title="Delete">✕</button></div>' +
                 '</div>';
             }).join('');
+            if (notesArr.length > 2) {
+                notesList.classList.add('collapsed');
+                notesList.innerHTML += '<button class="show-all-notes-btn" onclick="this.parentElement.classList.remove(\'collapsed\');this.style.display=\'none\';">Show all ' + notesArr.length + ' notes</button>';
+            } else {
+                notesList.classList.remove('collapsed');
+            }
         } else {
+            notesList.classList.remove('collapsed');
             notesList.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes yet</p>';
         }
         document.getElementById('modalNotesInput').value = '';
@@ -7063,41 +7078,6 @@
         }
     }
     window.selectCardStatus = selectCardStatus;
-
-    // Save note
-    document.getElementById('modalSaveNoteBtn').addEventListener('click', async function() {
-        if (!currentLeadId) return;
-        var noteText = document.getElementById('modalNotesInput').value.trim();
-        if (!noteText) return;
-
-        var btn = this;
-        btn.disabled = true;
-        btn.textContent = 'Saving...';
-
-        try {
-            var lead = allLeads.find(function(l) { return l.id === currentLeadId; });
-            var existingNotesRaw = lead.fields['Client Notes'] || '';
-            var notesArray = parseNotesJson(existingNotesRaw);
-            notesArray.push({ text: noteText, date: new Date().toISOString() });
-            var newNotes = JSON.stringify(notesArray);
-
-            await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
-                method: 'PATCH',
-                body: { fields: { 'Client Notes': newNotes } }
-            });
-
-            lead.fields['Client Notes'] = newNotes;
-            lead.fields['Updated At'] = new Date().toISOString(); // Update timestamp live
-            document.getElementById('modalNotesInput').value = '';
-            openLeadModal(currentLeadId); // Refresh modal
-            updateLeadCardDisplay(currentLeadId); // Update card live
-            showToast('Note saved', 'success');
-        } catch (err) {
-            showToast('Failed to save note', 'error');
-        }
-        btn.disabled = false;
-        btn.textContent = '💾 Save';
-    });
 
     // === VOICE INPUT ===
     var voiceRecognition = null;
@@ -9792,7 +9772,9 @@
         var notes = parseNotesJson(notesRaw);
         var notesList = document.getElementById('modalNotesList');
         if (notes.length > 0) {
-            notesList.innerHTML = notes.map(function(note, idx) {
+            var reversed = notes.slice().map(function(note, idx) { return {note: note, origIdx: idx}; }).reverse();
+            notesList.innerHTML = reversed.map(function(item) {
+                var note = item.note; var idx = item.origIdx;
                 var dateStr = note.date ? formatNoteDate(note.date) : '';
                 return '<div class="lead-note-item" data-note-index="' + idx + '">' +
                     '<div class="note-content">' + escapeHtml(note.text) + '</div>' +
@@ -9800,11 +9782,18 @@
                     '<div class="note-actions"><button class="btn-edit-note" onclick="editNote(' + idx + ')" title="Edit">✏️</button><button class="btn-delete-note" onclick="deleteNote(' + idx + ')" title="Delete">✕</button></div>' +
                 '</div>';
             }).join('');
+            if (notes.length > 2) {
+                notesList.classList.add('collapsed');
+                notesList.innerHTML += '<button class="show-all-notes-btn" onclick="this.parentElement.classList.remove(\'collapsed\');this.style.display=\'none\';">Show all ' + notes.length + ' notes</button>';
+            } else {
+                notesList.classList.remove('collapsed');
+            }
         } else {
+            notesList.classList.remove('collapsed');
             notesList.innerHTML = '<div style="color:rgba(255,255,255,0.4)">No notes yet</div>';
         }
         document.getElementById('modalNotesInput').value = '';
-        
+
         // Attempts - parse JSON if available
         var attemptsRaw = f['Client Attempts'] || '[]';
         var attemptsArray = [];
