@@ -506,6 +506,7 @@ img {
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--text-primary);
+    margin: 0;
 }
 
 .header-right {
@@ -1153,13 +1154,8 @@ tr:hover td {
 }
 
 .prio-header-text h2 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin-bottom: var(--space-2);
-    color: var(--text-primary);
-}
-
-.prio-header-text p {
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--text-secondary);
 }
 
