@@ -670,8 +670,8 @@
         .intent-label.intent-error{color:rgba(255,255,255,0.3)}
 
         /* Compact intent card in info grid */
-        .glass-intent-card .glass-info-value{display:flex;align-items:center;gap:8px}
-        .intent-card-fires{display:flex;align-items:center;gap:2px}
+        .glass-intent-card .glass-info-value{display:flex;flex-direction:row;align-items:center;gap:8px;flex-wrap:nowrap}
+        .intent-card-fires{display:inline-flex;flex-direction:row;align-items:center;gap:2px;flex-wrap:nowrap}
         .intent-card-fire{font-size:0.875rem;line-height:1;transition:opacity 300ms ease,filter 300ms ease}
         .intent-card-fire.dim{opacity:0.15;filter:grayscale(1)}
         .intent-card-fire.lit{opacity:1;filter:none}
@@ -3883,8 +3883,8 @@
                         </div>
                         <div class="glass-info-panel glass-intent-card">
                             <span class="glass-info-label">LEAD INTENT</span>
-                            <span class="glass-info-value">
-                                <span class="intent-card-fires" id="intentCardFires">
+                            <span class="glass-info-value" style="display:flex;flex-direction:row;align-items:center;gap:8px">
+                                <span class="intent-card-fires" id="intentCardFires" style="display:inline-flex;flex-direction:row;align-items:center">
                                     <span class="intent-card-fire dim">🔥</span>
                                     <span class="intent-card-fire dim">🔥</span>
                                     <span class="intent-card-fire dim">🔥</span>
