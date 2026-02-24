@@ -2965,7 +2965,7 @@
                                                 <input type="hidden" id="singleLeadCallDate">
                                             </div>
                                         </div>
-                                        <div id="singleLeadTimeWrapper" style="display:none;">
+                                        <div id="singleLeadTimeWrapper">
                                             <label style="display:block;font-size:0.75rem;font-weight:400;color:#707070;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Preferred Time of Day</label>
                                             <div class="send-ai-time-pref" id="singleLeadTimePref">
                                                 <button type="button" class="time-pref-btn" data-time="Morning">🌅 Morning</button>
@@ -11617,7 +11617,7 @@
                 else if (selectedTime === 'Evening') timeHour = 17;
                 var nextCallDt = new Date(selectedDate + 'T00:00:00');
                 nextCallDt.setHours(timeHour, 0, 0, 0);
-                leadData['Next Call Date'] = nextCallDt.toISOString();
+                leadData.nextCallDate = nextCallDt.toISOString();
             }
 
             // Send to n8n webhook
@@ -11651,7 +11651,6 @@
             singleLeadSelectedDate = null;
             singleLeadSelectedTime = 'Afternoon';
             document.getElementById('singleLeadCalendar').style.display = 'none';
-            document.getElementById('singleLeadTimeWrapper').style.display = 'none';
             var calToggle = document.getElementById('singleLeadCalToggle');
             calToggle.innerHTML = '📅 Pick a date';
             calToggle.style.color = 'rgba(255,255,255,0.5)';
@@ -11708,8 +11707,6 @@
                 var toggle = document.getElementById('singleLeadCalToggle');
                 toggle.innerHTML = '📅 ' + monthNames[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
                 toggle.style.color = '#fff';
-                // Show time preference
-                document.getElementById('singleLeadTimeWrapper').style.display = 'block';
             });
         });
     }
