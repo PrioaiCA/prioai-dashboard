@@ -119,6 +119,7 @@
         .font-size-lg .priority-card-lg-time-col .date-value{font-size:1rem}
         .font-size-lg .priority-card-lg{min-height:120px}
         .header-count-badge{background:rgb(52,211,153);color:#000;font-size:0.875rem;font-weight:700;padding:2px 10px;border-radius:20px;margin-left:10px;vertical-align:middle}
+        .page-section-title{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;color:#fff;margin:0 0 4px 0;display:flex;align-items:center}
         .filters-left{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
         .sort-controls{display:flex;align-items:center;gap:8px}
         .sort-label{font-size:0.6875rem;font-weight:400;color:#707070;white-space:nowrap}
@@ -654,8 +655,8 @@
         .intent-refresh-btn:hover{border-color:rgba(0,230,118,0.2);color:#00e676;transform:rotate(45deg)}
         .intent-refresh-btn.spinning svg{animation:intentSpin 0.8s linear infinite}
         @keyframes intentSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-        .intent-fire-row{display:flex;align-items:center;gap:6px}
-        .intent-fire{font-size:1.75rem;line-height:1;transition:opacity 300ms ease,filter 300ms ease}
+        .intent-fire-row{display:flex;flex-direction:row;align-items:center;gap:6px}
+        .intent-fire{font-size:1.75rem;line-height:1}
         .intent-fire.dim{opacity:0.15;filter:grayscale(1)}
         .intent-fire.lit{opacity:1;filter:none}
         .intent-fire-row.loading .intent-fire{animation:intentPulse 1.2s ease-in-out infinite}
@@ -670,9 +671,9 @@
         .intent-label.intent-error{color:rgba(255,255,255,0.3)}
 
         /* Compact intent card in info grid */
-        .glass-intent-card .glass-info-value{display:inline-flex;align-items:center;gap:8px;flex-wrap:nowrap}
-        .intent-card-fires{display:inline-flex;align-items:center;gap:2px;flex-wrap:nowrap;white-space:nowrap}
-        .intent-card-fire{font-size:0.875rem;line-height:1;flex-shrink:0;display:inline-block;transition:opacity 300ms ease,filter 300ms ease}
+        .glass-intent-card .glass-info-value{display:inline-flex;flex-direction:row;align-items:center;gap:8px;flex-wrap:nowrap}
+        .intent-card-fires{display:inline-flex;flex-direction:row;align-items:center;gap:2px;flex-wrap:nowrap;white-space:nowrap}
+        .intent-card-fire{font-size:0.875rem;line-height:1;flex-shrink:0;display:inline-block}
         .intent-card-fire.dim{opacity:0.15;filter:grayscale(1)}
         .intent-card-fire.lit{opacity:1;filter:none}
         .intent-card-fires.loading .intent-card-fire{animation:intentPulse 1.2s ease-in-out infinite}
@@ -956,6 +957,12 @@
         .calendar-day.other-month{opacity:0.3}
         .calendar-day.past{color:rgba(255,255,255,0.3);cursor:not-allowed}
         .calendar-day.empty{cursor:default}
+        /* Single Lead Calendar Popup */
+        .send-ai-calendar{position:absolute;top:100%;left:0;z-index:100;width:280px;max-width:100%;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-top:6px;box-shadow:0 8px 32px rgba(0,0,0,0.6)}
+        .send-ai-time-pref{display:flex;gap:8px;flex-wrap:wrap}
+        .time-pref-btn{padding:8px 16px;font-size:0.8125rem;font-weight:500;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;cursor:pointer;transition:all 150ms ease}
+        .time-pref-btn:hover{color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)}
+        .time-pref-btn.active{background:rgba(52,211,153,0.15);border-color:rgba(52,211,153,0.4);color:rgb(52,211,153);font-weight:600}
         /* old lead-info-grid responsive handled by glass-info-grid now */
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -2231,7 +2238,8 @@
                         <!-- Prio Header -->
                         <div class="prio-header">
                             <div class="prio-header-text">
-                                <h2>Your priority leads ranked by engagement. Focus here first. <span class="header-count-badge" id="prioCount">0</span></h2>
+                                <h1 class="page-section-title">Prio Prospects <span class="header-count-badge" id="prioCount">0</span></h1>
+                                <h2>Your priority leads ranked by engagement. Focus here first.</h2>
                             </div>
                             <div class="prio-header-actions">
                                 <div class="view-toggle">
@@ -2300,7 +2308,8 @@
                         <!-- Prospects Header -->
                         <div class="prospects-header">
                             <div class="prospects-header-text">
-                                <h2>Booked meetings and callback requests. <span class="header-count-badge" id="prospectsCount">0</span></h2>
+                                <h1 class="page-section-title">Prospects <span class="header-count-badge" id="prospectsCount">0</span></h1>
+                                <h2>Booked meetings and callback requests.</h2>
                             </div>
                             <div class="prospects-header-actions">
                                 <div class="view-toggle">
@@ -2369,7 +2378,8 @@
                         <!-- Pipeline Header -->
                         <div class="pipeline-header">
                             <div class="pipeline-header-text">
-                                <h2>Leads being followed up by AI. Timeline and scheduled follow-ups. <span class="header-count-badge" id="pipelineCount">0</span></h2>
+                                <h1 class="page-section-title">AI Follow Ups <span class="header-count-badge" id="pipelineCount">0</span></h1>
+                                <h2>Leads being followed up by AI. Timeline and scheduled follow-ups.</h2>
                             </div>
                             <div class="pipeline-header-actions">
                                 <div class="view-toggle">
@@ -2421,7 +2431,8 @@
                         <!-- Shared Header -->
                         <div class="shared-header">
                             <div class="shared-header-text">
-                                <h2>Leads that have been shared with you. <span class="header-count-badge" id="sharedCount">0</span></h2>
+                                <h1 class="page-section-title">Shared Leads <span class="header-count-badge" id="sharedCount">0</span></h1>
+                                <h2>Leads that have been shared with you.</h2>
                             </div>
                             <div class="shared-header-actions">
                                 <div class="view-toggle">
@@ -2490,7 +2501,8 @@
                         <!-- Booked Today Header -->
                         <div class="pipeline-header">
                             <div class="pipeline-header-text">
-                                <h2>Prospects qualified and booked/callback by AI from today's conversations. <span class="header-count-badge" id="bookedTodayCount">0</span></h2>
+                                <h1 class="page-section-title">Booked Today <span class="header-count-badge" id="bookedTodayCount">0</span></h1>
+                                <h2>Prospects qualified and booked/callback by AI from today's conversations.</h2>
                             </div>
                             <div class="pipeline-header-actions">
                                 <div class="view-toggle">
@@ -2538,7 +2550,8 @@
                         <!-- Unqualified Header -->
                         <div class="unqualified-header">
                             <div class="unqualified-header-text">
-                                <h2>Leads that are not yet booked or in an active pipeline. <span class="header-count-badge" id="unqualifiedCount">0</span></h2>
+                                <h1 class="page-section-title">Unqualified Leads <span class="header-count-badge" id="unqualifiedCount">0</span></h1>
+                                <h2>Leads that are not yet booked or in an active pipeline.</h2>
                             </div>
                             <div class="unqualified-header-actions">
                                 <div class="view-toggle">
@@ -2602,7 +2615,8 @@
                         <!-- Open Leads Header -->
                         <div class="unqualified-header">
                             <div class="unqualified-header-text">
-                                <h2>Leads with Status = New or Retry that are ready to be called. <span class="header-count-badge" id="openLeadsCount">0</span></h2>
+                                <h1 class="page-section-title">Open Leads <span class="header-count-badge" id="openLeadsCount">0</span></h1>
+                                <h2>Leads with Status = New or Retry that are ready to be called.</h2>
                             </div>
                             <div class="unqualified-header-actions">
                                 <div class="view-toggle">
@@ -11492,6 +11506,15 @@
     }
     
     // ===== IMPORT PAGE =====
+    // Enforce max call attempts between 1-10
+    var maxAttemptsEl = document.getElementById('singleLeadMaxAttempts');
+    if (maxAttemptsEl) {
+        maxAttemptsEl.addEventListener('input', function() {
+            var val = parseInt(this.value, 10);
+            if (val > 10) this.value = 10;
+            if (val < 1 && this.value !== '') this.value = 1;
+        });
+    }
     // Tab switching
     document.querySelectorAll('.import-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
