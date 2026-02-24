@@ -670,7 +670,8 @@
         .intent-label.intent-error{color:rgba(255,255,255,0.3)}
 
         /* Compact intent card in info grid */
-        .glass-intent-card .glass-info-value{display:inline-flex;flex-direction:row;align-items:center;gap:8px;flex-wrap:nowrap}
+        .glass-intent-card .glass-info-value{display:inline-flex;flex-direction:row;align-items:center;gap:8px;flex-wrap:nowrap;visibility:hidden}
+        .glass-intent-card.loaded .glass-info-value{visibility:visible}
         .intent-card-fires{display:inline-flex;flex-direction:row;align-items:center;gap:2px;flex-wrap:nowrap;white-space:nowrap}
         .intent-card-fire{font-size:0.875rem;line-height:1;flex-shrink:0;display:inline-block}
         .intent-card-fire.dim{opacity:0.15;filter:grayscale(1)}
@@ -6332,6 +6333,7 @@
 
     function displayIntentScore(score) {
         // Update compact card in info grid
+        var intentCard = document.querySelector('.glass-intent-card');
         var cardFires = document.getElementById('intentCardFires');
         var cardLabel = document.getElementById('intentCardLabel');
         if (cardFires) {
@@ -6351,6 +6353,7 @@
                 cardLabel.style.color = 'rgba(255,255,255,0.3)';
             }
         }
+        if (intentCard) intentCard.classList.add('loaded');
     }
 
     function getIntentColor(score) {
@@ -6359,8 +6362,10 @@
     }
 
     function showIntentLoading() {
+        var intentCard = document.querySelector('.glass-intent-card');
         var cardFires = document.getElementById('intentCardFires');
         var cardLabel = document.getElementById('intentCardLabel');
+        if (intentCard) intentCard.classList.remove('loaded');
         if (cardFires) {
             var cFires = cardFires.querySelectorAll('.intent-card-fire');
             cFires.forEach(function(f) { f.classList.remove('lit'); f.classList.add('dim'); });
