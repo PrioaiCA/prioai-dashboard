@@ -670,9 +670,9 @@
         .intent-label.intent-error{color:rgba(255,255,255,0.3)}
 
         /* Compact intent card in info grid */
-        .glass-intent-card .glass-info-value{display:flex;align-items:center;gap:8px}
-        .intent-card-fires{display:flex;align-items:center;gap:2px}
-        .intent-card-fire{font-size:0.875rem;line-height:1;transition:opacity 300ms ease,filter 300ms ease}
+        .glass-intent-card .glass-info-value{display:inline-flex;align-items:center;gap:8px;flex-wrap:nowrap}
+        .intent-card-fires{display:inline-flex;align-items:center;gap:2px;flex-wrap:nowrap;white-space:nowrap}
+        .intent-card-fire{font-size:0.875rem;line-height:1;flex-shrink:0;display:inline-block;transition:opacity 300ms ease,filter 300ms ease}
         .intent-card-fire.dim{opacity:0.15;filter:grayscale(1)}
         .intent-card-fire.lit{opacity:1;filter:none}
         .intent-card-fires.loading .intent-card-fire{animation:intentPulse 1.2s ease-in-out infinite}
