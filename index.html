@@ -1540,7 +1540,7 @@
         .import-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
         .import-panel{display:none}
         .import-panel.active{display:block}
-        .import-single-grid{display:grid;grid-template-columns:1fr 280px;gap:24px;max-width:720px}
+        .import-single-grid{display:grid;grid-template-columns:1fr 280px;gap:24px;max-width:900px}
         .import-single-form{background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:28px}
         .import-single-tips{display:flex;flex-direction:column;gap:16px}
         .import-section{margin-bottom:24px}
@@ -2934,7 +2934,7 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>Max Call Attempts</label>
+                                                <label>Max Call Attempts <span style="color:rgba(255,255,255,0.3);font-weight:400;">(1–10)</span></label>
                                                 <input type="number" id="singleLeadMaxAttempts" placeholder="5" min="1" max="10" value="5" class="form-input">
                                             </div>
                                         </div>
@@ -2969,9 +2969,9 @@
                                         <div id="singleLeadTimeWrapper">
                                             <label style="display:block;font-size:0.75rem;font-weight:400;color:#707070;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Preferred Time of Day</label>
                                             <div class="send-ai-time-pref" id="singleLeadTimePref">
-                                                <button type="button" class="time-pref-btn" data-time="Morning">🌅 Morning</button>
-                                                <button type="button" class="time-pref-btn active" data-time="Afternoon">☀️ Afternoon</button>
-                                                <button type="button" class="time-pref-btn" data-time="Evening">🌆 Evening</button>
+                                                <button type="button" class="time-pref-btn" data-time="Morning">🌅 Morning <span style="opacity:0.5;font-weight:400;">9 AM</span></button>
+                                                <button type="button" class="time-pref-btn active" data-time="Afternoon">☀️ Afternoon <span style="opacity:0.5;font-weight:400;">1 PM</span></button>
+                                                <button type="button" class="time-pref-btn" data-time="Evening">🌆 Evening <span style="opacity:0.5;font-weight:400;">5 PM</span></button>
                                             </div>
                                         </div>
                                     </div>
