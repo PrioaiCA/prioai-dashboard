@@ -1570,44 +1570,20 @@ html.theme-transitioning * {
    ========================================================================== */
 
 [data-theme="light"] .sidebar {
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.85) 0%,
-        rgba(248, 249, 252, 0.92) 30%,
-        rgba(255, 255, 255, 0.88) 60%,
-        rgba(245, 246, 250, 0.95) 100%
-    );
-    backdrop-filter: blur(60px) saturate(1.4) brightness(1.05);
-    border-right: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.04);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(40px) saturate(1.4);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
 }
 
 /* Top specular highlight — light mode */
 [data-theme="light"] .sidebar::before {
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.9) 15%,
-        rgba(255, 255, 255, 1) 40%,
-        rgba(0, 180, 90, 0.08) 50%,
-        rgba(255, 255, 255, 1) 60%,
-        rgba(255, 255, 255, 0.9) 85%,
-        transparent
-    );
+    background: none;
 }
 
 /* Right-edge refraction — light mode */
 [data-theme="light"] .sidebar::after {
-    background: linear-gradient(
-        180deg,
-        transparent,
-        rgba(0, 0, 0, 0.03) 15%,
-        rgba(0, 180, 90, 0.03) 30%,
-        rgba(0, 0, 0, 0.02) 50%,
-        rgba(0, 180, 90, 0.02) 70%,
-        rgba(0, 0, 0, 0.03) 85%,
-        transparent
-    );
+    background: none;
 }
 
 [data-theme="light"] .sidebar-header {
@@ -1615,7 +1591,7 @@ html.theme-transitioning * {
 }
 
 [data-theme="light"] .sidebar-header::after {
-    background: linear-gradient(90deg, transparent, rgba(0, 180, 90, 0.06), transparent);
+    background: none;
 }
 
 [data-theme="light"] .sidebar-close {
@@ -1624,7 +1600,7 @@ html.theme-transitioning * {
 
 [data-theme="light"] .sidebar-close:hover {
     color: #1a1a2e;
-    background: linear-gradient(150deg, rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.6));
+    background: rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="light"] .sidebar-nav {
@@ -1653,15 +1629,15 @@ html.theme-transitioning * {
 }
 
 [data-theme="light"] .nav-item.active {
-    background: linear-gradient(150deg, rgba(0, 180, 90, 0.08) 0%, rgba(255, 255, 255, 0.6) 100%);
-    border: 1px solid rgba(0, 180, 90, 0.15);
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.15);
     color: hsl(var(--brand-hue), 72%, 32%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(0, 180, 90, 0.04);
+    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.06);
     text-shadow: none;
 }
 
 [data-theme="light"] .nav-item.active::before {
-    background: linear-gradient(90deg, transparent, rgba(0, 180, 90, 0.1), transparent);
+    background: none;
 }
 
 /* ==========================================================================
@@ -1673,7 +1649,7 @@ html.theme-transitioning * {
 }
 
 [data-theme="light"] .sidebar-footer::before {
-    background: linear-gradient(90deg, transparent, rgba(0, 180, 90, 0.04), transparent);
+    background: none;
 }
 
 [data-theme="light"] .notification-btn {
@@ -1681,12 +1657,12 @@ html.theme-transitioning * {
 }
 
 [data-theme="light"] .notification-btn:hover {
-    background: linear-gradient(150deg, rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.6));
+    background: rgba(0, 0, 0, 0.05);
     color: rgba(0, 0, 0, 0.9);
 }
 
 [data-theme="light"] .user-card:hover {
-    background: linear-gradient(150deg, rgba(0, 0, 0, 0.03) 0%, rgba(255, 255, 255, 0.5) 100%);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 [data-theme="light"] .user-name {
@@ -1702,23 +1678,16 @@ html.theme-transitioning * {
    ========================================================================== */
 
 [data-theme="light"] .card {
-    background: linear-gradient(
-        150deg,
-        rgba(255, 255, 255, 0.7) 0%,
-        rgba(255, 255, 255, 0.9) 50%,
-        rgba(248, 249, 252, 0.8) 100%
-    );
-    backdrop-filter: blur(30px) saturate(1.3) brightness(1.02);
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(24px) saturate(1.4);
     border: 1px solid rgba(0, 0, 0, 0.06);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.02),
-        0 1px 3px rgba(0, 0, 0, 0.06),
-        0 4px 12px rgba(0, 0, 0, 0.04);
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] .card::before {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+    background: none;
 }
 
 /* ==========================================================================
