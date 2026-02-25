@@ -17,6 +17,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/styles.css">
+    <script>
+        // Prevent flash of wrong theme on load
+        (function() {
+            var t = localStorage.getItem('prio-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+            var m = document.querySelector('meta[name="theme-color"]');
+            if (m) m.setAttribute('content', t === 'dark' ? '#0a0a0a' : '#f8f9fc');
+        })();
+    </script>
     <style>
         /* Critical inline styles for immediate rendering */
         .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
@@ -1779,6 +1788,370 @@
         .page:not(.hidden) .overview-card:nth-child(4),.page:not(.hidden) .priority-card-lg:nth-child(4),.page:not(.hidden) .today-number-item:nth-child(7){animation-delay:150ms}
         .page:not(.hidden) .priority-card-lg:nth-child(5){animation-delay:200ms}
         .page:not(.hidden) .priority-card-lg:nth-child(6){animation-delay:250ms}
+
+        /* ==========================================================================
+           Light Theme — Inline Critical Overrides (Liquid Glass)
+           ========================================================================== */
+
+        /* --- Stat Cards --- */
+        [data-theme="light"] .stat-card{
+            background:linear-gradient(150deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.95) 50%,rgba(248,249,252,0.85) 100%);
+            backdrop-filter:blur(30px) saturate(1.3) brightness(1.02);
+            border:1px solid rgba(0,0,0,0.07);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 0 rgba(0,0,0,0.02),0 1px 3px rgba(0,0,0,0.05),0 4px 12px rgba(0,0,0,0.04)
+        }
+        [data-theme="light"] .stat-card::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.95),transparent)}
+        [data-theme="light"] .stat-card:hover{border-color:rgba(0,0,0,0.12);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(0,0,0,0.08)}
+        [data-theme="light"] .stat-card.accent{
+            background:linear-gradient(150deg,rgba(0,180,90,0.06) 0%,rgba(255,255,255,0.95) 50%,rgba(0,180,90,0.03) 100%);
+            border-color:rgba(0,180,90,0.2);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 0 25px rgba(0,180,90,0.04),0 4px 12px rgba(0,0,0,0.04)
+        }
+        [data-theme="light"] .stat-card.accent::before{background:linear-gradient(90deg,transparent,rgba(0,180,90,0.1),transparent)}
+        [data-theme="light"] .stat-value{color:#1a1a2e}
+        [data-theme="light"] .stat-label{color:#5a5a7a}
+
+        /* --- Quick Actions --- */
+        [data-theme="light"] .quick-action{
+            background:linear-gradient(150deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.95) 50%,rgba(248,249,252,0.85) 100%);
+            backdrop-filter:blur(30px) saturate(1.3) brightness(1.02);
+            border:1px solid rgba(0,0,0,0.07);
+            color:#1a1a2e;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .quick-action:hover{
+            border-color:rgba(0,180,90,0.2);
+            background:linear-gradient(150deg,rgba(0,180,90,0.05) 0%,rgba(255,255,255,0.9) 100%);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 0 20px rgba(0,180,90,0.04),0 6px 16px rgba(0,0,0,0.06)
+        }
+
+        /* --- Header Stat Badges --- */
+        [data-theme="light"] .header-stat-badge{
+            background:linear-gradient(150deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.95) 50%,rgba(248,249,252,0.85) 100%);
+            backdrop-filter:blur(30px) saturate(1.3) brightness(1.02);
+            border:1px solid rgba(0,0,0,0.07);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 0 rgba(0,0,0,0.02),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .header-stat-badge::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.95),transparent)}
+        [data-theme="light"] .header-stat-badge.accent{
+            background:linear-gradient(150deg,rgba(0,180,90,0.06) 0%,rgba(255,255,255,0.95) 50%,rgba(0,180,90,0.03) 100%);
+            border-color:rgba(0,180,90,0.2);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 0 25px rgba(0,180,90,0.04),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .header-stat-badge .badge-value{color:#1a1a2e}
+        [data-theme="light"] .header-stat-badge .badge-label{color:#5a5a7a}
+
+        /* --- Overview Section --- */
+        [data-theme="light"] .overview-header{border-bottom-color:rgba(0,0,0,0.08)}
+        [data-theme="light"] .overview-header-row{border-bottom-color:rgba(0,0,0,0.08)}
+        [data-theme="light"] .overview-welcome{color:#1a1a2e}
+        [data-theme="light"] .overview-header-meta{color:#9a9ab0}
+        [data-theme="light"] .section-label{color:#5a5a7a}
+        [data-theme="light"] .usage-bar-mini{background:rgba(0,0,0,0.08)}
+        [data-theme="light"] .usage-bar-mini .usage-bar-fill{background:linear-gradient(90deg,#1a1a2e,#1a1a2e)}
+        [data-theme="light"] .usage-bar{background:rgba(0,0,0,0.08)}
+        [data-theme="light"] .meta-label{color:#9a9ab0}
+        [data-theme="light"] .sort-label{color:#9a9ab0}
+
+        /* --- Analytics Cards --- */
+        [data-theme="light"] .analytics-card{
+            background:linear-gradient(150deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.95) 50%,rgba(248,249,252,0.85) 100%);
+            backdrop-filter:blur(30px) saturate(1.3) brightness(1.02);
+            border:1px solid rgba(0,0,0,0.07);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 0 rgba(0,0,0,0.02),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .analytics-row{border-bottom-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .analytics-label{color:#5a5a7a}
+        [data-theme="light"] .analytics-value{color:#1a1a2e}
+        [data-theme="light"] .analytics-value.muted{color:#9a9ab0}
+        [data-theme="light"] .analytics-header h3{color:#1a1a2e}
+        [data-theme="light"] .section-header h3{color:#1a1a2e}
+        [data-theme="light"] .priorities-header h3{color:#1a1a2e}
+
+        /* --- View Toggle Buttons --- */
+        [data-theme="light"] .view-toggle-btn{
+            border:1px solid rgba(0,0,0,0.08);
+            background:linear-gradient(150deg,rgba(255,255,255,0.7) 0%,rgba(248,249,252,0.9) 100%);
+            color:rgba(0,0,0,0.4);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)
+        }
+        [data-theme="light"] .view-toggle-btn:hover{border-color:rgba(0,0,0,0.15);color:rgba(0,0,0,0.7);background:linear-gradient(150deg,rgba(255,255,255,0.8) 0%,rgba(248,249,252,0.95) 100%)}
+        [data-theme="light"] .font-size-toggle{
+            border:1px solid rgba(0,0,0,0.08);
+            background:linear-gradient(150deg,rgba(255,255,255,0.7) 0%,rgba(248,249,252,0.9) 100%);
+            color:rgba(0,0,0,0.4);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)
+        }
+        [data-theme="light"] .font-size-toggle:hover{border-color:rgba(0,0,0,0.15);color:rgba(0,0,0,0.7)}
+        [data-theme="light"] .sort-direction-btn{
+            border:1px solid rgba(0,0,0,0.08);
+            background:linear-gradient(150deg,rgba(255,255,255,0.7) 0%,rgba(248,249,252,0.9) 100%);
+            color:rgba(0,0,0,0.4);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)
+        }
+        [data-theme="light"] .sort-direction-btn:hover{border-color:rgba(0,0,0,0.15);color:rgba(0,0,0,0.7)}
+
+        /* --- Priority Card (large) --- */
+        [data-theme="light"] .priority-card-lg{
+            background:linear-gradient(150deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.95) 50%,rgba(248,249,252,0.85) 100%);
+            backdrop-filter:blur(30px) saturate(1.3) brightness(1.02);
+            border:1px solid rgba(0,0,0,0.07);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .priority-card-lg:hover{
+            border-color:rgba(0,0,0,0.12);
+            background:linear-gradient(150deg,rgba(255,255,255,0.85) 0%,rgba(255,255,255,0.97) 50%,rgba(248,249,252,0.9) 100%);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 8px 24px rgba(0,0,0,0.08)
+        }
+        [data-theme="light"] .priority-card-lg-left{border-right-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .priority-card-lg-summary-col{border-right-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .priority-card-lg-summary-col .col-label{color:#9a9ab0}
+        [data-theme="light"] .priority-card-lg-summary-col .col-content{color:#5a5a7a}
+        [data-theme="light"] .priority-card-lg-notes-col .col-label{color:#9a9ab0}
+        [data-theme="light"] .priority-card-lg-notes-col .col-content{color:#5a5a7a}
+        [data-theme="light"] .priority-card-lg-phone{color:#9a9ab0}
+        [data-theme="light"] .priority-card-lg-lastcall{color:#9a9ab0}
+        [data-theme="light"] .priority-card-lg-actions{border-left-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .priority-card-lg-status-col{border-right-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .priority-card-lg-status-col .col-label{color:#9a9ab0}
+        [data-theme="light"] .priorities-cards > .missed-meeting-separator{border-top-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .priority-card-lg.meeting-done{
+            opacity:0.5;border-color:rgba(0,0,0,0.06);background:rgba(255,255,255,0.6);
+            filter:saturate(0.3) brightness(0.95)
+        }
+        [data-theme="light"] .priority-card-lg.meeting-done:hover{opacity:0.7;filter:saturate(0.5) brightness(0.98)}
+        [data-theme="light"] .priority-card-lg.meeting-done .priority-card-lg-name{color:rgba(0,0,0,0.4)}
+        [data-theme="light"] .priority-card-lg.meeting-done .priority-card-lg-phone{color:rgba(0,0,0,0.25)}
+        [data-theme="light"] .priority-card-lg.meeting-done .priority-card-lg-lastcall{color:rgba(0,0,0,0.25)}
+        [data-theme="light"] .priority-card-lg.meeting-done .col-label{color:rgba(0,0,0,0.2)}
+        [data-theme="light"] .priority-card-lg.meeting-done .col-content{color:rgba(0,0,0,0.3)}
+
+        /* --- Action Buttons --- */
+        [data-theme="light"] .action-btn{
+            border:1px solid rgba(0,0,0,0.08);
+            background:linear-gradient(150deg,rgba(255,255,255,0.7) 0%,rgba(248,249,252,0.9) 100%);
+            color:rgba(0,0,0,0.45);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)
+        }
+        [data-theme="light"] .action-btn:hover{
+            border-color:rgba(0,0,0,0.15);color:rgba(0,0,0,0.8);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 4px 12px rgba(0,0,0,0.06)
+        }
+
+        /* --- Prio Cards (grid) --- */
+        [data-theme="light"] .prio-card{
+            background:linear-gradient(150deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.95) 50%,rgba(248,249,252,0.85) 100%);
+            backdrop-filter:blur(30px) saturate(1.3) brightness(1.02);
+            border:1px solid rgba(0,0,0,0.07);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .prio-card:hover{
+            border-color:rgba(0,180,90,0.2);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 0 20px rgba(0,180,90,0.04),0 8px 24px rgba(0,0,0,0.08)
+        }
+        [data-theme="light"] .prio-card-header{border-bottom-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .prio-card-name{color:#1a1a2e}
+        [data-theme="light"] .prio-card-meta{color:#9a9ab0}
+        [data-theme="light"] .prio-card-tabs{border-bottom-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .prio-card-tab{color:#9a9ab0}
+        [data-theme="light"] .prio-card-tab:first-child{border-right-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .prio-card-tab:hover:not(.active){color:rgba(0,0,0,0.7)}
+        [data-theme="light"] .prio-card-tab.active{background:rgba(0,180,90,0.05)}
+        [data-theme="light"] .prio-card-summary{color:#5a5a7a}
+        [data-theme="light"] .prio-note-item{background:rgba(0,0,0,0.03)}
+        [data-theme="light"] .prio-note-text{color:#5a5a7a}
+        [data-theme="light"] .prio-note-date{color:#9a9ab0}
+        [data-theme="light"] .prio-card-footer{border-top-color:rgba(0,0,0,0.06)}
+
+        /* --- Prio Filters (inline) --- */
+        [data-theme="light"] .prio-filter{
+            color:rgba(0,0,0,0.5);
+            background:linear-gradient(150deg,rgba(255,255,255,0.7) 0%,rgba(248,249,252,0.9) 100%);
+            border:1px solid rgba(0,0,0,0.07);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)
+        }
+        [data-theme="light"] .prio-filter:hover{color:rgba(0,0,0,0.7);border-color:rgba(0,0,0,0.12)}
+        [data-theme="light"] .prio-header-text h2{color:rgba(0,0,0,0.5)}
+
+        /* --- Status Dropdowns --- */
+        [data-theme="light"] .card-status-trigger{
+            background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.1);color:#1a1a2e
+        }
+        [data-theme="light"] .card-status-trigger:hover{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.15)}
+        [data-theme="light"] .card-status-menu,[data-theme="light"] #cardStatusPortal{
+            background:#ffffff;border:1px solid rgba(0,0,0,0.1);box-shadow:0 4px 20px rgba(0,0,0,0.1)
+        }
+        [data-theme="light"] .card-status-menu .status-option{color:#5a5a7a}
+        [data-theme="light"] .card-status-menu .status-option:hover{background:rgba(0,0,0,0.04);color:#1a1a2e}
+        [data-theme="light"] .status-dropdown-menu{background:#ffffff;border:1px solid rgba(0,0,0,0.1);box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+        [data-theme="light"] .status-option{color:#5a5a7a}
+        [data-theme="light"] .status-option:hover{background:rgba(0,0,0,0.04);color:#1a1a2e}
+        [data-theme="light"] .status-dropdown-trigger{background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.1);color:#1a1a2e}
+        [data-theme="light"] .status-dropdown-trigger:hover{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.15)}
+
+        /* --- Glass Modal (Lead Detail) --- */
+        [data-theme="light"] .glass-modal-border{
+            background:linear-gradient(160deg,rgba(0,180,90,0.2) 0%,rgba(0,180,90,0.04) 20%,rgba(0,0,0,0.04) 40%,rgba(255,255,255,0.5) 60%,rgba(0,180,90,0.06) 80%,rgba(0,180,90,0.18) 100%);
+            background-size:300% 300%;
+            filter:drop-shadow(0 25px 50px rgba(0,0,0,0.15)) drop-shadow(0 0 80px rgba(0,180,90,0.03))
+        }
+        [data-theme="light"] .glass-modal-card{
+            background:linear-gradient(160deg,rgba(255,255,255,0.92) 0%,rgba(248,249,252,0.96) 30%,rgba(255,255,255,0.94) 60%,rgba(245,246,250,0.97) 100%);
+            backdrop-filter:blur(60px) saturate(1.4) brightness(1.05)
+        }
+        [data-theme="light"] .glass-modal-card::before{
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.8) 15%,rgba(255,255,255,1) 40%,rgba(0,180,90,0.12) 50%,rgba(255,255,255,1) 60%,rgba(255,255,255,0.8) 85%,transparent)
+        }
+        [data-theme="light"] .glass-modal-card::after{
+            background:linear-gradient(180deg,rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.2) 50%,transparent 100%)
+        }
+        [data-theme="light"] .glass-modal-inner{scrollbar-color:rgba(0,0,0,0.1) transparent}
+        [data-theme="light"] .glass-modal-inner::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.1)}
+        [data-theme="light"] .glass-lead-name{color:#1a1a2e}
+        [data-theme="light"] .glass-close-btn{
+            background:linear-gradient(150deg,rgba(0,0,0,0.04),rgba(255,255,255,0.6));
+            border:1px solid rgba(0,0,0,0.08);color:rgba(0,0,0,0.4);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8),0 2px 8px rgba(0,0,0,0.06)
+        }
+        [data-theme="light"] .glass-close-btn:hover{
+            color:#1a1a2e;background:linear-gradient(150deg,rgba(0,0,0,0.06),rgba(255,255,255,0.7));border-color:rgba(0,0,0,0.12)
+        }
+        [data-theme="light"] .glass-pill{
+            background:linear-gradient(150deg,rgba(255,255,255,0.7) 0%,rgba(248,249,252,0.9) 100%);
+            border:1px solid rgba(0,0,0,0.08);color:rgba(0,0,0,0.55);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(0,0,0,0.02),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .glass-pill::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.9),transparent)}
+        [data-theme="light"] .glass-pill:hover{
+            background:linear-gradient(150deg,rgba(255,255,255,0.8) 0%,rgba(248,249,252,0.95) 100%);
+            border-color:rgba(0,0,0,0.12);color:rgba(0,0,0,0.75);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),0 4px 12px rgba(0,0,0,0.06)
+        }
+        [data-theme="light"] .glass-pill-prio{
+            background:linear-gradient(150deg,rgba(0,180,90,0.08),rgba(255,255,255,0.85));
+            border-color:rgba(0,180,90,0.2);color:hsl(145,72%,32%);text-shadow:none;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8),0 0 20px rgba(0,180,90,0.04),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .glass-pill-prio::before{background:linear-gradient(90deg,transparent,rgba(0,180,90,0.08),transparent)}
+        [data-theme="light"] .glass-pill-prio:hover{
+            background:linear-gradient(150deg,rgba(0,180,90,0.12),rgba(255,255,255,0.9));
+            border-color:rgba(0,180,90,0.3);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8),0 0 25px rgba(0,180,90,0.06),0 4px 12px rgba(0,0,0,0.06)
+        }
+
+        /* --- Glass Modal Sections --- */
+        [data-theme="light"] .glass-section{border-top-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .glass-section-title{color:#5a5a7a}
+        [data-theme="light"] .glass-info-label{color:#9a9ab0}
+        [data-theme="light"] .glass-info-value{color:#1a1a2e}
+        [data-theme="light"] .glass-info-value a{color:#1a1a2e}
+        [data-theme="light"] .glass-info-panel{
+            background:linear-gradient(150deg,rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.95) 50%,rgba(248,249,252,0.85) 100%);
+            backdrop-filter:blur(30px) saturate(1.3) brightness(1.02);
+            border:1px solid rgba(0,0,0,0.07);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 0 rgba(0,0,0,0.02),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .glass-info-panel::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.95),transparent)}
+        [data-theme="light"] .glass-inner-panel{
+            background:linear-gradient(150deg,rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.95) 50%,rgba(248,249,252,0.85) 100%);
+            backdrop-filter:blur(30px) saturate(1.3) brightness(1.02);
+            border:1px solid rgba(0,0,0,0.07);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 0 rgba(0,0,0,0.02),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .glass-inner-panel::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.95),transparent)}
+        [data-theme="light"] .glass-divider{background:linear-gradient(90deg,transparent 3%,rgba(0,0,0,0.04) 20%,rgba(0,180,90,0.06) 50%,rgba(0,0,0,0.04) 80%,transparent 97%)}
+        [data-theme="light"] .glass-tab-bar{
+            background:linear-gradient(150deg,rgba(0,0,0,0.02),rgba(248,249,252,0.8));
+            border:1px solid rgba(0,0,0,0.06);
+            box-shadow:inset 0 1px 3px rgba(0,0,0,0.04)
+        }
+        [data-theme="light"] .glass-tab{color:rgba(0,0,0,0.35)}
+        [data-theme="light"] .glass-tab:hover{color:rgba(0,0,0,0.55)}
+        [data-theme="light"] .glass-tab.active{
+            background:linear-gradient(150deg,rgba(255,255,255,0.8),rgba(248,249,252,0.95));
+            color:rgba(0,0,0,0.85);
+            border:1px solid rgba(0,0,0,0.08);
+            box-shadow:0 1px 4px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.9)
+        }
+        [data-theme="light"] .glass-ai-date{color:rgba(0,0,0,0.35)}
+        [data-theme="light"] .glass-summary-text{color:#5a5a7a}
+        [data-theme="light"] .glass-transcript-text{color:#5a5a7a}
+        [data-theme="light"] .glass-transcript-text .speaker-prospect{color:#1a1a2e}
+        [data-theme="light"] .glass-transcript-bubble{
+            background:linear-gradient(150deg,rgba(0,0,0,0.02),rgba(255,255,255,0.7));
+            border-color:rgba(0,0,0,0.06)
+        }
+        [data-theme="light"] #leadModal .lead-note-item{
+            background:linear-gradient(150deg,rgba(0,0,0,0.01),rgba(255,255,255,0.6));
+            border:1px solid rgba(0,0,0,0.04);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)
+        }
+        [data-theme="light"] #leadModal .lead-note-item .note-content{color:#5a5a7a}
+        [data-theme="light"] #leadModal .lead-note-item .note-date{color:#9a9ab0}
+        [data-theme="light"] #leadModal .lead-notes-list .show-all-notes-btn{
+            background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.06);color:#5a5a7a
+        }
+        [data-theme="light"] #leadModal .lead-notes-list .show-all-notes-btn:hover{background:rgba(0,0,0,0.06);color:#1a1a2e}
+        [data-theme="light"] .glass-note-item{
+            background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06)
+        }
+        [data-theme="light"] .glass-note-content{color:#5a5a7a}
+        [data-theme="light"] .glass-note-date{color:#9a9ab0}
+        [data-theme="light"] .glass-btn-schedule{
+            background:linear-gradient(150deg,rgba(0,180,90,0.08),rgba(255,255,255,0.85));
+            border:1px solid rgba(0,180,90,0.2);color:hsl(145,72%,32%);text-shadow:none
+        }
+        [data-theme="light"] .glass-btn-schedule:hover{
+            background:linear-gradient(150deg,rgba(0,180,90,0.12),rgba(255,255,255,0.9));border-color:rgba(0,180,90,0.3)
+        }
+        [data-theme="light"] .glass-status-badge{
+            background:linear-gradient(150deg,rgba(0,180,90,0.08),rgba(255,255,255,0.85));
+            border:1px solid rgba(0,180,90,0.2);color:hsl(145,72%,32%);text-shadow:none;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8),0 0 15px rgba(0,180,90,0.04)
+        }
+        [data-theme="light"] .glass-ambient-glow{background:radial-gradient(ellipse at bottom,rgba(0,180,90,0.02) 0%,transparent 70%)}
+        [data-theme="light"] .glass-textarea{
+            background:linear-gradient(150deg,rgba(0,0,0,0.01),rgba(255,255,255,0.7));
+            border:1px solid rgba(0,0,0,0.1);color:#1a1a2e;
+            box-shadow:inset 0 1px 3px rgba(0,0,0,0.04),inset 0 1px 0 rgba(255,255,255,0.8)
+        }
+        [data-theme="light"] .glass-textarea:focus{
+            border-color:rgba(0,180,90,0.3);
+            box-shadow:inset 0 1px 3px rgba(0,0,0,0.04),inset 0 1px 0 rgba(255,255,255,0.8),0 0 20px rgba(0,180,90,0.04)
+        }
+        [data-theme="light"] .glass-textarea::placeholder{color:rgba(0,0,0,0.3)}
+        [data-theme="light"] .glass-btn-dark{
+            background:linear-gradient(150deg,rgba(0,0,0,0.03),rgba(248,249,252,0.8));
+            color:rgba(0,0,0,0.55);border:1px solid rgba(0,0,0,0.08);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.8),0 1px 3px rgba(0,0,0,0.05)
+        }
+        [data-theme="light"] .glass-btn-dark:hover{
+            background:linear-gradient(150deg,rgba(0,0,0,0.05),rgba(248,249,252,0.9));
+            border-color:rgba(0,0,0,0.12);color:rgba(0,0,0,0.75)
+        }
+
+        /* --- Nav Arrows --- */
+        [data-theme="light"] .modal-nav-arrow{
+            background:rgba(255,255,255,0.85);border:1px solid rgba(0,0,0,0.1);color:#1a1a2e;
+            box-shadow:0 4px 16px rgba(0,0,0,0.08)
+        }
+        [data-theme="light"] .modal-nav-arrow:hover{
+            background:rgba(0,180,90,0.08);border-color:rgba(0,180,90,0.2);
+            box-shadow:0 4px 20px rgba(0,180,90,0.08)
+        }
+
+        /* --- Misc Inline Responsive Borders --- */
+        [data-theme="light"] .priorities-cards:not(.list-view) .priority-card-lg-left{border-bottom-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .priorities-cards:not(.list-view) .priority-card-lg-status-col{border-bottom-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .priorities-cards:not(.list-view) .priority-card-lg-actions{border-top-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .prio-list:not(.list-view) .priority-card-lg-left{border-bottom-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .prio-list:not(.list-view) .priority-card-lg-status-col{border-bottom-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .prio-list:not(.list-view) .priority-card-lg-actions{border-top-color:rgba(0,0,0,0.06)}
+        @media(max-width:900px){
+            [data-theme="light"] .priority-card-lg-left{border-bottom-color:rgba(0,0,0,0.06)}
+            [data-theme="light"] .priority-card-lg-summary-col{border-bottom-color:rgba(0,0,0,0.06)}
+            [data-theme="light"] .priority-card-lg-status-col{border-bottom-color:rgba(0,0,0,0.06)}
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 </head>
@@ -1873,13 +2246,13 @@
     </script>
 
     <!-- Full Page Loading Overlay -->
-    <div id="pageLoadingOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity 0.5s ease;">
+    <div id="pageLoadingOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg-primary, #000);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity 0.5s ease;">
         <div class="page-loading-spinner"></div>
-        <div style="color:rgba(255,255,255,0.7);font-size:14px;">Loading...</div>
+        <div style="color:var(--text-secondary, rgba(255,255,255,0.7));font-size:14px;">Loading...</div>
     </div>
     <style>
         #pageLoadingOverlay.fade-out{opacity:0;pointer-events:none}
-        .page-loading-spinner{width:48px;height:48px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 1s linear infinite}
+        .page-loading-spinner{width:48px;height:48px;border:3px solid var(--border-primary, rgba(255,255,255,0.1));border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 1s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
     </style>
     
@@ -2040,6 +2413,22 @@
                     <span class="header-count-badge" id="pageTitleCount" style="display:none;">0</span>
                 </div>
                 <div class="header-right">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+                        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
                     <button class="btn btn-primary btn-sm" id="loginBtn">Sign In</button>
                 </div>
             </header>
@@ -3904,14 +4293,8 @@
                         </div>
                         <div class="glass-info-panel glass-intent-card">
                             <span class="glass-info-label">LEAD INTENT</span>
-                            <span class="glass-info-value">
-                                <span class="intent-card-fires" id="intentCardFires">
-                                    <span class="intent-card-fire dim">🔥</span>
-                                    <span class="intent-card-fire dim">🔥</span>
-                                    <span class="intent-card-fire dim">🔥</span>
-                                    <span class="intent-card-fire dim">🔥</span>
-                                    <span class="intent-card-fire dim">🔥</span>
-                                </span>
+                            <span class="glass-info-value" style="display:flex;flex-direction:row;align-items:center;gap:8px">
+                                <span class="intent-card-fires" id="intentCardFires"><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span></span>
                                 <span class="intent-card-label" id="intentCardLabel">--</span>
                             </span>
                         </div>
@@ -4371,11 +4754,41 @@
         }
     });
 
-    // Set dark theme
+    // Theme toggle (dark/light mode)
     (function() {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.querySelectorAll('.logo-dark').forEach(function(el) { el.style.display = 'block'; });
-        document.querySelectorAll('.logo-light').forEach(function(el) { el.style.display = 'none'; });
+        var savedTheme = localStorage.getItem('prio-theme') || 'dark';
+        applyTheme(savedTheme, false);
+
+        var toggleBtn = document.getElementById('themeToggle');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function() {
+                var current = document.documentElement.getAttribute('data-theme') || 'dark';
+                var next = current === 'dark' ? 'light' : 'dark';
+                applyTheme(next, true);
+                localStorage.setItem('prio-theme', next);
+            });
+        }
+
+        function applyTheme(theme, animate) {
+            if (animate) {
+                document.documentElement.classList.add('theme-transitioning');
+                setTimeout(function() {
+                    document.documentElement.classList.remove('theme-transitioning');
+                }, 400);
+            }
+            document.documentElement.setAttribute('data-theme', theme);
+            var metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) {
+                metaTheme.setAttribute('content', theme === 'dark' ? '#0a0a0a' : '#f8f9fc');
+            }
+            if (theme === 'dark') {
+                document.querySelectorAll('.logo-dark').forEach(function(el) { el.style.display = 'block'; });
+                document.querySelectorAll('.logo-light').forEach(function(el) { el.style.display = 'none'; });
+            } else {
+                document.querySelectorAll('.logo-dark').forEach(function(el) { el.style.display = 'none'; });
+                document.querySelectorAll('.logo-light').forEach(function(el) { el.style.display = 'block'; });
+            }
+        }
     })();
 
     // Sidebar Toggle (mobile)
