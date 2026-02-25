@@ -663,8 +663,8 @@
         .intent-refresh-btn:hover{border-color:rgba(0,230,118,0.2);color:#00e676;transform:rotate(45deg)}
         .intent-refresh-btn.spinning svg{animation:intentSpin 0.8s linear infinite}
         @keyframes intentSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-        .intent-fire-row{display:flex;align-items:center;gap:6px}
-        .intent-fire{font-size:1.75rem;line-height:1;transition:opacity 300ms ease,filter 300ms ease}
+        .intent-fire-row{display:flex;flex-direction:row;align-items:center;gap:6px}
+        .intent-fire{font-size:1.75rem;line-height:1}
         .intent-fire.dim{opacity:0.15;filter:grayscale(1)}
         .intent-fire.lit{opacity:1;filter:none}
         .intent-fire-row.loading .intent-fire{animation:intentPulse 1.2s ease-in-out infinite}
@@ -679,9 +679,10 @@
         .intent-label.intent-error{color:rgba(255,255,255,0.3)}
 
         /* Compact intent card in info grid */
-        .glass-intent-card .glass-info-value{display:flex;flex-direction:row;align-items:center;gap:8px;flex-wrap:nowrap}
-        .intent-card-fires{white-space:nowrap;line-height:1}
-        .intent-card-fire{font-size:0.875rem;line-height:1;margin-right:2px;transition:opacity 300ms ease,filter 300ms ease}
+        .glass-intent-card .glass-info-value{display:none;flex-direction:row;align-items:center;gap:8px;flex-wrap:nowrap}
+        .glass-intent-card.loaded .glass-info-value{display:inline-flex}
+        .intent-card-fires{display:inline-flex;flex-direction:row;align-items:center;gap:2px;flex-wrap:nowrap;white-space:nowrap}
+        .intent-card-fire{font-size:0.875rem;line-height:1;flex-shrink:0;display:inline-block}
         .intent-card-fire.dim{opacity:0.15;filter:grayscale(1)}
         .intent-card-fire.lit{opacity:1;filter:none}
         .intent-card-fires.loading .intent-card-fire{animation:intentPulse 1.2s ease-in-out infinite}
@@ -965,6 +966,12 @@
         .calendar-day.other-month{opacity:0.3}
         .calendar-day.past{color:rgba(255,255,255,0.3);cursor:not-allowed}
         .calendar-day.empty{cursor:default}
+        /* Single Lead Calendar Popup */
+        .send-ai-calendar{position:absolute;top:100%;left:0;z-index:100;width:280px;max-width:100%;background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-top:6px;box-shadow:0 8px 32px rgba(0,0,0,0.6)}
+        .send-ai-time-pref{display:flex;gap:8px;flex-wrap:wrap}
+        .time-pref-btn{padding:8px 16px;font-size:0.8125rem;font-weight:500;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;cursor:pointer;transition:all 150ms ease}
+        .time-pref-btn:hover{color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)}
+        .time-pref-btn.active{background:rgba(52,211,153,0.15);border-color:rgba(52,211,153,0.4);color:rgb(52,211,153);font-weight:600}
         /* old lead-info-grid responsive handled by glass-info-grid now */
         .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:rgb(52,211,153);border-radius:50%;animation:spin 0.8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -1542,7 +1549,7 @@
         .import-tab.active{background:rgb(52,211,153);border-color:rgb(52,211,153);color:#000}
         .import-panel{display:none}
         .import-panel.active{display:block}
-        .import-single-grid{display:grid;grid-template-columns:1fr 280px;gap:24px}
+        .import-single-grid{display:grid;grid-template-columns:1fr 280px;gap:24px;max-width:900px}
         .import-single-form{background:#111;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:28px}
         .import-single-tips{display:flex;flex-direction:column;gap:16px}
         .import-section{margin-bottom:24px}
@@ -1555,6 +1562,10 @@
         .form-group .required{color:#ef4444}
         .form-input{width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:12px 16px;color:#fff;font-size:0.9375rem;transition:border-color 150ms ease}
         .form-input:focus{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent)}
+        .form-input.input-invalid{border-color:#ef4444}
+        .form-input.input-invalid:focus{outline-color:#ef4444;border-color:#ef4444}
+        .field-error-hint{display:none;font-size:0.75rem;color:#ef4444;margin-top:4px}
+        .field-error-hint.visible{display:block}
         .form-hint{font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:4px}
         .btn-block{width:100%;justify-content:center}
         .template-download{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
@@ -2399,6 +2410,7 @@
                         </svg>
                     </button>
                     <h1 class="header-title" id="pageTitle">Overview</h1>
+                    <span class="header-count-badge" id="pageTitleCount" style="display:none;">0</span>
                 </div>
                 <div class="header-right">
                     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode" title="Toggle theme">
@@ -2620,7 +2632,8 @@
                         <!-- Prio Header -->
                         <div class="prio-header">
                             <div class="prio-header-text">
-                                <h2>Your priority leads ranked by engagement. Focus here first. <span class="header-count-badge" id="prioCount">0</span></h2>
+                                <span id="prioCount" style="display:none;">0</span>
+                                <h2>Your priority leads ranked by engagement. Focus here first.</h2>
                             </div>
                             <div class="prio-header-actions">
                                 <div class="view-toggle">
@@ -2689,7 +2702,8 @@
                         <!-- Prospects Header -->
                         <div class="prospects-header">
                             <div class="prospects-header-text">
-                                <h2>Booked meetings and callback requests. <span class="header-count-badge" id="prospectsCount">0</span></h2>
+                                <span id="prospectsCount" style="display:none;">0</span>
+                                <h2>Booked meetings and callback requests.</h2>
                             </div>
                             <div class="prospects-header-actions">
                                 <div class="view-toggle">
@@ -2758,7 +2772,8 @@
                         <!-- Pipeline Header -->
                         <div class="pipeline-header">
                             <div class="pipeline-header-text">
-                                <h2>Leads being followed up by AI. Timeline and scheduled follow-ups. <span class="header-count-badge" id="pipelineCount">0</span></h2>
+                                <span id="pipelineCount" style="display:none;">0</span>
+                                <h2>Leads being followed up by AI. Timeline and scheduled follow-ups.</h2>
                             </div>
                             <div class="pipeline-header-actions">
                                 <div class="view-toggle">
@@ -2810,7 +2825,8 @@
                         <!-- Shared Header -->
                         <div class="shared-header">
                             <div class="shared-header-text">
-                                <h2>Leads that have been shared with you. <span class="header-count-badge" id="sharedCount">0</span></h2>
+                                <span id="sharedCount" style="display:none;">0</span>
+                                <h2>Leads that have been shared with you.</h2>
                             </div>
                             <div class="shared-header-actions">
                                 <div class="view-toggle">
@@ -2879,7 +2895,8 @@
                         <!-- Booked Today Header -->
                         <div class="pipeline-header">
                             <div class="pipeline-header-text">
-                                <h2>Prospects qualified and booked/callback by AI from today's conversations. <span class="header-count-badge" id="bookedTodayCount">0</span></h2>
+                                <span id="bookedTodayCount" style="display:none;">0</span>
+                                <h2>Prospects qualified and booked/callback by AI from today's conversations.</h2>
                             </div>
                             <div class="pipeline-header-actions">
                                 <div class="view-toggle">
@@ -2927,7 +2944,8 @@
                         <!-- Unqualified Header -->
                         <div class="unqualified-header">
                             <div class="unqualified-header-text">
-                                <h2>Leads that are not yet booked or in an active pipeline. <span class="header-count-badge" id="unqualifiedCount">0</span></h2>
+                                <span id="unqualifiedCount" style="display:none;">0</span>
+                                <h2>Leads that are not yet booked or in an active pipeline.</h2>
                             </div>
                             <div class="unqualified-header-actions">
                                 <div class="view-toggle">
@@ -2991,7 +3009,8 @@
                         <!-- Open Leads Header -->
                         <div class="unqualified-header">
                             <div class="unqualified-header-text">
-                                <h2>Leads with Status = New or Retry that are ready to be called. <span class="header-count-badge" id="openLeadsCount">0</span></h2>
+                                <span id="openLeadsCount" style="display:none;">0</span>
+                                <h2>Leads with Status = New or Retry that are ready to be called.</h2>
                             </div>
                             <div class="unqualified-header-actions">
                                 <div class="view-toggle">
@@ -3287,10 +3306,12 @@
                                             <div class="form-group">
                                                 <label>Phone Number <span class="required">*</span></label>
                                                 <input type="tel" id="singleLeadPhone" placeholder="(416) 555-1234" class="form-input">
+                                                <div class="field-error-hint" id="phoneErrorHint">Enter at least 10 digits</div>
                                             </div>
                                             <div class="form-group">
                                                 <label>Email</label>
                                                 <input type="email" id="singleLeadEmail" placeholder="john@example.com" class="form-input">
+                                                <div class="field-error-hint" id="emailErrorHint">Enter a valid email address</div>
                                             </div>
                                         </div>
                                     </div>
@@ -3308,7 +3329,7 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>Max Call Attempts</label>
+                                                <label>Max Call Attempts <span style="color:rgba(255,255,255,0.3);font-weight:400;">(1–10)</span></label>
                                                 <input type="number" id="singleLeadMaxAttempts" placeholder="5" min="1" max="10" value="5" class="form-input">
                                             </div>
                                         </div>
@@ -3340,12 +3361,12 @@
                                                 <input type="hidden" id="singleLeadCallDate">
                                             </div>
                                         </div>
-                                        <div id="singleLeadTimeWrapper" style="display:none;">
+                                        <div id="singleLeadTimeWrapper">
                                             <label style="display:block;font-size:0.75rem;font-weight:400;color:#707070;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Preferred Time of Day</label>
                                             <div class="send-ai-time-pref" id="singleLeadTimePref">
-                                                <button type="button" class="time-pref-btn" data-time="Morning">🌅 Morning</button>
-                                                <button type="button" class="time-pref-btn active" data-time="Afternoon">☀️ Afternoon</button>
-                                                <button type="button" class="time-pref-btn" data-time="Evening">🌆 Evening</button>
+                                                <button type="button" class="time-pref-btn" data-time="Morning">🌅 Morning <span style="opacity:0.5;font-weight:400;">9 AM</span></button>
+                                                <button type="button" class="time-pref-btn active" data-time="Afternoon">☀️ Afternoon <span style="opacity:0.5;font-weight:400;">1 PM</span></button>
+                                                <button type="button" class="time-pref-btn" data-time="Evening">🌆 Evening <span style="opacity:0.5;font-weight:400;">5 PM</span></button>
                                             </div>
                                         </div>
                                     </div>
@@ -4907,7 +4928,23 @@
             feedback: 'Contact Us', leadgen: 'Lead Gen', 'booked-today': '🎯 Booked Today', 'open-leads': '📂 Open Leads'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
-        
+
+        // Show/hide lead count badge in header
+        var pageCountMap = {
+            prio: 'prioCount', prospects: 'prospectsCount', pipeline: 'pipelineCount',
+            shared: 'sharedCount', 'booked-today': 'bookedTodayCount',
+            unqualified: 'unqualifiedCount', 'open-leads': 'openLeadsCount'
+        };
+        var pageTitleCountEl = document.getElementById('pageTitleCount');
+        var countSourceId = pageCountMap[page];
+        if (countSourceId) {
+            var srcEl = document.getElementById(countSourceId);
+            pageTitleCountEl.textContent = srcEl ? srcEl.textContent : '0';
+            pageTitleCountEl.style.display = '';
+        } else {
+            pageTitleCountEl.style.display = 'none';
+        }
+
         // Show page
         document.querySelectorAll('.page').forEach(function(p) { p.classList.add('hidden'); });
         var pageEl = document.getElementById('page-' + page);
@@ -4916,6 +4953,30 @@
         // Update hash
         window.location.hash = page;
     }
+
+    // Sync hidden per-page count spans to header badge automatically
+    (function() {
+        var countIdToPage = {
+            prioCount: 'prio', prospectsCount: 'prospects', pipelineCount: 'pipeline',
+            sharedCount: 'shared', bookedTodayCount: 'booked-today',
+            unqualifiedCount: 'unqualified', openLeadsCount: 'open-leads'
+        };
+        Object.keys(countIdToPage).forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            var obs = new MutationObserver(function() {
+                var currentPage = (window.location.hash || '#overview').replace('#', '');
+                if (currentPage === countIdToPage[id]) {
+                    var badge = document.getElementById('pageTitleCount');
+                    if (badge) {
+                        badge.textContent = el.textContent;
+                        badge.style.display = '';
+                    }
+                }
+            });
+            obs.observe(el, { childList: true, characterData: true, subtree: true });
+        });
+    })();
 
     // Auth Modal
     function openAuthModal(mode) {
@@ -6691,6 +6752,7 @@
 
     function displayIntentScore(score) {
         // Update compact card in info grid
+        var intentCard = document.querySelector('.glass-intent-card');
         var cardFires = document.getElementById('intentCardFires');
         var cardLabel = document.getElementById('intentCardLabel');
         if (cardFires) {
@@ -6710,6 +6772,7 @@
                 cardLabel.style.color = 'rgba(255,255,255,0.3)';
             }
         }
+        if (intentCard) intentCard.classList.add('loaded');
     }
 
     function getIntentColor(score) {
@@ -6718,8 +6781,10 @@
     }
 
     function showIntentLoading() {
+        var intentCard = document.querySelector('.glass-intent-card');
         var cardFires = document.getElementById('intentCardFires');
         var cardLabel = document.getElementById('intentCardLabel');
+        if (intentCard) intentCard.classList.remove('loaded');
         if (cardFires) {
             var cFires = cardFires.querySelectorAll('.intent-card-fire');
             cFires.forEach(function(f) { f.classList.remove('lit'); f.classList.add('dim'); });
@@ -11905,6 +11970,15 @@
     }
     
     // ===== IMPORT PAGE =====
+    // Enforce max call attempts between 1-10
+    var maxAttemptsEl = document.getElementById('singleLeadMaxAttempts');
+    if (maxAttemptsEl) {
+        maxAttemptsEl.addEventListener('input', function() {
+            var val = parseInt(this.value, 10);
+            if (val > 10) this.value = 10;
+            if (val < 1 && this.value !== '') this.value = 1;
+        });
+    }
     // Tab switching
     document.querySelectorAll('.import-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
@@ -11916,6 +11990,43 @@
         });
     });
     
+    // Real-time validation for phone and email
+    (function() {
+        var phoneInput = document.getElementById('singleLeadPhone');
+        var emailInput = document.getElementById('singleLeadEmail');
+        var phoneHint = document.getElementById('phoneErrorHint');
+        var emailHint = document.getElementById('emailErrorHint');
+
+        function validatePhone() {
+            var val = phoneInput.value.trim();
+            if (!val) { phoneInput.classList.remove('input-invalid'); phoneHint.classList.remove('visible'); return; }
+            var digits = val.replace(/\D/g, '');
+            if (digits.length < 10) {
+                phoneInput.classList.add('input-invalid');
+                phoneHint.classList.add('visible');
+            } else {
+                phoneInput.classList.remove('input-invalid');
+                phoneHint.classList.remove('visible');
+            }
+        }
+
+        function validateEmail() {
+            var val = emailInput.value.trim();
+            if (!val) { emailInput.classList.remove('input-invalid'); emailHint.classList.remove('visible'); return; }
+            var valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val);
+            if (!valid) {
+                emailInput.classList.add('input-invalid');
+                emailHint.classList.add('visible');
+            } else {
+                emailInput.classList.remove('input-invalid');
+                emailHint.classList.remove('visible');
+            }
+        }
+
+        if (phoneInput) { phoneInput.addEventListener('input', validatePhone); phoneInput.addEventListener('blur', validatePhone); }
+        if (emailInput) { emailInput.addEventListener('input', validateEmail); emailInput.addEventListener('blur', validateEmail); }
+    })();
+
     // Single lead form
     document.getElementById('submitSingleLeadBtn')?.addEventListener('click', async function() {
         var btn = this;
@@ -11939,6 +12050,19 @@
             return;
         }
 
+        // Block submit if phone/email validation fails
+        var phoneDigits = phone.replace(/\D/g, '');
+        if (phoneDigits.length < 10) {
+            if (statusEl) statusEl.innerHTML = '<p style="color:#ef4444">Phone number must be at least 10 digits</p>';
+            document.getElementById('singleLeadPhone')?.focus();
+            return;
+        }
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+            if (statusEl) statusEl.innerHTML = '<p style="color:#ef4444">Please enter a valid email address</p>';
+            document.getElementById('singleLeadEmail')?.focus();
+            return;
+        }
+
         btn.disabled = true;
         btn.textContent = 'Adding...';
         if (statusEl) statusEl.innerHTML = '<p style="color:rgb(52,211,153)">Adding lead...</p>';
@@ -11949,9 +12073,9 @@
             var defaultContext = 'You reached out to ' + agentName + ' a while ago regarding your interest in buying or selling a property. Are you still in the market?';
 
             var leadData = {
-                'First Name': firstName,
-                'Last Name': lastName,
-                'Phone #': phone,
+                firstName: firstName,
+                lastName: lastName,
+                phone: phone,
                 interest: interest,
                 email: email,
                 maxAttempts: maxAttempts,
@@ -11967,6 +12091,7 @@
                 else if (selectedTime === 'Evening') timeHour = 17;
                 var nextCallDt = new Date(selectedDate + 'T00:00:00');
                 nextCallDt.setHours(timeHour, 0, 0, 0);
+                leadData.nextCallDate = nextCallDt.toISOString();
                 leadData['Next Call Date'] = nextCallDt.toISOString();
             }
 
@@ -11994,6 +12119,10 @@
             document.getElementById('singleLeadPhone').value = '';
             document.getElementById('singleLeadInterest').value = '';
             document.getElementById('singleLeadEmail').value = '';
+            document.getElementById('singleLeadPhone').classList.remove('input-invalid');
+            document.getElementById('singleLeadEmail').classList.remove('input-invalid');
+            document.getElementById('phoneErrorHint').classList.remove('visible');
+            document.getElementById('emailErrorHint').classList.remove('visible');
             document.getElementById('singleLeadMaxAttempts').value = '5';
             document.getElementById('singleLeadContext').value = '';
             document.getElementById('singleLeadCallDate').value = '';
@@ -12001,7 +12130,6 @@
             singleLeadSelectedDate = null;
             singleLeadSelectedTime = 'Afternoon';
             document.getElementById('singleLeadCalendar').style.display = 'none';
-            document.getElementById('singleLeadTimeWrapper').style.display = 'none';
             var calToggle = document.getElementById('singleLeadCalToggle');
             calToggle.innerHTML = '📅 Pick a date';
             calToggle.style.color = 'rgba(255,255,255,0.5)';
@@ -12058,8 +12186,6 @@
                 var toggle = document.getElementById('singleLeadCalToggle');
                 toggle.innerHTML = '📅 ' + monthNames[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
                 toggle.style.color = '#fff';
-                // Show time preference
-                document.getElementById('singleLeadTimeWrapper').style.display = 'block';
             });
         });
     }
