@@ -203,6 +203,18 @@ img {
     position: relative;
 }
 
+.sidebar-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-header-left .theme-toggle {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+}
+
 /* Subtle bottom highlight on header border */
 .sidebar-header::after {
     content: '';
