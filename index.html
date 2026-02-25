@@ -12186,6 +12186,7 @@
                 var toggle = document.getElementById('singleLeadCalToggle');
                 toggle.innerHTML = '📅 ' + monthNames[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
                 toggle.style.color = '#fff';
+                document.getElementById('singleLeadCalendar').style.display = 'none';
             });
         });
     }
