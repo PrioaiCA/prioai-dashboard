@@ -452,6 +452,59 @@
             color:rgba(255,255,255,0.75);
             box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 4px 16px rgba(0,0,0,0.4);
         }
+        /* Pill view toggle */
+        .pill-view-toggle{
+            display:flex;align-items:center;justify-content:flex-end;margin-bottom:8px;
+        }
+        .pill-view-btn{
+            display:flex;align-items:center;gap:5px;
+            padding:5px 12px;border-radius:8px;
+            background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.2));
+            border:1px solid rgba(255,255,255,0.06);
+            color:rgba(255,255,255,0.4);font-size:11px;font-weight:500;
+            font-family:'DM Sans',sans-serif;cursor:pointer;
+            transition:all 200ms ease;
+        }
+        .pill-view-btn:hover{border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.7)}
+        .pill-view-btn .pill-view-icon{font-size:13px;line-height:1}
+        [data-theme="light"] .pill-view-btn{
+            background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.08);color:rgba(0,0,0,0.45)
+        }
+        [data-theme="light"] .pill-view-btn:hover{border-color:rgba(0,0,0,0.15);color:rgba(0,0,0,0.7)}
+
+        /* Compact pill mode */
+        .glass-action-pills.compact-pills{
+            gap:0;background:linear-gradient(150deg,rgba(255,255,255,0.03),rgba(0,0,0,0.25));
+            border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;
+            margin-bottom:24px
+        }
+        .glass-action-pills.compact-pills .glass-pill{
+            border:none;border-radius:0;flex:1;text-align:center;justify-content:center;
+            border-right:1px solid rgba(255,255,255,0.06);
+            background:transparent;box-shadow:none;margin:0;
+            padding:10px 8px;font-size:12px
+        }
+        .glass-action-pills.compact-pills .glass-pill:last-child{border-right:none}
+        .glass-action-pills.compact-pills .glass-pill::before{display:none}
+        .glass-action-pills.compact-pills .glass-pill:hover{background:rgba(255,255,255,0.04)}
+        .glass-action-pills.compact-pills .glass-pill-prio{
+            border-color:transparent;border-right:1px solid rgba(255,255,255,0.06)
+        }
+        .glass-action-pills.compact-pills .glass-pill-prio:hover{background:rgba(0,230,118,0.08)}
+        .glass-action-pills.compact-pills .glass-pill-dnc{border-color:transparent}
+        .glass-action-pills.compact-pills .glass-pill-dnc:hover{background:rgba(239,68,68,0.08)}
+        [data-theme="light"] .glass-action-pills.compact-pills{
+            background:rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.08)
+        }
+        [data-theme="light"] .glass-action-pills.compact-pills .glass-pill{
+            border-right-color:rgba(0,0,0,0.08);background:transparent;box-shadow:none;
+            border:none;border-right:1px solid rgba(0,0,0,0.08)
+        }
+        [data-theme="light"] .glass-action-pills.compact-pills .glass-pill:last-child{border-right:none}
+        [data-theme="light"] .glass-action-pills.compact-pills .glass-pill:hover{background:rgba(0,0,0,0.04)}
+        [data-theme="light"] .glass-action-pills.compact-pills .glass-pill-prio:hover{background:rgba(16,185,129,0.06)}
+        [data-theme="light"] .glass-action-pills.compact-pills .glass-pill-dnc:hover{background:rgba(239,68,68,0.06)}
+
         /* PRIO pill */
         .glass-pill-prio{
             background:linear-gradient(150deg,rgba(0,230,118,0.12),rgba(0,0,0,0.35));
@@ -649,6 +702,9 @@
             transition:all 250ms ease;
         }
         .glass-log-attempt-btn:hover{border-color:rgba(0,230,118,0.12);color:rgba(255,255,255,0.4)}
+        .attempt-time-label{color:rgba(255,255,255,0.5);font-size:0.8125rem}
+        .btn-delete-attempt{background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:6px;transition:all 150ms ease}
+        .btn-delete-attempt:hover{color:#ef4444;background:rgba(239,68,68,0.1)}
 
         /* Lead Intent Score */
         .intent-score-panel{display:flex;flex-direction:column;gap:14px}
@@ -1248,12 +1304,14 @@
 
         /* Filters Bar */
         .search-box{position:relative;flex:0 0 auto;min-width:200px;max-width:300px}
-        .search-box input{width:100%;padding:10px 16px 10px 40px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.06);border-radius:12px;color:#fff;font-size:0.875rem;transition:all 250ms ease;box-shadow:inset 0 2px 6px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.04)}
-        .search-box input:focus{outline:none;border-color:rgba(0,230,118,0.25);box-shadow:inset 0 2px 6px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.04),0 0 20px rgba(0,230,118,0.05)}
-        .search-box .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.5}
-        .filter-select{padding:10px 16px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.06);border-radius:100px;color:#fff;font-size:0.875rem;min-width:140px;cursor:pointer;transition:all 250ms ease;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
-        .filter-select:focus{outline:none;border-color:rgba(0,230,118,0.25);box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),0 0 20px rgba(0,230,118,0.05)}
-        .filter-select option{background:#1a1a2e;color:#fff}
+        .search-box input{width:100%;padding:10px 16px 10px 40px;background:linear-gradient(150deg,rgba(255,255,255,0.06),rgba(0,0,0,0.25));border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:0.875rem;font-family:'DM Sans',sans-serif;transition:all 250ms ease;box-shadow:0 2px 8px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.06)}
+        .search-box input::placeholder{color:rgba(255,255,255,0.35);font-weight:400}
+        .search-box input:focus{outline:none;border-color:rgba(0,230,118,0.35);box-shadow:0 2px 8px rgba(0,0,0,0.2),0 0 0 3px rgba(0,230,118,0.08)}
+        .search-box .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.45;font-size:14px}
+        .filter-select{padding:10px 20px 10px 16px;background:linear-gradient(150deg,rgba(255,255,255,0.06),rgba(0,0,0,0.25));border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.85);font-size:0.8125rem;font-family:'DM Sans',sans-serif;font-weight:500;min-width:140px;cursor:pointer;transition:all 250ms ease;box-shadow:0 2px 8px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.06);-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+        .filter-select:focus{outline:none;border-color:rgba(0,230,118,0.35);box-shadow:0 2px 8px rgba(0,0,0,0.15),0 0 0 3px rgba(0,230,118,0.08)}
+        .filter-select:hover{border-color:rgba(255,255,255,0.18);background:linear-gradient(150deg,rgba(255,255,255,0.08),rgba(0,0,0,0.2))}
+        .filter-select option{background:#1a1a2e;color:#fff;padding:8px}
 
         /* Data Table */
         .table-container{background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 50%,rgba(255,255,255,0.02) 100%);backdrop-filter:blur(30px) brightness(0.9);border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 4px 12px rgba(0,0,0,0.4)}
@@ -2250,6 +2308,76 @@
         [data-theme="light"] .prio-list:not(.list-view) .priority-card-lg-left{border-bottom-color:rgba(0,0,0,0.06)}
         [data-theme="light"] .prio-list:not(.list-view) .priority-card-lg-status-col{border-bottom-color:rgba(0,0,0,0.06)}
         [data-theme="light"] .prio-list:not(.list-view) .priority-card-lg-actions{border-top-color:rgba(0,0,0,0.06)}
+
+        /* --- Call Attempts Light Mode --- */
+        [data-theme="light"] #leadModal .lead-attempt-item{
+            background:rgba(0,0,0,0.03);
+            border:1px solid rgba(0,0,0,0.08);
+            color:rgba(0,0,0,0.7);
+            box-shadow:0 1px 2px rgba(0,0,0,0.04)
+        }
+        [data-theme="light"] #leadModal .lead-attempt-item span{color:rgba(0,0,0,0.7)}
+        [data-theme="light"] #leadModal .lead-attempt-item span span{color:rgba(0,0,0,0.45)}
+        [data-theme="light"] #leadModal .lead-attempt-item .attempt-result{color:#10b981;text-shadow:none}
+        [data-theme="light"] .glass-log-attempt-btn{
+            background:rgba(0,0,0,0.02);
+            border:1px dashed rgba(0,0,0,0.15);
+            color:rgba(0,0,0,0.4)
+        }
+        [data-theme="light"] .glass-log-attempt-btn:hover{
+            border-color:rgba(16,185,129,0.3);
+            color:rgba(0,0,0,0.6);
+            background:rgba(16,185,129,0.04)
+        }
+        [data-theme="light"] .attempt-time-label{color:rgba(0,0,0,0.45)}
+        [data-theme="light"] .btn-delete-attempt{
+            color:rgba(0,0,0,0.25)
+        }
+        [data-theme="light"] .btn-delete-attempt:hover{color:#ef4444;background:rgba(239,68,68,0.08)}
+        [data-theme="light"] #callAttemptsSection p{color:rgba(0,0,0,0.4) !important}
+        [data-theme="light"] .glass-pill-dnc{
+            border-color:rgba(239,68,68,0.2);color:rgba(239,68,68,0.7)
+        }
+        [data-theme="light"] .glass-pill-dnc:hover{
+            border-color:rgba(239,68,68,0.35);color:#ef4444;
+            background:rgba(239,68,68,0.06)
+        }
+
+        /* --- Filters & Search Bar Light Mode --- */
+        [data-theme="light"] .search-box input{
+            background:#fff;
+            border:1px solid rgba(0,0,0,0.12);
+            color:#111118;
+            box-shadow:0 1px 4px rgba(0,0,0,0.06)
+        }
+        [data-theme="light"] .search-box input::placeholder{color:rgba(0,0,0,0.38)}
+        [data-theme="light"] .search-box input:focus{
+            border-color:rgba(16,185,129,0.5);
+            box-shadow:0 1px 4px rgba(0,0,0,0.06),0 0 0 3px rgba(16,185,129,0.12)
+        }
+        [data-theme="light"] .search-box .search-icon{opacity:0.45}
+        [data-theme="light"] .filter-select{
+            background:#fff;
+            border:1px solid rgba(0,0,0,0.12);
+            color:#2d2d42;
+            box-shadow:0 1px 4px rgba(0,0,0,0.06);
+            background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(0,0,0,0.35)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        }
+        [data-theme="light"] .filter-select:hover{
+            border-color:rgba(0,0,0,0.2);
+            background-color:rgba(0,0,0,0.01)
+        }
+        [data-theme="light"] .filter-select:focus{
+            border-color:rgba(16,185,129,0.5);
+            box-shadow:0 1px 4px rgba(0,0,0,0.06),0 0 0 3px rgba(16,185,129,0.12)
+        }
+        [data-theme="light"] .filter-select option{background:#fff;color:#111118}
+        [data-theme="light"] .sort-direction-btn{
+            background:#fff;border:1px solid rgba(0,0,0,0.12);color:rgba(0,0,0,0.55);
+            box-shadow:0 1px 4px rgba(0,0,0,0.06)
+        }
+        [data-theme="light"] .sort-direction-btn:hover{border-color:rgba(0,0,0,0.2);color:rgba(0,0,0,0.85)}
+
         @media(max-width:900px){
             [data-theme="light"] .priority-card-lg-left{border-bottom-color:rgba(0,0,0,0.06)}
             [data-theme="light"] .priority-card-lg-summary-col{border-bottom-color:rgba(0,0,0,0.06)}
@@ -4370,6 +4498,11 @@
                     </div>
 
                     <!-- 2. Action Pills Row -->
+                    <div class="pill-view-toggle">
+                        <button class="pill-view-btn" id="pillViewToggle" onclick="togglePillView()" title="Toggle compact/expanded view">
+                            <span class="pill-view-icon">☰</span> <span id="pillViewLabel">Compact</span>
+                        </button>
+                    </div>
                     <div class="glass-action-pills">
                         <button class="glass-pill" id="modalShareBtn" title="Share with another agent">Share</button>
                         <button class="glass-pill glass-pill-prio" id="modalPrioBtn" title="Toggle PRIO status">PRIO</button>
@@ -7137,7 +7270,7 @@
             var attemptsList = document.getElementById('modalAttemptsList');
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
                 var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
-                return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
+                return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span class="attempt-time-label">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
             if (attemptsList) attemptsList.innerHTML = attemptsHtml;
         }
@@ -7863,12 +7996,39 @@
     }
 
     window.bindLogAttemptBtn = function(btn) {
+        if (btn._logAttemptBound) return;
+        btn._logAttemptBound = true;
         btn.addEventListener('click', function() { handleLogAttempt(this); });
     };
 
     var initialLogBtn = document.getElementById('modalLogAttemptBtn');
     if (initialLogBtn) window.bindLogAttemptBtn(initialLogBtn);
-    
+
+    // Pill view toggle (compact vs individual)
+    window.togglePillView = function() {
+        var pills = document.querySelector('.glass-action-pills');
+        var label = document.getElementById('pillViewLabel');
+        var icon = document.querySelector('#pillViewToggle .pill-view-icon');
+        if (!pills) return;
+        var isCompact = pills.classList.toggle('compact-pills');
+        if (label) label.textContent = isCompact ? 'Expand' : 'Compact';
+        if (icon) icon.textContent = isCompact ? '⊞' : '☰';
+        try { localStorage.setItem('pillViewCompact', isCompact ? '1' : '0'); } catch(e) {}
+    };
+    // Restore saved preference
+    (function() {
+        var saved = null;
+        try { saved = localStorage.getItem('pillViewCompact'); } catch(e) {}
+        if (saved === '1') {
+            var pills = document.querySelector('.glass-action-pills');
+            var label = document.getElementById('pillViewLabel');
+            var icon = document.querySelector('#pillViewToggle .pill-view-icon');
+            if (pills) pills.classList.add('compact-pills');
+            if (label) label.textContent = 'Expand';
+            if (icon) icon.textContent = '⊞';
+        }
+    })();
+
     // Unprio from table
     async function unprio(leadId) {
         try {
@@ -10401,7 +10561,7 @@
             var attemptsList = document.getElementById('modalAttemptsList');
             var attemptsHtml = attemptsArray.map(function(attempt, i) {
                 var timeStr = attempt.time ? formatFriendlyDateTime(attempt.time) : 'Unknown time';
-                return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);font-size:0.8125rem;">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
+                return '<div class="lead-attempt-item"><span>Call Attempt #' + (i + 1) + '</span><span style="display:flex;align-items:center;gap:8px;"><span class="attempt-time-label">' + timeStr + '</span><button class="btn-delete-attempt" onclick="deleteCallAttempt(' + i + ')" title="Delete">✕</button></span></div>';
             }).join('');
             if (attemptsList) attemptsList.innerHTML = attemptsHtml;
         }
