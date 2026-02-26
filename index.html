@@ -555,13 +555,19 @@
         [data-theme="light"] .tab-viewall-btn.active{border-color:rgba(16,185,129,0.3);color:rgba(16,185,129,0.8);background:rgba(16,185,129,0.06)}
 
         /* View All mode: show all tab contents with section labels */
+        .glass-section.view-all-mode{display:flex;flex-direction:column}
+        .glass-section.view-all-mode > div:first-child{order:-1}
         .glass-section.view-all-mode .glass-tab-bar{display:none}
+        .glass-section.view-all-mode #glassTabSummary{order:1}
+        .glass-section.view-all-mode #glassTabNotes{order:2}
+        .glass-section.view-all-mode #glassTabAttempts{order:3}
+        .glass-section.view-all-mode #glassTabTranscript{order:4}
         .glass-section.view-all-mode .glass-tab-content{
             display:block !important;
             border-top:1px solid rgba(255,255,255,0.06);
             padding-top:12px;margin-top:12px
         }
-        .glass-section.view-all-mode #glassTabNotes{border-top:none;margin-top:0;padding-top:0}
+        .glass-section.view-all-mode #glassTabSummary{border-top:none;margin-top:0;padding-top:0}
         .glass-section.view-all-mode .glass-tab-content::before{
             display:block;font-size:11px;font-weight:600;text-transform:uppercase;
             letter-spacing:0.05em;color:rgba(255,255,255,0.35);margin-bottom:8px
@@ -7471,7 +7477,14 @@
         var pageId = activePage.id;
         var leads = [];
 
-        if (pageId === 'page-overview' || pageId === 'page-prio') {
+        if (pageId === 'page-overview') {
+            // Get leads from today's priorities list shown on overview page
+            var priorityCards = document.querySelectorAll('#todayPriorities .priority-card-lg[data-id]');
+            var priorityIds = Array.from(priorityCards).map(function(card) { return card.dataset.id; });
+            leads = priorityIds.map(function(id) {
+                return allLeads.find(function(l) { return l.id === id; });
+            }).filter(Boolean);
+        } else if (pageId === 'page-prio') {
             // Get leads from prio list
             leads = allLeads.filter(function(l) {
                 return l.fields['Is Prio'] === true;
