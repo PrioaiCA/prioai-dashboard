@@ -2558,6 +2558,10 @@
                             <span class="nav-item-icon">🔍</span>
                             <span>Search</span>
                         </div>
+                        <div class="nav-item" data-page="sms-leads">
+                            <span class="nav-item-icon">💬</span>
+                            <span>SMS Outreach</span>
+                        </div>
                     </div>
                 </div>
 
@@ -3760,6 +3764,78 @@
                         <div id="searchEmptyState" style="display:none;text-align:center;padding:60px;color:rgba(255,255,255,0.4);">
                             <div style="font-size:3rem;margin-bottom:16px;">🔍</div>
                             <p id="searchEmptyText">No lead found</p>
+                        </div>
+                    </div>
+
+                    <!-- Page: SMS Outreach -->
+                    <div class="page hidden" id="page-sms-leads">
+                        <!-- SMS Header -->
+                        <div class="unqualified-header">
+                            <div class="unqualified-header-text">
+                                <span id="smsLeadsCount" style="display:none;">0</span>
+                                <h2>Leads in your SMS/texting outreach flow. Only leads with an SMS Status are shown.</h2>
+                            </div>
+                            <div class="unqualified-header-actions">
+                                <div class="view-toggle">
+                                    <button class="view-toggle-btn active" id="smsLeadsViewList" onclick="setSmsLeadsView('list')" title="List view">☰</button>
+                                    <button class="view-toggle-btn" id="smsLeadsViewGrid" onclick="setSmsLeadsView('grid')" title="Grid view">▦</button>
+                                    <button class="font-size-toggle size-sm" onclick="cycleFontSize()" title="Change font size"><span class="size-icon">Aa</span> <span class="size-label">S</span></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SMS Status Summary Cards -->
+                        <div class="sms-stats-grid" id="smsStatsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1.5rem;">
+                        </div>
+
+                        <!-- SMS Status Tabs -->
+                        <div class="unqualified-tabs" id="smsStatusTabs">
+                            <button class="unqualified-tab active" data-sms-status="all">All</button>
+                            <button class="unqualified-tab" data-sms-status="Initial Sent">Initial Sent</button>
+                            <button class="unqualified-tab" data-sms-status="Follow Up 1">Follow Up 1</button>
+                            <button class="unqualified-tab" data-sms-status="Follow Up 2">Follow Up 2</button>
+                            <button class="unqualified-tab" data-sms-status="Cadence Complete">Cadence Complete</button>
+                            <button class="unqualified-tab" data-sms-status="Interested">Interested</button>
+                            <button class="unqualified-tab" data-sms-status="Watching">Watching</button>
+                            <button class="unqualified-tab" data-sms-status="Opted Out">Opted Out</button>
+                            <button class="unqualified-tab" data-sms-status="AI Handled">AI Handled</button>
+                            <button class="unqualified-tab" data-sms-status="Interested - Later">Interested - Later</button>
+                        </div>
+
+                        <!-- SMS Filters -->
+                        <div class="filters-bar">
+                            <div class="filters-left">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="smsLeadsSearch" placeholder="Search by name or phone...">
+                                </div>
+                                <select id="smsLeadsOptOut" class="filter-select">
+                                    <option value="all">All Opt Out</option>
+                                    <option value="opted-in">Opted In</option>
+                                    <option value="opted-out">Opted Out</option>
+                                </select>
+                                <select id="smsLeadsTimeframe" class="filter-select">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="7days">Last 7 Days</option>
+                                    <option value="30days">Last 30 Days</option>
+                                    <option value="90days">Last 90 Days</option>
+                                </select>
+                            </div>
+                            <div class="sort-controls">
+                                <span class="sort-label">Sort by</span>
+                                <select id="smsLeadsSort" class="filter-select sort-select">
+                                    <option value="lastUpdated">Last Updated</option>
+                                    <option value="name">Name</option>
+                                    <option value="smsStatus">SMS Status</option>
+                                </select>
+                                <button class="sort-direction-btn" id="smsLeadsSortDir" onclick="toggleSmsLeadsSortDir()" title="Toggle sort direction">↓</button>
+                            </div>
+                        </div>
+
+                        <!-- SMS Leads Cards -->
+                        <div class="unqualified-list list-view" id="smsLeadsList">
+                            <div class="page-loading"><div class="spinner"></div><p>Loading SMS leads...</p></div>
                         </div>
                     </div>
 
@@ -5152,7 +5228,8 @@
             overview: 'Overview', prio: '⚡ Prio Prospects', prospects: '📋 Prospects', pipeline: '🤖 AI Follow Ups',
             unqualified: '📁 Unqualified Leads', shared: '🔗 Shared Leads', analytics: '📊 Analytics',
             import: '📥 Import Leads', search: '🔍 Search Lead', settings: '⚙️ Settings', billing: 'Billing', help: 'Help',
-            feedback: 'Contact Us', leadgen: 'Lead Gen', 'booked-today': '🎯 Booked Today', 'open-leads': '📂 Open Leads'
+            feedback: 'Contact Us', leadgen: 'Lead Gen', 'booked-today': '🎯 Booked Today', 'open-leads': '📂 Open Leads',
+            'sms-leads': '💬 SMS Outreach'
         };
         document.getElementById('pageTitle').textContent = titles[page] || page;
 
@@ -5160,7 +5237,8 @@
         var pageCountMap = {
             prio: 'prioCount', prospects: 'prospectsCount', pipeline: 'pipelineCount',
             shared: 'sharedCount', 'booked-today': 'bookedTodayCount',
-            unqualified: 'unqualifiedCount', 'open-leads': 'openLeadsCount'
+            unqualified: 'unqualifiedCount', 'open-leads': 'openLeadsCount',
+            'sms-leads': 'smsLeadsCount'
         };
         var pageTitleCountEl = document.getElementById('pageTitleCount');
         var countSourceId = pageCountMap[page];
@@ -5186,7 +5264,8 @@
         var countIdToPage = {
             prioCount: 'prio', prospectsCount: 'prospects', pipelineCount: 'pipeline',
             sharedCount: 'shared', bookedTodayCount: 'booked-today',
-            unqualifiedCount: 'unqualified', openLeadsCount: 'open-leads'
+            unqualifiedCount: 'unqualified', openLeadsCount: 'open-leads',
+            smsLeadsCount: 'sms-leads'
         };
         Object.keys(countIdToPage).forEach(function(id) {
             var el = document.getElementById(id);
@@ -5801,6 +5880,8 @@
             updateUnqualifiedList();
             await yieldToMain();
             updateOpenLeadsList();
+            await yieldToMain();
+            updateSmsLeadsList();
             await yieldToMain();
             updateAnalyticsDisplay();
 
@@ -10142,6 +10223,264 @@
     document.getElementById('openLeadsOwnership')?.addEventListener('change', updateOpenLeadsList);
     document.getElementById('openLeadsTimeframe')?.addEventListener('change', updateOpenLeadsList);
     document.getElementById('openLeadsSort')?.addEventListener('change', updateOpenLeadsList);
+
+    // ============ SMS OUTREACH PAGE ============
+    var smsStatusFilter = 'all';
+    var smsLeadsSortAsc = false;
+
+    function setSmsLeadsView(view) {
+        var list = document.getElementById('smsLeadsList');
+        var listBtn = document.getElementById('smsLeadsViewList');
+        var gridBtn = document.getElementById('smsLeadsViewGrid');
+        if (view === 'list') {
+            list?.classList.add('list-view');
+            listBtn?.classList.add('active');
+            gridBtn?.classList.remove('active');
+        } else {
+            list?.classList.remove('list-view');
+            listBtn?.classList.remove('active');
+            gridBtn?.classList.add('active');
+        }
+    }
+
+    function toggleSmsLeadsSortDir() {
+        smsLeadsSortAsc = !smsLeadsSortAsc;
+        var btn = document.getElementById('smsLeadsSortDir');
+        if (btn) btn.textContent = smsLeadsSortAsc ? '↑' : '↓';
+        updateSmsLeadsList();
+    }
+
+    function getSmsStatusColor(status) {
+        var colors = {
+            'Initial Sent': '#3b82f6',
+            'Follow Up 1': '#8b5cf6',
+            'Follow Up 2': '#a855f7',
+            'Cadence Complete': '#6b7280',
+            'Interested': '#10b981',
+            'Watching': '#f59e0b',
+            'Opted Out': '#ef4444',
+            'AI Handled': '#06b6d4',
+            'Interested - Later': '#34d399'
+        };
+        return colors[status] || '#6b7280';
+    }
+
+    function getSmsStatusEmoji(status) {
+        var emojis = {
+            'Initial Sent': '📤',
+            'Follow Up 1': '🔁',
+            'Follow Up 2': '🔁',
+            'Cadence Complete': '✅',
+            'Interested': '🟢',
+            'Watching': '👀',
+            'Opted Out': '🚫',
+            'AI Handled': '🤖',
+            'Interested - Later': '🕐'
+        };
+        return emojis[status] || '💬';
+    }
+
+    function updateSmsStatsGrid(smsLeads) {
+        var grid = document.getElementById('smsStatsGrid');
+        if (!grid) return;
+
+        var statusCounts = {};
+        var statuses = ['Initial Sent', 'Follow Up 1', 'Follow Up 2', 'Cadence Complete', 'Interested', 'Watching', 'Opted Out', 'AI Handled', 'Interested - Later'];
+        statuses.forEach(function(s) { statusCounts[s] = 0; });
+
+        smsLeads.forEach(function(l) {
+            var s = l.fields['SMS Status'] || '';
+            if (statusCounts[s] !== undefined) statusCounts[s]++;
+        });
+
+        var optedOutCount = smsLeads.filter(function(l) { return l.fields['SMS Opt Out'] === true || l.fields['SMS Opt Out'] === 'true'; }).length;
+        var respondedCount = smsLeads.filter(function(l) { var r = l.fields['SMS Response'] || ''; return r.trim() !== ''; }).length;
+
+        grid.innerHTML =
+            '<div style="position:relative;background:linear-gradient(150deg,rgba(16,185,129,0.1) 0%,rgba(0,0,0,0.3) 50%,rgba(16,185,129,0.03) 100%);border:1px solid rgba(16,185,129,0.18);border-radius:16px;padding:1rem;text-align:center;box-shadow:inset 0 1px 0 rgba(16,185,129,0.1),0 4px 12px rgba(0,0,0,0.4)">' +
+                '<div style="font-size:1.75rem;font-weight:700;color:#fff;font-family:var(--font-heading)">' + smsLeads.length + '</div>' +
+                '<div style="font-size:0.6875rem;color:#a0a0a0;text-transform:uppercase">Total SMS</div>' +
+            '</div>' +
+            '<div style="position:relative;background:linear-gradient(150deg,rgba(59,130,246,0.1) 0%,rgba(0,0,0,0.3) 50%,rgba(59,130,246,0.03) 100%);border:1px solid rgba(59,130,246,0.18);border-radius:16px;padding:1rem;text-align:center;box-shadow:inset 0 1px 0 rgba(59,130,246,0.1),0 4px 12px rgba(0,0,0,0.4)">' +
+                '<div style="font-size:1.75rem;font-weight:700;color:#fff;font-family:var(--font-heading)">' + respondedCount + '</div>' +
+                '<div style="font-size:0.6875rem;color:#a0a0a0;text-transform:uppercase">Responded</div>' +
+            '</div>' +
+            '<div style="position:relative;background:linear-gradient(150deg,rgba(16,185,129,0.1) 0%,rgba(0,0,0,0.3) 50%,rgba(16,185,129,0.03) 100%);border:1px solid rgba(16,185,129,0.18);border-radius:16px;padding:1rem;text-align:center;box-shadow:inset 0 1px 0 rgba(16,185,129,0.1),0 4px 12px rgba(0,0,0,0.4)">' +
+                '<div style="font-size:1.75rem;font-weight:700;color:#fff;font-family:var(--font-heading)">' + (statusCounts['Interested'] + statusCounts['Interested - Later']) + '</div>' +
+                '<div style="font-size:0.6875rem;color:#a0a0a0;text-transform:uppercase">Interested</div>' +
+            '</div>' +
+            '<div style="position:relative;background:linear-gradient(150deg,rgba(245,158,11,0.1) 0%,rgba(0,0,0,0.3) 50%,rgba(245,158,11,0.03) 100%);border:1px solid rgba(245,158,11,0.18);border-radius:16px;padding:1rem;text-align:center;box-shadow:inset 0 1px 0 rgba(245,158,11,0.1),0 4px 12px rgba(0,0,0,0.4)">' +
+                '<div style="font-size:1.75rem;font-weight:700;color:#fff;font-family:var(--font-heading)">' + statusCounts['Watching'] + '</div>' +
+                '<div style="font-size:0.6875rem;color:#a0a0a0;text-transform:uppercase">Watching</div>' +
+            '</div>' +
+            '<div style="position:relative;background:linear-gradient(150deg,rgba(239,68,68,0.1) 0%,rgba(0,0,0,0.3) 50%,rgba(239,68,68,0.03) 100%);border:1px solid rgba(239,68,68,0.18);border-radius:16px;padding:1rem;text-align:center;box-shadow:inset 0 1px 0 rgba(239,68,68,0.1),0 4px 12px rgba(0,0,0,0.4)">' +
+                '<div style="font-size:1.75rem;font-weight:700;color:#fff;font-family:var(--font-heading)">' + optedOutCount + '</div>' +
+                '<div style="font-size:0.6875rem;color:#a0a0a0;text-transform:uppercase">Opted Out</div>' +
+            '</div>' +
+            '<div style="position:relative;background:linear-gradient(150deg,rgba(6,182,212,0.1) 0%,rgba(0,0,0,0.3) 50%,rgba(6,182,212,0.03) 100%);border:1px solid rgba(6,182,212,0.18);border-radius:16px;padding:1rem;text-align:center;box-shadow:inset 0 1px 0 rgba(6,182,212,0.1),0 4px 12px rgba(0,0,0,0.4)">' +
+                '<div style="font-size:1.75rem;font-weight:700;color:#fff;font-family:var(--font-heading)">' + statusCounts['AI Handled'] + '</div>' +
+                '<div style="font-size:0.6875rem;color:#a0a0a0;text-transform:uppercase">AI Handled</div>' +
+            '</div>';
+    }
+
+    function updateSmsLeadsList() {
+        var smsLeadsList = document.getElementById('smsLeadsList');
+        if (!smsLeadsList) return;
+
+        var searchVal = (document.getElementById('smsLeadsSearch')?.value || '').toLowerCase();
+        var optOutFilter = document.getElementById('smsLeadsOptOut')?.value || 'all';
+        var timeframeFilter = document.getElementById('smsLeadsTimeframe')?.value || 'all';
+        var sortBy = document.getElementById('smsLeadsSort')?.value || 'lastUpdated';
+
+        // Filter leads: SMS Status must not be empty
+        var smsLeads = allLeads.filter(function(l) {
+            var f = l.fields;
+            var smsStatus = f['SMS Status'] || '';
+            if (!smsStatus) return false;
+
+            // Filter by SMS Status tab
+            if (smsStatusFilter !== 'all') {
+                if (smsStatus !== smsStatusFilter) return false;
+            }
+
+            // Opt Out filter
+            if (optOutFilter !== 'all') {
+                var isOptedOut = f['SMS Opt Out'] === true || f['SMS Opt Out'] === 'true';
+                if (optOutFilter === 'opted-out' && !isOptedOut) return false;
+                if (optOutFilter === 'opted-in' && isOptedOut) return false;
+            }
+
+            // Search filter
+            if (searchVal) {
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+                var phone = (f['Phone #'] || f['Phone'] || '').toLowerCase();
+                if (!name.includes(searchVal) && !phone.includes(searchVal)) return false;
+            }
+
+            // Timeframe filter
+            if (timeframeFilter !== 'all') {
+                var lastUpdated = f['Updated At'] ? new Date(f['Updated At']) : null;
+                if (!lastUpdated) return timeframeFilter === 'all';
+                var now = new Date();
+                var daysDiff = Math.floor((now - lastUpdated) / (1000 * 60 * 60 * 24));
+                if (timeframeFilter === 'today' && daysDiff > 0) return false;
+                if (timeframeFilter === '7days' && daysDiff > 7) return false;
+                if (timeframeFilter === '30days' && daysDiff > 30) return false;
+                if (timeframeFilter === '90days' && daysDiff > 90) return false;
+            }
+
+            return true;
+        });
+
+        // Update stats grid with ALL SMS leads (unfiltered by tab)
+        var allSmsLeads = allLeads.filter(function(l) { return !!(l.fields['SMS Status']); });
+        updateSmsStatsGrid(allSmsLeads);
+
+        // Sort
+        var dir = smsLeadsSortAsc ? 1 : -1;
+        smsLeads.sort(function(a, b) {
+            var fa = a.fields, fb = b.fields;
+            var result;
+            switch (sortBy) {
+                case 'name':
+                    var nameA = ((fa['First Name'] || '') + ' ' + (fa['Last Name'] || '')).toLowerCase();
+                    var nameB = ((fb['First Name'] || '') + ' ' + (fb['Last Name'] || '')).toLowerCase();
+                    result = nameA.localeCompare(nameB);
+                    break;
+                case 'smsStatus':
+                    result = (fa['SMS Status'] || '').localeCompare(fb['SMS Status'] || '');
+                    break;
+                case 'lastUpdated':
+                default:
+                    var updA = new Date(fa['Updated At'] || 0).getTime();
+                    var updB = new Date(fb['Updated At'] || 0).getTime();
+                    result = updB - updA;
+                    break;
+            }
+            return result * dir;
+        });
+
+        // Update count badge
+        var smsCountEl = document.getElementById('smsLeadsCount');
+        if (smsCountEl) smsCountEl.textContent = smsLeads.length;
+
+        if (smsLeads.length === 0) {
+            smsLeadsList.innerHTML = '<div class="pipeline-empty">No SMS leads found</div>';
+            return;
+        }
+
+        smsLeadsList.innerHTML = smsLeads.map(function(lead) {
+            var f = lead.fields;
+            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
+            var phone = f['Phone #'] || f['Phone'] || '-';
+            var formattedPhone = formatPhoneNumber(phone);
+            var lastUpdatedTimestamp = f['Updated At'];
+            var lastUpdated = lastUpdatedTimestamp ? formatTimeAgo(lastUpdatedTimestamp) : '-';
+            var lastUpdatedColor = getLastCalledColor(lastUpdatedTimestamp);
+            var smsStatus = f['SMS Status'] || '';
+            var smsOptOut = f['SMS Opt Out'] === true || f['SMS Opt Out'] === 'true';
+            var smsResponse = f['SMS Response'] || '';
+            var summary = f['Last Call Summary'] || f['Summary'] || '';
+            var isPrio = f['Is Prio'] === true;
+            var statusColor = getSmsStatusColor(smsStatus);
+            var statusEmoji = getSmsStatusEmoji(smsStatus);
+
+            var prioIndicator = isPrio ? '<img src="/assets/favicon.png" class="prio-icon" title="Priority Lead">' : '';
+
+            // SMS status badge in place of time column
+            var smsStatusBadge = '<span style="font-size:0.6875rem;font-weight:600;padding:4px 10px;border-radius:20px;background:' + statusColor + '20;color:' + statusColor + ';white-space:nowrap;text-align:center;display:inline-block">' + statusEmoji + ' ' + escapeHtml(smsStatus) + '</span>';
+
+            var optOutBadge = smsOptOut ? '<span style="font-size:0.5625rem;font-weight:600;padding:2px 8px;border-radius:20px;background:rgba(239,68,68,0.15);color:#ef4444;text-transform:uppercase;margin-top:4px;display:inline-block">OPT OUT</span>' : '';
+
+            return '<div class="priority-card-lg" style="border-left-color:' + statusColor + '" data-id="' + lead.id + '">' +
+                '<div class="priority-card-lg-left" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="priority-card-lg-time-col" style="background:' + statusColor + '0a;flex:0 0 110px">' +
+                        prioIndicator +
+                        smsStatusBadge +
+                        optOutBadge +
+                    '</div>' +
+                    '<div class="priority-card-lg-info">' +
+                        '<div class="priority-card-lg-top">' +
+                            '<div class="priority-card-lg-name">' + escapeHtml(name) + getSharedIconHtml(lead) + '</div>' +
+                        '</div>' +
+                        '<div class="priority-card-lg-phone">📞 ' + phoneLink(phone, formattedPhone) + '</div>' +
+                        '<div class="priority-card-lg-lastcall">Updated ' + lastUpdated + ' <span class="lastcall-dot ' + lastUpdatedColor + '"></span></div>' +
+                    '</div>' +
+                '</div>' +
+                getCardStatusHtml(lead) +
+                '<div class="priority-card-lg-summary-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">SMS Response</div>' +
+                    '<div class="col-content">' + (smsResponse ? escapeHtml(smsResponse) : '<span style="color:rgba(255,255,255,0.4)">No response yet</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-notes-col" onclick="openLeadModal(\'' + lead.id + '\')">' +
+                    '<div class="col-label">AI Summary</div>' +
+                    '<div class="col-content">' + (summary ? escapeHtml(summary) : '<span style="color:rgba(255,255,255,0.4)">No summary</span>') + '</div>' +
+                '</div>' +
+                '<div class="priority-card-lg-actions">' +
+                    '<button class="action-btn action-reschedule" onclick="event.stopPropagation();quickReschedule(\'' + lead.id + '\')"><span class="action-icon">📅</span><span class="action-label">Change Call Date</span></button>' +
+                    '<button class="action-btn action-takeover" onclick="event.stopPropagation();takeOverLead(\'' + lead.id + '\')"><span class="action-icon">👤</span><span class="action-label">Take Over</span></button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    // SMS Leads tab switching
+    document.querySelectorAll('#smsStatusTabs .unqualified-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('#smsStatusTabs .unqualified-tab').forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+            smsStatusFilter = this.dataset.smsStatus;
+            updateSmsLeadsList();
+        });
+    });
+
+    // SMS Leads filter listeners
+    document.getElementById('smsLeadsSearch')?.addEventListener('input', debounce(function() {
+        updateSmsLeadsList();
+    }, 300));
+    document.getElementById('smsLeadsOptOut')?.addEventListener('change', updateSmsLeadsList);
+    document.getElementById('smsLeadsTimeframe')?.addEventListener('change', updateSmsLeadsList);
+    document.getElementById('smsLeadsSort')?.addEventListener('change', updateSmsLeadsList);
 
     // ============ BOOKED TODAY PAGE ============
     var bookedTodayTypeFilter = 'all';
