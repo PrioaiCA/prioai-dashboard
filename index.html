@@ -1635,65 +1635,55 @@
         .search-results-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
         .search-result-item{display:flex;justify-content:space-between;align-items:center;padding:16px;background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 100%);border:1px solid rgba(255,255,255,0.06);border-radius:12px;cursor:pointer;transition:all 250ms ease;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
         .search-result-item:hover{border-color:rgba(0,230,118,0.2);background:linear-gradient(150deg,rgba(0,230,118,0.06) 0%,rgba(0,0,0,0.25) 100%);box-shadow:inset 0 1px 0 rgba(0,230,118,0.08),0 0 15px rgba(0,230,118,0.04)}
-        .search-lead-card{position:relative;background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 50%,rgba(255,255,255,0.02) 100%);backdrop-filter:blur(30px) brightness(0.9);border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 4px 12px rgba(0,0,0,0.4)}
-        .search-lead-card::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);pointer-events:none;z-index:1}
-        .search-lead-top{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;flex-wrap:wrap;gap:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
-        .search-lead-identity{display:flex;align-items:center;gap:14px;min-width:0}
-        .search-lead-avatar{width:40px;height:40px;border-radius:10px;background:rgba(52,211,153,0.12);color:rgb(52,211,153);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;flex-shrink:0}
-        .search-lead-name-group{min-width:0}
-        .search-lead-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-        .search-lead-name-row h3{margin:0;font-size:1.0625rem;font-weight:700;font-family:var(--font-heading);white-space:nowrap}
-        .search-lead-phone{font-size:0.8125rem;color:rgba(255,255,255,0.5);font-family:monospace;margin-top:2px}
-        .search-lead-phone a{color:rgba(255,255,255,0.5);text-decoration:none}
-        .search-lead-phone a:hover{color:rgb(52,211,153)}
-        .search-lead-info-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-bottom:1px solid rgba(255,255,255,0.06)}
-        .search-info-cell{padding:14px 18px;border-right:1px solid rgba(255,255,255,0.06);text-align:center}
-        .search-info-cell:last-child{border-right:none}
-        .search-info-cell .info-label{display:block;font-size:0.6875rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:3px}
-        .search-info-cell .info-value{font-size:0.8125rem;font-weight:600;color:#fff}
-        @media(max-width:768px){.search-lead-info-strip{grid-template-columns:repeat(2,1fr)}.search-info-cell{border-bottom:1px solid rgba(255,255,255,0.06)}}
-        .search-lead-badges{display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap}
-        .search-action-btn{padding:8px 16px;font-size:0.8125rem;font-weight:600;border-radius:8px;cursor:pointer;transition:all 150ms ease;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-        .search-action-btn.share{background:rgba(255,255,255,0.05);color:#fff;border:1px solid rgba(255,255,255,0.12)}
-        .search-action-btn.share:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
-        .search-action-btn.share.shared{background:rgba(52,211,153,0.1);color:rgb(52,211,153);border-color:rgba(52,211,153,0.3)}
-        .search-action-btn.takeover{background:rgba(255,255,255,0.05);color:#fff;border:1px solid rgba(255,255,255,0.12)}
-        .search-action-btn.takeover:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
-        .search-action-btn.dnc{background:transparent;color:rgba(239,68,68,0.6);border:none;padding:8px 12px;margin-left:auto}
-        .search-action-btn.dnc:hover{color:#ef4444}
-        .search-lead-body{padding:20px 24px}
-        .search-section{margin-bottom:4px;border:1px solid rgba(255,255,255,0.05);border-radius:14px;overflow:hidden;background:linear-gradient(150deg,rgba(255,255,255,0.02),rgba(0,0,0,0.2));box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
-        .search-section:last-child{margin-bottom:0}
-        .search-section-toggle{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;transition:background 100ms ease;width:100%;background:none;border:none;color:#fff;text-align:left}
-        .search-section-toggle:hover{background:rgba(255,255,255,0.03)}
-        .search-section-toggle h4{font-family:var(--font-heading);font-size:0.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:rgba(255,255,255,0.7);margin:0;display:flex;align-items:center;gap:8px}
-        .search-section-toggle .section-count{font-size:0.6875rem;font-weight:500;color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px}
-        .search-section-arrow{font-size:0.625rem;color:rgba(255,255,255,0.3);transition:transform 200ms ease}
-        .search-section.collapsed .search-section-arrow{transform:rotate(-90deg)}
-        .search-section-content{max-height:600px;overflow-y:auto;transition:max-height 250ms ease-out,padding 250ms ease-out;padding:0 18px 14px}
-        .search-section.collapsed .search-section-content{max-height:0;overflow:hidden;padding:0 18px}
+        /* Search Detail - Glass Card Redesign */
+        .search-back-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;margin-bottom:16px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.2));border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.5);font-size:13px;font-weight:500;cursor:pointer;transition:all 200ms ease;font-family:'DM Sans',sans-serif}
+        .search-back-btn:hover{border-color:rgba(0,230,118,0.2);color:rgba(255,255,255,0.8);background:linear-gradient(150deg,rgba(255,255,255,0.06),rgba(0,0,0,0.2))}
+        .search-back-btn svg{opacity:0.6}
+        .search-detail-glass{max-width:900px}
+        .search-detail-glass .glass-modal-card{border-radius:20px;border:1px solid rgba(255,255,255,0.08)}
+        .search-detail-inner{max-height:none;overflow-y:visible}
+        .search-detail-inner .glass-name-row{gap:14px}
+        .search-lead-avatar{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(0,230,118,0.15),rgba(0,230,118,0.05));color:#00e676;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;flex-shrink:0;border:1px solid rgba(0,230,118,0.1)}
+        .search-lead-phone{font-size:13px;color:rgba(255,255,255,0.45);font-family:'DM Sans',monospace;margin-top:4px;padding-left:58px}
+        .search-lead-phone a{color:rgba(255,255,255,0.45);text-decoration:none;transition:color 200ms ease}
+        .search-lead-phone a:hover{color:#00e676}
+        .search-detail-status-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(150deg,rgba(0,230,118,0.12),rgba(0,0,0,0.3));border:1px solid rgba(0,230,118,0.2);color:#00e676;border-radius:100px;padding:5px 14px;font-size:12px;font-weight:500;text-shadow:0 0 12px rgba(0,230,118,0.4);box-shadow:inset 0 1px 0 rgba(0,230,118,0.1),0 0 20px rgba(0,230,118,0.08)}
+        .search-detail-status-dot{width:6px;height:6px;border-radius:50%;background:#00e676;flex-shrink:0;animation:pulseGlow 2s ease-in-out infinite}
+        .search-detail-outcome-badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:100px;font-size:11px;font-weight:500;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.6)}
+        .search-detail-info-grid{grid-template-columns:repeat(4,1fr)}
+        @media(max-width:768px){.search-detail-info-grid{grid-template-columns:1fr 1fr}}
+        .search-tab-header{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:10px}
+        .search-tab-count{font-weight:600;color:rgba(255,255,255,0.5)}
         .search-lead-notes-list,.search-lead-attempts-list,.search-lead-ai-calls-list{font-size:0.875rem}
-        .search-note-item,.search-attempt-item,.search-ai-call-item{padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;margin-bottom:6px;border-left:3px solid rgba(52,211,153,0.4)}
+        .search-note-item,.search-attempt-item,.search-ai-call-item{padding:12px 14px;background:linear-gradient(150deg,rgba(255,255,255,0.03),rgba(0,0,0,0.15));border:1px solid rgba(255,255,255,0.04);border-radius:12px;margin-bottom:8px;transition:border-color 200ms ease}
+        .search-note-item:hover,.search-attempt-item:hover,.search-ai-call-item:hover{border-color:rgba(255,255,255,0.08)}
         .search-note-item:last-child,.search-attempt-item:last-child,.search-ai-call-item:last-child{margin-bottom:0}
-        .search-note-date,.search-attempt-time,.search-ai-call-time{font-size:0.6875rem;color:rgba(255,255,255,0.35);margin-bottom:3px}
-        .search-note-text,.search-attempt-result{font-size:0.8125rem;line-height:1.5}
-        .search-ai-call-item{border-left-color:rgba(99,102,241,0.4);position:relative}
+        .search-note-date,.search-attempt-time,.search-ai-call-time{font-size:0.6875rem;color:rgba(255,255,255,0.35);margin-bottom:4px}
+        .search-note-text,.search-attempt-result{font-size:0.8125rem;line-height:1.5;color:rgba(255,255,255,0.7)}
+        .search-ai-call-item{border-left:3px solid rgba(99,102,241,0.4);position:relative}
         .search-ai-call-header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:2px}
         .search-ai-call-title{font-weight:600;font-size:0.8125rem}
-        .search-ai-call-outcome{font-size:0.6875rem;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.1)}
-        .search-ai-call-outcome.booked{background:rgba(52,211,153,0.2);color:rgb(52,211,153)}
-        .search-ai-call-outcome.callback{background:rgba(245,158,11,0.2);color:#f59e0b}
-        .search-ai-call-outcome.timeline,.search-ai-call-outcome.follow-up{background:rgba(99,102,241,0.2);color:#6366f1}
-        .search-ai-call-outcome.not-interested,.search-ai-call-outcome.voicemail,.search-ai-call-outcome.no-answer{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)}
+        .search-ai-call-outcome{font-size:0.6875rem;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,0.08);font-weight:500}
+        .search-ai-call-outcome.booked,.search-ai-call-outcome.appointment-booked{background:rgba(0,230,118,0.15);color:#00e676}
+        .search-ai-call-outcome.callback,.search-ai-call-outcome.callback-requested{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .search-ai-call-outcome.timeline,.search-ai-call-outcome.follow-up{background:rgba(99,102,241,0.15);color:#818cf8}
+        .search-ai-call-outcome.not-interested,.search-ai-call-outcome.voicemail,.search-ai-call-outcome.no-answer{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5)}
         .search-ai-call-meta{display:flex;align-items:center;gap:12px;margin-top:4px;font-size:0.75rem;color:rgba(255,255,255,0.35)}
-        .search-ai-call-preview{font-size:0.8125rem;color:rgba(255,255,255,0.45);margin-top:6px;line-height:1.4;font-style:italic}
-        .search-ai-call-footer{display:flex;justify-content:flex-end;margin-top:6px}
-        .search-ai-view-btn{font-size:0.75rem;color:rgb(52,211,153);background:none;border:none;cursor:pointer;padding:2px 0;transition:opacity 150ms ease}
+        .search-ai-call-preview{font-size:0.8125rem;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.5;font-style:italic;padding:8px 12px;background:rgba(255,255,255,0.02);border-radius:8px}
+        .search-ai-call-footer{display:flex;justify-content:flex-end;margin-top:8px}
+        .search-ai-view-btn{font-size:0.75rem;color:#00e676;background:none;border:none;cursor:pointer;padding:4px 0;transition:all 150ms ease;font-weight:500}
         .search-ai-view-btn:hover{opacity:0.8;text-decoration:underline}
-        .search-show-all-calls-btn{width:100%;padding:10px;margin-top:6px;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);border-radius:8px;color:rgba(255,255,255,0.5);font-size:0.8125rem;font-weight:500;cursor:pointer;transition:all 150ms ease}
-        .search-show-all-calls-btn:hover{background:rgba(255,255,255,0.07);border-color:rgba(52,211,153,0.3);color:rgb(52,211,153)}
-        .search-lead-content{background:rgba(255,255,255,0.02);padding:14px;border-radius:8px;font-size:0.875rem;line-height:1.6;white-space:pre-wrap;color:rgba(255,255,255,0.7)}
-        .search-lead-content.transcript{max-height:300px;overflow-y:auto}
+        .search-show-all-calls-btn{width:100%;padding:12px;margin-top:8px;background:linear-gradient(150deg,rgba(255,255,255,0.03),rgba(0,0,0,0.15));border:1px dashed rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.45);font-size:0.8125rem;font-weight:500;cursor:pointer;transition:all 200ms ease;font-family:'DM Sans',sans-serif}
+        .search-show-all-calls-btn:hover{background:linear-gradient(150deg,rgba(0,230,118,0.06),rgba(0,0,0,0.15));border-color:rgba(0,230,118,0.25);color:#00e676}
+        /* Search View All mode */
+        #searchGlassSection.search-view-all-mode .glass-tab-bar{display:none}
+        #searchGlassSection.search-view-all-mode .glass-tab-content{display:block !important;border-top:1px solid rgba(255,255,255,0.06);padding-top:12px;margin-top:12px}
+        #searchGlassSection.search-view-all-mode #searchTabAICalls{border-top:none;margin-top:0;padding-top:0}
+        #searchGlassSection.search-view-all-mode .glass-tab-content::before{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.35);margin-bottom:8px}
+        #searchGlassSection.search-view-all-mode #searchTabAICalls::before{content:'AI Call History'}
+        #searchGlassSection.search-view-all-mode #searchTabSummary::before{content:'AI Summary'}
+        #searchGlassSection.search-view-all-mode #searchTabNotes::before{content:'Notes'}
+        #searchGlassSection.search-view-all-mode #searchTabAttempts::before{content:'Call Attempts'}
         .call-detail-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:10001;align-items:center;justify-content:center}
         .call-detail-modal.active{display:flex}
         .call-detail-content{background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:12px;max-width:700px;width:90%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
@@ -2346,6 +2336,22 @@
             box-shadow:0 1px 4px rgba(0,0,0,0.06),0 0 0 3px rgba(16,185,129,0.12)
         }
         [data-theme="light"] .search-box .search-icon{opacity:0.45}
+        [data-theme="light"] .search-back-btn{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.1);color:rgba(0,0,0,0.5)}
+        [data-theme="light"] .search-back-btn:hover{border-color:rgba(16,185,129,0.3);color:rgba(0,0,0,0.7)}
+        [data-theme="light"] .search-lead-avatar{background:rgba(16,185,129,0.1);color:#10b981;border-color:rgba(16,185,129,0.15)}
+        [data-theme="light"] .search-lead-phone{color:rgba(0,0,0,0.45)}
+        [data-theme="light"] .search-lead-phone a{color:rgba(0,0,0,0.45)}
+        [data-theme="light"] .search-lead-phone a:hover{color:#10b981}
+        [data-theme="light"] .search-detail-status-badge{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.2);color:#10b981;text-shadow:none;box-shadow:none}
+        [data-theme="light"] .search-detail-outcome-badge{background:rgba(0,0,0,0.05);border-color:rgba(0,0,0,0.08);color:rgba(0,0,0,0.6)}
+        [data-theme="light"] .search-note-item,[data-theme="light"] .search-attempt-item,[data-theme="light"] .search-ai-call-item{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.06)}
+        [data-theme="light"] .search-note-text,[data-theme="light"] .search-attempt-result{color:rgba(0,0,0,0.7)}
+        [data-theme="light"] .search-ai-call-preview{color:rgba(0,0,0,0.5);background:rgba(0,0,0,0.02)}
+        [data-theme="light"] .search-ai-view-btn{color:#10b981}
+        [data-theme="light"] .search-show-all-calls-btn{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.1);color:rgba(0,0,0,0.4)}
+        [data-theme="light"] .search-show-all-calls-btn:hover{border-color:rgba(16,185,129,0.3);color:#10b981}
+        [data-theme="light"] .search-tab-header{color:rgba(0,0,0,0.4)}
+        [data-theme="light"] .search-tab-count{color:rgba(0,0,0,0.6)}
         [data-theme="light"] .filter-select{
             background:#fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(0,0,0,0.35)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
             border:1px solid rgba(0,0,0,0.12);
@@ -3670,90 +3676,123 @@
                         
                         <!-- Single Result Detail -->
                         <div id="searchLeadDetail" style="display:none;">
-                            <div class="search-lead-card">
-                                <!-- Compact Header -->
-                                <div class="search-lead-top">
-                                    <div class="search-lead-identity">
-                                        <div class="search-lead-avatar" id="searchLeadAvatar">?</div>
-                                        <div class="search-lead-name-group">
-                                            <div class="search-lead-name-row">
-                                                <h3 id="searchLeadName">-</h3>
-                                                <span id="searchLeadStatusBadge" class="status-badge">-</span>
-                                                <span id="searchLeadOutcomeBadge" class="status-badge" style="display:none;">-</span>
+                            <!-- Back to results button -->
+                            <button class="search-back-btn" id="searchBackBtn" onclick="searchGoBack()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                                Back to Search
+                            </button>
+
+                            <div class="search-detail-glass">
+                                <div class="glass-modal-card">
+                                    <div class="glass-refraction"></div>
+                                    <div class="glass-caustic"></div>
+                                    <div class="glass-ambient-glow"></div>
+
+                                    <div class="glass-modal-inner search-detail-inner">
+                                        <!-- 1. Header -->
+                                        <div class="glass-modal-header">
+                                            <div class="glass-header-left">
+                                                <div class="glass-name-row">
+                                                    <div class="search-lead-avatar" id="searchLeadAvatar">?</div>
+                                                    <h2 class="glass-lead-name" id="searchLeadName">-</h2>
+                                                    <div class="glass-status-wrapper" style="position:relative;">
+                                                        <div class="search-detail-status-badge" id="searchLeadStatusBadge">
+                                                            <span class="search-detail-status-dot"></span>
+                                                            <span>-</span>
+                                                        </div>
+                                                    </div>
+                                                    <span id="searchLeadOutcomeBadge" class="search-detail-outcome-badge" style="display:none;">-</span>
+                                                </div>
+                                                <div class="search-lead-phone" id="searchLeadPhoneDisplay">-</div>
                                             </div>
-                                            <div class="search-lead-phone" id="searchLeadPhoneDisplay">-</div>
                                         </div>
-                                    </div>
-                                    <div class="search-lead-badges">
-                                        <button class="search-action-btn share" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
-                                        <button class="search-action-btn takeover" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
-                                        <button class="search-action-btn dnc" id="searchDNCBtn" onclick="dncFromSearch()">🚫 DNC</button>
-                                    </div>
-                                </div>
 
-                                <!-- Info Strip -->
-                                <div class="search-lead-info-strip">
-                                    <div class="search-info-cell">
-                                        <span class="info-label">Email</span>
-                                        <span class="info-value" id="searchLeadEmail">-</span>
-                                    </div>
-                                    <div class="search-info-cell">
-                                        <span class="info-label">Total Calls</span>
-                                        <span class="info-value" id="searchLeadCalls">-</span>
-                                    </div>
-                                    <div class="search-info-cell">
-                                        <span class="info-label">Last Updated</span>
-                                        <span class="info-value" id="searchLeadLastCall">-</span>
-                                    </div>
-                                    <div class="search-info-cell">
-                                        <span class="info-label">Booked Time</span>
-                                        <span class="info-value" id="searchLeadBookedTime">-</span>
-                                    </div>
-                                    <div class="search-info-cell">
-                                        <span class="info-label">Next Call</span>
-                                        <span class="info-value" id="searchLeadNextCall">-</span>
-                                    </div>
-                                </div>
-
-                                <!-- Collapsible Sections -->
-                                <div class="search-lead-body">
-                                    <div class="search-section" id="searchSectionAICalls">
-                                        <button class="search-section-toggle" onclick="toggleSearchSection('searchSectionAICalls')">
-                                            <h4>🤖 AI Call History <span class="section-count" id="searchAICallsCount">0</span></h4>
-                                            <span class="search-section-arrow">▼</span>
-                                        </button>
-                                        <div class="search-section-content">
-                                            <div id="searchLeadAICallsList" class="search-lead-ai-calls-list">No AI calls recorded</div>
+                                        <!-- 2. Action Pills -->
+                                        <div class="glass-action-pills">
+                                            <button class="glass-pill" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
+                                            <button class="glass-pill" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
+                                            <button class="glass-pill glass-pill-dnc" id="searchDNCBtn" onclick="dncFromSearch()">⛔ DNC</button>
                                         </div>
-                                    </div>
 
-                                    <div class="search-section" id="searchSectionSummary">
-                                        <button class="search-section-toggle" onclick="toggleSearchSection('searchSectionSummary')">
-                                            <h4>🤖 AI Summary</h4>
-                                            <span class="search-section-arrow">▼</span>
-                                        </button>
-                                        <div class="search-section-content">
-                                            <div id="searchLeadSummary" class="search-lead-content">No summary available</div>
+                                        <!-- 3. Info Grid -->
+                                        <div class="glass-info-grid search-detail-info-grid">
+                                            <div class="glass-info-panel">
+                                                <span class="glass-info-label">PHONE</span>
+                                                <span class="glass-info-value" id="searchLeadPhoneInfo">-</span>
+                                            </div>
+                                            <div class="glass-info-panel">
+                                                <span class="glass-info-label">EMAIL</span>
+                                                <span class="glass-info-value" id="searchLeadEmail">-</span>
+                                            </div>
+                                            <div class="glass-info-panel">
+                                                <span class="glass-info-label">TOTAL CALLS</span>
+                                                <span class="glass-info-value" id="searchLeadCalls">-</span>
+                                            </div>
+                                            <div class="glass-info-panel">
+                                                <span class="glass-info-label">LAST UPDATED</span>
+                                                <span class="glass-info-value" id="searchLeadLastCall">-</span>
+                                            </div>
+                                            <div class="glass-info-panel">
+                                                <span class="glass-info-label">BOOKED TIME</span>
+                                                <span class="glass-info-value" id="searchLeadBookedTime">-</span>
+                                            </div>
+                                            <div class="glass-info-panel">
+                                                <span class="glass-info-label">NEXT CALL</span>
+                                                <span class="glass-info-value" id="searchLeadNextCall">-</span>
+                                            </div>
+                                            <div class="glass-info-panel glass-intent-card">
+                                                <span class="glass-info-label">LEAD INTENT</span>
+                                                <span class="glass-info-value" style="display:flex;flex-direction:row;align-items:center;gap:8px">
+                                                    <span class="intent-card-fires" id="searchIntentFires"><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span></span>
+                                                    <span class="intent-card-label" id="searchIntentLabel">--</span>
+                                                </span>
+                                            </div>
+                                            <div class="glass-info-panel">
+                                                <span class="glass-info-label">INTEREST</span>
+                                                <span class="glass-info-value" id="searchLeadInterest">-</span>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="search-section collapsed" id="searchSectionNotes">
-                                        <button class="search-section-toggle" onclick="toggleSearchSection('searchSectionNotes')">
-                                            <h4>📝 Notes <span class="section-count" id="searchNotesCount">0</span></h4>
-                                            <span class="search-section-arrow">▼</span>
-                                        </button>
-                                        <div class="search-section-content">
-                                            <div id="searchLeadNotesList" class="search-lead-notes-list">No notes available</div>
-                                        </div>
-                                    </div>
+                                        <!-- 4. Divider -->
+                                        <div class="glass-divider"></div>
 
-                                    <div class="search-section collapsed" id="searchSectionAttempts">
-                                        <button class="search-section-toggle" onclick="toggleSearchSection('searchSectionAttempts')">
-                                            <h4>📞 Manual Attempts <span class="section-count" id="searchAttemptsCount">0</span></h4>
-                                            <span class="search-section-arrow">▼</span>
-                                        </button>
-                                        <div class="search-section-content">
-                                            <div id="searchLeadAttemptsList" class="search-lead-attempts-list">No call attempts logged</div>
+                                        <!-- 5. Tab Section -->
+                                        <div class="glass-section" id="searchGlassSection">
+                                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                                                <div class="glass-tab-bar" style="margin-bottom:0">
+                                                    <button class="glass-tab active" data-search-tab="ai-calls" onclick="switchSearchTab(this, 'ai-calls')">AI Call History</button>
+                                                    <button class="glass-tab" data-search-tab="summary" onclick="switchSearchTab(this, 'summary')">AI Summary</button>
+                                                    <button class="glass-tab" data-search-tab="notes" onclick="switchSearchTab(this, 'notes')">Notes</button>
+                                                    <button class="glass-tab" data-search-tab="attempts" onclick="switchSearchTab(this, 'attempts')">Call Attempts</button>
+                                                </div>
+                                                <button class="tab-viewall-btn" id="searchTabViewAllToggle" onclick="toggleSearchTabViewAll()" title="Show all sections at once">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                                                    <span id="searchTabViewAllLabel">View All</span>
+                                                </button>
+                                            </div>
+                                            <div class="glass-tab-content" id="searchTabAICalls">
+                                                <div class="search-tab-header">
+                                                    <span class="search-tab-count" id="searchAICallsCount">0</span> calls
+                                                </div>
+                                                <div id="searchLeadAICallsList" class="search-lead-ai-calls-list">No AI calls recorded</div>
+                                            </div>
+                                            <div class="glass-tab-content" id="searchTabSummary" style="display:none;">
+                                                <div class="glass-inner-panel">
+                                                    <div class="glass-summary-text" id="searchLeadSummary">No summary available</div>
+                                                </div>
+                                            </div>
+                                            <div class="glass-tab-content" id="searchTabNotes" style="display:none;">
+                                                <div class="search-tab-header">
+                                                    <span class="search-tab-count" id="searchNotesCount">0</span> notes
+                                                </div>
+                                                <div id="searchLeadNotesList" class="search-lead-notes-list">No notes available</div>
+                                            </div>
+                                            <div class="glass-tab-content" id="searchTabAttempts" style="display:none;">
+                                                <div class="search-tab-header">
+                                                    <span class="search-tab-count" id="searchAttemptsCount">0</span> attempts
+                                                </div>
+                                                <div id="searchLeadAttemptsList" class="search-lead-attempts-list">No call attempts logged</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -12918,11 +12957,40 @@
         }
     }
     
-    function toggleSearchSection(id) {
-        var el = document.getElementById(id);
-        if (el) el.classList.toggle('collapsed');
+    // Search detail tab switching
+    function switchSearchTab(btn, tabName) {
+        var section = document.getElementById('searchGlassSection');
+        section.querySelectorAll('.glass-tab').forEach(function(t) { t.classList.remove('active'); });
+        btn.classList.add('active');
+        section.querySelectorAll('.glass-tab-content').forEach(function(c) { c.style.display = 'none'; });
+        var tabMap = { 'ai-calls': 'searchTabAICalls', 'summary': 'searchTabSummary', 'notes': 'searchTabNotes', 'attempts': 'searchTabAttempts' };
+        var target = document.getElementById(tabMap[tabName]);
+        if (target) target.style.display = '';
     }
-    window.toggleSearchSection = toggleSearchSection;
+    window.switchSearchTab = switchSearchTab;
+
+    function toggleSearchTabViewAll() {
+        var section = document.getElementById('searchGlassSection');
+        var btn = document.getElementById('searchTabViewAllToggle');
+        var label = document.getElementById('searchTabViewAllLabel');
+        section.classList.toggle('search-view-all-mode');
+        var isActive = section.classList.contains('search-view-all-mode');
+        btn.classList.toggle('active', isActive);
+        label.textContent = isActive ? 'Tab View' : 'View All';
+    }
+    window.toggleSearchTabViewAll = toggleSearchTabViewAll;
+
+    function searchGoBack() {
+        document.getElementById('searchLeadDetail').style.display = 'none';
+        // Only show multiple results if they were visible before
+        var multiResults = document.getElementById('searchMultipleResults');
+        var resultsList = document.getElementById('searchResultsList');
+        if (resultsList && resultsList.innerHTML.trim()) {
+            multiResults.style.display = '';
+        }
+        history.pushState(null, '', '#search');
+    }
+    window.searchGoBack = searchGoBack;
 
     function showSearchLeadDetail(lead) {
         if (!lead) return;
@@ -12935,6 +13003,18 @@
         // Update URL with lead ID for deep linking
         history.pushState({ leadId: lead.id, page: 'search' }, '', '#search/' + lead.id);
 
+        // Reset tab state to default
+        var section = document.getElementById('searchGlassSection');
+        section.classList.remove('search-view-all-mode');
+        var tabViewAllBtn = document.getElementById('searchTabViewAllToggle');
+        if (tabViewAllBtn) { tabViewAllBtn.classList.remove('active'); }
+        var tabViewAllLabel = document.getElementById('searchTabViewAllLabel');
+        if (tabViewAllLabel) tabViewAllLabel.textContent = 'View All';
+        section.querySelectorAll('.glass-tab').forEach(function(t) { t.classList.remove('active'); });
+        section.querySelector('.glass-tab[data-search-tab="ai-calls"]').classList.add('active');
+        section.querySelectorAll('.glass-tab-content').forEach(function(c) { c.style.display = 'none'; });
+        document.getElementById('searchTabAICalls').style.display = '';
+
         var firstName = f['First Name'] || '';
         var lastName = f['Last Name'] || '';
         var fullName = (firstName + ' ' + lastName).trim() || 'Unknown';
@@ -12943,17 +13023,16 @@
         document.getElementById('searchLeadAvatar').textContent = initials;
         var searchRawPhone = f['Phone #'] || f['Phone'] || '-';
         document.getElementById('searchLeadPhoneDisplay').innerHTML = phoneLink(searchRawPhone, formatPhone(searchRawPhone));
+        document.getElementById('searchLeadPhoneInfo').innerHTML = phoneLink(searchRawPhone, formatPhone(searchRawPhone));
 
         var status = f['Status'] || f['Disposition'] || '-';
         var statusBadge = document.getElementById('searchLeadStatusBadge');
-        statusBadge.textContent = status;
-        statusBadge.className = 'status-badge ' + getStatusClass(status);
+        statusBadge.innerHTML = '<span class="search-detail-status-dot"></span><span>' + escapeHtml(status) + '</span>';
 
         var lastOutcome = f['Last Outcome'] || '';
         var outcomeBadge = document.getElementById('searchLeadOutcomeBadge');
         if (lastOutcome && lastOutcome.toLowerCase() !== status.toLowerCase()) {
             outcomeBadge.textContent = lastOutcome;
-            outcomeBadge.className = 'status-badge ' + getStatusClass(lastOutcome);
             outcomeBadge.style.display = '';
         } else {
             outcomeBadge.style.display = 'none';
@@ -12964,6 +13043,10 @@
         document.getElementById('searchLeadLastCall').textContent = f['Updated At'] ? formatDateTime(f['Updated At']) : '-';
         document.getElementById('searchLeadBookedTime').textContent = f['Booked Time'] ? formatDateTime(f['Booked Time']) : '-';
         document.getElementById('searchLeadNextCall').textContent = f['Next Call Date'] ? formatDateTime(f['Next Call Date']) : '-';
+        document.getElementById('searchLeadInterest').textContent = f['Stated Interest'] || f['Interest'] || '-';
+
+        // Fetch intent score for search detail
+        fetchSearchIntentScore(lead);
 
         // Notes History (read-only)
         var notesRaw = f['Client Notes'] || '';
@@ -12971,18 +13054,15 @@
         var notesListEl = document.getElementById('searchLeadNotesList');
         document.getElementById('searchNotesCount').textContent = notes.length;
         if (notes.length > 0) {
-            notesListEl.innerHTML = notes.map(function(n) {
+            notesListEl.innerHTML = notes.slice().reverse().map(function(n) {
                 var dateStr = n.date ? formatNoteDate(n.date) : '';
                 return '<div class="search-note-item">' +
                     (dateStr ? '<div class="search-note-date">' + dateStr + '</div>' : '') +
                     '<div class="search-note-text">' + escapeHtml(n.text) + '</div>' +
                 '</div>';
             }).join('');
-            // Auto-expand notes if they exist
-            document.getElementById('searchSectionNotes').classList.remove('collapsed');
         } else {
             notesListEl.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.8125rem;">No notes available</p>';
-            document.getElementById('searchSectionNotes').classList.add('collapsed');
         }
 
         // Manual Call Attempts (read-only)
@@ -13190,10 +13270,10 @@
         var isShared = lead.isShared || (f['Shared With'] && f['Shared With'].length > 0) || (f['Shared With Email'] && (Array.isArray(f['Shared With Email']) ? f['Shared With Email'].length > 0 : f['Shared With Email']));
         var shareBtn = document.getElementById('searchShareBtn');
         if (isShared) {
-            shareBtn.textContent = '✓ Shared';
+            shareBtn.innerHTML = '🔗 Shared';
             shareBtn.classList.add('shared');
         } else {
-            shareBtn.textContent = '🔗 Share';
+            shareBtn.innerHTML = '🔗 Share';
             shareBtn.classList.remove('shared');
         }
 
@@ -13206,14 +13286,94 @@
         if (isPipelineLead) {
             takeOverBtn.textContent = '📥 Take Over';
             takeOverBtn.onclick = takeOverFromSearch;
-            takeOverBtn.style.display = 'inline-block';
+            takeOverBtn.style.display = '';
         } else if (isProspectLead) {
-            takeOverBtn.textContent = '🤖 Send Back to AI';
+            takeOverBtn.textContent = '🤖 Send to AI';
             takeOverBtn.onclick = sendBackToAIFromSearch;
-            takeOverBtn.style.display = 'inline-block';
+            takeOverBtn.style.display = '';
         } else {
-            // For other statuses like Do Not Call, hide the button
             takeOverBtn.style.display = 'none';
+        }
+    }
+
+    // Intent score for search detail view
+    function fetchSearchIntentScore(lead) {
+        var firesEl = document.getElementById('searchIntentFires');
+        var labelEl = document.getElementById('searchIntentLabel');
+        if (!firesEl || !labelEl) return;
+
+        var leadId = lead.id;
+        var f = lead.fields || {};
+
+        // Reset to loading state
+        firesEl.innerHTML = '<span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span>';
+        firesEl.classList.add('loading');
+        labelEl.textContent = '...';
+        labelEl.style.color = 'rgba(255,255,255,0.35)';
+
+        // Check cache first
+        if (typeof intentScoreCache !== 'undefined' && intentScoreCache[leadId] !== undefined) {
+            displaySearchIntentScore(intentScoreCache[leadId], firesEl, labelEl);
+            return;
+        }
+
+        var notesRaw = f['Client Notes'] || '';
+        var notesText = '';
+        try {
+            var parsed = JSON.parse(notesRaw);
+            if (Array.isArray(parsed)) {
+                notesText = parsed.map(function(n) { return (n.date ? n.date + ': ' : '') + (n.text || ''); }).join(' | ');
+            } else { notesText = notesRaw; }
+        } catch(e) { notesText = notesRaw; }
+
+        var body = {
+            status: f['Status'] || f['Outcome'] || '',
+            lastOutcome: f['Last Outcome'] || f['Disposition'] || '',
+            callSummary: f['Last Call Summary'] || f['Summary'] || '',
+            interest: f['Stated Interest'] || f['Interest'] || '',
+            context: f['Lead Context'] || f['Context'] || '',
+            attempts: f['Attempts'] || '0',
+            bookings: f['Bookings'] || '',
+            bookedTime: f['Booked Time'] || '',
+            clientNotes: notesText,
+            updatedAt: f['Updated At'] || ''
+        };
+
+        fetch('/api/intent-score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            var score = data.score;
+            if (score && score >= 1 && score <= 5) {
+                if (typeof intentScoreCache !== 'undefined') intentScoreCache[leadId] = score;
+                if (searchedLead && searchedLead.id === leadId) displaySearchIntentScore(score, firesEl, labelEl);
+            } else {
+                if (searchedLead && searchedLead.id === leadId) displaySearchIntentScore(null, firesEl, labelEl);
+            }
+        })
+        .catch(function() {
+            if (searchedLead && searchedLead.id === leadId) displaySearchIntentScore(null, firesEl, labelEl);
+        });
+    }
+
+    function displaySearchIntentScore(score, firesEl, labelEl) {
+        firesEl.classList.remove('loading');
+        var labels = { 5: 'Very Hot', 4: 'Hot', 3: 'Warm', 2: 'Cool', 1: 'Cold' };
+        var colors = { 5: '#ef4444', 4: '#f97316', 3: '#eab308', 2: '#6b7280', 1: '#3b82f6' };
+        if (score && score >= 1 && score <= 5) {
+            var fires = firesEl.querySelectorAll('.intent-card-fire');
+            fires.forEach(function(f, i) {
+                if (i < score) { f.classList.remove('dim'); f.classList.add('lit'); }
+                else { f.classList.add('dim'); f.classList.remove('lit'); }
+            });
+            labelEl.textContent = labels[score] || '';
+            labelEl.style.color = colors[score] || 'rgba(255,255,255,0.5)';
+        } else {
+            labelEl.textContent = 'N/A';
+            labelEl.style.color = 'rgba(255,255,255,0.35)';
         }
     }
 
