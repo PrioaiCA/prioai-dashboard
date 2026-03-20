@@ -575,26 +575,6 @@
         // Inject CSS
         var style = document.createElement('style');
         style.textContent = [
-            '.demo-info-btn{',
-            '  display:inline-flex;align-items:center;justify-content:center;',
-            '  width:28px;height:28px;border-radius:50%;',
-            '  background:linear-gradient(135deg,rgba(0,230,118,0.15),rgba(0,230,118,0.05));',
-            '  border:1px solid rgba(0,230,118,0.25);',
-            '  color:rgba(0,230,118,0.9);font-size:14px;font-weight:700;',
-            '  cursor:pointer;transition:all 200ms ease;',
-            '  margin-left:10px;vertical-align:middle;flex-shrink:0;',
-            '  position:relative;z-index:10;',
-            '}',
-            '.demo-info-btn:hover{',
-            '  background:linear-gradient(135deg,rgba(0,230,118,0.25),rgba(0,230,118,0.1));',
-            '  border-color:rgba(0,230,118,0.5);',
-            '  transform:scale(1.1);',
-            '  box-shadow:0 0 16px rgba(0,230,118,0.2);',
-            '}',
-            '[data-theme="light"] .demo-info-btn{',
-            '  background:linear-gradient(135deg,rgba(0,180,90,0.12),rgba(0,180,90,0.04));',
-            '  border-color:rgba(0,180,90,0.3);color:rgba(0,150,70,0.9);',
-            '}',
             '.demo-popup-overlay{',
             '  position:fixed;top:0;left:0;right:0;bottom:0;',
             '  background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);',
@@ -683,27 +663,27 @@
             overlay.classList.add('active');
         }
 
-        // Inject info buttons into each page header
-        Object.keys(SECTION_INFO).forEach(function(pageId) {
-            var page = document.getElementById(pageId);
-            if (!page) return;
+        // Auto-show popup whenever a page becomes visible
+        var lastShownPage = null;
 
-            // Find the first h2 in the page header area
-            var h2 = page.querySelector('h2');
-            if (!h2) return;
+        function checkVisiblePage() {
+            var visiblePage = document.querySelector('.page:not(.hidden)');
+            if (visiblePage && visiblePage.id !== lastShownPage) {
+                lastShownPage = visiblePage.id;
+                showDemoPopup(lastShownPage);
+            }
+        }
 
-            var btn = document.createElement('button');
-            btn.className = 'demo-info-btn';
-            btn.textContent = '?';
-            btn.title = 'What is this section?';
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                showDemoPopup(pageId);
-            });
-
-            // Insert after the h2 text or at the end of the parent
-            h2.parentElement.appendChild(btn);
+        // Observe class changes on all pages to detect navigation
+        var observer = new MutationObserver(function() {
+            checkVisiblePage();
         });
+        document.querySelectorAll('.page').forEach(function(p) {
+            observer.observe(p, { attributes: true, attributeFilter: ['class'] });
+        });
+
+        // Show popup for the initial page (overview) on first load
+        setTimeout(checkVisiblePage, 300);
     }
 
     // Run after DOM is ready and only for demo account
