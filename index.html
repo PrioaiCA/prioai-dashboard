@@ -5013,6 +5013,7 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <script src="/assets/mock-data.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script>
@@ -5630,6 +5631,13 @@
             return;
         }
 
+        // Demo account: use mock calls
+        if (window.__PRIO_MOCK_DATA && currentUser && currentUser.email === window.__PRIO_MOCK_DATA.email) {
+            allCalls = window.__PRIO_MOCK_DATA.calls;
+            callsLoaded = true;
+            return;
+        }
+
         try {
             var clientName = currentUserRecord.fields['Agent Name'] || '';
             console.log('Loading calls for client name: ' + clientName);
@@ -5706,7 +5714,14 @@
     // Load user data from Airtable
     async function loadUserData() {
         if (!currentUser) return;
-        
+
+        // Demo account: use mock data instead of Airtable
+        if (window.__PRIO_MOCK_DATA && currentUser.email === window.__PRIO_MOCK_DATA.email) {
+            currentUserRecord = window.__PRIO_MOCK_DATA.clientRecord;
+            dynamicCallLimit = window.__PRIO_MOCK_DATA.callLimit;
+            return;
+        }
+
         // Show cached data immediately if available (SWR: serve stale, revalidate in background)
         var hasCached = loadCachedData();
 
@@ -5823,6 +5838,24 @@
     // Load leads data — resilient SWR background sync with per-page retry and progressive rendering
     async function loadLeadsData(isRefresh) {
         if (!currentUser) return;
+
+        // Demo account: use mock leads instead of Airtable
+        if (window.__PRIO_MOCK_DATA && currentUser.email === window.__PRIO_MOCK_DATA.email) {
+            allLeads = window.__PRIO_MOCK_DATA.leads;
+            window.dataLoadedSuccessfully = true;
+            updateDashboard();
+            updatePrioList();
+            updateBookedTodayList();
+            updateProspectsTable();
+            updatePipelineList();
+            updateSharedLeadsList();
+            updateUnqualifiedList();
+            updateOpenLeadsList();
+            updateSmsLeadsList();
+            updateAnalyticsDisplay();
+            hidePageLoading();
+            return;
+        }
 
         var tempLeads = [];
 
