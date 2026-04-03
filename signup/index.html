@@ -47,7 +47,7 @@
             <button type="button" class="btn btn-secondary btn-block" id="showEmailBtn" style="opacity:0.7;">I don't have a Google account</button>
 
             <!-- Email signup (hidden by default) -->
-            <form id="emailSignupForm" class="auth-form" style="display:none;margin-top:1.25rem;">
+            <form id="emailSignupForm" class="auth-form" style="margin-top:1.25rem;">
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required placeholder="John Smith" autocomplete="name">
@@ -104,7 +104,7 @@
 
     // Show email form when "I don't have a Google account" is clicked
     document.getElementById('showEmailBtn').addEventListener('click', function() {
-        document.getElementById('emailSignupForm').style.display = '';
+        document.getElementById('emailSignupForm').classList.add('active');
         this.style.display = 'none';
     });
 
