@@ -4023,7 +4023,7 @@
                         <div class="settings-card danger">
                             <h3 class="settings-title" style="color:#ef4444;">Danger Zone</h3>
                             <p class="text-muted" style="margin-bottom:1rem;">Need to pause or cancel your subscription?</p>
-                            <button class="btn btn-secondary" onclick="window.location.href='mailto:info@prioai.ca?subject=Account Change Request'">Contact Support</button>
+                            <button class="btn btn-secondary" onclick="openStripePortal()">Manage Subscription</button>
                         </div>
                     </div>
 
@@ -7142,28 +7142,53 @@
     }
     
     // Billing buttons
+    // Helper: open Stripe Customer Portal
+    function openStripePortal() {
+        if (!currentUser || !currentUser.email) {
+            showToast('Please log in first.', 'error');
+            return;
+        }
+        showToast('Opening billing portal...', 'info');
+        fetch('/api/stripe-portal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: currentUser.email })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.url) {
+                window.open(data.url, '_blank');
+            } else {
+                showToast(data.error || 'Could not open billing portal.', 'error');
+            }
+        })
+        .catch(function() {
+            showToast('Failed to connect to billing. Please try again.', 'error');
+        });
+    }
+
     var manageBillingBtn = document.getElementById('manageBillingBtn');
     if (manageBillingBtn) {
         manageBillingBtn.addEventListener('click', function() {
-            window.open('mailto:info@prioai.ca?subject=Subscription Inquiry', '_blank');
+            openStripePortal();
         });
     }
     var updatePaymentBtn = document.getElementById('updatePaymentBtn');
     if (updatePaymentBtn) {
         updatePaymentBtn.addEventListener('click', function() {
-            window.open('mailto:info@prioai.ca?subject=Update Payment Method', '_blank');
+            openStripePortal();
         });
     }
     var viewAllInvoicesBtn = document.getElementById('viewAllInvoicesBtn');
     if (viewAllInvoicesBtn) {
         viewAllInvoicesBtn.addEventListener('click', function() {
-            window.open('mailto:info@prioai.ca?subject=Invoice Request', '_blank');
+            openStripePortal();
         });
     }
     var downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
     if (downloadReceiptBtn) {
         downloadReceiptBtn.addEventListener('click', function() {
-            window.open('mailto:info@prioai.ca?subject=Receipt Request', '_blank');
+            openStripePortal();
         });
     }
     var upgradePlanBtn = document.getElementById('upgradePlanBtn');
