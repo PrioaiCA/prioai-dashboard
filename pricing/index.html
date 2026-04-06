@@ -80,21 +80,51 @@
             }
         }
 
-        .plan-price-original {
-            font-size: var(--text-sm);
-            color: var(--text-tertiary);
-            text-decoration: line-through;
+        .pricing-toggle-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: var(--space-8);
         }
-
-        .plan-price-save {
-            display: inline-block;
-            background: rgba(52, 211, 153, 0.12);
-            color: var(--accent);
-            font-size: var(--text-xs);
+        .pricing-toggle-btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
             font-weight: 600;
-            padding: 2px 8px;
+            cursor: pointer;
+            transition: all 200ms ease;
+            background: transparent;
+            color: var(--text-tertiary);
+        }
+        .pricing-toggle-btn.active {
+            background: var(--accent-muted);
+            color: var(--accent);
+            box-shadow: 0 2px 8px rgba(52, 211, 153, 0.15);
+        }
+        .pricing-promo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: #000;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            padding: 3px 10px;
             border-radius: 999px;
             margin-top: var(--space-2);
+            letter-spacing: 0.02em;
+        }
+        .pricing-strike {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+            font-size: var(--text-sm);
+            font-weight: 400;
+            margin-right: 4px;
         }
 
         .plan-card {
@@ -415,28 +445,47 @@
             <p>Start closing more deals with AI-powered lead management. All plans include our core AI calling platform.</p>
         </div>
 
+        <!-- Billing Toggle -->
+        <div class="pricing-toggle-wrap" style="max-width:320px;">
+            <button class="pricing-toggle-btn active" data-billing="quarterly" id="toggleQuarterly">Billed Quarterly</button>
+            <button class="pricing-toggle-btn" data-billing="annual" id="toggleAnnual">Billed Annually</button>
+        </div>
+
         <div class="pricing-grid">
             <!-- Starter Plan -->
             <div class="plan-card">
                 <div class="plan-name">Starter</div>
                 <div class="plan-desc">Perfect for individual agents getting started with AI calling.</div>
                 <div class="plan-price">
-                    <div class="plan-price-amount"><span class="plan-price-currency">$</span>199</div>
-                    <div class="plan-price-period">per month</div>
+                    <div class="plan-price-quarterly">
+                        <div class="plan-price-amount"><span class="pricing-strike">$600</span> <span class="plan-price-currency">$</span>400</div>
+                        <div class="plan-price-period">per quarter &middot; $133/mo</div>
+                        <span class="pricing-promo-badge">Limited time: locked in for life</span>
+                    </div>
+                    <div class="plan-price-annual" style="display:none;">
+                        <div class="plan-price-amount"><span class="plan-price-currency">$</span>1,500</div>
+                        <div class="plan-price-period">per year &middot; $125/mo</div>
+                    </div>
                 </div>
                 <div class="plan-calls">1,000 calls / month</div>
                 <a href="https://buy.stripe.com/8x23cwa2D8IT01adTM6Ri06" class="plan-btn plan-btn-secondary" id="starterBtn">Get Started</a>
             </div>
 
-            <!-- Professional Plan — Founding Member Pricing -->
+            <!-- Professional Plan -->
             <div class="plan-card limited">
-                <div class="plan-badge limited">Founding Member</div>
+                <div class="plan-badge limited">Most Popular</div>
                 <div class="plan-name">Professional</div>
                 <div class="plan-desc">For agents ready to scale their business.</div>
                 <div class="plan-price">
-                    <div class="plan-price-amount"><span class="plan-price-original">$399</span> <span class="plan-price-currency">$</span>299</div>
-                    <div class="plan-price-period">per month</div>
-                    <div class="plan-price-save">Save $100/mo — limited time</div>
+                    <div class="plan-price-quarterly">
+                        <div class="plan-price-amount"><span class="pricing-strike">$1,200</span> <span class="plan-price-currency">$</span>800</div>
+                        <div class="plan-price-period">per quarter &middot; $267/mo</div>
+                        <span class="pricing-promo-badge">Limited time: locked in for life</span>
+                    </div>
+                    <div class="plan-price-annual" style="display:none;">
+                        <div class="plan-price-amount"><span class="plan-price-currency">$</span>3,000</div>
+                        <div class="plan-price-period">per year &middot; $250/mo</div>
+                    </div>
                 </div>
                 <div class="plan-calls">3,000 calls / month</div>
                 <a href="https://buy.stripe.com/8x200keiT1gr29ig1U6Ri09" class="plan-btn plan-btn-limited" id="proBtn">Get Started</a>
@@ -448,8 +497,15 @@
                 <div class="plan-name">Growth</div>
                 <div class="plan-desc">Scale faster with maximum call volume.</div>
                 <div class="plan-price">
-                    <div class="plan-price-amount"><span class="plan-price-currency">$</span>599</div>
-                    <div class="plan-price-period">per month</div>
+                    <div class="plan-price-quarterly">
+                        <div class="plan-price-amount"><span class="pricing-strike">$1,800</span> <span class="plan-price-currency">$</span>1,200</div>
+                        <div class="plan-price-period">per quarter &middot; $400/mo</div>
+                        <span class="pricing-promo-badge">Limited time: locked in for life</span>
+                    </div>
+                    <div class="plan-price-annual" style="display:none;">
+                        <div class="plan-price-amount"><span class="plan-price-currency">$</span>4,500</div>
+                        <div class="plan-price-period">per year &middot; $375/mo</div>
+                    </div>
                 </div>
                 <div class="plan-calls">6,000 calls / month</div>
                 <a href="https://buy.stripe.com/5kQ28sgr10cn15e4jc6Ri08" class="plan-btn plan-btn-primary" id="growthBtn">Get Started</a>
@@ -498,7 +554,7 @@
         </div>
 
         <div class="pricing-footer">
-            <p>All plans are billed monthly. Cancel anytime with no long-term commitment.</p>
+            <p>Cancel anytime. No long-term contracts.</p>
             <div class="pricing-guarantee">
                 <div class="guarantee-item">
                     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -563,6 +619,19 @@
             }
         });
     }
+
+    // Pricing toggle: quarterly vs annual
+    var toggleQ = document.getElementById('toggleQuarterly');
+    var toggleA = document.getElementById('toggleAnnual');
+    function setPricingBilling(period) {
+        var isQ = period === 'quarterly';
+        toggleQ.classList.toggle('active', isQ);
+        toggleA.classList.toggle('active', !isQ);
+        document.querySelectorAll('.plan-price-quarterly').forEach(function(el) { el.style.display = isQ ? '' : 'none'; });
+        document.querySelectorAll('.plan-price-annual').forEach(function(el) { el.style.display = isQ ? 'none' : ''; });
+    }
+    toggleQ.addEventListener('click', function() { setPricingBilling('quarterly'); });
+    toggleA.addEventListener('click', function() { setPricingBilling('annual'); });
     </script>
 </body>
 </html>
