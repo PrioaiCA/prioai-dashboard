@@ -1642,6 +1642,48 @@
         .search-results-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
         .search-result-item{display:flex;justify-content:space-between;align-items:center;padding:16px;background:linear-gradient(150deg,rgba(255,255,255,0.04) 0%,rgba(0,0,0,0.3) 100%);border:1px solid rgba(255,255,255,0.06);border-radius:12px;cursor:pointer;transition:all 250ms ease;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
         .search-result-item:hover{border-color:rgba(0,230,118,0.2);background:linear-gradient(150deg,rgba(0,230,118,0.06) 0%,rgba(0,0,0,0.25) 100%);box-shadow:inset 0 1px 0 rgba(0,230,118,0.08),0 0 15px rgba(0,230,118,0.04)}
+        /* All Leads Search Page */
+        .all-leads-search-header{margin-bottom:20px}
+        .all-leads-search-header .page-title{font-size:1.5rem;font-weight:700;color:#fff;margin:0 0 14px}
+        .all-leads-search-wrap{position:relative;max-width:620px}
+        .all-leads-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);pointer-events:none;display:flex;align-items:center}
+        .all-leads-search-input{width:100%;padding:12px 18px 12px 42px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.08);border-radius:14px;color:#fff;font-size:0.9375rem;transition:all 250ms ease;box-shadow:inset 0 2px 6px rgba(0,0,0,0.25)}
+        .all-leads-search-input:focus{outline:none;border-color:rgba(0,230,118,0.25);box-shadow:inset 0 2px 6px rgba(0,0,0,0.25),0 0 20px rgba(0,230,118,0.05)}
+        .all-leads-search-input::placeholder{color:rgba(255,255,255,0.28)}
+        .all-leads-filters{margin-bottom:14px}
+        .all-leads-count-badge{font-size:0.8125rem;color:rgba(255,255,255,0.38);font-weight:500;white-space:nowrap}
+        .all-leads-table-wrap{background:linear-gradient(150deg,rgba(255,255,255,0.025),rgba(0,0,0,0.18));border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:4px}
+        .all-leads-table{width:100%;border-collapse:collapse}
+        .all-leads-table thead th{padding:10px 14px;text-align:left;font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:rgba(255,255,255,0.32);border-bottom:1px solid rgba(255,255,255,0.06);white-space:nowrap}
+        .all-leads-table tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:background 120ms ease}
+        .all-leads-table tbody tr:last-child{border-bottom:none}
+        .all-leads-table tbody tr:hover{background:rgba(0,230,118,0.045)}
+        .all-leads-table td{padding:9px 14px;font-size:0.875rem;color:rgba(255,255,255,0.8);vertical-align:middle}
+        .all-leads-table td.td-name{font-weight:600;color:#fff}
+        .all-leads-table td.td-phone{font-family:'DM Mono',monospace;font-size:0.8125rem;color:rgba(255,255,255,0.45)}
+        .all-leads-table td.td-updated,.all-leads-table td.td-next{font-size:0.8125rem;color:rgba(255,255,255,0.35)}
+        .all-leads-pagination{display:flex;align-items:center;justify-content:center;gap:5px;padding:14px 0}
+        .all-leads-page-btn{padding:6px 11px;border:1px solid rgba(255,255,255,0.09);border-radius:8px;background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.5);font-size:0.8125rem;cursor:pointer;transition:all 140ms ease;line-height:1}
+        .all-leads-page-btn:hover:not(:disabled){border-color:rgba(0,230,118,0.22);color:rgba(255,255,255,0.85)}
+        .all-leads-page-btn.active{background:rgba(0,230,118,0.1);border-color:rgba(0,230,118,0.28);color:#00e676;font-weight:600}
+        .all-leads-page-btn:disabled{opacity:0.28;cursor:default}
+        [data-theme="light"] .all-leads-search-header .page-title{color:#111118}
+        [data-theme="light"] .all-leads-search-input{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.1);color:#111118;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+        [data-theme="light"] .all-leads-search-input::placeholder{color:rgba(0,0,0,0.28)}
+        [data-theme="light"] .all-leads-search-input:focus{border-color:rgba(16,185,129,0.35);box-shadow:0 1px 4px rgba(0,0,0,0.05),0 0 0 3px rgba(16,185,129,0.1)}
+        [data-theme="light"] .all-leads-search-icon{color:rgba(0,0,0,0.28)}
+        [data-theme="light"] .all-leads-count-badge{color:rgba(0,0,0,0.38)}
+        [data-theme="light"] .all-leads-table-wrap{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.07)}
+        [data-theme="light"] .all-leads-table thead th{color:rgba(0,0,0,0.38);border-bottom-color:rgba(0,0,0,0.07)}
+        [data-theme="light"] .all-leads-table tbody tr{border-bottom-color:rgba(0,0,0,0.05)}
+        [data-theme="light"] .all-leads-table tbody tr:hover{background:rgba(16,185,129,0.04)}
+        [data-theme="light"] .all-leads-table td{color:rgba(0,0,0,0.75)}
+        [data-theme="light"] .all-leads-table td.td-name{color:#111118}
+        [data-theme="light"] .all-leads-table td.td-phone{color:rgba(0,0,0,0.42)}
+        [data-theme="light"] .all-leads-table td.td-updated,[data-theme="light"] .all-leads-table td.td-next{color:rgba(0,0,0,0.32)}
+        [data-theme="light"] .all-leads-page-btn{border-color:rgba(0,0,0,0.1);background:rgba(0,0,0,0.02);color:rgba(0,0,0,0.5)}
+        [data-theme="light"] .all-leads-page-btn:hover:not(:disabled){border-color:rgba(16,185,129,0.3);color:rgba(0,0,0,0.75)}
+        [data-theme="light"] .all-leads-page-btn.active{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.28);color:#10b981}
         /* Search Detail - Glass Card Redesign */
         .search-back-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;margin-bottom:16px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.2));border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.5);font-size:13px;font-weight:500;cursor:pointer;transition:all 200ms ease;font-family:'DM Sans',sans-serif}
         .search-back-btn:hover{border-color:rgba(0,230,118,0.2);color:rgba(255,255,255,0.8);background:linear-gradient(150deg,rgba(255,255,255,0.06),rgba(0,0,0,0.2))}
@@ -2569,7 +2611,7 @@
                         </div>
                         <div class="nav-item" data-page="search">
                             <span class="nav-item-icon">🔍</span>
-                            <span>Search</span>
+                            <span>Search all Leads</span>
                         </div>
                         <div class="nav-item" data-page="sms-leads">
                             <span class="nav-item-icon">💬</span>
@@ -3697,25 +3739,67 @@
                         </div>
                     </div>
 
-                    <!-- Page: Search -->
+                    <!-- Page: Search all Leads -->
                     <div class="page hidden" id="page-search">
-                        <div class="search-header">
-                            <h2 style="color:rgba(255,255,255,0.5);font-size:1rem;font-weight:500;">Search by name or last 4 digits of phone number</h2>
+
+                        <!-- Title + Search Bar -->
+                        <div class="all-leads-search-header">
+                            <h1 class="page-title">Search all Leads</h1>
+                            <div class="all-leads-search-wrap">
+                                <span class="all-leads-search-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                </span>
+                                <input type="text" id="globalSearchInput" placeholder="Search by name or phone number..." class="all-leads-search-input">
+                            </div>
                         </div>
-                        
-                        <div class="search-box-large">
-                            <input type="text" id="globalSearchInput" placeholder="Enter name or last 4 digits of phone..." class="search-input-large">
-                            <button class="btn btn-primary" id="globalSearchBtn">Search</button>
+
+                        <!-- Filter bar -->
+                        <div class="filters-bar all-leads-filters">
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                                <select id="allLeadsStatusFilter" class="filter-select">
+                                    <option value="">All Statuses</option>
+                                    <option value="New">New</option>
+                                    <option value="Meeting Booked">Meeting Booked</option>
+                                    <option value="Callback">Callback</option>
+                                    <option value="Retry">Retry</option>
+                                    <option value="Follow Up">Follow Up</option>
+                                    <option value="Not Interested">Not Interested</option>
+                                    <option value="Unqualified">Unqualified</option>
+                                    <option value="DNC">DNC</option>
+                                </select>
+                                <select id="allLeadsTimeframeFilter" class="filter-select">
+                                    <option value="">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="7">Last 7 Days</option>
+                                    <option value="30">Last 30 Days</option>
+                                    <option value="90">Last 90 Days</option>
+                                </select>
+                            </div>
+                            <span id="allLeadsCountBadge" class="all-leads-count-badge">0 leads</span>
                         </div>
-                        
-                        <!-- Multiple Results -->
-                        <div id="searchMultipleResults" style="display:none;">
-                            <h4 style="margin-bottom:12px;color:rgba(255,255,255,0.6);">Multiple leads found - click to view:</h4>
-                            <div id="searchResultsList" class="search-results-list"></div>
+
+                        <!-- Compact Leads Table -->
+                        <div class="all-leads-table-wrap" id="allLeadsTableWrap">
+                            <table class="all-leads-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                        <th>Next Call</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allLeadsTableBody"></tbody>
+                            </table>
+                            <div id="allLeadsEmpty" class="pipeline-empty" style="display:none;">No leads found</div>
                         </div>
-                        
-                        <!-- Single Result Detail -->
-                        <div id="searchLeadDetail" style="display:none;">
+
+                        <!-- Pagination -->
+                        <div id="allLeadsPagination" class="all-leads-pagination" style="display:none;"></div>
+
+                        <!-- Lead Detail (glass card) -->
+                        <div id="searchLeadDetail" style="display:none;margin-top:24px;">
                             <!-- Back to results button -->
                             <button class="search-back-btn" id="searchBackBtn" onclick="searchGoBack()">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -3839,11 +3923,6 @@
                             </div>
                         </div>
                         
-                        <!-- Empty State -->
-                        <div id="searchEmptyState" style="display:none;text-align:center;padding:60px;color:rgba(255,255,255,0.4);">
-                            <div style="font-size:3rem;margin-bottom:16px;">🔍</div>
-                            <p id="searchEmptyText">No lead found</p>
-                        </div>
                     </div>
 
                     <!-- Page: SMS Outreach -->
@@ -5307,7 +5386,7 @@
         var titles = {
             overview: 'Overview', prio: '⚡ Prio Prospects', prospects: '📋 Prospects', pipeline: '🤖 AI Follow Ups',
             unqualified: '📁 Unqualified Leads', shared: '🔗 Shared Leads', analytics: '📊 Analytics',
-            import: '📥 Import Leads', search: '🔍 Search Lead', settings: '⚙️ Settings', billing: 'Billing', help: 'Help',
+            import: '📥 Import Leads', search: '🔍 Search all Leads', settings: '⚙️ Settings', billing: 'Billing', help: 'Help',
             feedback: 'Contact Us', leadgen: 'Lead Gen', 'booked-today': '🎯 Booked Today', 'open-leads': '📂 Open Leads',
             'sms-leads': '💬 SMS Outreach'
         };
@@ -5334,7 +5413,8 @@
         document.querySelectorAll('.page').forEach(function(p) { p.classList.add('hidden'); });
         var pageEl = document.getElementById('page-' + page);
         if (pageEl) pageEl.classList.remove('hidden');
-        
+        if (page === 'search' && typeof updateAllLeadsTable === 'function') updateAllLeadsTable();
+
         // Update hash
         window.location.hash = page;
     }
@@ -13023,51 +13103,141 @@
     // ===== SEARCH PAGE =====
     var searchedLead = null;
     
-    document.getElementById('globalSearchBtn')?.addEventListener('click', performSearch);
-    document.getElementById('globalSearchInput')?.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') performSearch();
-    });
-    
-    function performSearch() {
-        var query = document.getElementById('globalSearchInput')?.value.trim().toLowerCase();
-        if (!query) return;
-        
-        var results = allLeads.filter(function(l) {
+    // All Leads Search Page — live filter + pagination
+    var allLeadsCurrentPage = 1;
+    var ALL_LEADS_PAGE_SIZE = 50;
+
+    function updateAllLeadsTable() {
+        var query = (document.getElementById('globalSearchInput')?.value || '').trim().toLowerCase();
+        var statusFilter = document.getElementById('allLeadsStatusFilter')?.value || '';
+        var timeframeFilter = document.getElementById('allLeadsTimeframeFilter')?.value || '';
+
+        var now = new Date();
+        var cutoff = null;
+        if (timeframeFilter === 'today') {
+            cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        } else if (timeframeFilter) {
+            cutoff = new Date(now - parseInt(timeframeFilter) * 86400000);
+        }
+
+        var filtered = allLeads.filter(function(l) {
             var f = l.fields;
-            var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
-            var phone = (f['Phone #'] || f['Phone'] || '').replace(/\D/g, '');
-            var phoneLast4 = phone.slice(-4);
-            return name.includes(query) || phoneLast4 === query || phone.includes(query);
+            if (query) {
+                var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).toLowerCase();
+                var phone = (f['Phone #'] || f['Phone'] || '').replace(/\D/g, '');
+                var queryDigits = query.replace(/\D/g, '');
+                var nameMatch = name.includes(query);
+                var phoneMatch = queryDigits && phone.includes(queryDigits);
+                if (!nameMatch && !phoneMatch) return false;
+            }
+            if (statusFilter) {
+                var st = f['Status'] || f['Disposition'] || '';
+                if (st !== statusFilter) return false;
+            }
+            if (cutoff) {
+                var updated = f['Updated At'] || f['Last Updated'] || '';
+                if (!updated) return false;
+                var d = new Date(updated);
+                if (isNaN(d) || d < cutoff) return false;
+            }
+            return true;
         });
-        
-        document.getElementById('searchMultipleResults').style.display = 'none';
-        document.getElementById('searchLeadDetail').style.display = 'none';
-        document.getElementById('searchEmptyState').style.display = 'none';
-        
-        if (results.length === 0) {
-            document.getElementById('searchEmptyState').style.display = 'block';
-            document.getElementById('searchEmptyText').textContent = 'No lead found matching "' + query + '"';
-        } else if (results.length === 1) {
-            showSearchLeadDetail(results[0]);
+
+        filtered.sort(function(a, b) {
+            var da = new Date(a.fields['Updated At'] || 0);
+            var db = new Date(b.fields['Updated At'] || 0);
+            return db - da;
+        });
+
+        var countBadge = document.getElementById('allLeadsCountBadge');
+        if (countBadge) countBadge.textContent = filtered.length + ' lead' + (filtered.length !== 1 ? 's' : '');
+
+        var totalPages = Math.max(1, Math.ceil(filtered.length / ALL_LEADS_PAGE_SIZE));
+        if (allLeadsCurrentPage > totalPages) allLeadsCurrentPage = 1;
+        var start = (allLeadsCurrentPage - 1) * ALL_LEADS_PAGE_SIZE;
+        var pageLeads = filtered.slice(start, start + ALL_LEADS_PAGE_SIZE);
+
+        var tbody = document.getElementById('allLeadsTableBody');
+        var empty = document.getElementById('allLeadsEmpty');
+        if (!tbody) return;
+
+        if (pageLeads.length === 0) {
+            tbody.innerHTML = '';
+            if (empty) { empty.style.display = ''; empty.textContent = query ? 'No leads match "' + query + '"' : 'No leads found'; }
         } else {
-            // Multiple results
-            document.getElementById('searchMultipleResults').style.display = 'block';
-            document.getElementById('searchResultsList').innerHTML = results.slice(0, 10).map(function(lead) {
+            if (empty) empty.style.display = 'none';
+            tbody.innerHTML = pageLeads.map(function(lead) {
                 var f = lead.fields;
                 var name = ((f['First Name'] || '') + ' ' + (f['Last Name'] || '')).trim() || 'Unknown';
-                var phone = formatPhone(f['Phone #'] || f['Phone'] || '-');
+                var phone = formatPhone(f['Phone #'] || f['Phone'] || '');
                 var status = f['Status'] || f['Disposition'] || '-';
-                var nextCallDate = f['Next Call Date'];
-                var nextCallDisplay = nextCallDate ? formatDateTime(nextCallDate) : '';
-                return '<div class="search-result-item" onclick="showSearchLeadDetail(allLeads.find(function(l){return l.id===\'' + lead.id + '\'}))">' +
-                    '<div><div style="font-weight:600">' + escapeHtml(name) + '</div><div style="color:rgba(255,255,255,0.5);font-family:monospace">' + escapeHtml(phone) + '</div>' +
-                    (nextCallDisplay ? '<div class="search-result-next-call">Next Call: ' + escapeHtml(nextCallDisplay) + '</div>' : '') +
-                    '</div>' +
-                    '<span class="status-badge ' + getStatusClass(status) + '">' + escapeHtml(status) + '</span>' +
-                '</div>';
+                var updated = f['Updated At'] ? formatDateTime(f['Updated At']) : '-';
+                var nextCall = f['Next Call Date'] ? formatDateTime(f['Next Call Date']) : '-';
+                var sc = getStatusClass(status);
+                var lid = lead.id;
+                return '<tr onclick="(function(){var l=allLeads.find(function(x){return x.id===\'' + lid + '\'});if(l){showSearchLeadDetail(l);setTimeout(function(){var d=document.getElementById(\'searchLeadDetail\');if(d)d.scrollIntoView({behavior:\'smooth\',block:\'start\'})},50);}})()">' +
+                    '<td class="td-name">' + escapeHtml(name) + '</td>' +
+                    '<td class="td-phone">' + escapeHtml(phone) + '</td>' +
+                    '<td><span class="status-badge ' + sc + '">' + escapeHtml(status) + '</span></td>' +
+                    '<td class="td-updated">' + escapeHtml(updated) + '</td>' +
+                    '<td class="td-next">' + escapeHtml(nextCall) + '</td>' +
+                '</tr>';
             }).join('');
         }
+
+        renderAllLeadsPagination(totalPages);
     }
+
+    function renderAllLeadsPagination(totalPages) {
+        var container = document.getElementById('allLeadsPagination');
+        if (!container) return;
+        if (totalPages <= 1) { container.style.display = 'none'; return; }
+        container.style.display = 'flex';
+        var cur = allLeadsCurrentPage;
+        var html = '<button class="all-leads-page-btn" ' + (cur === 1 ? 'disabled' : '') + ' onclick="allLeadsGoToPage(' + (cur - 1) + ')">&#8592;</button>';
+        var pages = [];
+        if (totalPages <= 7) {
+            for (var i = 1; i <= totalPages; i++) pages.push(i);
+        } else {
+            pages.push(1);
+            if (cur > 3) pages.push('…');
+            var s = Math.max(2, cur - 1), e = Math.min(totalPages - 1, cur + 1);
+            for (var j = s; j <= e; j++) pages.push(j);
+            if (cur < totalPages - 2) pages.push('…');
+            pages.push(totalPages);
+        }
+        pages.forEach(function(p) {
+            if (p === '…') {
+                html += '<span style="color:rgba(255,255,255,0.25);padding:0 2px;font-size:0.875rem">…</span>';
+            } else {
+                html += '<button class="all-leads-page-btn' + (p === cur ? ' active' : '') + '" onclick="allLeadsGoToPage(' + p + ')">' + p + '</button>';
+            }
+        });
+        html += '<button class="all-leads-page-btn" ' + (cur === totalPages ? 'disabled' : '') + ' onclick="allLeadsGoToPage(' + (cur + 1) + ')">&#8594;</button>';
+        container.innerHTML = html;
+    }
+
+    function allLeadsGoToPage(page) {
+        allLeadsCurrentPage = page;
+        updateAllLeadsTable();
+        var wrap = document.getElementById('allLeadsTableWrap');
+        if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    window.allLeadsGoToPage = allLeadsGoToPage;
+    window.updateAllLeadsTable = updateAllLeadsTable;
+
+    document.getElementById('globalSearchInput')?.addEventListener('input', debounce(function() {
+        allLeadsCurrentPage = 1;
+        updateAllLeadsTable();
+    }, 200));
+    document.getElementById('allLeadsStatusFilter')?.addEventListener('change', function() {
+        allLeadsCurrentPage = 1;
+        updateAllLeadsTable();
+    });
+    document.getElementById('allLeadsTimeframeFilter')?.addEventListener('change', function() {
+        allLeadsCurrentPage = 1;
+        updateAllLeadsTable();
+    });
     
     // Search detail tab switching
     function switchSearchTab(btn, tabName) {
@@ -13094,12 +13264,8 @@
 
     function searchGoBack() {
         document.getElementById('searchLeadDetail').style.display = 'none';
-        // Only show multiple results if they were visible before
-        var multiResults = document.getElementById('searchMultipleResults');
-        var resultsList = document.getElementById('searchResultsList');
-        if (resultsList && resultsList.innerHTML.trim()) {
-            multiResults.style.display = '';
-        }
+        var wrap = document.getElementById('allLeadsTableWrap');
+        if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
         history.pushState(null, '', '#search');
     }
     window.searchGoBack = searchGoBack;
@@ -13109,7 +13275,6 @@
         searchedLead = lead;
         var f = lead.fields;
 
-        document.getElementById('searchMultipleResults').style.display = 'none';
         document.getElementById('searchLeadDetail').style.display = 'block';
 
         // Update URL with lead ID for deep linking
