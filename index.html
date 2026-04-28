@@ -1688,8 +1688,14 @@
         .search-back-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;margin-bottom:16px;background:linear-gradient(150deg,rgba(255,255,255,0.04),rgba(0,0,0,0.2));border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.5);font-size:13px;font-weight:500;cursor:pointer;transition:all 200ms ease;font-family:'DM Sans',sans-serif}
         .search-back-btn:hover{border-color:rgba(0,230,118,0.2);color:rgba(255,255,255,0.8);background:linear-gradient(150deg,rgba(255,255,255,0.06),rgba(0,0,0,0.2))}
         .search-back-btn svg{opacity:0.6}
-        .search-detail-glass{max-width:900px}
-        .search-detail-glass .glass-modal-card{border-radius:20px;border:1px solid rgba(255,255,255,0.08)}
+        #searchLeadModal{display:flex !important;justify-content:center;align-items:center;padding:24px;visibility:hidden;opacity:0;pointer-events:none;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:opacity 300ms ease,visibility 300ms ease,backdrop-filter 300ms ease,background 300ms ease}
+        #searchLeadModal.active{visibility:visible;opacity:1;pointer-events:auto;background:rgba(0,0,0,0.65);backdrop-filter:blur(12px)}
+        #searchLeadModal .glass-modal-border{transform:scale(0.88) translateY(30px);opacity:0;filter:blur(20px);transition:transform 400ms cubic-bezier(0.16,1,0.3,1),opacity 400ms ease,filter 400ms ease;max-width:820px;width:100%}
+        #searchLeadModal.active .glass-modal-border{transform:scale(1) translateY(0);opacity:1;filter:blur(0)}
+        .search-modal-close-btn{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 150ms ease;z-index:10;flex-shrink:0}
+        .search-modal-close-btn:hover{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
+        [data-theme="light"] .search-modal-close-btn{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:rgba(0,0,0,0.4)}
+        [data-theme="light"] .search-modal-close-btn:hover{background:rgba(0,0,0,0.08);color:rgba(0,0,0,0.7)}
         .search-detail-inner{max-height:none;overflow-y:visible}
         .search-detail-inner .glass-name-row{gap:14px}
         .search-lead-avatar{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(0,230,118,0.15),rgba(0,230,118,0.05));color:#00e676;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;flex-shrink:0;border:1px solid rgba(0,230,118,0.1)}
@@ -3798,131 +3804,6 @@
                         <!-- Pagination -->
                         <div id="allLeadsPagination" class="all-leads-pagination" style="display:none;"></div>
 
-                        <!-- Lead Detail (glass card) -->
-                        <div id="searchLeadDetail" style="display:none;margin-top:24px;">
-                            <!-- Back to results button -->
-                            <button class="search-back-btn" id="searchBackBtn" onclick="searchGoBack()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-                                Back to Search
-                            </button>
-
-                            <div class="search-detail-glass">
-                                <div class="glass-modal-card">
-                                    <div class="glass-refraction"></div>
-                                    <div class="glass-caustic"></div>
-                                    <div class="glass-ambient-glow"></div>
-
-                                    <div class="glass-modal-inner search-detail-inner">
-                                        <!-- 1. Header -->
-                                        <div class="glass-modal-header">
-                                            <div class="glass-header-left">
-                                                <div class="glass-name-row">
-                                                    <div class="search-lead-avatar" id="searchLeadAvatar">?</div>
-                                                    <h2 class="glass-lead-name" id="searchLeadName">-</h2>
-                                                    <div class="glass-status-wrapper" style="position:relative;">
-                                                        <div class="search-detail-status-badge" id="searchLeadStatusBadge">
-                                                            <span class="search-detail-status-dot"></span>
-                                                            <span>-</span>
-                                                        </div>
-                                                    </div>
-                                                    <span id="searchLeadOutcomeBadge" class="search-detail-outcome-badge" style="display:none;">-</span>
-                                                </div>
-                                                <div class="search-lead-phone" id="searchLeadPhoneDisplay">-</div>
-                                            </div>
-                                        </div>
-
-                                        <!-- 2. Action Pills -->
-                                        <div class="glass-action-pills">
-                                            <button class="glass-pill" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
-                                            <button class="glass-pill" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
-                                            <button class="glass-pill glass-pill-dnc" id="searchDNCBtn" onclick="dncFromSearch()">⛔ DNC</button>
-                                        </div>
-
-                                        <!-- 3. Info Grid -->
-                                        <div class="glass-info-grid search-detail-info-grid">
-                                            <div class="glass-info-panel">
-                                                <span class="glass-info-label">PHONE</span>
-                                                <span class="glass-info-value" id="searchLeadPhoneInfo">-</span>
-                                            </div>
-                                            <div class="glass-info-panel">
-                                                <span class="glass-info-label">EMAIL</span>
-                                                <span class="glass-info-value" id="searchLeadEmail">-</span>
-                                            </div>
-                                            <div class="glass-info-panel">
-                                                <span class="glass-info-label">TOTAL CALLS</span>
-                                                <span class="glass-info-value" id="searchLeadCalls">-</span>
-                                            </div>
-                                            <div class="glass-info-panel">
-                                                <span class="glass-info-label">LAST UPDATED</span>
-                                                <span class="glass-info-value" id="searchLeadLastCall">-</span>
-                                            </div>
-                                            <div class="glass-info-panel">
-                                                <span class="glass-info-label">BOOKED TIME</span>
-                                                <span class="glass-info-value" id="searchLeadBookedTime">-</span>
-                                            </div>
-                                            <div class="glass-info-panel">
-                                                <span class="glass-info-label">NEXT CALL</span>
-                                                <span class="glass-info-value" id="searchLeadNextCall">-</span>
-                                            </div>
-                                            <div class="glass-info-panel glass-intent-card">
-                                                <span class="glass-info-label">LEAD INTENT</span>
-                                                <span class="glass-info-value" style="display:flex;flex-direction:row;align-items:center;gap:8px">
-                                                    <span class="intent-card-fires" id="searchIntentFires"><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span></span>
-                                                    <span class="intent-card-label" id="searchIntentLabel">--</span>
-                                                </span>
-                                            </div>
-                                            <div class="glass-info-panel">
-                                                <span class="glass-info-label">INTEREST</span>
-                                                <span class="glass-info-value" id="searchLeadInterest">-</span>
-                                            </div>
-                                        </div>
-
-                                        <!-- 4. Divider -->
-                                        <div class="glass-divider"></div>
-
-                                        <!-- 5. Tab Section -->
-                                        <div class="glass-section" id="searchGlassSection">
-                                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                                                <div class="glass-tab-bar" style="margin-bottom:0">
-                                                    <button class="glass-tab active" data-search-tab="ai-calls" onclick="switchSearchTab(this, 'ai-calls')">AI Call History</button>
-                                                    <button class="glass-tab" data-search-tab="summary" onclick="switchSearchTab(this, 'summary')">AI Summary</button>
-                                                    <button class="glass-tab" data-search-tab="notes" onclick="switchSearchTab(this, 'notes')">Notes</button>
-                                                    <button class="glass-tab" data-search-tab="attempts" onclick="switchSearchTab(this, 'attempts')">Call Attempts</button>
-                                                </div>
-                                                <button class="tab-viewall-btn" id="searchTabViewAllToggle" onclick="toggleSearchTabViewAll()" title="Show all sections at once">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
-                                                    <span id="searchTabViewAllLabel">View All</span>
-                                                </button>
-                                            </div>
-                                            <div class="glass-tab-content" id="searchTabAICalls">
-                                                <div class="search-tab-header">
-                                                    <span class="search-tab-count" id="searchAICallsCount">0</span> calls
-                                                </div>
-                                                <div id="searchLeadAICallsList" class="search-lead-ai-calls-list">No AI calls recorded</div>
-                                            </div>
-                                            <div class="glass-tab-content" id="searchTabSummary" style="display:none;">
-                                                <div class="glass-inner-panel">
-                                                    <div class="glass-summary-text" id="searchLeadSummary">No summary available</div>
-                                                </div>
-                                            </div>
-                                            <div class="glass-tab-content" id="searchTabNotes" style="display:none;">
-                                                <div class="search-tab-header">
-                                                    <span class="search-tab-count" id="searchNotesCount">0</span> notes
-                                                </div>
-                                                <div id="searchLeadNotesList" class="search-lead-notes-list">No notes available</div>
-                                            </div>
-                                            <div class="glass-tab-content" id="searchTabAttempts" style="display:none;">
-                                                <div class="search-tab-header">
-                                                    <span class="search-tab-count" id="searchAttemptsCount">0</span> attempts
-                                                </div>
-                                                <div id="searchLeadAttemptsList" class="search-lead-attempts-list">No call attempts logged</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
                     </div>
 
                     <!-- Page: SMS Outreach -->
@@ -4662,6 +4543,117 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Search Lead Popup Modal -->
+    <div class="modal-overlay" id="searchLeadModal">
+        <div class="glass-modal-border search-lead-modal-border">
+            <div class="glass-modal-card" style="position:relative;">
+                <button class="search-modal-close-btn" onclick="searchGoBack()" title="Close">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+                </button>
+                <div class="glass-refraction"></div>
+                <div class="glass-caustic"></div>
+                <div class="glass-ambient-glow"></div>
+                <div class="glass-modal-inner search-detail-inner">
+                    <!-- Header -->
+                    <div class="glass-modal-header">
+                        <div class="glass-header-left">
+                            <div class="glass-name-row">
+                                <div class="search-lead-avatar" id="searchLeadAvatar">?</div>
+                                <h2 class="glass-lead-name" id="searchLeadName">-</h2>
+                                <div class="glass-status-wrapper" style="position:relative;">
+                                    <div class="search-detail-status-badge" id="searchLeadStatusBadge">
+                                        <span class="search-detail-status-dot"></span>
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <span id="searchLeadOutcomeBadge" class="search-detail-outcome-badge" style="display:none;">-</span>
+                            </div>
+                            <div class="search-lead-phone" id="searchLeadPhoneDisplay">-</div>
+                        </div>
+                    </div>
+                    <!-- Action Pills -->
+                    <div class="glass-action-pills">
+                        <button class="glass-pill" id="searchShareBtn" onclick="shareFromSearch()">🔗 Share</button>
+                        <button class="glass-pill" id="searchTakeOverBtn" onclick="takeOverFromSearch()">📥 Take Over</button>
+                        <button class="glass-pill glass-pill-dnc" id="searchDNCBtn" onclick="dncFromSearch()">⛔ DNC</button>
+                    </div>
+                    <!-- Info Grid -->
+                    <div class="glass-info-grid search-detail-info-grid">
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">PHONE</span>
+                            <span class="glass-info-value" id="searchLeadPhoneInfo">-</span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">EMAIL</span>
+                            <span class="glass-info-value" id="searchLeadEmail">-</span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">TOTAL CALLS</span>
+                            <span class="glass-info-value" id="searchLeadCalls">-</span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">LAST UPDATED</span>
+                            <span class="glass-info-value" id="searchLeadLastCall">-</span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">BOOKED TIME</span>
+                            <span class="glass-info-value" id="searchLeadBookedTime">-</span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">NEXT CALL</span>
+                            <span class="glass-info-value" id="searchLeadNextCall">-</span>
+                        </div>
+                        <div class="glass-info-panel glass-intent-card">
+                            <span class="glass-info-label">LEAD INTENT</span>
+                            <span class="glass-info-value" style="display:flex;flex-direction:row;align-items:center;gap:8px">
+                                <span class="intent-card-fires" id="searchIntentFires"><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span><span class="intent-card-fire dim">🔥</span></span>
+                                <span class="intent-card-label" id="searchIntentLabel">--</span>
+                            </span>
+                        </div>
+                        <div class="glass-info-panel">
+                            <span class="glass-info-label">INTEREST</span>
+                            <span class="glass-info-value" id="searchLeadInterest">-</span>
+                        </div>
+                    </div>
+                    <!-- Divider -->
+                    <div class="glass-divider"></div>
+                    <!-- Tab Section -->
+                    <div class="glass-section" id="searchGlassSection">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                            <div class="glass-tab-bar" style="margin-bottom:0">
+                                <button class="glass-tab active" data-search-tab="ai-calls" onclick="switchSearchTab(this, 'ai-calls')">AI Call History</button>
+                                <button class="glass-tab" data-search-tab="summary" onclick="switchSearchTab(this, 'summary')">AI Summary</button>
+                                <button class="glass-tab" data-search-tab="notes" onclick="switchSearchTab(this, 'notes')">Notes</button>
+                                <button class="glass-tab" data-search-tab="attempts" onclick="switchSearchTab(this, 'attempts')">Call Attempts</button>
+                            </div>
+                            <button class="tab-viewall-btn" id="searchTabViewAllToggle" onclick="toggleSearchTabViewAll()" title="Show all sections at once">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                                <span id="searchTabViewAllLabel">View All</span>
+                            </button>
+                        </div>
+                        <div class="glass-tab-content" id="searchTabAICalls">
+                            <div class="search-tab-header"><span class="search-tab-count" id="searchAICallsCount">0</span> calls</div>
+                            <div id="searchLeadAICallsList" class="search-lead-ai-calls-list">No AI calls recorded</div>
+                        </div>
+                        <div class="glass-tab-content" id="searchTabSummary" style="display:none;">
+                            <div class="glass-inner-panel">
+                                <div class="glass-summary-text" id="searchLeadSummary">No summary available</div>
+                            </div>
+                        </div>
+                        <div class="glass-tab-content" id="searchTabNotes" style="display:none;">
+                            <div class="search-tab-header"><span class="search-tab-count" id="searchNotesCount">0</span> notes</div>
+                            <div id="searchLeadNotesList" class="search-lead-notes-list">No notes available</div>
+                        </div>
+                        <div class="glass-tab-content" id="searchTabAttempts" style="display:none;">
+                            <div class="search-tab-header"><span class="search-tab-count" id="searchAttemptsCount">0</span> attempts</div>
+                            <div id="searchLeadAttemptsList" class="search-lead-attempts-list">No call attempts logged</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Lead Detail Modal -->
@@ -13175,7 +13167,7 @@
                 var nextCall = f['Next Call Date'] ? formatDateTime(f['Next Call Date']) : '-';
                 var sc = getStatusClass(status);
                 var lid = lead.id;
-                return '<tr onclick="(function(){var l=allLeads.find(function(x){return x.id===\'' + lid + '\'});if(l){showSearchLeadDetail(l);setTimeout(function(){var d=document.getElementById(\'searchLeadDetail\');if(d)d.scrollIntoView({behavior:\'smooth\',block:\'start\'})},50);}})()">' +
+                return '<tr onclick="(function(){var l=allLeads.find(function(x){return x.id===\'' + lid + '\'});if(l)showSearchLeadDetail(l);})()">' +
                     '<td class="td-name">' + escapeHtml(name) + '</td>' +
                     '<td class="td-phone">' + escapeHtml(phone) + '</td>' +
                     '<td><span class="status-badge ' + sc + '">' + escapeHtml(status) + '</span></td>' +
@@ -13263,11 +13255,21 @@
     window.toggleSearchTabViewAll = toggleSearchTabViewAll;
 
     function searchGoBack() {
-        document.getElementById('searchLeadDetail').style.display = 'none';
-        var wrap = document.getElementById('allLeadsTableWrap');
-        if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var modal = document.getElementById('searchLeadModal');
+        if (modal) modal.classList.remove('active');
         history.pushState(null, '', '#search');
     }
+
+    // Close on backdrop click
+    document.getElementById('searchLeadModal')?.addEventListener('click', function(e) {
+        if (e.target === this) searchGoBack();
+    });
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('searchLeadModal')?.classList.contains('active')) {
+            searchGoBack();
+        }
+    });
     window.searchGoBack = searchGoBack;
 
     function showSearchLeadDetail(lead) {
@@ -13275,7 +13277,8 @@
         searchedLead = lead;
         var f = lead.fields;
 
-        document.getElementById('searchLeadDetail').style.display = 'block';
+        var modal = document.getElementById('searchLeadModal');
+        if (modal) modal.classList.add('active');
 
         // Update URL with lead ID for deep linking
         history.pushState({ leadId: lead.id, page: 'search' }, '', '#search/' + lead.id);
